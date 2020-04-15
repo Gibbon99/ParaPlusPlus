@@ -1,2 +1,4 @@
 leak:libX11
 leak:create_thread
+leak:libnvidia
+leak:libasan
