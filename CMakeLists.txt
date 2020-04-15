@@ -33,9 +33,8 @@ if (WIN32)
                     SDL2_image
                     SDL2_mixer
                     SDL2_ttf
-                    asan
                     #asan_dynamic-i386
-                    #clang_rt.asan_dynamic_runtime_thunk-i386
+                    clang_rt.asan_dynamic_runtime_thunk-i386
             )
 
             message("-")
