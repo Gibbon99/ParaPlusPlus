@@ -5,7 +5,7 @@
 paraScript     paraScriptInstance;
 paraLogFile    logFile;
 paraFileSystem fileSystem;
-paraFont       fontOne;
+paraFont       consoleFont;
 paraConsole    console;
 
 bool      quitLoop = false;
@@ -21,18 +21,13 @@ int main(int argc, char *argv[])
 
 	while (!quitLoop)
 	{
-		SDL_BlitSurface(fontOne.write(logFile, 100, 100, "Test text for Para++"), nullptr, sys_getScreenSurface(), &fontOne.pos);
-
-		int consoleX, consoleY = 0;
-
-		consoleY = 600 - fontOne.lineHeight;
-
-		auto consoleItr = console.consoleText.rbegin();
-		for (; consoleItr != console.consoleText.rend(); ++consoleItr)
+		console.prepare(600, consoleFont.lineHeight);
+		for (; console.consoleItr != console.consoleText.rend(); ++console.consoleItr)
 		{
-			SDL_BlitSurface(fontOne.write(logFile, consoleX, consoleY, *consoleItr), nullptr, sys_getScreenSurface(), &fontOne.pos);
-			consoleY -= fontOne.lineHeight;
+			SDL_BlitSurface(consoleFont.write(logFile, console.posX, console.posY, *console.consoleItr), nullptr, sys_getScreenSurface(), &consoleFont.pos);
+			console.posY -= consoleFont.lineHeight;
 		}
+
 		//Update the surface
 		SDL_UpdateWindowSurface(sys_getWindow());
 

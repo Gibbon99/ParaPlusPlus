@@ -27,5 +27,5 @@ typedef int (*functionPtr)(...);
 extern paraScript     paraScriptInstance;
 extern paraLogFile    logFile;
 extern paraFileSystem fileSystem;
-extern paraFont       fontOne;
+extern paraFont       consoleFont;
 extern paraConsole    console;

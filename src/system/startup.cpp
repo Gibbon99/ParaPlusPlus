@@ -96,8 +96,8 @@ void sys_startSystems()
 
 	logFile.write("About to load font.");
 
-	fontOne.load(logFile, 16, "data/Modenine.ttf");
-	fontOne.setColor(255, 255, 255, 255);
+	consoleFont.load(logFile, 16, "data/Modenine.ttf");
+	consoleFont.setColor(255, 255, 255, 255);
 
 #ifdef MY_DEBUG//=true
 	logFile.write("Running DEBUG version.");
