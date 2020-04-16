@@ -81,18 +81,22 @@ void sys_startSystems()
 	if (!logFile.open("paraLogFile.txt"))
 		sys_shutdownWithError("Error: Could not start paraLogFile. Check write permissions on folder.");
 	logFile.write("Logfile started.");
+	console.add(sys_getString("Console started [ %s ]", APP_NAME));
 
 	sys_createScreen();
+	console.add("Window system started.");
 
 	if (!fileSystem.init(logFile, "data", "data"))
 		sys_shutdownWithError("Error. Could not start filesystem. Check directory structure.");
+
+	console.add("Filesystem started.");
 
 	fileSystem.addPath(logFile, "data/data");
 	fileSystem.addPath(logFile, "data/scripts");
 
 	logFile.write("About to load font.");
 
-	fontOne.load(logFile, 15, "data/Modenine.ttf");
+	fontOne.load(logFile, 18, "data/Modenine.ttf");
 	fontOne.setColor(255, 255, 255, 255);
 
 #ifdef MY_DEBUG//=true
@@ -102,6 +106,7 @@ void sys_startSystems()
 	if (!paraScriptInstance.init(logFile, reinterpret_cast<asSFuncPtr &>(scr_Output)))
 		sys_shutdownWithError("Error: Could not start Scripting engine.");
 
+	console.add("Scripting started.");
 	sys_scriptInitScriptFunctions();
 	sys_scriptInitFunctions();
 	sys_scriptInitVariables();

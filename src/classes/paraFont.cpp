@@ -75,15 +75,22 @@ void paraFont::setColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a surface to hold the text and return pointer to the surface
-PARA_Surface    *paraFont::write(paraLogFile& outFile, const std::string& fontText)
+PARA_Surface    *paraFont::write(paraLogFile& outFile, int X, int Y, const std::string& fontText)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	if (nullptr != paraFont::surface)
+	{
+		SDL_FreeSurface(paraFont::surface);
+	}
+
 	paraFont::surface = TTF_RenderText_Blended(paraFont::fontHandle, fontText.c_str(), paraFont::color);
 	if (nullptr == paraFont::surface)
 	{
 		outFile.write(sys_getString("Unable to render font to surface [ %s ]", TTF_GetError()));
 		return nullptr;
 	}
+	paraFont::pos.x = X;
+	paraFont::pos.y = Y;
 
 	return paraFont::surface;
 }

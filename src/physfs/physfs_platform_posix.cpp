@@ -98,7 +98,7 @@ char *__PHYSFS_platformCalcUserDir(void)
         {
             const size_t envrlen = strlen(envr);
             const size_t add_dirsep = (envr[envrlen-1] != '/') ? 1 : 0;
-            retval = allocator.Malloc(envrlen + 1 + add_dirsep);
+            retval = static_cast<char *>(allocator.Malloc(envrlen + 1 + add_dirsep));
             if (retval)
             {
                 strcpy(retval, envr);
