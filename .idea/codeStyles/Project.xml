@@ -1,5 +1,26 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
+    <DB2CodeStyleSettings version="2">
+      <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
+      <option name="IMP_DECLARE_ALIGN_DEFAULT" value="true" />
+    </DB2CodeStyleSettings>
+    <DerbyCodeStyleSettings version="2">
+      <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
+      <option name="IMP_DECLARE_ALIGN_DEFAULT" value="true" />
+    </DerbyCodeStyleSettings>
+    <H2CodeStyleSettings version="2">
+      <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
+    </H2CodeStyleSettings>
+    <HSQLCodeStyleSettings version="2">
+      <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
+    </HSQLCodeStyleSettings>
+    <MSSQLCodeStyleSettings version="2">
+      <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
+      <option name="IMP_DECLARE_ALIGN_DEFAULT" value="true" />
+    </MSSQLCodeStyleSettings>
+    <MySQLCodeStyleSettings version="2">
+      <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
+    </MySQLCodeStyleSettings>
     <Objective-C>
       <option name="INDENT_PREPROCESSOR_DIRECTIVE" value="2" />
       <option name="NAMESPACE_BRACE_PLACEMENT" value="2" />
@@ -8,10 +29,25 @@
       <option name="FUNCTION_PARAMETERS_NEW_LINE_AFTER_LPAR" value="true" />
       <option name="FUNCTION_PARAMETERS_ALIGN_MULTILINE_PARS" value="true" />
     </Objective-C>
+    <OracleCodeStyleSettings version="2">
+      <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
+      <option name="IMP_DECLARE_ALIGN_DEFAULT" value="true" />
+    </OracleCodeStyleSettings>
+    <PostgresCodeStyleSettings version="2">
+      <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
+      <option name="IMP_DECLARE_ALIGN_DEFAULT" value="true" />
+    </PostgresCodeStyleSettings>
+    <SQLiteCodeStyleSettings version="2">
+      <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
+    </SQLiteCodeStyleSettings>
     <SqlCodeStyleSettings version="2">
       <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
       <option name="IMP_DECLARE_ALIGN_DEFAULT" value="true" />
     </SqlCodeStyleSettings>
+    <SybaseCodeStyleSettings version="2">
+      <option name="ROUTINE_ARG_ALIGN_TYPES" value="true" />
+      <option name="IMP_DECLARE_ALIGN_DEFAULT" value="true" />
+    </SybaseCodeStyleSettings>
     <codeStyleSettings language="CMake">
       <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
       <option name="SPACE_BEFORE_METHOD_CALL_PARENTHESES" value="true" />

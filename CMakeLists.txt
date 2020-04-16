@@ -92,7 +92,7 @@ set (CXX_SRCS
      src/system/util.cpp hdr/system/util.h
      src/classes/paraScript.cpp hdr/classes/paraScript.h
      src/classes/paraFileSystem.cpp hdr/io/fileSystem.h
-     src/system/scriptConfig.cpp hdr/system/scriptConfig.h src/system/startup.cpp hdr/system/startup.h src/io/fileSystem.cpp hdr/classes/paraFileSystem.h)
+     src/system/scriptConfig.cpp hdr/system/scriptConfig.h src/system/startup.cpp hdr/system/startup.h src/io/fileSystem.cpp hdr/classes/paraFileSystem.h src/classes/paraFont.cpp hdr/classes/paraFont.h hdr/wrapper.h)
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
 
@@ -100,7 +100,11 @@ SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
 if (WIN32)
     # Library path
     link_directories(./SDL2_WIN/lib/x86)
-    include_directories(./SDL2_WIN/include)
+    include_directories(
+            ./SDL2_WIN/include
+            ./hdr/script
+            ./hdr/physfs
+    )
 
         if (CMAKE_BUILD_TYPE MATCHES Debug)
 

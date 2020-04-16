@@ -3,10 +3,10 @@
 
 #define MODULE_NAME                 "clientModule"
 
+#include "paraLogFile.h"
 #include "../script/angelscript.h"
 #include "../script/scriptbuilder.h"
-#include "paraLogFile.h"
-#include <scriptstdstring.h>
+#include "../script/scriptstdstring.h"
 
 class paraScript
 {

@@ -24,5 +24,4 @@ private:
 	bool fileSystemReady = false;
 };
 
-
 #endif //PARA_PARAFILESYSTEM_H

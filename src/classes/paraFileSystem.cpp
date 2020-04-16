@@ -118,9 +118,9 @@ PHYSFS_sint64 paraFileSystem::getFileSize(paraLogFile &outFile, const std::strin
 }
 
 
-PHYSFS_sint64 PHYSFS_readBytes(
-		PHYSFS_File *handle, void *buffer,
-		PHYSFS_uint64 len);
+//PHYSFS_sint64 PHYSFS_readBytes(
+//		PHYSFS_File *handle, void *buffer,
+//		PHYSFS_uint64 len);
 
 //----------------------------------------------------------------------------------------------------------------------
 //

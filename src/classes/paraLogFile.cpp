@@ -1,6 +1,10 @@
 #include "../../hdr/classes/paraLogFile.h"
 
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Open the logfile
 bool paraLogFile::open(std::string fileName)
+//----------------------------------------------------------------------------------------------------------------------
 {
     logFileName = std::move(fileName);
 
@@ -12,18 +16,34 @@ bool paraLogFile::open(std::string fileName)
     return true;
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Write a string to the open logfile
 void paraLogFile::write(const std::string& logText)
+//----------------------------------------------------------------------------------------------------------------------
 {
-	paraLogFile::outFile << logText << std::endl;
+	if (paraLogFile::enabled())
+		paraLogFile::outFile << logText << std::endl;
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Flush the ofstream and then close it
 void paraLogFile::close()
+//----------------------------------------------------------------------------------------------------------------------
 {
-    flush(outFile);
-	paraLogFile::outFile.close();
+	if (paraLogFile::enabled())
+	{
+		flush(outFile);
+		paraLogFile::outFile.close();
+	}
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Check if file logging is available
 bool paraLogFile::enabled() const
+//----------------------------------------------------------------------------------------------------------------------
 {
     return fileLoggingOn;
 }

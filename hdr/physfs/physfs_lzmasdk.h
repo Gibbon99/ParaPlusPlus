@@ -3678,7 +3678,7 @@ static SRes SzDecodeLzma(const Byte *props, unsigned propsSize, UInt64 inSize, I
     {
       SizeT inProcessed = (SizeT)lookahead, dicPos = state.dicPos;
       ELzmaStatus status;
-      res = LzmaDec_DecodeToDic(&state, outSize, inBuf, &inProcessed, LZMA_FINISH_END, &status);
+      res = LzmaDec_DecodeToDic(&state, outSize, (const Byte *)inBuf, &inProcessed, LZMA_FINISH_END, &status);
       lookahead -= inProcessed;
       inSize -= inProcessed;
       if (res != SZ_OK)
@@ -3740,7 +3740,7 @@ static SRes SzDecodeLzma2(const Byte *props, unsigned propsSize, UInt64 inSize, 
     {
       SizeT inProcessed = (SizeT)lookahead, dicPos = state.decoder.dicPos;
       ELzmaStatus status;
-      res = Lzma2Dec_DecodeToDic(&state, outSize, inBuf, &inProcessed, LZMA_FINISH_END, &status);
+      res = Lzma2Dec_DecodeToDic(&state, outSize, (const Byte *)inBuf, &inProcessed, LZMA_FINISH_END, &status);
       lookahead -= inProcessed;
       inSize -= inProcessed;
       if (res != SZ_OK)

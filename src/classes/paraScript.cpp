@@ -37,7 +37,6 @@ bool paraScript::init(paraLogFile& outFile, asSFuncPtr &outputFunction)
 	return true;
 }
 
-
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Execute a script function from the host

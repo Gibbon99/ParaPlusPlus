@@ -3056,7 +3056,7 @@ int __PHYSFS_readAll(PHYSFS_Io *io, void *buf, const size_t _len)
 } /* __PHYSFS_readAll */
 
 
-void *__PHYSFS_initSmallAlloc(void *ptr, const size_t len)
+char * __PHYSFS_initSmallAlloc(void *ptr, const size_t len)
 {
     void *useHeap = ((ptr == NULL) ? ((void *) 1) : ((void *) 0));
     if (useHeap)  /* too large for stack allocation or alloca() failed. */
@@ -3068,7 +3068,7 @@ void *__PHYSFS_initSmallAlloc(void *ptr, const size_t len)
         /*printf("%s alloc'd (%lld) bytes at (%p).\n",
                 useHeap ? "heap" : "stack", (long long) len, ptr);*/
         *retval = useHeap;
-        return retval + 1;
+        return reinterpret_cast<char *>(retval + 1);
     } /* if */
 
     return NULL;  /* allocation failed. */
@@ -3205,7 +3205,7 @@ static __PHYSFS_DirTreeEntry *addAncestors(__PHYSFS_DirTree *dt, char *name)
 
 void *__PHYSFS_DirTreeAdd(__PHYSFS_DirTree *dt, char *name, const int isdir)
 {
-    __PHYSFS_DirTreeEntry *retval = __PHYSFS_DirTreeFind(dt, name);
+    __PHYSFS_DirTreeEntry *retval = static_cast<__PHYSFS_DirTreeEntry *>(__PHYSFS_DirTreeFind(dt, name));
     if (!retval)
     {
         const size_t alloclen = strlen(name) + 1 + dt->entrylen;
