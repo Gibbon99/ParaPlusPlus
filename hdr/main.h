@@ -29,3 +29,5 @@ extern paraLogFile    logFile;
 extern paraFileSystem fileSystem;
 extern paraFont       consoleFont;
 extern paraConsole    console;
+
+extern bool      quitLoop;

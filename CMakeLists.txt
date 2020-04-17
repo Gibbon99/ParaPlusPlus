@@ -92,7 +92,7 @@ set (CXX_SRCS
      src/system/util.cpp hdr/system/util.h
      src/classes/paraScript.cpp hdr/classes/paraScript.h
      src/classes/paraFileSystem.cpp hdr/io/fileSystem.h
-     src/system/scriptConfig.cpp hdr/system/scriptConfig.h src/system/startup.cpp hdr/system/startup.h src/io/fileSystem.cpp hdr/classes/paraFileSystem.h src/classes/paraFont.cpp hdr/classes/paraFont.h hdr/wrapper.h src/classes/paraConsole.cpp hdr/classes/paraConsole.h)
+     src/system/scriptConfig.cpp hdr/system/scriptConfig.h src/system/startup.cpp hdr/system/startup.h src/io/fileSystem.cpp hdr/classes/paraFileSystem.h src/classes/paraFont.cpp hdr/classes/paraFont.h hdr/wrapper.h src/classes/paraConsole.cpp hdr/classes/paraConsole.h src/system/frameUpdate.cpp hdr/system/frameUpdate.h src/system/frameRender.cpp hdr/system/frameRender.h)
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
 

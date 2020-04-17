@@ -10,5 +10,6 @@
 #define PARA_Renderer       SDL_Renderer
 #define PARA_Window         SDL_Window
 #define PARA_PixelFormat    SDL_PixelFormat
+#define PARA_GetTicks       SDL_GetTicks
 
 #endif //PARA_WRAPPER_H
