@@ -36,3 +36,7 @@ extern bool   quitLoop;
 extern Uint32 fpsPrint;
 extern Uint32 thinkFPSPrint;
 extern double percentIntoNextFrame;
+extern int virtualWinWidth;
+extern int virtualWinHeight;
+extern int windowWidth;
+extern int windowHeight;

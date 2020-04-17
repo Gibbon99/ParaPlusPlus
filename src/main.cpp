@@ -10,6 +10,11 @@ paraFileSystem fileSystem;
 paraFont       consoleFont;
 paraConsole    console;
 
+int virtualWinWidth;
+int virtualWinHeight;
+int windowWidth;
+int windowHeight;
+
 #define TICKS_PER_SECOND 30.0f
 #define MAX_FRAMESKIP 5
 

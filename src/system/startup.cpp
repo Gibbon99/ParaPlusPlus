@@ -2,20 +2,14 @@
 #include "../../hdr/system/scriptEngine.h"
 #include "../../hdr/system/scriptConfig.h"
 #include "../../hdr/io/fileSystem.h"
+#include "../../hdr/classes/configFile.h"
 
 #define APP_NAME    "Para++"
-
-//Screen dimension constants
-const int SCREEN_WIDTH  = 800;
-const int SCREEN_HEIGHT = 600;
 
 // The window we'll be rendering to
 PARA_Window *window = nullptr;
 
-// The surface contained by the window
-PARA_Surface *screenSurface = nullptr;
-
-//
+// Renderer associated with the window
 PARA_Renderer    *renderer;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -59,7 +53,7 @@ void sys_createScreen()
 		sys_shutdownWithError(sys_getString("SDL could not initialize. [ %s ]", SDL_GetError()));
 	else
 	{
-		if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE, &window, &renderer))
+		if (SDL_CreateWindowAndRenderer(windowWidth, windowHeight, SDL_WINDOW_RESIZABLE, &window, &renderer))
 			sys_shutdownWithError(sys_getString("Window could not be created. [ %s ]", SDL_GetError()));
 	}
 }
@@ -74,6 +68,8 @@ void sys_startSystems()
 		sys_shutdownWithError("Error: Could not start paraLogFile. Check write permissions on folder.");
 	logFile.write("Logfile started.");
 	console.add(sys_getString("Console started [ %s ]", APP_NAME));
+
+	io_readConfigValues("data/config.ini");
 
 	sys_createScreen();
 	console.add("Window system started.");
@@ -90,7 +86,7 @@ void sys_startSystems()
 
 	logFile.write("About to load font.");
 
-	consoleFont.load(logFile, 16, "data/Modenine.ttf");
+	consoleFont.load(logFile, 16, "data/console.ttf");
 	consoleFont.setColor(255, 255, 255, 255);
 
 #ifdef MY_DEBUG//=true
