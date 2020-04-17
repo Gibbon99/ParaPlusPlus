@@ -1,4 +1,5 @@
 #include "../../hdr/system/frameUpdate.h"
+#include "../../hdr/system/startup.h"
 
 SDL_Event evt;
 
@@ -14,6 +15,14 @@ void sys_gameTickRun()
 		if (evt.type == SDL_QUIT)
 		{
 			quitLoop = true;
+		}
+
+		if (evt.type == SDL_KEYDOWN)
+		{
+			if (evt.key.keysym.sym == SDLK_SPACE)
+			{
+				sys_createNewScreen(1024, 768, 0);
+			}
 		}
 	}
 }

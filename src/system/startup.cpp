@@ -10,7 +10,18 @@
 PARA_Window *window = nullptr;
 
 // Renderer associated with the window
-PARA_Renderer    *renderer;
+PARA_Renderer *renderer;
+
+int windowFullscreen        = false;
+int windowFullscreenDesktop = false;
+int windowBorderless        = false;
+int windowInputGrabbed      = true;
+int windowInputFocus        = true;
+int windowAllowHighDPI      = false;
+int  whichRenderer           = 0;
+int presentVSync            = true;
+
+std::vector<SDL_RendererInfo> rendererInfo;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -19,19 +30,6 @@ PARA_Renderer *sys_getRenderer()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return renderer;
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Return the suface contained by the current window
-PARA_Surface *sys_getScreenSurface()
-//----------------------------------------------------------------------------------------------------------------------
-{
-	if (nullptr == window)
-		sys_shutdownWithError("Attempting to use invalid window.");
-
-	//Get window surface
-	return SDL_GetWindowSurface(window);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -45,16 +43,146 @@ PARA_Window *sys_getWindow()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Start the Windowing system
-void sys_createScreen()
+// Decide which renderer to use
+Uint32 sys_getRendererType()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-		sys_shutdownWithError(sys_getString("SDL could not initialize. [ %s ]", SDL_GetError()));
-	else
+
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Get the information about the available renderers
+void sys_getRendererInfo()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int              numRenderDrivers;
+	SDL_RendererInfo renderDriverInfo;
+
+	numRenderDrivers = SDL_GetNumRenderDrivers();
+	if (numRenderDrivers <= 0)
+		sys_shutdownWithError("Error. No renderer drivers available.");
+
+	for (int i = 0; i != numRenderDrivers; i++)
 	{
-		if (SDL_CreateWindowAndRenderer(windowWidth, windowHeight, SDL_WINDOW_RESIZABLE, &window, &renderer))
-			sys_shutdownWithError(sys_getString("Window could not be created. [ %s ]", SDL_GetError()));
+		if (SDL_GetRenderDriverInfo(i, &renderDriverInfo) < 0)
+		{
+			sys_shutdownWithError(sys_getString("Error. Unable to get render driver info [ %s ]", SDL_GetError()));
+		}
+		rendererInfo.push_back(renderDriverInfo);
+
+		console.add(sys_getString("%i. Renderer name [ %s ]", i, renderDriverInfo.name));
+
+		if (renderDriverInfo.flags & SDL_RENDERER_SOFTWARE)
+			console.add(sys_getString("          %i. Software fallback", i));
+		if (renderDriverInfo.flags & SDL_RENDERER_ACCELERATED)
+			console.add(sys_getString("          %i. Uses hardware acceleration", i));
+		if (renderDriverInfo.flags & SDL_RENDERER_PRESENTVSYNC)
+			console.add(sys_getString("          %i. Uses screen refresh rate to sync", i));
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Create the flags to be used with the renderer
+Uint32 sys_createRendererFlags(int rendererIndex)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	Uint32 newFlags = 0;
+
+	if ((rendererIndex < 0) || (rendererIndex > (int)(rendererInfo.size() - 1)))
+		sys_shutdownWithError("Error. Using invalid renderindex to create renderer flags.");
+
+	if (presentVSync)
+		newFlags = SDL_RENDERER_PRESENTVSYNC;
+
+	if (rendererInfo[rendererIndex].flags & SDL_RENDERER_SOFTWARE)
+	{
+		newFlags = newFlags | SDL_RENDERER_SOFTWARE;
+		return newFlags;
+	}
+
+	if (rendererInfo[rendererIndex].flags & SDL_RENDERER_ACCELERATED)
+	{
+		newFlags = newFlags | SDL_RENDERER_ACCELERATED;
+		return newFlags;
+	}
+
+	return newFlags;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Create the flags to be used to create a window with
+Uint32 sys_createWindowFlags()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	Uint32 newFlags = 0;
+
+	if (windowFullscreen)
+		newFlags = newFlags | SDL_WINDOW_FULLSCREEN;
+
+	if (windowFullscreen && windowFullscreenDesktop)
+		newFlags = newFlags | SDL_WINDOW_FULLSCREEN_DESKTOP;
+
+	if (windowBorderless)
+		newFlags = newFlags | SDL_WINDOW_BORDERLESS;
+
+	if (windowInputGrabbed)
+		newFlags = newFlags | SDL_WINDOW_INPUT_GRABBED;
+
+	if (windowInputFocus)
+		newFlags = newFlags | SDL_WINDOW_INPUT_FOCUS;
+
+	if (windowAllowHighDPI)
+		newFlags = newFlags | SDL_WINDOW_ALLOW_HIGHDPI;
+
+	return newFlags;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Start the Windowing system
+void sys_createScreen(bool restart, int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, int rendererFlags)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	//
+	// Maybe need a mutex or a condition here - although no other thread should be rendering apart from main thread
+	//
+	if (restart)
+	{
+		SDL_DestroyRenderer(sys_getRenderer());
+		SDL_DestroyWindow(sys_getWindow());
+	}
+
+	if (!SDL_WasInit(SDL_INIT_EVERYTHING))
+	{
+		if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+			sys_shutdownWithError(sys_getString("SDL could not initialize. [ %s ]", SDL_GetError()));
+	}
+
+	window = SDL_CreateWindow(APP_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, newWinWidth, newWinHeight, winFlags);
+	if (nullptr == window)
+		sys_shutdownWithError(sys_getString("Window could not be created. [ %s ]", SDL_GetError()));
+
+	renderer = SDL_CreateRenderer(window, rendererIndex, rendererFlags);
+	if (nullptr == renderer)
+		sys_shutdownWithError(sys_getString("Renderer could not be created. [ %s ]", SDL_GetError()));
+
+	windowWidth = newWinWidth;
+	windowHeight = newWinHeight;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Verify that the renderer pulled from the config file is valid and can be used
+void sys_verifyRenderer()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if ((whichRenderer < 0) || (whichRenderer > (int) (rendererInfo.size() - 1)))
+	{
+		logFile.write("Attempted to use an invalid renderer. Resetting to default.");
+		whichRenderer = 0;
 	}
 }
 
@@ -71,10 +199,12 @@ void sys_startSystems()
 
 	io_readConfigValues("data/config.ini");
 
-	sys_createScreen();
-	console.add("Window system started.");
+	sys_getRendererInfo();  // Store the renderers available to the system
 
-	sys_getRendererInfo();
+	sys_verifyRenderer();
+
+	sys_createScreen(false, windowWidth, windowHeight, sys_createWindowFlags(), whichRenderer, sys_createRendererFlags(whichRenderer));
+	console.add(sys_getString("Window system started. Renderer [ %s ]", rendererInfo[whichRenderer].name));
 
 	if (!fileSystem.init(logFile, "data", "data"))
 		sys_shutdownWithError("Error. Could not start filesystem. Check directory structure.");
@@ -105,4 +235,14 @@ void sys_startSystems()
 	paraScriptInstance.cacheFunctions(logFile);
 
 
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Destroy the current window and renderer and create a new one
+void sys_createNewScreen(int winWidth, int winHeight, int newRenderer)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	sys_createScreen(true, winWidth, winHeight, sys_createWindowFlags(), newRenderer, sys_createRendererFlags(newRenderer));
+	console.add(sys_getString("Window system started. Renderer [ %s ]", rendererInfo[newRenderer].name));
 }

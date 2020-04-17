@@ -1,5 +1,6 @@
 #include "../../hdr/classes/configFile.h"
 #include "../../hdr/system/shutdown.h"
+#include "../../hdr/system/startup.h"
 
 //--------------------------------------------------------------------------------------------------------------------
 //
@@ -26,7 +27,30 @@ void io_readConfigValues(const std::string& fileName)
 	if (!iniFile.GetValueToInt("Main", "windowHeight", (int &)windowHeight, 0))
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowHeight"));
 
-	console.add(sys_getString("virtualWinWidth [ %i ]", virtualWinWidth));
+	if (!iniFile.GetValueToInt("Main", "windowFullscreen", (int &)windowFullscreen, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowFullscreen"));
+
+	if (!iniFile.GetValueToInt("Main", "windowFullscreenDesktop", (int &)windowFullscreenDesktop, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowFullscreenDesktop"));
+
+	if (!iniFile.GetValueToInt("Main", "windowBorderless", (int &)windowBorderless, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowBorderless"));
+
+	if (!iniFile.GetValueToInt("Main", "windowInputGrabbed", (int &)windowInputGrabbed, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowInputGrabbed"));
+
+	if (!iniFile.GetValueToInt("Main", "windowInputFocus", (int &)windowInputFocus, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowInputFocus"));
+
+	if (!iniFile.GetValueToInt("Main", "windowAllowHighDPI", (int &)windowAllowHighDPI, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowAllowHighDPI"));
+
+	if (!iniFile.GetValueToInt("Main", "whichRenderer", (int &)whichRenderer, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "whichRenderer"));
+
+	if (!iniFile.GetValueToInt("Main", "presentVSync", (int &)presentVSync, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "presentVSync"));
+
 }
 
 //std::stoi( str )
