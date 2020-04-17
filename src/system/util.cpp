@@ -80,3 +80,33 @@ void sys_freeMemory ()
 		}
 	}
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Get the information about the available renderers
+void sys_getRendererInfo()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int numRenderDrivers;
+	SDL_RendererInfo    renderDriverInfo;
+
+	numRenderDrivers = SDL_GetNumRenderDrivers();
+	if (numRenderDrivers < 0)
+		sys_shutdownWithError("Error. No renderer drivers available.");
+
+	for (int i = 0; i != numRenderDrivers; i++)
+	{
+		if (SDL_GetRenderDriverInfo(i, &renderDriverInfo) < 0)
+		{
+			sys_shutdownWithError(sys_getString("Error. Unable to get render driver info [ %s ]", SDL_GetError()));
+		}
+		console.add(sys_getString("%i. Renderer name [ %s ]", i, renderDriverInfo.name));
+
+		if (renderDriverInfo.flags & SDL_RENDERER_SOFTWARE)
+			console.add(sys_getString("          %i. Software fallback", i));
+		if (renderDriverInfo.flags & SDL_RENDERER_ACCELERATED)
+			console.add(sys_getString("          %i. Uses hardware acceleration", i));
+		if (renderDriverInfo.flags & SDL_RENDERER_PRESENTVSYNC)
+			console.add(sys_getString("          %i. Uses screen refresh rate to sync", i));
+	}
+}

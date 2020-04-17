@@ -11,3 +11,6 @@ char *sys_malloc (int memorySize, const std::string& keyName);
 
 // Go through memory map and free allocations
 void sys_freeMemory ();
+
+// Get the information about the available renderers
+void sys_getRendererInfo();

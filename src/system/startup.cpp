@@ -33,6 +33,9 @@ PARA_Renderer *sys_getRenderer()
 PARA_Surface *sys_getScreenSurface()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	if (nullptr == window)
+		sys_shutdownWithError("Attempting to use invalid window.");
+
 	//Get window surface
 	return SDL_GetWindowSurface(window);
 }
@@ -56,19 +59,8 @@ void sys_createScreen()
 		sys_shutdownWithError(sys_getString("SDL could not initialize. [ %s ]", SDL_GetError()));
 	else
 	{
-		window = SDL_CreateWindow(APP_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
-		                          SDL_WINDOW_SHOWN);
-		if (window == nullptr)
+		if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE, &window, &renderer))
 			sys_shutdownWithError(sys_getString("Window could not be created. [ %s ]", SDL_GetError()));
-		else
-		{
-			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-			if (nullptr == renderer)
-			{
-				SDL_DestroyWindow(window);
-				sys_shutdownWithError(sys_getString("Renderer could not be created. [ %s ]", SDL_GetError()));
-			}
-		}
 	}
 }
 
@@ -85,6 +77,8 @@ void sys_startSystems()
 
 	sys_createScreen();
 	console.add("Window system started.");
+
+	sys_getRendererInfo();
 
 	if (!fileSystem.init(logFile, "data", "data"))
 		sys_shutdownWithError("Error. Could not start filesystem. Check directory structure.");

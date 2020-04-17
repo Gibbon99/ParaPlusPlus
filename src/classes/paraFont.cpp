@@ -91,6 +91,8 @@ PARA_Surface    *paraFont::write(paraLogFile& outFile, int X, int Y, const std::
 	}
 	paraFont::pos.x = X;
 	paraFont::pos.y = Y;
+	paraFont::pos.w = paraFont::surface->w;
+	paraFont::pos.h = paraFont::surface->h;
 
 	return paraFont::surface;
 }

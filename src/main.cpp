@@ -13,12 +13,13 @@ paraConsole    console;
 #define TICKS_PER_SECOND 30.0f
 #define MAX_FRAMESKIP 5
 
-bool   quitLoop          = false;
-Uint32 maxNumUpdateLoops = 0;
-Uint32 fps               = 0;
-Uint32 fpsPrint          = 0;
-Uint32 thinkFPS          = 0;
-Uint32 thinkFPSPrint     = 0;
+bool   quitLoop             = false;
+Uint32 maxNumUpdateLoops    = 0;
+Uint32 fps                  = 0;
+Uint32 fpsPrint             = 0;
+Uint32 thinkFPS             = 0;
+Uint32 thinkFPSPrint        = 0;
+double percentIntoNextFrame = 0.0f;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -39,10 +40,12 @@ Uint32 fpsCallback(Uint32 interval, void *param)
 int main(int argc, char *argv[])
 //----------------------------------------------------------------------------------------------------------------------
 {
-	double msPerUpdate          = 1000.0f / TICKS_PER_SECOND;
-	Uint32 previousTime         = PARA_GetTicks();
-	double timeLag              = 0.0f;
-	double percentIntoNextFrame = 0.0f;
+	double msPerUpdate  = 1000.0f / TICKS_PER_SECOND;
+	Uint32 previousTime = PARA_GetTicks();
+	double timeLag      = 0.0f;
+
+	Uint32 currentTime = 0.0f;
+	Uint32 elapsedTime = 0.0f;
 
 	sys_startSystems();
 
@@ -50,11 +53,11 @@ int main(int argc, char *argv[])
 
 	while (!quitLoop)
 	{
-		Uint32 currentTime = PARA_GetTicks();
-		Uint32 elapsedTime = currentTime - previousTime;
+		currentTime              = PARA_GetTicks();
+		elapsedTime              = currentTime - previousTime;
 		previousTime             = currentTime;
-		timeLag += elapsedTime;r
 		maxNumUpdateLoops        = 0;
+		timeLag += elapsedTime;
 
 		while (timeLag >= msPerUpdate && maxNumUpdateLoops < MAX_FRAMESKIP)
 		{
@@ -68,14 +71,6 @@ int main(int argc, char *argv[])
 			percentIntoNextFrame = 1.0f;
 
 		sys_renderFrame(percentIntoNextFrame);
-
-		SDL_BlitSurface(consoleFont.write(logFile, 1, 10,
-		                                  sys_getString("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint,
-		                                                fpsPrint)),
-		                nullptr, sys_getScreenSurface(), &consoleFont.pos);
-
-		//Update the surface
-		SDL_UpdateWindowSurface(sys_getWindow());
 		fps++;
 	}
 	sys_shutdown();

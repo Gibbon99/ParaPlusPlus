@@ -8,7 +8,9 @@
 #ifdef WIN32
   #include "SDL.h"
 #else
+
   #include "SDL2/SDL.h"
+
 #endif
 
 #include "classes/paraScript.h"
@@ -30,4 +32,7 @@ extern paraFileSystem fileSystem;
 extern paraFont       consoleFont;
 extern paraConsole    console;
 
-extern bool      quitLoop;
+extern bool   quitLoop;
+extern Uint32 fpsPrint;
+extern Uint32 thinkFPSPrint;
+extern double percentIntoNextFrame;
