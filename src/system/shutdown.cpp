@@ -9,8 +9,11 @@ void sys_closeSystems()
 {
 	paraScriptInstance.stop();
 	sys_freeMemory ();
-
 	logFile.close();
+
+	evt_stopThreads();
+
+	evt_destroyMutexes();
 }
 
 //----------------------------------------------------------------------------------------------------------------------

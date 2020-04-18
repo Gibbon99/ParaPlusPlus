@@ -1,6 +1,6 @@
-Logfile started.
 Compiled against PhysFS version 3.0.2.
 Linked against PhysFS version 3.0.2.
+Filesystem started.
 Failed to set search path - [ data/data ] - [ not found ]
 Failed to set search path - [ data/scripts ] - [ not found ]
 About to load font.

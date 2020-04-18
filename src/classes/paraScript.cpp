@@ -1,10 +1,11 @@
 #include "../../hdr/classes/paraScript.h"
 #include "../main.h"
+#include "../../hdr/io/logFile.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start the script engine
-bool paraScript::init(paraLogFile& outFile, asSFuncPtr &outputFunction)
+bool paraScript::init(asSFuncPtr &outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 //	io_getScriptFileNames();
@@ -14,7 +15,7 @@ bool paraScript::init(paraLogFile& outFile, asSFuncPtr &outputFunction)
 	if (nullptr == scriptEngine)
 	{
 		scriptEngineStarted = false;
-		outFile.write(
+		log_addEvent(
 				sys_getString("Script: Error: Failed to create script engine- [ %s ]",
 				              paraScript::getScriptError(0).c_str()));
 	}
@@ -22,17 +23,17 @@ bool paraScript::init(paraLogFile& outFile, asSFuncPtr &outputFunction)
 	// The script compiler will write any compiler messages to the callback.
 	scriptEngine->SetMessageCallback(outputFunction, nullptr, asCALL_CDECL);
 
-	outFile.write(sys_getString("Script: Script Engine started."));
+	log_addEvent(sys_getString("Script: Script Engine started."));
 
 	RegisterStdString(scriptEngine);
 
 //	RegisterScriptArray(scriptEngine, true);
 
 	// What version are we running
-	outFile.write(sys_getString("Script: Script Engine version - [ %s ]", asGetLibraryVersion()));
+	log_addEvent(sys_getString("Script: Script Engine version - [ %s ]", asGetLibraryVersion()));
 
 	// What options are compiled
-	outFile.write(sys_getString("Script: Options - [ %s ]", asGetLibraryOptions()));
+	log_addEvent(sys_getString("Script: Options - [ %s ]", asGetLibraryOptions()));
 
 	return true;
 }
@@ -40,7 +41,7 @@ bool paraScript::init(paraLogFile& outFile, asSFuncPtr &outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Execute a script function from the host
-void paraScript::run(paraLogFile& outFile, const std::string &functionName, const std::string &param)
+void paraScript::run(const std::string &functionName, const std::string &param)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int returnCode = 0;
@@ -57,14 +58,14 @@ void paraScript::run(paraLogFile& outFile, const std::string &functionName, cons
 
 		if (scriptEngine != context->GetEngine())
 		{
-			outFile.write(sys_getString("Context DOES NOT belong to this engine."));
+			log_addEvent(sys_getString("Context DOES NOT belong to this engine."));
 		}
 
 		if (funcItr.scriptName == functionName)
 		{
 			if (scriptEngine != funcItr.funcID->GetEngine())
 			{
-				outFile.write(sys_getString("Function DOES NOT belong to this engine."));
+				log_addEvent(sys_getString("Function DOES NOT belong to this engine."));
 			}
 
 			context->Prepare(funcItr.funcID);
@@ -97,37 +98,37 @@ void paraScript::run(paraLogFile& outFile, const std::string &functionName, cons
 				//
 				if (returnCode == asEXECUTION_ABORTED)
 				{
-					outFile.write(sys_getString(
+					log_addEvent(sys_getString(
 							"Script: The script was aborted before it could finish. Probably it timed out."));
 				}
 				else if (returnCode == asEXECUTION_EXCEPTION)
 				{
-					outFile.write(sys_getString("Script: The script ended with an exception."));
+					log_addEvent(sys_getString("Script: The script ended with an exception."));
 					//
 					// Write some information about the script exception
 					//
 					asIScriptFunction *func = context->GetExceptionFunction();
-					outFile.write(sys_getString("Func: [ %s ]", func->GetDeclaration()));
-					outFile.write(sys_getString("Module: [ %s ]", func->GetModuleName()));
-					outFile.write(sys_getString("Section: [ %s ]", func->GetScriptSectionName()));
-					outFile.write(sys_getString("Line: [ %i ]", context->GetExceptionLineNumber()));
-					outFile.write(sys_getString("Desc: [ %s ]", context->GetExceptionString()));
+					log_addEvent(sys_getString("Func: [ %s ]", func->GetDeclaration()));
+					log_addEvent(sys_getString("Module: [ %s ]", func->GetModuleName()));
+					log_addEvent(sys_getString("Section: [ %s ]", func->GetScriptSectionName()));
+					log_addEvent(sys_getString("Line: [ %i ]", context->GetExceptionLineNumber()));
+					log_addEvent(sys_getString("Desc: [ %s ]", context->GetExceptionString()));
 				}
 				else
 				{
-					outFile.write(sys_getString("The script ended for an unknown reason [ %i ].", returnCode));
+					log_addEvent(sys_getString("The script ended for an unknown reason [ %i ].", returnCode));
 				}
 			}
 			return;
 		}
 	}
-	outFile.write(sys_getString("Function [ %s ] not found in script", functionName.c_str()));
+	log_addEvent(sys_getString("Function [ %s ] not found in script", functionName.c_str()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Cache the functionID from functions in the scripts
-void paraScript::cacheFunctions(paraLogFile& outFile)
+void paraScript::cacheFunctions()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_scriptFunctionName tempFunctionName;
@@ -145,11 +146,11 @@ void paraScript::cacheFunctions(paraLogFile& outFile)
 
 		if (tempFunctionName.funcID == nullptr)
 		{
-			outFile.write(sys_getString("Failed to get function ID for [ %s ]", funcItr.functionName.c_str()));
+			log_addEvent(sys_getString("Failed to get function ID for [ %s ]", funcItr.functionName.c_str()));
 		}
 		else
 		{
-			outFile.write(sys_getString("Func ID for [ %s ] - [ %i ]", funcItr.functionName.c_str(),
+			log_addEvent(sys_getString("Func ID for [ %s ] - [ %i ]", funcItr.functionName.c_str(),
 			                                tempFunctionName.funcID));
 
 			//
@@ -174,7 +175,7 @@ void paraScript::cacheFunctions(paraLogFile& outFile)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new script to the array to be compiled
-void paraScript::addScript(paraLogFile& outFile, std::string sectionName, std::string scriptContents)
+void paraScript::addScript(std::string sectionName, std::string scriptContents)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_scriptFileCache scriptFile;
@@ -188,7 +189,7 @@ void paraScript::addScript(paraLogFile& outFile, std::string sectionName, std::s
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Compile the script files into a single module
-bool paraScript::loadAndCompile(paraLogFile& outFile)
+bool paraScript::loadAndCompile()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int  retCode  = 0;
@@ -197,7 +198,7 @@ bool paraScript::loadAndCompile(paraLogFile& outFile)
 
 	if (retCode < 0)
 	{
-		outFile.write(sys_getString("Failed to start script module."));
+		log_addEvent(sys_getString("Failed to start script module."));
 	}
 
 	for (auto scriptItr : scriptFileCache)
@@ -206,16 +207,16 @@ bool paraScript::loadAndCompile(paraLogFile& outFile)
 		switch (retCode)
 		{
 			case 0:
-				outFile.write(sys_getString("Section with same name has already been added [ %s ]. Ignoring.",
+				log_addEvent(sys_getString("Section with same name has already been added [ %s ]. Ignoring.",
 				                                scriptItr.sectionName.c_str()));
 				break;
 
 			case 1:
-				outFile.write(sys_getString("Section has been added [ %s ]", scriptItr.sectionName.c_str()));
+				log_addEvent(sys_getString("Section has been added [ %s ]", scriptItr.sectionName.c_str()));
 				break;
 
 			default:
-				outFile.write(sys_getString("Failed to add script section [ %s ].", scriptItr.sectionName.c_str()));
+				log_addEvent(sys_getString("Failed to add script section [ %s ].", scriptItr.sectionName.c_str()));
 				break;
 		}
 	}
@@ -230,7 +231,7 @@ bool paraScript::loadAndCompile(paraLogFile& outFile)
 		return false;
 	}
 
-	outFile.write(sys_getString("Compiled scripts."));
+	log_addEvent(sys_getString("Compiled scripts."));
 
 	// Cache the functionID from functions in the scripts
 //	sys_scriptCacheScriptFunctions();
@@ -241,7 +242,7 @@ bool paraScript::loadAndCompile(paraLogFile& outFile)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Register all the functions to make available to the script
-void paraScript::addHostFunction(paraLogFile& outFile, const std::string &funcName, asSFuncPtr& funcPtr)
+void paraScript::addHostFunction(const std::string &funcName, asSFuncPtr &funcPtr)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int            returnCode;
@@ -253,7 +254,7 @@ void paraScript::addHostFunction(paraLogFile& outFile, const std::string &funcNa
 	{
 		if (scriptItr.scriptFunctionName == funcName)
 		{
-			outFile.write(sys_getString("Function [ %s ] has already been added.", funcName.c_str()));
+			log_addEvent(sys_getString("Function [ %s ] has already been added.", funcName.c_str()));
 			return;
 		}
 	}
@@ -276,11 +277,11 @@ void paraScript::addHostFunction(paraLogFile& outFile, const std::string &funcNa
 	returnCode = scriptEngine->RegisterGlobalFunction(funcName.c_str(), (asSFuncPtr &&) funcPtr, asCALL_CDECL);
 	if (returnCode < 0)
 	{
-		outFile.write(sys_getString("Failed to registerGlobalFunction [ %s ] - [ %s ]", funcName.c_str(),
+		log_addEvent(sys_getString("Failed to registerGlobalFunction [ %s ] - [ %s ]", funcName.c_str(),
 		                                paraScript::getScriptError(returnCode).c_str()));
 	}
 
-	outFile.write(sys_getString("Script: Registered function - [ %s ]", funcName.c_str()));
+	log_addEvent(sys_getString("Script: Registered function - [ %s ]", funcName.c_str()));
 	hostScriptFunctions.push_back(tempFunc);
 }
 
@@ -288,7 +289,7 @@ void paraScript::addHostFunction(paraLogFile& outFile, const std::string &funcNa
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Print out the variables that Angelscript knows about internally - DEBUGGING
-void paraScript::debugState(paraLogFile& outFile)
+void paraScript::debugState()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	asUINT stackLevel = 0;
@@ -300,7 +301,7 @@ void paraScript::debugState(paraLogFile& outFile)
 	void *varPointer1 = ctx->GetThisPointer();
 	if (typeId1)
 	{
-		outFile.write(sys_getString(" this = 0x%x\n", varPointer1));
+		log_addEvent(sys_getString(" this = 0x%x\n", varPointer1));
 	}
 
 	asUINT         numVars = ctx->GetVarCount();
@@ -310,25 +311,25 @@ void paraScript::debugState(paraLogFile& outFile)
 		void *varPointer = ctx->GetAddressOfVar(n);
 		if (typeId == engine->GetTypeIdByDecl("int"))
 		{
-			outFile.write(sys_getString(" %s = %d\n", ctx->GetVarDeclaration(n, stackLevel), *(int *) varPointer));
+			log_addEvent(sys_getString(" %s = %d\n", ctx->GetVarDeclaration(n, stackLevel), *(int *) varPointer));
 		}
 		else if (typeId == engine->GetTypeIdByDecl("string"))
 		{
 			auto *str = (std::string *) varPointer;
 			if (str)
 			{
-				outFile.write(sys_getString(" %s = '%s'\n", ctx->GetVarDeclaration(n, stackLevel), str->c_str()));
+				log_addEvent(sys_getString(" %s = '%s'\n", ctx->GetVarDeclaration(n, stackLevel), str->c_str()));
 			}
 			else
 			{
-				outFile.write(sys_getString(" %s = <null>\n", ctx->GetVarDeclaration(n, stackLevel)));
+				log_addEvent(sys_getString(" %s = <null>\n", ctx->GetVarDeclaration(n, stackLevel)));
 			}
 		}
 		else
 		{
 //			auto *getValue = (b2Vec2 *) varPointer;
-//			outFile.write(sys_getString(" %s = {...}\n", ctx->GetVarDeclaration(n, stackLevel)));
-//			outFile.write(sys_getString("Debug [ %3.3f %3.3f ]\n", getValue->x, getValue->y));
+//			log_addEvent(sys_getString(" %s = {...}\n", ctx->GetVarDeclaration(n, stackLevel)));
+//			log_addEvent(sys_getString("Debug [ %3.3f %3.3f ]\n", getValue->x, getValue->y));
 		}
 	}
 }
@@ -356,7 +357,7 @@ void paraScript::stop()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new function that is defined in a script - create name to call it from host
-void paraScript::addScriptFunction(paraLogFile& outFile, const std::string &funcName, std::string hostCallName)
+void paraScript::addScriptFunction(const std::string &funcName, std::string hostCallName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_scriptFunctionName tempFunctionName;
@@ -365,7 +366,7 @@ void paraScript::addScriptFunction(paraLogFile& outFile, const std::string &func
 	{
 		if (funcItr.functionName == funcName)
 		{
-			outFile.write(sys_getString("Function name [ %s ] has already been added.", funcName.c_str()));
+			log_addEvent(sys_getString("Function name [ %s ] has already been added.", funcName.c_str()));
 			return;
 		}
 	}
@@ -382,7 +383,7 @@ void paraScript::addScriptFunction(paraLogFile& outFile, const std::string &func
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a variable to the array holding all the script accessible variables
-void paraScript::addHostVariable(paraLogFile& outFile, const std::string &varName, void *varPtr)
+void paraScript::addHostVariable(const std::string &varName, void *varPtr)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_hostScriptVariables tempVar;
@@ -394,17 +395,17 @@ void paraScript::addHostVariable(paraLogFile& outFile, const std::string &varNam
 	{
 		if (varItr.scriptFunctionName == varName)
 		{
-			outFile.write(sys_getString("Variable [ %s ] has already been added.", varName.c_str()));
+			log_addEvent(sys_getString("Variable [ %s ] has already been added.", varName.c_str()));
 			return;
 		}
 	}
 
 	if (scriptEngine->RegisterGlobalProperty(varName.c_str(), (void *) varPtr) < 0)
 	{
-		outFile.write(sys_getString("Script: Error: Couldn't register variable - [ %s ]", varName.c_str()));
+		log_addEvent(sys_getString("Script: Error: Couldn't register variable - [ %s ]", varName.c_str()));
 	}
 
-	outFile.write(sys_getString("Script: Registered variable - [ %s ]", varName.c_str()));
+	log_addEvent(sys_getString("Script: Registered variable - [ %s ]", varName.c_str()));
 	hostVariables.push_back(tempVar);
 }
 

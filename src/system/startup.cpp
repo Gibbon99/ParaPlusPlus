@@ -4,8 +4,8 @@
 #include "../../hdr/system/scriptConfig.h"
 #include "../../hdr/io/fileSystem.h"
 #include "../../hdr/io/configFile.h"
-
-#define APP_NAME    "Para++"
+#include "../../hdr/io/logFile.h"
+#include "../../hdr/io/console.h"
 
 // The window we'll be rendering to
 PARA_Window *window = nullptr;
@@ -92,15 +92,15 @@ void sys_createRenderTargetTexture(int targetWidth, int targetHeight)
 	// Influence how the scaling is done when rendering the target texture to screen
 	hintValue = std::to_string(renderScaleQuality);
 	if (SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, hintValue.c_str()))
-		console.add("Hint SDL_HINT_RENDER_SCALE_QUALITY applied.");
+		con_addEvent(0, "Hint SDL_HINT_RENDER_SCALE_QUALITY applied.");
 	else
-		console.add("Hint SDL_HINT_RENDER_SCALE_QUALITY not applied.");
+		con_addEvent(0, "Hint SDL_HINT_RENDER_SCALE_QUALITY not applied.");
 
 	renderTargetTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, targetWidth, targetHeight);
 	if (nullptr == renderTargetTexture)
 	{
 		renderToTextureAvailable = false;
-		console.add(sys_getString("Unable to create render target texture [ %s ]", SDL_GetError()));
+		con_addEvent(0, sys_getString("Unable to create render target texture [ %s ]", SDL_GetError()));
 	}
 
 	renderToTextureAvailable = true;
@@ -127,16 +127,16 @@ void sys_getRendererInfo()
 		}
 		rendererInfo.push_back(renderDriverInfo);
 
-		console.add(sys_getString("%i. Renderer name [ %s ]", i, renderDriverInfo.name));
+		con_addEvent(0, sys_getString("%i. Renderer name [ %s ]", i, renderDriverInfo.name));
 
 		if (renderDriverInfo.flags & SDL_RENDERER_SOFTWARE)
-			console.add(sys_getString("          %i. Software fallback", i));
+			con_addEvent(0, sys_getString("          %i. Software fallback", i));
 		if (renderDriverInfo.flags & SDL_RENDERER_ACCELERATED)
-			console.add(sys_getString("          %i. Uses hardware acceleration", i));
+			con_addEvent(0, sys_getString("          %i. Uses hardware acceleration", i));
 		if (renderDriverInfo.flags & SDL_RENDERER_PRESENTVSYNC)
-			console.add(sys_getString("          %i. Uses screen refresh rate to sync", i));
+			con_addEvent(0, sys_getString("          %i. Uses screen refresh rate to sync", i));
 		if (renderDriverInfo.flags & SDL_RENDERER_TARGETTEXTURE)
-			console.add(sys_getString("          %i. Supports render to texture", i));
+			con_addEvent(0, sys_getString("          %i. Supports render to texture", i));
 	}
 }
 
@@ -215,12 +215,6 @@ void sys_createScreen(
 		SDL_DestroyWindow(sys_getWindow());
 	}
 
-	if (!SDL_WasInit(SDL_INIT_EVERYTHING))
-	{
-		if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-			sys_shutdownWithError(sys_getString("SDL could not initialize. [ %s ]", SDL_GetError()));
-	}
-
 	window = SDL_CreateWindow(APP_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, newWinWidth, newWinHeight, winFlags);
 	if (nullptr == window)
 		sys_shutdownWithError(sys_getString("Window could not be created. [ %s ]", SDL_GetError()));
@@ -262,10 +256,15 @@ void sys_verifyRenderer()
 void sys_startSystems()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (!logFile.open("paraLogFile.txt"))
-		sys_shutdownWithError("Error: Could not start paraLogFile. Check write permissions on folder.");
-	logFile.write("Logfile started.");
-	console.add(sys_getString("Console started [ %s ]", APP_NAME));
+	if (!SDL_WasInit(SDL_INIT_EVERYTHING))
+	{
+		if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+			sys_shutdownWithError(sys_getString("SDL could not initialize. [ %s ]", SDL_GetError()));
+	}
+
+	io_initLogFile();
+
+	con_initConsole();
 
 	io_readConfigValues("data/config.ini");
 
@@ -275,35 +274,35 @@ void sys_startSystems()
 
 	sys_createScreen(false, windowWidth, windowHeight, sys_createWindowFlags(), whichRenderer, sys_createRendererFlags(whichRenderer), logicalWinWidth,
 	                 logicalWinHeight);
-	console.add(sys_getString("Window system started. Renderer [ %s ]", rendererInfo[whichRenderer].name));
+	con_addEvent(0, sys_getString("Window system started. Renderer [ %s ]", rendererInfo[whichRenderer].name));
 
-	if (!fileSystem.init(logFile, "data", "data"))
+	if (!fileSystem.init("data", "data"))
 		sys_shutdownWithError("Error. Could not start filesystem. Check directory structure.");
 
-	console.add("Filesystem started.");
+	log_addEvent("Filesystem started.");
 
-	fileSystem.addPath(logFile, "data/data");
-	fileSystem.addPath(logFile, "data/scripts");
+	fileSystem.addPath("data/data");
+	fileSystem.addPath("data/scripts");
 
-	logFile.write("About to load font.");
+	log_addEvent("About to load font.");
 
-	consoleFont.load(logFile, 12, "data/console.ttf");
+	consoleFont.load(12, "data/console.ttf");
 	consoleFont.setColor(255, 255, 255, 255);
 
 #ifdef MY_DEBUG//=true
-	logFile.write("Running DEBUG version.");
+	log_addEvent("Running DEBUG version.");
 #endif
 
-	if (!paraScriptInstance.init(logFile, reinterpret_cast<asSFuncPtr &>(scr_Output)))
+	if (!paraScriptInstance.init(reinterpret_cast<asSFuncPtr &>(scr_Output)))
 		sys_shutdownWithError("Error: Could not start Scripting engine.");
 
-	console.add("Scripting started.");
+	sys_addEvent(EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_WRITE, 0, ("Scripting started."));
 	sys_scriptInitScriptFunctions();
 	sys_scriptInitFunctions();
 	sys_scriptInitVariables();
 	io_getScriptFileNames("scripts");
-	paraScriptInstance.loadAndCompile(logFile);
-	paraScriptInstance.cacheFunctions(logFile);
+	paraScriptInstance.loadAndCompile();
+	paraScriptInstance.cacheFunctions();
 
 
 }
@@ -315,5 +314,5 @@ void sys_createNewScreen(int winWidth, int winHeight, int newRenderer)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	sys_createScreen(true, winWidth, winHeight, sys_createWindowFlags(), newRenderer, sys_createRendererFlags(newRenderer), winWidth, winHeight);
-	console.add(sys_getString("Window system started. Renderer [ %s ]", rendererInfo[newRenderer].name));
+	con_addEvent(0, sys_getString("Window system started. Renderer [ %s ]", rendererInfo[newRenderer].name));
 }

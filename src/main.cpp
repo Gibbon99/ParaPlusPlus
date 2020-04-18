@@ -3,6 +3,9 @@
 #include "../hdr/system/startup.h"
 #include "../hdr/system/frameUpdate.h"
 #include "../hdr/system/frameRender.h"
+#include "../hdr/classes/paraEvent.h"
+
+#include <queue>
 
 paraScript     paraScriptInstance;
 paraLogFile    logFile;
@@ -75,6 +78,7 @@ int main(int argc, char *argv[])
 		sys_renderFrame(percentIntoNextFrame);
 		fps++;
 	}
+
 	sys_shutdown();
 
 	return 0;

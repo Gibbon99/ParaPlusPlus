@@ -16,7 +16,7 @@ void io_getScriptFileNames(const std::string& directoryName)
 	{
 		tempFileName = *i;
 
-		paraScriptInstance.addScript(logFile, tempFileName, fileSystem.getString (logFile, tempFileName));
+		paraScriptInstance.addScript(tempFileName, fileSystem.getString(tempFileName));
 
 		logFile.write(sys_getString("Script [ %s ]", tempFileName.c_str()));
 	}

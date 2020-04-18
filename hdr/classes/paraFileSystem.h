@@ -8,17 +8,17 @@
 class paraFileSystem
 {
 public:
-	bool init(paraLogFile& outFile, const std::string& baseDirectory, const std::string& writeDirectory);
+	bool init(const std::string &baseDirectory, const std::string &writeDirectory);
 
-	bool addPath(paraLogFile& outFile, const std::string& newDirectory);
+	bool addPath(const std::string &newDirectory);
 
-	PHYSFS_sint64 getFileSize ( paraLogFile &outFile, const std::string &fileName );
+	PHYSFS_sint64 getFileSize(const std::string &fileName);
 
-	int getFileIntoMemory ( paraLogFile &outFile, const std::string &fileName, void *results );
+	int getFileIntoMemory(const std::string &fileName, void *results);
 
-	bool doesFileExist(paraLogFile &outFile, const std::string& fileName);
+	bool doesFileExist(const std::string &fileName);
 
-	std::string getString(paraLogFile &outFile, const std::string &fileName);
+	std::string getString(const std::string &fileName);
 
 private:
 	bool fileSystemReady = false;

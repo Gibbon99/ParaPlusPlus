@@ -8,13 +8,13 @@ bool quitProgram;
 void sys_scriptInitScriptFunctions ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraScriptInstance.addScriptFunction (logFile, "void script_loadAllResources()", "script_loadAllResources");
-	paraScriptInstance.addScriptFunction (logFile, "void script_initGUI()", "script_initGUI");
-	paraScriptInstance.addScriptFunction (logFile, "void as_guiHandleElementAction(string &in objectID)", "as_guiHandleElementAction");
-	paraScriptInstance.addScriptFunction (logFile, "void as_guiHandleTerminalAction(string &in objectID)", "as_guiHandleTerminalAction");
-	paraScriptInstance.addScriptFunction (logFile, "void as_guiHandleDatabaseAction(string &in objectID)", "as_guiHandleDatabaseAction");
-	paraScriptInstance.addScriptFunction (logFile, "void as_guiHandleTransferAction(string &in objectID)", "as_guiHandleTransferAction");
-	paraScriptInstance.addScriptFunction (logFile, "void as_guiHandleDialogAction(string &in objectID)", "as_guiHandleDialogAction");
+	paraScriptInstance.addScriptFunction("void script_loadAllResources()", "script_loadAllResources");
+	paraScriptInstance.addScriptFunction("void script_initGUI()", "script_initGUI");
+	paraScriptInstance.addScriptFunction("void as_guiHandleElementAction(string &in objectID)", "as_guiHandleElementAction");
+	paraScriptInstance.addScriptFunction("void as_guiHandleTerminalAction(string &in objectID)", "as_guiHandleTerminalAction");
+	paraScriptInstance.addScriptFunction("void as_guiHandleDatabaseAction(string &in objectID)", "as_guiHandleDatabaseAction");
+	paraScriptInstance.addScriptFunction("void as_guiHandleTransferAction(string &in objectID)", "as_guiHandleTransferAction");
+	paraScriptInstance.addScriptFunction("void as_guiHandleDialogAction(string &in objectID)", "as_guiHandleDialogAction");
 }
 
 
@@ -24,7 +24,7 @@ void sys_scriptInitScriptFunctions ()
 void sys_scriptInitVariables ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraScriptInstance.addHostVariable (logFile, "int quitProgram", &quitProgram);
+	paraScriptInstance.addHostVariable("int quitProgram", &quitProgram);
 }
 
 int sys_scriptPrintInt()
@@ -39,6 +39,6 @@ int sys_scriptPrintInt()
 void sys_scriptInitFunctions ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraScriptInstance.addHostFunction (logFile, "void sys_printConInt(string &in, uint param)", reinterpret_cast<asSFuncPtr &>(sys_scriptPrintInt));
+	paraScriptInstance.addHostFunction("void sys_printConInt(string &in, uint param)", reinterpret_cast<asSFuncPtr &>(sys_scriptPrintInt));
 
 }

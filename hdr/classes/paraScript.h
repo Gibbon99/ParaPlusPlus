@@ -11,25 +11,25 @@
 class paraScript
 {
 public:
-	bool init(paraLogFile& outFile, asSFuncPtr &outputFunction);
+	bool init(asSFuncPtr &outputFunction);
 
-	void addHostVariable(paraLogFile& outFile, const std::string &varName, void *varPtr);
+	void addHostVariable(const std::string &varName, void *varPtr);
 
-	void addScriptFunction(paraLogFile& outFile, const std::string &funcName, std::string hostCallName);
+	void addScriptFunction(const std::string &funcName, std::string hostCallName);
 
-	void addHostFunction(paraLogFile& outFile, const std::string &funcName, asSFuncPtr &funcPtr);
+	void addHostFunction(const std::string &funcName, asSFuncPtr &funcPtr);
 
 	void stop();
 
-	void debugState(paraLogFile& outFile);
+	void debugState();
 
-	bool loadAndCompile(paraLogFile& outFile);
+	bool loadAndCompile();
 
-	void addScript(paraLogFile& outFile, std::string sectionName, std::string scriptContents);
+	void addScript(std::string sectionName, std::string scriptContents);
 
-	void cacheFunctions(paraLogFile& outFile);
+	void cacheFunctions();
 
-	void run(paraLogFile& outFile, const std::string &functionName, const std::string &param);
+	void run(const std::string &functionName, const std::string &param);
 
 private:
 	static std::string getScriptError(int errNo);
