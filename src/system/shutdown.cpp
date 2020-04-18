@@ -1,4 +1,17 @@
 #include "../../hdr/system/shutdown.h"
+#include "../../hdr/system/startup.h"
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Close down systems
+void sys_closeSystems()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	paraScriptInstance.stop();
+	sys_freeMemory ();
+
+	logFile.close();
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -6,8 +19,12 @@
 void sys_shutdownWithError(const std::string& errorMessage)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	sys_freeMemory ();
-    cout << errorMessage << endl;
+	if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Fatal Error", errorMessage.c_str(), sys_getWindow()) < 0)
+	{
+		cout << "Fatal error : " << errorMessage << endl;
+	}
+
+	sys_closeSystems();
 
     exit(-1);
 }
@@ -18,10 +35,7 @@ void sys_shutdownWithError(const std::string& errorMessage)
 void sys_shutdown()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraScriptInstance.stop();
-	sys_freeMemory ();
-
-	logFile.close();
+	sys_closeSystems();
 
 	exit(0);
 }

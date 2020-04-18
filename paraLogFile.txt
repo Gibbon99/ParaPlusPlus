@@ -7,9 +7,10 @@ About to load font.
 Compiled with SDL_ttf version: 2.0.15
 Running with SDL_ttf version: 2.0.15
 Loaded font file [ data/console.ttf ]
+Running DEBUG version.
 Script: Script Engine started.
-Script: Script Engine version - [ 2.32.0 DEBUG ]
-Script: Options - [  AS_WIN AS_X86  ]
+Script: Script Engine version - [ 2.32.0 ]
+Script: Options - [  AS_64BIT_PTR AS_LINUX AS_X64_GCC  ]
 Script: Registered function - [ void sys_printConInt(string &in, uint param) ]
 Script: Registered variable - [ int quitProgram ]
 Compiled scripts.

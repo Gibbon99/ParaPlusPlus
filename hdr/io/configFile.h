@@ -1,4 +1,4 @@
-#include "IniFileParser.hpp"
+#include "../classes/IniFileParser.hpp"
 
 #ifndef PARA_CONFIGFILE_H
 #define PARA_CONFIGFILE_H

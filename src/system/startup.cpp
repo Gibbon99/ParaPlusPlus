@@ -1,8 +1,9 @@
+#include <cassert>
 #include "../../hdr/system/startup.h"
 #include "../../hdr/system/scriptEngine.h"
 #include "../../hdr/system/scriptConfig.h"
 #include "../../hdr/io/fileSystem.h"
-#include "../../hdr/classes/configFile.h"
+#include "../../hdr/io/configFile.h"
 
 #define APP_NAME    "Para++"
 
@@ -10,16 +11,26 @@
 PARA_Window *window = nullptr;
 
 // Renderer associated with the window
-PARA_Renderer *renderer;
+PARA_Renderer *renderer = nullptr;
 
+// Target render texture
+PARA_Texture    *renderTargetTexture = nullptr;
+
+int logicalWinWidth;
+int logicalWinHeight;
+int windowWidth;
+int windowHeight;
 int windowFullscreen        = false;
 int windowFullscreenDesktop = false;
 int windowBorderless        = false;
 int windowInputGrabbed      = true;
 int windowInputFocus        = true;
 int windowAllowHighDPI      = false;
-int  whichRenderer           = 0;
+int whichRenderer           = 0;
 int presentVSync            = true;
+int renderScaleQuality      = 0;
+
+bool renderToTextureAvailable = false;
 
 std::vector<SDL_RendererInfo> rendererInfo;
 
@@ -39,6 +50,60 @@ PARA_Window *sys_getWindow()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return window;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return if render to texture is in use
+bool sys_useRenderTarget()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return renderToTextureAvailable;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the render target texture handle
+PARA_Texture *sys_getRenderTarget()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	SDL_assert_release(renderTargetTexture != nullptr);
+	return renderTargetTexture;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Create the render target texture
+void sys_createRenderTargetTexture(int targetWidth, int targetHeight)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	std::string hintValue;
+
+//	0 or nearest 	nearest pixel sampling
+//	1 or linear 	linear filtering (supported by OpenGL and Direct3D)
+//	2 or best	anisotropic filtering (supported by Direct3D)
+
+	if (nullptr != renderTargetTexture)
+	{
+		SDL_DestroyTexture(renderTargetTexture);
+		renderToTextureAvailable = false;
+	}
+	//
+	// Influence how the scaling is done when rendering the target texture to screen
+	hintValue = std::to_string(renderScaleQuality);
+	if (SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, hintValue.c_str()))
+		console.add("Hint SDL_HINT_RENDER_SCALE_QUALITY applied.");
+	else
+		console.add("Hint SDL_HINT_RENDER_SCALE_QUALITY not applied.");
+
+	renderTargetTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, targetWidth, targetHeight);
+	if (nullptr == renderTargetTexture)
+	{
+		renderToTextureAvailable = false;
+		console.add(sys_getString("Unable to create render target texture [ %s ]", SDL_GetError()));
+	}
+
+	renderToTextureAvailable = true;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -70,6 +135,8 @@ void sys_getRendererInfo()
 			console.add(sys_getString("          %i. Uses hardware acceleration", i));
 		if (renderDriverInfo.flags & SDL_RENDERER_PRESENTVSYNC)
 			console.add(sys_getString("          %i. Uses screen refresh rate to sync", i));
+		if (renderDriverInfo.flags & SDL_RENDERER_TARGETTEXTURE)
+			console.add(sys_getString("          %i. Supports render to texture", i));
 	}
 }
 
@@ -81,7 +148,7 @@ Uint32 sys_createRendererFlags(int rendererIndex)
 {
 	Uint32 newFlags = 0;
 
-	if ((rendererIndex < 0) || (rendererIndex > (int)(rendererInfo.size() - 1)))
+	if ((rendererIndex < 0) || (rendererIndex > (int) (rendererInfo.size() - 1)))
 		sys_shutdownWithError("Error. Using invalid renderindex to create renderer flags.");
 
 	if (presentVSync)
@@ -134,7 +201,9 @@ Uint32 sys_createWindowFlags()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start the Windowing system
-void sys_createScreen(bool restart, int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, int rendererFlags)
+void sys_createScreen(
+		bool restart, int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, int rendererFlags, int newLogicalWidth,
+		int newLogicalHeight)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	//
@@ -160,8 +229,18 @@ void sys_createScreen(bool restart, int newWinWidth, int newWinHeight, int winFl
 	if (nullptr == renderer)
 		sys_shutdownWithError(sys_getString("Renderer could not be created. [ %s ]", SDL_GetError()));
 
-	windowWidth = newWinWidth;
+	windowWidth  = newWinWidth;
 	windowHeight = newWinHeight;
+
+	logicalWinHeight = newLogicalWidth;
+	logicalWinHeight = newLogicalHeight;
+
+	SDL_RenderSetLogicalSize(renderer, newLogicalWidth, newLogicalHeight);
+	//
+	// See if render to texture is supported - if so, create a render target texture and set available flag to true
+	renderToTextureAvailable = SDL_RenderTargetSupported(renderer);
+	if (renderToTextureAvailable)
+		sys_createRenderTargetTexture(newLogicalWidth, newLogicalHeight);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -194,7 +273,8 @@ void sys_startSystems()
 
 	sys_verifyRenderer();
 
-	sys_createScreen(false, windowWidth, windowHeight, sys_createWindowFlags(), whichRenderer, sys_createRendererFlags(whichRenderer));
+	sys_createScreen(false, windowWidth, windowHeight, sys_createWindowFlags(), whichRenderer, sys_createRendererFlags(whichRenderer), logicalWinWidth,
+	                 logicalWinHeight);
 	console.add(sys_getString("Window system started. Renderer [ %s ]", rendererInfo[whichRenderer].name));
 
 	if (!fileSystem.init(logFile, "data", "data"))
@@ -207,7 +287,7 @@ void sys_startSystems()
 
 	logFile.write("About to load font.");
 
-	consoleFont.load(logFile, 16, "data/console.ttf");
+	consoleFont.load(logFile, 12, "data/console.ttf");
 	consoleFont.setColor(255, 255, 255, 255);
 
 #ifdef MY_DEBUG//=true
@@ -234,6 +314,6 @@ void sys_startSystems()
 void sys_createNewScreen(int winWidth, int winHeight, int newRenderer)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	sys_createScreen(true, winWidth, winHeight, sys_createWindowFlags(), newRenderer, sys_createRendererFlags(newRenderer));
+	sys_createScreen(true, winWidth, winHeight, sys_createWindowFlags(), newRenderer, sys_createRendererFlags(newRenderer), winWidth, winHeight);
 	console.add(sys_getString("Window system started. Renderer [ %s ]", rendererInfo[newRenderer].name));
 }

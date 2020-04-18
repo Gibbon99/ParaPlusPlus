@@ -1,4 +1,4 @@
-#include "../../hdr/classes/configFile.h"
+#include "../../hdr/io/configFile.h"
 #include "../../hdr/system/shutdown.h"
 #include "../../hdr/system/startup.h"
 
@@ -15,11 +15,11 @@ void io_readConfigValues(const std::string& fileName)
 		sys_shutdownWithError(sys_getString("Unable to open config file [ %s ]", fileName.c_str()));
 	}
 
-	if (!iniFile.GetValueToInt("Main", "virtualWinWidth", (int &)virtualWinWidth, 0))
-		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "virtualWinWidth"));
+	if (!iniFile.GetValueToInt("Main", "logicalWinWidth", (int &)logicalWinWidth, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "logicalWinWidth"));
 
-	if (!iniFile.GetValueToInt("Main", "virtualWinHeight", (int &)virtualWinHeight, 0))
-		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "virtualWinHeight"));
+	if (!iniFile.GetValueToInt("Main", "logicalWinHeight", (int &)logicalWinHeight, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "logicalWinHeight"));
 
 	if (!iniFile.GetValueToInt("Main", "windowWidth", (int &)windowWidth, 0))
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowWidth"));
@@ -51,6 +51,8 @@ void io_readConfigValues(const std::string& fileName)
 	if (!iniFile.GetValueToInt("Main", "presentVSync", (int &)presentVSync, 0))
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "presentVSync"));
 
+	if (!iniFile.GetValueToInt("Main", "renderScaleQuality", (int &)renderScaleQuality, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "renderScaleQuality"));
 }
 
 //std::stoi( str )

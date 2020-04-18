@@ -7,10 +7,10 @@
 void con_renderConsole()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_Surface *tempSurface;
-	SDL_Texture *tempTexture;
+	PARA_Surface *tempSurface  = nullptr;
+	PARA_Texture *tempTexture  = nullptr;
 
-	console.prepare(windowHeight, consoleFont.lineHeight);
+	console.prepare(logicalWinHeight, consoleFont.lineHeight);
 	for (; console.consoleItr != console.consoleText.rend(); ++console.consoleItr)
 	{
 		tempSurface = consoleFont.write(logFile, console.posX, console.posY, *console.consoleItr);  // Surface is freed within console class
@@ -23,7 +23,8 @@ void con_renderConsole()
 		console.posY -= consoleFont.lineHeight;
 	}
 
-	tempSurface = consoleFont.write(logFile, 1, 10, sys_getString("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
+	tempSurface = consoleFont.write(logFile, 1, 10,
+	                                sys_getString("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
 	tempTexture = SDL_CreateTextureFromSurface(sys_getRenderer(), tempSurface);
 	SDL_RenderCopy(sys_getRenderer(), tempTexture, nullptr, &consoleFont.pos);
 	SDL_DestroyTexture(tempTexture);

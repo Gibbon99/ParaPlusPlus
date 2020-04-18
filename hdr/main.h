@@ -22,6 +22,8 @@
 #include "system/util.h"
 #include "physfs/physfs.h"
 
+#define ERROR_COUNT_LIMIT   10
+
 using namespace std;
 
 typedef int (*functionPtr)(...);
@@ -36,7 +38,3 @@ extern bool   quitLoop;
 extern Uint32 fpsPrint;
 extern Uint32 thinkFPSPrint;
 extern double percentIntoNextFrame;
-extern int    virtualWinWidth;
-extern int    virtualWinHeight;
-extern int    windowWidth;
-extern int    windowHeight;

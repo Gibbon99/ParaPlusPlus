@@ -7,6 +7,7 @@
 
 #define PARA_Color          SDL_Color
 #define PARA_Surface        SDL_Surface
+#define PARA_Texture        SDL_Texture
 #define PARA_Renderer       SDL_Renderer
 #define PARA_Window         SDL_Window
 #define PARA_PixelFormat    SDL_PixelFormat

@@ -4,14 +4,51 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Prepare the frame for rendering
+void sys_prepareFrame()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	static int errorCount = 0;
+
+	if (sys_useRenderTarget())
+	{
+		if (SDL_SetRenderTarget(sys_getRenderer(), sys_getRenderTarget()) < 0)
+		{
+			logFile.write(sys_getString("Unable to set render target [ %s ]", SDL_GetError));
+			errorCount++;
+			if (errorCount > ERROR_COUNT_LIMIT)
+				sys_shutdownWithError("Exceeded error count for set render target. Check logfile for details.");
+		}
+	}
+
+	SDL_SetRenderDrawColor(sys_getRenderer(), 0x00, 0x00, 0x00, 0x00);
+	SDL_RenderClear(sys_getRenderer());
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Complete a frame and present to the screen
+void sys_completeFrame()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if (sys_useRenderTarget())
+	{
+		SDL_SetRenderTarget(sys_getRenderer(), nullptr);
+		SDL_RenderCopy(sys_getRenderer(), sys_getRenderTarget(), nullptr, nullptr);
+	}
+
+	SDL_RenderPresent(sys_getRenderer());
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Render a frame once
 void sys_renderFrame (double interpolation)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_SetRenderDrawColor(sys_getRenderer(), 0x00, 0x00, 0x00, 0x00);
-	SDL_RenderClear(sys_getRenderer());
+	sys_prepareFrame();
 
 	con_renderConsole();
 
-	SDL_RenderPresent(sys_getRenderer());
+	sys_completeFrame();
 }
