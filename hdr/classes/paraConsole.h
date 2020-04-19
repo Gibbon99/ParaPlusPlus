@@ -9,7 +9,7 @@ class paraConsole
 public:
 	void add(const std::string& newLine);
 
-	void prepare(int screenHeight, int fontHeight);
+	void prepare(int newPosX, int newPosY);
 
 	std::vector<std::string> consoleText;
 	int posX = 0;

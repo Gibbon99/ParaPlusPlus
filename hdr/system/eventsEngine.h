@@ -19,7 +19,7 @@ enum EVENT_ACTIONS
 	EVENT_ACTION_LOGFILE_OPEN = 0,
 	EVENT_ACTION_LOGFILE_WRITE,
 	EVENT_ACTION_LOGFILE_CLOSE,
-	EVENT_ACTION_CONSOLE_WRITE
+	EVENT_ACTION_CONSOLE_ADD
 };
 
 extern bool runThreads;     // Master flag to control state of detached threads

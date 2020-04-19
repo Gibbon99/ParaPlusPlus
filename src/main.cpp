@@ -14,7 +14,6 @@ paraFont       consoleFont;
 paraConsole    console;
 
 
-
 #define TICKS_PER_SECOND 30.0f
 #define MAX_FRAMESKIP 5
 
@@ -46,11 +45,9 @@ int main(int argc, char *argv[])
 //----------------------------------------------------------------------------------------------------------------------
 {
 	double msPerUpdate  = 1000.0f / TICKS_PER_SECOND;
-	Uint32 previousTime = PARA_GetTicks();
 	double timeLag      = 0.0f;
-
-	Uint32 currentTime = 0.0f;
-	Uint32 elapsedTime = 0.0f;
+	Uint32 previousTime = PARA_GetTicks();
+	Uint32 currentTime  = 0.0f;
 
 	sys_startSystems();
 
@@ -58,11 +55,11 @@ int main(int argc, char *argv[])
 
 	while (!quitLoop)
 	{
-		currentTime              = PARA_GetTicks();
-		elapsedTime              = currentTime - previousTime;
 		previousTime             = currentTime;
+		currentTime              = PARA_GetTicks();
 		maxNumUpdateLoops        = 0;
-		timeLag += elapsedTime;
+
+		timeLag += (currentTime - previousTime);
 
 		while (timeLag >= msPerUpdate && maxNumUpdateLoops < MAX_FRAMESKIP)
 		{

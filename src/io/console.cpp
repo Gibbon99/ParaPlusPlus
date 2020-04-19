@@ -2,6 +2,7 @@
 #include "../../hdr/io/console.h"
 #include "../../hdr/system/startup.h"
 #include "../../hdr/classes/paraEvent.h"
+#include "../../hdr/io/logFile.h"
 
 std::queue<paraEventConsole *> consoleEvents;
 
@@ -32,7 +33,7 @@ void con_processConsoleEventQueue(void *data)
 								sys_getString("Unable to get Mutex value [ %s ] - [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError()));
 				}
 				PARA_LockMutex(consoleMutex);
-					tempEvent = consoleEvents.front();
+				tempEvent = consoleEvents.front();
 				PARA_UnlockMutex(consoleMutex);
 
 				if (tempEvent->counter > 0)  // If not 0 - re-add to the queue with the reduced count
@@ -44,16 +45,15 @@ void con_processConsoleEventQueue(void *data)
 				{
 					switch (tempEvent->action)
 					{
-						case EVENT_ACTION_CONSOLE_WRITE:
+						case EVENT_ACTION_CONSOLE_ADD:
 							console.add(tempEvent->newConsoleLine);
 							break;
 					}
 
-					PARA_LockMutex(consoleMutex);   // Blocks if the mutex is locked by another thread
-						delete (consoleEvents.front());     // Free memory
-						consoleEvents.pop();
+					PARA_LockMutex(consoleMutex);           // Blocks if the mutex is locked by another thread
+					delete (consoleEvents.front());         // Free memory
+					consoleEvents.pop();
 					PARA_UnlockMutex(consoleMutex);
-
 				}
 			}
 		}
@@ -74,7 +74,7 @@ void con_addEvent(int newCounter, const std::string &newLine)
 
 	if (PARA_LockMutex(tempMutex) == 0)
 	{
-		consoleEvents.push(new paraEventConsole(EVENT_ACTION_CONSOLE_WRITE, newLine));
+		consoleEvents.push(new paraEventConsole(EVENT_ACTION_CONSOLE_ADD, newLine));
 		PARA_UnlockMutex(tempMutex);
 	}
 	else
@@ -100,7 +100,7 @@ void con_initConsole()
 #endif
 	}// Wait for thread to be ready to use
 
-	sys_addEvent(EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_WRITE, 0, sys_getString("Console started [ %s ]", APP_NAME));
+	sys_addEvent(EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD, 0, sys_getString("Console started [ %s ]", APP_NAME));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -112,11 +112,21 @@ void con_renderConsole()
 	PARA_Surface *tempSurface = nullptr;
 	PARA_Texture *tempTexture = nullptr;
 
-	console.prepare(logicalWinHeight, consoleFont.lineHeight);
+	console.prepare(1, logicalWinHeight - (consoleFont.lineHeight * 2));
 	for (; console.consoleItr != console.consoleText.rend(); ++console.consoleItr)
 	{
 		tempSurface = consoleFont.write(console.posX, console.posY, *console.consoleItr);  // Surface is freed within console class
+		if (nullptr == tempSurface)
+		{
+			log_addEvent("Unable to create temp surface when rendering console.");
+			return;
+		}
 		tempTexture = SDL_CreateTextureFromSurface(sys_getRenderer(), tempSurface);
+		if (nullptr == tempTexture)
+		{
+			log_addEvent("Unable to create temp texture when rendering console.");
+			return;
+		}
 
 		SDL_RenderCopy(sys_getRenderer(), tempTexture, nullptr, &consoleFont.pos);
 
@@ -125,9 +135,19 @@ void con_renderConsole()
 		console.posY -= consoleFont.lineHeight;
 	}
 
-	tempSurface = consoleFont.write(1, 10,
-	                                sys_getString("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
+	console.prepare(1, 10);
+	tempSurface = consoleFont.write(console.posX, console.posY,sys_getString("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
+	if (nullptr == tempSurface)
+	{
+		log_addEvent("Unable to create temp surface when rendering console.");
+		return;
+	}
 	tempTexture = SDL_CreateTextureFromSurface(sys_getRenderer(), tempSurface);
+	if (nullptr == tempTexture)
+	{
+		log_addEvent("Unable to create temp texture when rendering console.");
+		return;
+	}
 	SDL_RenderCopy(sys_getRenderer(), tempTexture, nullptr, &consoleFont.pos);
 	SDL_DestroyTexture(tempTexture);
 }

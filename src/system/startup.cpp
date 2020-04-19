@@ -296,7 +296,7 @@ void sys_startSystems()
 	if (!paraScriptInstance.init(reinterpret_cast<asSFuncPtr &>(scr_Output)))
 		sys_shutdownWithError("Error: Could not start Scripting engine.");
 
-	sys_addEvent(EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_WRITE, 0, ("Scripting started."));
+	sys_addEvent(EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD, 0, ("Scripting started."));
 	sys_scriptInitScriptFunctions();
 	sys_scriptInitFunctions();
 	sys_scriptInitVariables();
