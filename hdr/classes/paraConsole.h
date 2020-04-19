@@ -56,9 +56,9 @@ public:
 
 	void processVariable(std::vector<std::string> commandLine);
 
-	void addCommand(std::string commandName, std::string functionName, std::string functionHelp);
+	void addCommand(const std::string& commandName, const std::string& functionName, const std::string& functionHelp);
 
-	void addVariable(std::string variableName, int variableType, void* variablePtr);
+	void addVariable(const std::string& variableName, int variableType, void* variablePtr);
 
 	std::string entryLine();	
 
@@ -69,7 +69,7 @@ public:
 	int posX = 0;
 	int posY = 0;
 	int userBufferIndex = 0;
-	std::vector<std::string>::reverse_iterator  consoleItr; // = consoleText.rbegin();
+	std::vector<std::string>::reverse_iterator  consoleItr;
 	std::map<std::string, _consoleFunction>		consoleFunctions;
 	std::map<std::string, _consoleVariable>		consoleVariables;
 

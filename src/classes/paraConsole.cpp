@@ -24,7 +24,7 @@ void paraConsole::addChar(const std::string& newChar)
 
 void paraConsole::deleteChar()
 {
-	if (paraConsole::enterLine.size() > 0)
+	if (!paraConsole::enterLine.empty())
 	{
 		paraConsole::enterLine.resize(paraConsole::enterLine.size() - 1);
 	}
@@ -70,9 +70,9 @@ void paraConsole::userBufferPrevious()
 	}
 }
 
-void paraConsole::addVariable(std::string variableName, int variableType, void* variablePtr)
+void paraConsole::addVariable(const std::string& variableName, int variableType, void* variablePtr)
 {
-	_consoleVariable tempVariable;
+	_consoleVariable tempVariable{};
 
 	if (variableName.empty()) // || (nullptr == variablePtr))
 	{
@@ -86,7 +86,7 @@ void paraConsole::addVariable(std::string variableName, int variableType, void* 
 	paraConsole::consoleVariables.insert(std::pair<std::string, _consoleVariable>(variableName, tempVariable));
 }
 
-void paraConsole::addCommand(std::string commandName, std::string functionName, std::string functionHelp)
+void paraConsole::addCommand(const std::string& commandName, const std::string& functionName, const std::string& functionHelp)
 {
 	_consoleFunction	tempFunction;
 
@@ -121,7 +121,7 @@ void paraConsole::processVariable(std::vector<std::string> commandLine)
 
 	if (commandLine[0] == "listVars")
 	{
-		for (auto varItr : consoleVariables)
+		for (const auto& varItr : consoleVariables)
 		{
 			paraConsole::add(sys_getString("[ %s ]", varItr.first.c_str()));
 		}
@@ -137,7 +137,7 @@ void paraConsole::processVariable(std::vector<std::string> commandLine)
 		}
 		//
 		// find any matching variable names
-		for (auto i = 1; i < commandLine.size(); i++)
+		for (int i = 1; i < (int)commandLine.size(); i++)
 		{
 			variableItr = consoleVariables.find(commandLine[i]);
 			if (variableItr == consoleVariables.end())
@@ -184,7 +184,7 @@ void paraConsole::processVariable(std::vector<std::string> commandLine)
 
 void paraConsole::processCommand(std::vector<std::string> commandLine)
 {
-	std::map<std::string, _consoleFunction>::iterator consoleItr;
+	std::map<std::string, _consoleFunction>::iterator localConsoleItr;
 	std::string parameterList;
 
 	//
@@ -197,8 +197,8 @@ void paraConsole::processCommand(std::vector<std::string> commandLine)
 		return;
 	}
 
-	consoleItr = consoleFunctions.find(commandLine[0]);
-	if (consoleItr == consoleFunctions.end())
+	localConsoleItr = consoleFunctions.find(commandLine[0]);
+	if (localConsoleItr == consoleFunctions.end())
 	{
 		paraConsole::add(sys_getString("Command [ %s ] not found.", commandLine[0].c_str()));
 		return;
@@ -206,11 +206,11 @@ void paraConsole::processCommand(std::vector<std::string> commandLine)
 
 	if (commandLine.size() > 1)
 	{
-		for (int i = 1; i != commandLine.size(); i++)
+		for (int i = 1; i != (int)commandLine.size(); i++)
 		{
 			parameterList += commandLine[i];
 			parameterList += " ";
 		}
 	}
-	paraConsole::add(sys_getString("Run function [ %s ] with [ %s ]", consoleItr->second.functionName.c_str(), parameterList.c_str()));
+	paraConsole::add(sys_getString("Run function [ %s ] with [ %s ]", localConsoleItr->second.functionName.c_str(), parameterList.c_str()));
 }

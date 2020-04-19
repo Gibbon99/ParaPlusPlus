@@ -274,7 +274,7 @@ void sys_startSystems()
 
 	sys_createScreen(false, windowWidth, windowHeight, sys_createWindowFlags(), whichRenderer, sys_createRendererFlags(whichRenderer), logicalWinWidth,
 	                 logicalWinHeight);
-	con_addEvent(0, sys_getString("Window system started. Renderer [ %s ]", rendererInfo[whichRenderer].name));
+	con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Window system started. Renderer [ %s ]", rendererInfo[whichRenderer].name));
 
 	if (!fileSystem.init("data", "data"))
 		sys_shutdownWithError("Error. Could not start filesystem. Check directory structure.");
