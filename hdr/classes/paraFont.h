@@ -17,17 +17,15 @@ public:
 
 	PARA_Surface *write(int X, int Y, const std::string &fontText);
 
-//	void render(float posX, float posY, std::string renderText);
-
-	int lineHeight;
+	int lineHeight = 0;
 	SDL_Rect pos;
 
 private:
 	bool                fontSystemAvailable = false;
 	bool                available           = false;
-	TTF_Font            *fontHandle;
-	PARA_Surface        *surface;
-	PARA_Color          color;
+	TTF_Font            *fontHandle = nullptr;
+	PARA_Surface        *surface = nullptr;
+	PARA_Color          color = { 0,0,0,0 };
 };
 
 #endif //PARA_PARAFONT_H

@@ -67,7 +67,7 @@ bool sys_useRenderTarget()
 PARA_Texture *sys_getRenderTarget()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_assert_release(renderTargetTexture != nullptr);
+//	SDL_assert_release(renderTargetTexture != nullptr);
 	return renderTargetTexture;
 }
 
@@ -92,15 +92,15 @@ void sys_createRenderTargetTexture(int targetWidth, int targetHeight)
 	// Influence how the scaling is done when rendering the target texture to screen
 	hintValue = std::to_string(renderScaleQuality);
 	if (SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, hintValue.c_str()))
-		con_addEvent(0, "Hint SDL_HINT_RENDER_SCALE_QUALITY applied.");
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, "Hint SDL_HINT_RENDER_SCALE_QUALITY applied.");
 	else
-		con_addEvent(0, "Hint SDL_HINT_RENDER_SCALE_QUALITY not applied.");
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, "Hint SDL_HINT_RENDER_SCALE_QUALITY not applied.");
 
 	renderTargetTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, targetWidth, targetHeight);
 	if (nullptr == renderTargetTexture)
 	{
 		renderToTextureAvailable = false;
-		con_addEvent(0, sys_getString("Unable to create render target texture [ %s ]", SDL_GetError()));
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Unable to create render target texture [ %s ]", SDL_GetError()));
 	}
 
 	renderToTextureAvailable = true;
@@ -127,16 +127,16 @@ void sys_getRendererInfo()
 		}
 		rendererInfo.push_back(renderDriverInfo);
 
-		con_addEvent(0, sys_getString("%i. Renderer name [ %s ]", i, renderDriverInfo.name));
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("%i. Renderer name [ %s ]", i, renderDriverInfo.name));
 
 		if (renderDriverInfo.flags & SDL_RENDERER_SOFTWARE)
-			con_addEvent(0, sys_getString("          %i. Software fallback", i));
+			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("          %i. Software fallback", i));
 		if (renderDriverInfo.flags & SDL_RENDERER_ACCELERATED)
-			con_addEvent(0, sys_getString("          %i. Uses hardware acceleration", i));
+			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("          %i. Uses hardware acceleration", i));
 		if (renderDriverInfo.flags & SDL_RENDERER_PRESENTVSYNC)
-			con_addEvent(0, sys_getString("          %i. Uses screen refresh rate to sync", i));
+			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("          %i. Uses screen refresh rate to sync", i));
 		if (renderDriverInfo.flags & SDL_RENDERER_TARGETTEXTURE)
-			con_addEvent(0, sys_getString("          %i. Supports render to texture", i));
+			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("          %i. Supports render to texture", i));
 	}
 }
 
@@ -296,7 +296,7 @@ void sys_startSystems()
 	if (!paraScriptInstance.init(reinterpret_cast<asSFuncPtr &>(scr_Output)))
 		sys_shutdownWithError("Error: Could not start Scripting engine.");
 
-	sys_addEvent(EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD, 0, ("Scripting started."));
+	sys_addEvent(EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, ("Scripting started."));
 	sys_scriptInitScriptFunctions();
 	sys_scriptInitFunctions();
 	sys_scriptInitVariables();

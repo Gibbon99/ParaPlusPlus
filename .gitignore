@@ -3,3 +3,15 @@
 ################################################################################
 
 /out/build/x86-Debug
+/cmake-build-debug
+/cmake-build-release
+/Win32_Para++_release.lib
+/Win32_Para++_release.exp
+/Win32_Para++_release.exe.manifest
+/Win32_Para++_release.exe
+/Win32_Para++_debug.pdb
+/Win32_Para++_debug.lib
+/Win32_Para++_debug.ilk
+/Win32_Para++_debug.exp
+/Win32_Para++_debug.exe
+/.vs/ParaPlusPlus/v16

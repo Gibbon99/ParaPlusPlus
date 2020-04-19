@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	double msPerUpdate  = 1000.0f / TICKS_PER_SECOND;
 	double timeLag      = 0.0f;
 	Uint32 previousTime = PARA_GetTicks();
-	Uint32 currentTime  = 0.0f;
+	Uint32 currentTime  = 0;
 
 	sys_startSystems();
 

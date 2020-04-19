@@ -5,6 +5,13 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("Para++")
 
+set(CMAKE_CXX_STANDARD "14")
+
+#set_property (TARGET ${PROJECT_NAME}
+#PROPERTY
+#CXX_STANDARD 14
+#)
+
 # Set default locations
 set(CL_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})

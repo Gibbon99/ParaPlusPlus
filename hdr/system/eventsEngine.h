@@ -1,12 +1,12 @@
 #pragma once
 
-#define CONSOLE_MUTEX_NAME      "consoleMutex"
-#define CONSOLE_THREAD_NAME     "consoleThread"
+#define CONSOLE_MUTEX_NAME		"consoleMutex"
+#define CONSOLE_THREAD_NAME		"consoleThread"
 
 #define LOGGING_MUTEX_NAME      "logfileMutex"
 #define LOGGING_THREAD_NAME     "logfileThread"
 
-#define THREAD_DELAY_MS                 1       // in MS
+#define THREAD_DELAY_MS         1       // in MS
 
 enum EVENT_TYPES
 {
@@ -19,7 +19,10 @@ enum EVENT_ACTIONS
 	EVENT_ACTION_LOGFILE_OPEN = 0,
 	EVENT_ACTION_LOGFILE_WRITE,
 	EVENT_ACTION_LOGFILE_CLOSE,
-	EVENT_ACTION_CONSOLE_ADD
+	EVENT_ACTION_CONSOLE_ADD_LINE,
+	EVENT_ACTION_CONSOLE_ADD_CHAR,
+	EVENT_ACTION_CONSOLE_DELETE_CHAR,
+	EVENT_ACTION_CONSOLE_ADD_CHAR_LINE
 };
 
 extern bool runThreads;     // Master flag to control state of detached threads
