@@ -41,3 +41,6 @@ extern bool   quitLoop;
 extern Uint32 fpsPrint;
 extern Uint32 thinkFPSPrint;
 extern double percentIntoNextFrame;
+
+extern std::string testVarString;
+extern float testVarFloat;

@@ -27,10 +27,14 @@ struct _consoleFunction
 	std::string		functionHelp;
 };
 
-struct _consoleVariable
+struct _variables
 {
-	int				variableType;
-	void			*variablePtr;
+	std::string   varName;
+	int           varType;
+	int           *varPtrInt = new int;
+	bool          *varPtrBool = new bool;
+	float         *varPtrFloat = new float;
+	std::string   *varPtrString = new std::string;
 };
 
 class paraConsole
@@ -60,6 +64,12 @@ public:
 
 	void addVariable(const std::string& variableName, int variableType, void* variablePtr);
 
+	void setVarFunc(const std::string &varName, int variablePtr);
+	void setVarFunc(const std::string &varName, float variablePtr);
+	void setVarFunc(const std::string &varName, std::string variablePtr);
+	void setVarBool(const std::string &varName, bool variablePtr);
+	void setVar(const std::string &varName, const std::string &varParam);
+
 	std::string entryLine();	
 
 	// TODO: bool entryMode - false means don't allow text entry
@@ -71,7 +81,7 @@ public:
 	int userBufferIndex = 0;
 	std::vector<std::string>::reverse_iterator  consoleItr;
 	std::map<std::string, _consoleFunction>		consoleFunctions;
-	std::map<std::string, _consoleVariable>		consoleVariables;
+	std::vector<_variables>                     consoleVariables;
 
 private:
 	std::string enterLine;

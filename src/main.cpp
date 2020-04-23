@@ -3,9 +3,6 @@
 #include "../hdr/system/startup.h"
 #include "../hdr/system/frameUpdate.h"
 #include "../hdr/system/frameRender.h"
-#include "../hdr/classes/paraEvent.h"
-
-#include <queue>
 
 paraScript     paraScriptInstance;
 paraLogFile    logFile;
@@ -24,6 +21,11 @@ Uint32 fpsPrint             = 0;
 Uint32 thinkFPS             = 0;
 Uint32 thinkFPSPrint        = 0;
 double percentIntoNextFrame = 0.0f;
+
+
+std::string testVarString = "First string text";
+float testVarFloat = 3.145;
+
 
 //----------------------------------------------------------------------------------------------------------------------
 //

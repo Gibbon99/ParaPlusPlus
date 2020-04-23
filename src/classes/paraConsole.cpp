@@ -5,10 +5,10 @@
 #include "../../hdr/wrapper.h"
 #include "../../hdr/main.h"
 
-void paraConsole::add(const std::string& newLine)
+void paraConsole::add(const std::string &newLine)
 {
 	//
-	// May need mutex gaurd here to stop adding while drawing
+	// May need mutex guard here to stop adding while drawing
 	// Event thread can generate new add outside mutex check
 	//
 	if (paraConsole::consoleText.size() < CONSOLE_MEM_SIZE)
@@ -17,7 +17,7 @@ void paraConsole::add(const std::string& newLine)
 		std::cout << "Error: Exceeded memory buffer for console text." << std::endl;
 }
 
-void paraConsole::addChar(const std::string& newChar)
+void paraConsole::addChar(const std::string &newChar)
 {
 	paraConsole::enterLine += newChar;
 }
@@ -32,10 +32,11 @@ void paraConsole::deleteChar()
 
 void paraConsole::addCharLine()
 {
-	paraConsole::processCommand(paraConsole::tokeniseEntryLine(paraConsole::enterLine));
-
 	paraConsole::consoleText.push_back(paraConsole::enterLine);
 	paraConsole::userBuffer.push_back(paraConsole::enterLine);
+
+	paraConsole::processCommand(paraConsole::tokeniseEntryLine(paraConsole::enterLine));
+
 	paraConsole::enterLine.clear();
 	paraConsole::userBufferIndex = userBuffer.size();
 }
@@ -48,13 +49,13 @@ std::string paraConsole::entryLine()
 void paraConsole::prepare(int newPosX, int newPosY)
 {
 	paraConsole::consoleItr = paraConsole::consoleText.rbegin();
-	paraConsole::posX = newPosX;
-	paraConsole::posY = newPosY;
+	paraConsole::posX       = newPosX;
+	paraConsole::posY       = newPosY;
 }
 
 void paraConsole::userBufferNext()
 {
-	if (paraConsole::userBufferIndex < (int)paraConsole::userBuffer.size() - 1)
+	if (paraConsole::userBufferIndex < (int) paraConsole::userBuffer.size() - 1)
 	{
 		paraConsole::userBufferIndex++;
 		paraConsole::enterLine = paraConsole::userBuffer[userBufferIndex];
@@ -70,9 +71,9 @@ void paraConsole::userBufferPrevious()
 	}
 }
 
-void paraConsole::addVariable(const std::string& variableName, int variableType, void* variablePtr)
+void paraConsole::addVariable(const std::string &variableName, int variableType, void *variablePtr)
 {
-	_consoleVariable tempVariable{};
+	_variables tempVar;
 
 	if (variableName.empty()) // || (nullptr == variablePtr))
 	{
@@ -80,15 +81,48 @@ void paraConsole::addVariable(const std::string& variableName, int variableType,
 		return;
 	}
 
-	tempVariable.variableType = variableType;
-	tempVariable.variablePtr = variablePtr;
+	for (const auto& varItr : consoleVariables)
+	{
+		if (varItr.varName == variableName)
+		{
+			cout << "Variable [ " << variableName << " ] already exists." << endl;
+			return;
+		}
+	}
 
-	paraConsole::consoleVariables.insert(std::pair<std::string, _consoleVariable>(variableName, tempVariable));
+	tempVar.varName = variableName;
+	tempVar.varType = variableType;
+
+	switch (variableType)
+	{
+		case VAR_TYPE_INT:
+			tempVar.varPtrInt = (int *) variablePtr;
+			break;
+
+		case VAR_TYPE_FLOAT:
+			tempVar.varPtrFloat = (float *) variablePtr;
+			break;
+
+		case VAR_TYPE_STRING:
+			tempVar.varPtrString = (std::string *) variablePtr;
+			break;
+
+		case VAR_TYPE_BOOL:
+			tempVar.varPtrBool = (bool *) variablePtr;
+			break;
+
+		default:
+			// Unknown type
+			break;
+	}
+	consoleVariables.push_back(tempVar);
+
+	cout << "Var : " << variableName << " has been added." << endl;
 }
 
-void paraConsole::addCommand(const std::string& commandName, const std::string& functionName, const std::string& functionHelp)
+void paraConsole::addCommand(const std::string &commandName, const std::string &functionName, const std::string &functionHelp)
 {
-	_consoleFunction	tempFunction;
+	_consoleFunction tempFunction;
 
 	tempFunction.functionName = functionName;
 	tempFunction.functionHelp = functionHelp;
@@ -115,15 +149,111 @@ std::vector<std::string> paraConsole::tokeniseEntryLine(std::string entryLine)
 	return enteredCommand;
 }
 
+
+void paraConsole::setVarFunc(const std::string &varName, int variablePtr)
+{
+	for (auto &varItr : consoleVariables)
+	{
+		if (varName == varItr.varName)
+		{
+			*varItr.varPtrInt = variablePtr;
+			return;
+		}
+		cout << "Var : " << varName << " not found." << endl;
+	}
+}
+
+void paraConsole::setVarFunc(const std::string &varName, float variablePtr)
+{
+	for (auto &varItr : consoleVariables)
+	{
+		if (varName == varItr.varName)
+		{
+			*varItr.varPtrFloat = variablePtr;
+			return;
+		}
+	}
+	cout << "Var : " << varName << " not found." << endl;
+}
+
+void paraConsole::setVarFunc(const std::string &varName, std::string variablePtr)
+{
+	for (auto &varItr : consoleVariables)
+	{
+		if (varName == varItr.varName)
+		{
+			*varItr.varPtrString = variablePtr;
+			return;
+		}
+	}
+	cout << "Var : " << varName << " not found." << endl;
+}
+
+void paraConsole::setVarBool(const std::string &varName, bool variablePtr)
+{
+	for (auto &varItr : consoleVariables)
+	{
+		if (varName == varItr.varName)
+		{
+			*varItr.varPtrBool = variablePtr;
+			return;
+		}
+	}
+	cout << "Var : " << varName << " not found." << endl;
+}
+
+void paraConsole::setVar(const std::string &varName, const std::string &varParam)
+{
+	int varType;
+
+	for (auto &varItr : consoleVariables)
+	{
+		if (varItr.varName == varName)
+		{
+			varType = varItr.varType;
+
+			switch (varType)
+			{
+				case VAR_TYPE_BOOL:
+					if ((varParam == "true") || (varParam == "1"))
+					{
+						setVarBool(varName, 1);
+						return;
+					}
+					else
+					{
+						setVarBool(varName, 0);
+						return;
+					}
+					break;
+
+				case VAR_TYPE_INT:
+					cout << "TYPE_INT" << endl;
+					setVarFunc(varName, std::stoi(varParam));
+					break;
+
+				case VAR_TYPE_FLOAT:
+					cout << "TYPE_FLOAT" << endl;
+					setVarFunc(varName, std::stof(varParam));
+					break;
+
+				case VAR_TYPE_STRING:
+					cout << "TYPE_STRING" << endl;
+					setVarFunc(varName, varParam);
+					break;
+			}
+		}
+	}
+	paraConsole::add(sys_getString("[ %s ] not found.", varName.c_str()));
+}
+
 void paraConsole::processVariable(std::vector<std::string> commandLine)
 {
-	std::map<std::string, _consoleVariable>::iterator variableItr;
-
 	if (commandLine[0] == "listVars")
 	{
-		for (const auto& varItr : consoleVariables)
+		for (const auto &varItr : consoleVariables)
 		{
-			paraConsole::add(sys_getString("[ %s ]", varItr.first.c_str()));
+			paraConsole::add(sys_getString("[ %s ]", varItr.varName.c_str()));
 		}
 		return;
 	}
@@ -137,47 +267,76 @@ void paraConsole::processVariable(std::vector<std::string> commandLine)
 		}
 		//
 		// find any matching variable names
-		for (int i = 1; i < (int)commandLine.size(); i++)
+		for (int i = 1; i < (int) commandLine.size(); i++)
 		{
-			variableItr = consoleVariables.find(commandLine[i]);
-			if (variableItr == consoleVariables.end())
+			for (const auto &varItr : consoleVariables)
 			{
-				paraConsole::add(sys_getString("Variable [ %s ] not found", commandLine[i].c_str()));
-			}
-			else
-			{
-				switch (variableItr->second.variableType)
+				if (varItr.varName == commandLine[i])
 				{
-				case VAR_TYPE_INT:
-					paraConsole::add(sys_getString("[ %s ] = [ %i ]", commandLine[i].c_str(), *(int*)variableItr->second.variablePtr));
+					switch (varItr.varType)
+					{
+						case VAR_TYPE_INT:
+							paraConsole::add(
+									sys_getString("[ %s ] = [ %i ]", commandLine[i].c_str(), *(int *) varItr.varPtrInt));
+							break;
 
-					std::cout << "print INT" << endl;
+						case VAR_TYPE_FLOAT:
+							paraConsole::add(
+									sys_getString("[ %s ] = [ %f ]", commandLine[i].c_str(), *(float *) varItr.varPtrFloat));
+							break;
 
-					break;
+						case VAR_TYPE_BOOL:
+							paraConsole::add(
+									sys_getString("[ %s ] = [ %i ]", commandLine[i].c_str(), *(bool *) varItr.varPtrBool));
+							break;
 
-				case VAR_TYPE_FLOAT:
-					paraConsole::add(sys_getString("[ %s ] = [ %f ]", commandLine[i].c_str(), *(float*)variableItr->second.variablePtr));
-					break;
-
-				case VAR_TYPE_BOOL:
-					paraConsole::add(sys_getString("[ %s ] = [ %i ]", commandLine[i].c_str(), *(bool*)variableItr->second.variablePtr));
-
-					std::cout << "print BOOL" << endl;
-
-					break;
-
-				case VAR_TYPE_STRING:
-					paraConsole::add(sys_getString("[ %s ] = [ %s ]", commandLine[i].c_str(), *(std::string*)variableItr->second.variablePtr));
-					break;
+						case VAR_TYPE_STRING:
+							paraConsole::add(
+									sys_getString("[ %s ] = [ %s ]", commandLine[i].c_str(),
+									              (std::string *) varItr.varPtrString->c_str()));
+							break;
+					}
+				}
+				else
+				{
+					paraConsole::add(sys_getString("[ %s ] not found.", commandLine[i].c_str()));
+					return;
 				}
 			}
 		}
 	}
-
-	variableItr = consoleVariables.find(commandLine[1]);
-	if (variableItr == consoleVariables.end())
+//
+// Process changing the value of a variable
+//
+	if (commandLine[0] == "setVar")
 	{
-		paraConsole::add(sys_getString("Variable [ %s ] not found.", commandLine[1].c_str()));
+		std::string fullString;
+
+		if (commandLine.size() < 3)
+		{
+			paraConsole::add(sys_getString("[ %s ] [ %s ] requires a valid argument.", commandLine[0].c_str(), commandLine[1].c_str()));
+			return;
+		}
+
+		for (const auto& varItr : consoleVariables)
+		{
+			//
+			// If the target variable is a string, then concatenate all the params back into a single string
+			//
+			if ((varItr.varType == VAR_TYPE_STRING) && (varItr.varName == commandLine[1]))
+			{
+				for (int i = 2; i != (int)commandLine.size(); i++)
+				{
+					fullString += commandLine[i] + " ";
+				}
+				//
+				// Change the value to the full string
+				setVar(commandLine[1], fullString);
+				return;
+			}
+		}
+
+		setVar(commandLine[1], commandLine[2]);
 		return;
 	}
 }
@@ -185,13 +344,13 @@ void paraConsole::processVariable(std::vector<std::string> commandLine)
 void paraConsole::processCommand(std::vector<std::string> commandLine)
 {
 	std::map<std::string, _consoleFunction>::iterator localConsoleItr;
-	std::string parameterList;
+	std::string                                       parameterList;
 
 	//
 	// Handle variables on their own
 	if ((commandLine[0] == "getVar") ||
-		(commandLine[0] == "setVar") ||
-		(commandLine[0] == "listVars"))
+	    (commandLine[0] == "setVar") ||
+	    (commandLine[0] == "listVars"))
 	{
 		paraConsole::processVariable(commandLine);
 		return;
@@ -206,7 +365,7 @@ void paraConsole::processCommand(std::vector<std::string> commandLine)
 
 	if (commandLine.size() > 1)
 	{
-		for (int i = 1; i != (int)commandLine.size(); i++)
+		for (int i = 1; i != (int) commandLine.size(); i++)
 		{
 			parameterList += commandLine[i];
 			parameterList += " ";

@@ -6,6 +6,8 @@
 
 std::queue<paraEventConsole *> consoleEvents;
 
+int testVar = 100;
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Process the contents of the console queue - run by detached thread
@@ -119,7 +121,9 @@ void con_initConsole()
 	console.addCommand("quit", "functionQuit", "Shutdown");
 	console.addCommand("exit", "functionQuit", "Shutdown");
 	console.addVariable("quitLoop", VAR_TYPE_BOOL, &quitLoop);
-	console.addVariable("height", VAR_TYPE_INT, &thinkFPSPrint);
+	console.addVariable("height", VAR_TYPE_INT, &testVar);
+	console.addVariable("testString", VAR_TYPE_STRING, &testVarString);
+	console.addVariable("testFloat", VAR_TYPE_FLOAT, &testVarFloat);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
