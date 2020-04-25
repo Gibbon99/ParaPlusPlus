@@ -1,6 +1,7 @@
 #include "../../hdr/system/util.h"
 #include "../../hdr/system/enum.h"
 #include "../../hdr/system/startup.h"
+#include "../../hdr/io/console.h"
 
 int currentMode;
 
@@ -22,8 +23,11 @@ void sys_setNewMode(int newMode)
 	{
 		case MODE_CONSOLE_EDIT:
 			//
-			// Change to new screen size and backing texture
+			// Change to new backing texture
 			sys_setCurrentBackingTexture(CONSOLE_BACKING_TEXTURE);
+			//
+			// Adjust virtual scaling
+			SDL_RenderSetLogicalSize(sys_getRenderer(), consoleVirtualWidth, consoleVirtualHeight);
 			currentMode = newMode;
 			break;
 
@@ -31,6 +35,15 @@ void sys_setNewMode(int newMode)
 			sys_shutdownWithError("Attempting to set an unknown mode.");
 			break;
 	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Get the operating system we are running on
+void sys_getOS()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("[ %s ]", SDL_GetPlatform()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------

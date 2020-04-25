@@ -7,8 +7,8 @@ extern int logicalWinWidth;
 extern int logicalWinHeight;
 extern int windowWidth;
 extern int windowHeight;
-extern int consoleWinWidth;
-extern int consoleWinHeight;
+extern int consoleVirtualWidth;
+extern int consoleVirtualHeight;
 extern int consoleNumColumns;
 extern int consoleFontSize;
 extern int windowFullscreen;
@@ -46,7 +46,7 @@ PARA_Texture *sys_getRenderTarget(const std::string& textureName);
 bool sys_useRenderTarget();
 
 // Create the render target texture
-void sys_createRenderTargetTexture(const std::string& textureName, int targetWidth, int targetHeight);
+void sys_createRenderTargetTexture(const std::string& textureName, int logicalWidth, int logicalHeight);
 
 std::string sys_getCurrentBackingTexture();
 

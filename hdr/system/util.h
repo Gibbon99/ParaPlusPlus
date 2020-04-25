@@ -17,3 +17,6 @@ void sys_getRendererInfo();
 
 // Set a new mode
 void sys_setNewMode(int newMode);
+
+// Get the operating system we are running on
+void sys_getOS();

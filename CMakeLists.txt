@@ -111,7 +111,7 @@ set (CXX_SRCS
      src/classes/paraEvent.cpp hdr/classes/paraEvent.h
      src/system/eventsEngine.cpp hdr/system/eventsEngine.h
      src/io/logFile.cpp hdr/io/logFile.h
-     hdr/system/enums.h)
+     )
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
 

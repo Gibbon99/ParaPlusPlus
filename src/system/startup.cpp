@@ -22,8 +22,8 @@ int         logicalWinWidth;
 int         logicalWinHeight;
 int         windowWidth;
 int         windowHeight;
-int         consoleWinWidth;
-int         consoleWinHeight;
+int			consoleVirtualWidth;
+int			consoleVirtualHeight;
 int         consoleNumColumns;
 int         consoleFontSize;
 int         windowFullscreen        = false;
@@ -42,18 +42,20 @@ bool renderToTextureAvailable = false;
 struct __backingTexture
 {
 	PARA_Texture *backingTexture;
-	int          width;
-	int          height;
+	int          backingWidth;
+	int          backingHeight;
+	int			logicalWidth;
+	int			logicalHeight;
 };
 
 struct __rendererInfo
 {
 	SDL_RendererInfo rendererInfo;
-	std::string      rendererName;
-	bool             softwareFallback;
-	bool             hardwareAccelerated;
-	bool             supportsRenderToTexture;
-	bool             supportsVSync;
+	std::string      rendererName = "";
+	bool             softwareFallback = false;
+	bool             hardwareAccelerated = false;
+	bool             supportsRenderToTexture = false;
+	bool             supportsVSync = false;
 };
 
 std::string                             activeBackingTexture;
@@ -104,10 +106,7 @@ void sys_debugBackingTextures()
 {
 	for (const auto &textureItr : backingTextures)
 	{
-		if (!textureItr.first.empty())
-			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE,
-			             sys_getString("[ %s ] - [ %i x %i ]", textureItr.first.c_str(), textureItr.second.width,
-			                           textureItr.second.height));
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("[ %s ] - Logical [ %i x %i ]", textureItr.first.c_str(), textureItr.second.logicalWidth, textureItr.second.logicalHeight));
 	}
 }
 
@@ -151,7 +150,7 @@ PARA_Texture *sys_getRenderTarget(const std::string &textureName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create the render target texture
-void sys_createRenderTargetTexture(const std::string &textureName, int targetWidth, int targetHeight)
+void sys_createRenderTargetTexture(const std::string &textureName, int logicalWidth, int logicalHeight)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string      hintValue;
@@ -175,8 +174,10 @@ void sys_createRenderTargetTexture(const std::string &textureName, int targetWid
 		}
 	}
 
-	tempBackingTexture.height         = targetHeight;
-	tempBackingTexture.width          = targetWidth;
+	tempBackingTexture.logicalHeight		 = logicalHeight;
+	tempBackingTexture.logicalWidth			 = logicalWidth;
+//	tempBackingTexture.backingHeight         = targetHeight;
+//	tempBackingTexture.backingWidth          = targetWidth;
 	tempBackingTexture.backingTexture = nullptr;
 	//
 	// Influence how the scaling is done when rendering the target texture to screen
@@ -186,8 +187,8 @@ void sys_createRenderTargetTexture(const std::string &textureName, int targetWid
 	else
 		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, "Hint SDL_HINT_RENDER_SCALE_QUALITY not applied.");
 
-	tempBackingTexture.backingTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, targetWidth,
-	                                                      targetHeight);
+	tempBackingTexture.backingTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, logicalWidth,
+	                                                      logicalHeight);
 	if (nullptr == tempBackingTexture.backingTexture)
 	{
 //		renderToTextureAvailable = false;
@@ -197,6 +198,10 @@ void sys_createRenderTargetTexture(const std::string &textureName, int targetWid
 //	renderToTextureAvailable = true;
 
 	backingTextures.insert(std::pair<std::string, __backingTexture>(textureName, tempBackingTexture));
+
+	//
+	// Adjust virtual scaling
+	SDL_RenderSetLogicalSize(sys_getRenderer(), logicalWidth, logicalHeight);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -342,15 +347,10 @@ void sys_createScreen(
 	windowWidth  = newWinWidth;
 	windowHeight = newWinHeight;
 
-	logicalWinHeight = newLogicalWidth;
-	logicalWinHeight = newLogicalHeight;
+//	logicalWinHeight = newLogicalWidth;
+//	logicalWinHeight = newLogicalHeight;
 
-	SDL_RenderSetLogicalSize(renderer, newLogicalWidth, newLogicalHeight);
-	//
-	// See if render to texture is supported - if so, create a render target texture and set available flag to true
-	renderToTextureAvailable = SDL_RenderTargetSupported(renderer);
-	if (renderToTextureAvailable)
-		sys_createRenderTargetTexture(std::__cxx11::string(), newLogicalWidth, newLogicalHeight);
+//	SDL_RenderSetLogicalSize(renderer, newLogicalWidth, newLogicalHeight);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

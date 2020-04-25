@@ -1,9 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\out",
-    "\\src"
+    "\\hdr",
+    "\\hdr\\classes",
+    "\\hdr\\io",
+    "\\hdr\\system",
+    "\\SDL2_WIN",
+    "\\src",
+    "\\src\\classes",
+    "\\src\\io",
+    "\\src\\system"
   ],
-  "SelectedNode": "\\CMakeSettings.json",
+  "SelectedNode": "\\.gitignore",
   "PreviewInSolutionExplorer": false
 }

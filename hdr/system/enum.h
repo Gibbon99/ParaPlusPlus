@@ -7,7 +7,8 @@ enum variableTypes
 	VAR_TYPE_FLOAT,
 	VAR_TYPE_UFLOAT,
 	VAR_TYPE_BOOL,
-	VAR_TYPE_STRING
+	VAR_TYPE_STRING,
+	VAR_TYPE_LAST
 };
 
 enum consoleFunctionSource

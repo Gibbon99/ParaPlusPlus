@@ -106,7 +106,7 @@ void con_initConsoleBackingTexture()
 {
 	//
 	// Create render target for the console
-	sys_createRenderTargetTexture(CONSOLE_BACKING_TEXTURE, consoleWinWidth, consoleWinHeight);
+	sys_createRenderTargetTexture(CONSOLE_BACKING_TEXTURE, consoleVirtualWidth, consoleVirtualHeight);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -115,7 +115,7 @@ void con_initConsoleBackingTexture()
 void con_initConsole()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	console.setScreenSize(consoleWinWidth, consoleWinHeight);
+	console.setScreenSize(consoleVirtualWidth, consoleVirtualHeight);
 	console.setNumVarColumns(consoleNumColumns);
 	//
 	// Start the console and processing thread
@@ -139,6 +139,7 @@ void con_initConsole()
 
 	console.addCommand("d_showBackingTextures", "Show backing texture information.",sys_debugBackingTextures);
 	console.addCommand("d_rendererInfo", "Show available renderer information.", sys_debugGetCurrentRenderer);
+	console.addCommand("d_getOS", "Show which OS is in use.", sys_getOS);
 
 	console.addVariable("quitLoop", VAR_TYPE_BOOL, &quitLoop);
 	console.addVariable("height", VAR_TYPE_INT, &testVar);
@@ -168,7 +169,7 @@ void con_renderConsole()
 
 	PARA_LockMutex(consoleMutex);
 
-		console.prepare(console.getDefaultPosX(), (float)logicalWinHeight - (consoleFont.lineHeight * 2));
+		console.prepare(console.getDefaultPosX(), (float)consoleVirtualHeight - (consoleFont.lineHeight * 2));
 		for (; console.consoleItr != console.consoleText.rend(); ++console.consoleItr)
 		{
 			consoleFont.setColor(console.consoleItr->red, console.consoleItr->green, console.consoleItr->blue, console.consoleItr->alpha);
@@ -191,11 +192,14 @@ void con_renderConsole()
 
 			if ( console.consoleItr->posX < console.getDefaultPosX() * 4)
 				console.posY -= consoleFont.lineHeight;
+
+			if (console.posY < 0)
+				break;
 		}
 
 		//
 		// Render the current input entry line
-		console.prepare(1, (float)logicalWinHeight - consoleFont.lineHeight);
+		console.prepare(1, (float)consoleVirtualHeight - consoleFont.lineHeight);
 		consoleFont.setColor(console.getDefaultRed(), console.getDefaultGreen(), console.getDefaultBlue(), console.getDefaultAlpha());
 		tempSurface = consoleFont.write(console.posX, console.posY, console.entryLine());
 		if (nullptr == tempSurface)

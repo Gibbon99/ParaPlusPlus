@@ -123,6 +123,9 @@ void paraConsole::addCharLine()
 {
 	_consoleLine tempLine;
 
+	if (paraConsole::enterLine.empty())
+		return;
+
 	tempLine.lineText = paraConsole::enterLine;
 	tempLine.posX     = paraConsole::posX;
 	tempLine.red      = paraConsole::defaultRed;
@@ -173,9 +176,15 @@ void paraConsole::addVariable(const std::string &variableName, int variableType,
 {
 	_variables tempVar;
 
-	if (variableName.empty()) // || (nullptr == variablePtr))
+	if ((variableName.empty()) || (nullptr == variablePtr))
 	{
 		std::cout << "Adding a variable must include a valid name and pointer." << endl;
+		return;
+	}
+
+	if ((variableType < 0) || (variableType > VAR_TYPE_LAST))
+	{
+		std::cout << "Invalid variableType for [ " << variableName << " ]" << endl;
 		return;
 	}
 
@@ -226,7 +235,7 @@ void paraConsole::addCommand(const std::string &commandName, const std::string &
 	tempCommand.commandHelp = commandHelp;
 	tempCommand.commandPtr  = commandPtr;
 
-	if ((!commandName.empty()) || (!commandName.empty()))
+	if ((!commandName.empty()) || (!commandHelp.empty()))
 	{
 		paraConsole::consoleCommands.insert(std::pair<std::string, _consoleCommand>(commandName, tempCommand));
 		return;

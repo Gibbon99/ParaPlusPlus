@@ -18,11 +18,11 @@ void io_readConfigValues(const std::string& fileName)
 	if (!iniFile.GetValuesToString("Main", "consoleFontFilename", (std::string &)consoleFontFilename))
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleFontFilename"));
 
-	if (!iniFile.GetValueToInt("Main", "consoleWinWidth", (int &)consoleWinWidth, 0))
-		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleWinWidth"));
+	if (!iniFile.GetValueToInt("Main", "consoleVirtualWidth", (int&)consoleVirtualWidth, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleVirtualWidth"));
 
-	if (!iniFile.GetValueToInt("Main", "consoleWinHeight", (int &)consoleWinHeight, 0))
-		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleWinHeight"));
+	if (!iniFile.GetValueToInt("Main", "consoleVirtualHeight", (int&)consoleVirtualHeight, 0))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleVirtualHeight"));
 
 	if (!iniFile.GetValueToInt("Main", "consoleNumColumns", (int &)consoleNumColumns, 0))
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleNumColumns"));
