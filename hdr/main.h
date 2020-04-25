@@ -27,6 +27,8 @@
 
 #define ERROR_COUNT_LIMIT   10
 
+#define CONSOLE_BACKING_TEXTURE "consoleBackingTexture"
+
 using namespace std;
 
 typedef int (*functionPtr)(...);
@@ -43,4 +45,4 @@ extern Uint32 thinkFPSPrint;
 extern double percentIntoNextFrame;
 
 extern std::string testVarString;
-extern float testVarFloat;
+extern float       testVarFloat;

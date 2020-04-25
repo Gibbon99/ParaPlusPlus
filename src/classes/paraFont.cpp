@@ -76,7 +76,7 @@ void paraFont::setColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a surface to hold the text and return pointer to the surface
-PARA_Surface *paraFont::write(int X, int Y, const std::string &fontText)
+PARA_Surface *paraFont::write(float X, float Y, const std::string &fontText)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (nullptr != paraFont::surface)

@@ -8,8 +8,7 @@ paraScript     paraScriptInstance;
 paraLogFile    logFile;
 paraFileSystem fileSystem;
 paraFont       consoleFont;
-paraConsole    console;
-
+paraConsole console(1, 255, 255, 255, 255);
 
 #define TICKS_PER_SECOND 30.0f
 #define MAX_FRAMESKIP 5

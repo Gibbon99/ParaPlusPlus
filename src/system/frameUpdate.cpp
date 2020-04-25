@@ -1,5 +1,5 @@
 #include "../../hdr/system/frameUpdate.h"
-#include "../../hdr/system/startup.h"
+#include "../main.h"
 
 SDL_Event evt;
 
@@ -36,6 +36,9 @@ void sys_gameTickRun()
 
 			if (evt.key.keysym.sym == SDLK_DOWN)
 				console.userBufferPrevious();
+
+			if (evt.key.keysym.sym == SDLK_TAB)
+				console.tabCompletion();
 
 			break;
 

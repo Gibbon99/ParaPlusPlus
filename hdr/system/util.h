@@ -14,3 +14,6 @@ void sys_freeMemory ();
 
 // Get the information about the available renderers
 void sys_getRendererInfo();
+
+// Set a new mode
+void sys_setNewMode(int newMode);

@@ -3,6 +3,8 @@
 #include "../../hdr/system/startup.h"
 #include "../../hdr/classes/paraEvent.h"
 #include "../../hdr/io/logFile.h"
+#include "../main.h"
+#include "../../hdr/system/enum.h"
 
 std::queue<paraEventConsole *> consoleEvents;
 
@@ -72,6 +74,7 @@ void con_processConsoleEventQueue(void *data)
 			}
 		}
 	}
+	cout << "CONSOLE thread stopped." << endl;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -97,10 +100,23 @@ void con_addEvent(int newAction, const std::string &newLine)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Create the console backing texture
+void con_initConsoleBackingTexture()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	//
+	// Create render target for the console
+	sys_createRenderTargetTexture(CONSOLE_BACKING_TEXTURE, consoleWinWidth, consoleWinHeight);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Start the console processing queue and thread
 void con_initConsole()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	console.setScreenSize(consoleWinWidth, consoleWinHeight);
+	console.setNumVarColumns(consoleNumColumns);
 	//
 	// Start the console and processing thread
 	evt_registerMutex(CONSOLE_MUTEX_NAME);
@@ -120,6 +136,9 @@ void con_initConsole()
 	console.addCommand("help", "functionHelp", "Show available commands");
 	console.addCommand("quit", "functionQuit", "Shutdown");
 	console.addCommand("exit", "functionQuit", "Shutdown");
+
+	console.addCommand("d_showBackingTextures", "Show backing texture information.",sys_debugBackingTextures);
+
 	console.addVariable("quitLoop", VAR_TYPE_BOOL, &quitLoop);
 	console.addVariable("height", VAR_TYPE_INT, &testVar);
 	console.addVariable("testString", VAR_TYPE_STRING, &testVarString);
@@ -148,10 +167,11 @@ void con_renderConsole()
 
 	PARA_LockMutex(consoleMutex);
 
-		console.prepare(1, logicalWinHeight - (consoleFont.lineHeight * 2));
+		console.prepare(console.getDefaultPosX(), (float)logicalWinHeight - (consoleFont.lineHeight * 2));
 		for (; console.consoleItr != console.consoleText.rend(); ++console.consoleItr)
 		{
-			tempSurface = consoleFont.write(console.posX, console.posY, *console.consoleItr);  // Surface is freed within console class
+			consoleFont.setColor(console.consoleItr->red, console.consoleItr->green, console.consoleItr->blue, console.consoleItr->alpha);
+			tempSurface = consoleFont.write(console.consoleItr->posX, console.posY, console.consoleItr->lineText);  // Surface is freed within console class
 			if (nullptr == tempSurface)
 			{
 				log_addEvent("Unable to create temp surface when rendering console.");
@@ -168,12 +188,14 @@ void con_renderConsole()
 
 			SDL_DestroyTexture(tempTexture);
 
-			console.posY -= consoleFont.lineHeight;
+			if ( console.consoleItr->posX < console.getDefaultPosX() * 4)
+				console.posY -= consoleFont.lineHeight;
 		}
 
 		//
 		// Render the current input entry line
-		console.prepare(1, logicalWinHeight - consoleFont.lineHeight);
+		console.prepare(1, (float)logicalWinHeight - consoleFont.lineHeight);
+		consoleFont.setColor(console.getDefaultRed(), console.getDefaultGreen(), console.getDefaultBlue(), console.getDefaultAlpha());
 		tempSurface = consoleFont.write(console.posX, console.posY, console.entryLine());
 		if (nullptr == tempSurface)
 		{
@@ -193,6 +215,7 @@ void con_renderConsole()
 
 	//
 	// Show performance stats
+	consoleFont.setColor(255,0,255,255);
 	tempSurface = consoleFont.write(1, 10, sys_getString("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
 	if (nullptr == tempSurface)
 	{

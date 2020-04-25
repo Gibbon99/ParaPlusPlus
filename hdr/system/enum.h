@@ -9,3 +9,14 @@ enum variableTypes
 	VAR_TYPE_BOOL,
 	VAR_TYPE_STRING
 };
+
+enum consoleFunctionSource
+{
+	CONSOLE_FUNCTION_SCRIPT = 0,
+	CONSOLE_FUNCTION_BUILTIN
+};
+
+enum currentModes
+{
+	MODE_CONSOLE_EDIT = 0
+};

@@ -1,11 +1,37 @@
 #include "../../hdr/system/util.h"
+#include "../../hdr/system/enum.h"
+#include "../../hdr/system/startup.h"
 
-typedef struct {
+int currentMode;
+
+struct paraMemoryMap
+{
 	char *pointer;
 	int  size;
-} _paraMemoryMap;
+};
 
-std::map<std::string, _paraMemoryMap> memoryMap;
+std::map<std::string, paraMemoryMap> memoryMap;
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Set a new mode
+void sys_setNewMode(int newMode)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	switch (newMode)
+	{
+		case MODE_CONSOLE_EDIT:
+			//
+			// Change to new screen size and backing texture
+			sys_setCurrentBackingTexture(CONSOLE_BACKING_TEXTURE);
+			currentMode = newMode;
+			break;
+
+		default:
+			sys_shutdownWithError("Attempting to set an unknown mode.");
+			break;
+	}
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -42,7 +68,7 @@ std::string sys_getString (std::string format, ...)
 char *sys_malloc (int memorySize, const std::string& keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	_paraMemoryMap newMemoryMapEntry;
+	paraMemoryMap newMemoryMapEntry;
 
 	newMemoryMapEntry.pointer = (char *) malloc (sizeof (char) * memorySize);
 	if (newMemoryMapEntry.pointer == nullptr)
@@ -52,7 +78,7 @@ char *sys_malloc (int memorySize, const std::string& keyName)
 
 	newMemoryMapEntry.size = memorySize;
 
-	memoryMap.insert (std::pair<std::string, _paraMemoryMap> (keyName, newMemoryMapEntry));
+	memoryMap.insert (std::pair<std::string, paraMemoryMap> (keyName, newMemoryMapEntry));
 
 	logFile.write(sys_getString("Allocated [ %i ] for [ %s ]", memorySize, keyName.c_str()));
 

@@ -6,6 +6,7 @@
 #include "../../hdr/io/configFile.h"
 #include "../../hdr/io/logFile.h"
 #include "../../hdr/io/console.h"
+#include "../../hdr/system/enum.h"
 
 // The window we'll be rendering to
 PARA_Window *window = nullptr;
@@ -20,6 +21,10 @@ int logicalWinWidth;
 int logicalWinHeight;
 int windowWidth;
 int windowHeight;
+int consoleWinWidth;
+int consoleWinHeight;
+int consoleNumColumns;
+int consoleFontSize;
 int windowFullscreen        = false;
 int windowFullscreenDesktop = false;
 int windowBorderless        = false;
@@ -32,7 +37,16 @@ int renderScaleQuality      = 0;
 
 bool renderToTextureAvailable = false;
 
-std::vector<SDL_RendererInfo> rendererInfo;
+struct __backingTexture
+{
+	PARA_Texture    *backingTexture;
+	int             width;
+	int             height;
+};
+
+std::string activeBackingTexture;
+std::map<std::string, __backingTexture>     backingTextures;
+std::vector<SDL_RendererInfo>               rendererInfo;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -63,31 +77,91 @@ bool sys_useRenderTarget()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Return the string name of the currently active backing texture
+std::string sys_getCurrentBackingTexture()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return activeBackingTexture;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Display the current backing texture information to the console
+void sys_debugBackingTextures()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	for (const auto& textureItr : backingTextures)
+	{
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("[ %s ] - [ %i x %i ]", textureItr.first.c_str(), textureItr.second.width, textureItr.second.height));
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Make a new backing texture active
+void sys_setCurrentBackingTexture(const std::string& newActiveTexture)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	for (const auto& textureItr : backingTextures)
+	{
+		if (newActiveTexture == textureItr.first)
+		{
+			activeBackingTexture = newActiveTexture;
+			return;
+		}
+	}
+	sys_shutdownWithError(sys_getString("Unable to set new backing texture. Not found [ %s ]", newActiveTexture.c_str()));
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Return the render target texture handle
-PARA_Texture *sys_getRenderTarget()
+PARA_Texture *sys_getRenderTarget(const std::string& textureName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 //	SDL_assert_release(renderTargetTexture != nullptr);
-	return renderTargetTexture;
+	if (backingTextures.empty())
+		sys_shutdownWithError(sys_getString("No backing textures exist."));
+
+	for (const auto& textureItr : backingTextures)
+	{
+		if (textureName == textureItr.first)
+		{
+			return textureItr.second.backingTexture;
+		}
+	}
+	sys_shutdownWithError(sys_getString("Backing texture [ %s ] does not exist.", textureName.c_str()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create the render target texture
-void sys_createRenderTargetTexture(int targetWidth, int targetHeight)
+void sys_createRenderTargetTexture(const std::string& textureName, int targetWidth, int targetHeight)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string hintValue;
+	__backingTexture    tempBackingTexture;
 
 //	0 or nearest 	nearest pixel sampling
 //	1 or linear 	linear filtering (supported by OpenGL and Direct3D)
 //	2 or best	anisotropic filtering (supported by Direct3D)
 
-	if (nullptr != renderTargetTexture)
+	//
+	// See if it exists already - if so, remove it, assuming it is being resized.
+	//
+	for (auto &textureItr : backingTextures)
 	{
-		SDL_DestroyTexture(renderTargetTexture);
-		renderToTextureAvailable = false;
+		if (textureItr.first == textureName)
+		{
+			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Backing texture [ %s ] already exists. Removing.", textureName.c_str()));
+			SDL_DestroyTexture(textureItr.second.backingTexture);
+			backingTextures.erase(textureName);
+		}
 	}
+
+	tempBackingTexture.height = targetHeight;
+	tempBackingTexture.width = targetWidth;
+	tempBackingTexture.backingTexture = nullptr;
 	//
 	// Influence how the scaling is done when rendering the target texture to screen
 	hintValue = std::to_string(renderScaleQuality);
@@ -96,14 +170,16 @@ void sys_createRenderTargetTexture(int targetWidth, int targetHeight)
 	else
 		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, "Hint SDL_HINT_RENDER_SCALE_QUALITY not applied.");
 
-	renderTargetTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, targetWidth, targetHeight);
-	if (nullptr == renderTargetTexture)
+	tempBackingTexture.backingTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, targetWidth, targetHeight);
+	if (nullptr == tempBackingTexture.backingTexture)
 	{
-		renderToTextureAvailable = false;
+//		renderToTextureAvailable = false;
 		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Unable to create render target texture [ %s ]", SDL_GetError()));
 	}
 
-	renderToTextureAvailable = true;
+//	renderToTextureAvailable = true;
+
+	backingTextures.insert( std::pair<std::string, __backingTexture>(textureName, tempBackingTexture));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -234,7 +310,7 @@ void sys_createScreen(
 	// See if render to texture is supported - if so, create a render target texture and set available flag to true
 	renderToTextureAvailable = SDL_RenderTargetSupported(renderer);
 	if (renderToTextureAvailable)
-		sys_createRenderTargetTexture(newLogicalWidth, newLogicalHeight);
+		sys_createRenderTargetTexture(std::__cxx11::string(), newLogicalWidth, newLogicalHeight);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -264,9 +340,9 @@ void sys_startSystems()
 
 	io_initLogFile();
 
-	con_initConsole();
-
 	io_readConfigValues("data/config.ini");
+
+	con_initConsole();
 
 	sys_getRendererInfo();  // Store the renderers available to the system
 
@@ -275,6 +351,8 @@ void sys_startSystems()
 	sys_createScreen(false, windowWidth, windowHeight, sys_createWindowFlags(), whichRenderer, sys_createRendererFlags(whichRenderer), logicalWinWidth,
 	                 logicalWinHeight);
 	con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Window system started. Renderer [ %s ]", rendererInfo[whichRenderer].name));
+
+	con_initConsoleBackingTexture();
 
 	if (!fileSystem.init("data", "data"))
 		sys_shutdownWithError("Error. Could not start filesystem. Check directory structure.");
@@ -286,7 +364,7 @@ void sys_startSystems()
 
 	log_addEvent("About to load font.");
 
-	consoleFont.load(12, "data/console.ttf");
+	consoleFont.load(consoleFontSize, "data/console.ttf");
 	consoleFont.setColor(255, 255, 255, 255);
 
 #ifdef MY_DEBUG//=true
@@ -304,7 +382,7 @@ void sys_startSystems()
 	paraScriptInstance.loadAndCompile();
 	paraScriptInstance.cacheFunctions();
 
-
+	sys_setNewMode(MODE_CONSOLE_EDIT);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

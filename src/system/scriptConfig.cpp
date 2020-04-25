@@ -24,7 +24,7 @@ void sys_scriptInitScriptFunctions ()
 void sys_scriptInitVariables ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraScriptInstance.addHostVariable("int quitProgram", &quitProgram);
+	paraScriptInstance.addHostVariable("int quitProgram", &quitLoop);
 }
 
 int sys_scriptPrintInt()

@@ -4,89 +4,149 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "../wrapper.h"
 
-#define CONSOLE_MEM_SIZE	1000	// Max number of lines in vector
+#define CONSOLE_MEM_SIZE    1000    // Max number of lines in vector
 
-enum consoleVariableTypes
+typedef void (*funcPtr)();      // Pointer to function with no args and returns void
+
+//
+// This runs a script command
+struct _consoleCommand
 {
-	VAR_TYPE_INT = 0,
-	VAR_TYPE_FLOAT,
-	VAR_TYPE_BOOL,
-	VAR_TYPE_STRING
+	std::string commandName;
+	std::string commandHelp;
+	funcPtr commandPtr;
 };
 
-enum consoleFunctionSource
-{
-	CONSOLE_FUNCTION_SCRIPT = 0,
-	CONSOLE_FUNCTION_BUILTIN
-};
-
+//
+// This runs a internal function via function pointer
 struct _consoleFunction
 {
-	std::string		functionName;
-	std::string		functionHelp;
+	void        *functionPtr;
+	std::string functionHelp;
 };
 
 struct _variables
 {
-	std::string   varName;
-	int           varType;
-	int           *varPtrInt = new int;
-	bool          *varPtrBool = new bool;
-	float         *varPtrFloat = new float;
-	std::string   *varPtrString = new std::string;
+	std::string varName;
+	int         varType;
+	int         *varPtrInt    = new int;
+	bool        *varPtrBool   = new bool;
+	float       *varPtrFloat  = new float;
+	std::string *varPtrString = new std::string;
+};
+
+struct _consoleLine
+{
+	float       posX;
+	int         red;
+	int         green;
+	int         blue;
+	int         alpha;
+	std::string lineText;
 };
 
 class paraConsole
 {
 public:
-	void add(const std::string& newLine);
+//
+// Constructor
+	paraConsole(float defaultPosX, int red, int green, int blue, int alpha);
+//
+// Add things
+	void add(const std::string &newLine);
 
-	void prepare(int newPosX, int newPosY);
+	void add(float linePosX, const std::string &newLine);
 
-	void addChar(const std::string& newChar);
+	void add(float linePosX, int red, int green, int blue, int alpha, const std::string &newLine);
 
-	void deleteChar();
+	void addChar(const std::string &newChar);
+
+	void addCommand(const std::string &commandName, const std::string &functionName, const std::string &functionHelp);
+
+	void addCommand(const std::string &commandName, const std::string &commandHelp,  funcPtr commandPtr);
+
+	void addVariable(const std::string &variableName, int variableType, void *variablePtr);
 
 	void addCharLine();
+//
+// Set things
+	void setScreenSize(int consoleWinWidth, int consoleWinHeight);
 
-	void userBufferNext();
+	void setNumVarColumns(int newNumVarColumns);
 
-	void userBufferPrevious();
+	void setVarFunc(const std::string &varName, int variablePtr);
 
-	std::vector<std::string> tokeniseEntryLine(std::string entryLine);
+	void setVarFunc(const std::string &varName, float variablePtr);
+
+	void setVarFunc(const std::string &varName, std::string variablePtr);
+
+	void setVarBool(const std::string &varName, bool variablePtr);
+
+	void setVar(const std::string &varName, const std::string &varParam);
+//
+// Get things
+	void getVariable(const std::vector<std::string> &commandLine);
+
+	float getDefaultPosX() const;
+
+	int getDefaultRed() const;
+
+	int getDefaultGreen() const;
+
+	int getDefaultBlue() const;
+
+	int getDefaultAlpha() const;
+//
+// Process things
+	void prepare(float newPosX, float newPosY);
 
 	void processCommand(std::vector<std::string> commandLine);
 
 	void processVariable(std::vector<std::string> commandLine);
 
-	void addCommand(const std::string& commandName, const std::string& functionName, const std::string& functionHelp);
+	void listVariables();
 
-	void addVariable(const std::string& variableName, int variableType, void* variablePtr);
+//
+// Misc things
+	void deleteChar();
 
-	void setVarFunc(const std::string &varName, int variablePtr);
-	void setVarFunc(const std::string &varName, float variablePtr);
-	void setVarFunc(const std::string &varName, std::string variablePtr);
-	void setVarBool(const std::string &varName, bool variablePtr);
-	void setVar(const std::string &varName, const std::string &varParam);
+	void userBufferNext();
 
-	std::string entryLine();	
+	void userBufferPrevious();
+
+	bool stringStartsWith(const std::string &lookIn, const std::string &lookFor);
+
+	void tabCompletion();
+
+	void displayInColumns(const std::vector<std::string> &displayText);
+
+	std::vector<std::string> tokeniseEntryLine(std::string entryLine);
+
+	std::string entryLine();
 
 	// TODO: bool entryMode - false means don't allow text entry
 
-	std::vector<std::string> consoleText;
-	std::vector<std::string> userBuffer;		// Remember commands entered
-	int posX = 0;
-	int posY = 0;
-	int userBufferIndex = 0;
-	std::vector<std::string>::reverse_iterator  consoleItr;
-	std::map<std::string, _consoleFunction>		consoleFunctions;
+	std::vector<_consoleLine>                   consoleText;
+	std::vector<std::string>                    userBuffer;        // Remember commands entered
+	float                                       posX            = 0;
+	float                                       posY            = 0;
+	int                                         userBufferIndex = 0;
+	std::vector<_consoleLine>::reverse_iterator consoleItr;
+	std::map<std::string, _consoleCommand>      consoleCommands;
 	std::vector<_variables>                     consoleVariables;
 
 private:
 	std::string enterLine;
-	
+	int         defaultRed;
+	int         defaultGreen;
+	int         defaultBlue;
+	int         defaultAlpha;
+	float       defaultPosX;
+	int         screenWidth;
+	int         screenHeight;
+	int         numVarColumns;
 };
-
 
 #endif //PARA_PARACONSOLE_H

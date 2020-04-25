@@ -12,7 +12,7 @@ void sys_prepareFrame()
 
 	if (sys_useRenderTarget())
 	{
-		if (SDL_SetRenderTarget(sys_getRenderer(), sys_getRenderTarget()) < 0)
+		if (SDL_SetRenderTarget(sys_getRenderer(), sys_getRenderTarget(sys_getCurrentBackingTexture())) < 0)
 		{
 			logFile.write(sys_getString("Unable to set render target [ %s ]", SDL_GetError));
 			errorCount++;
@@ -34,7 +34,7 @@ void sys_completeFrame()
 	if (sys_useRenderTarget())
 	{
 		SDL_SetRenderTarget(sys_getRenderer(), nullptr);
-		SDL_RenderCopy(sys_getRenderer(), sys_getRenderTarget(), nullptr, nullptr);
+		SDL_RenderCopy(sys_getRenderer(), sys_getRenderTarget(sys_getCurrentBackingTexture()), nullptr, nullptr);
 	}
 
 	SDL_RenderPresent(sys_getRenderer());
