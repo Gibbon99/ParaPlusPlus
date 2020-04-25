@@ -140,6 +140,8 @@ void paraConsole::addCharLine()
 
 	paraConsole::enterLine.clear();
 	paraConsole::userBufferIndex = userBuffer.size();
+
+	paraConsole::scrollbackOffset = 0;
 }
 
 std::string paraConsole::entryLine()
@@ -149,7 +151,7 @@ std::string paraConsole::entryLine()
 
 void paraConsole::prepare(float newPosX, float newPosY)
 {
-	paraConsole::consoleItr = paraConsole::consoleText.rbegin();
+	paraConsole::consoleItr = paraConsole::consoleText.rbegin() + scrollbackOffset;
 	paraConsole::posX       = newPosX;
 	paraConsole::posY       = newPosY;
 }
@@ -545,6 +547,16 @@ bool paraConsole::stringStartsWith(const std::string &lookIn, const std::string 
 		return true;
 	else
 		return false;
+}
+
+void paraConsole::changeScrollBackOffset(int value)
+{
+	paraConsole::scrollbackOffset += value;
+	if (paraConsole::scrollbackOffset < 0)
+		paraConsole::scrollbackOffset = 0;
+
+	if (paraConsole::scrollbackOffset > (int)paraConsole::consoleText.size() - 1)
+		paraConsole::scrollbackOffset = (int)paraConsole::consoleText.size() - 1;
 }
 
 void paraConsole::tabCompletion()

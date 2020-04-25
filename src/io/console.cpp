@@ -134,12 +134,12 @@ void con_initConsole()
 	sys_addEvent(EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, sys_getString("Console started [ %s ]", APP_NAME));
 
 	console.addCommand("help", "functionHelp", "Show available commands");
-	console.addCommand("quit", "functionQuit", "Shutdown");
 	console.addCommand("exit", "functionQuit", "Shutdown");
 
 	console.addCommand("d_showBackingTextures", "Show backing texture information.",sys_debugBackingTextures);
 	console.addCommand("d_rendererInfo", "Show available renderer information.", sys_debugGetCurrentRenderer);
 	console.addCommand("d_getOS", "Show which OS is in use.", sys_getOS);
+	console.addCommand("quit", "Quit the game.", sys_shutdown);
 
 	console.addVariable("quitLoop", VAR_TYPE_BOOL, &quitLoop);
 	console.addVariable("height", VAR_TYPE_INT, &testVar);

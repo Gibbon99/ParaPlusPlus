@@ -40,6 +40,12 @@ void sys_gameTickRun()
 			if (evt.key.keysym.sym == SDLK_TAB)
 				console.tabCompletion();
 
+			if (evt.key.keysym.sym == SDLK_PAGEUP)
+				console.changeScrollBackOffset(-1);
+
+			if (evt.key.keysym.sym == SDLK_PAGEDOWN)
+				console.changeScrollBackOffset(1);
+
 			break;
 
 		case SDL_TEXTINPUT:

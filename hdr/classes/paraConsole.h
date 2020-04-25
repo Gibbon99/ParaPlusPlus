@@ -16,7 +16,7 @@ struct _consoleCommand
 {
 	std::string commandName;
 	std::string commandHelp;
-	funcPtr commandPtr;
+	funcPtr     commandPtr;
 };
 
 //
@@ -53,6 +53,7 @@ public:
 //
 // Constructor
 	paraConsole(float defaultPosX, int red, int green, int blue, int alpha);
+
 //
 // Add things
 	void add(const std::string &newLine);
@@ -65,11 +66,12 @@ public:
 
 	void addCommand(const std::string &commandName, const std::string &functionName, const std::string &functionHelp);
 
-	void addCommand(const std::string &commandName, const std::string &commandHelp,  funcPtr commandPtr);
+	void addCommand(const std::string &commandName, const std::string &commandHelp, funcPtr commandPtr);
 
 	void addVariable(const std::string &variableName, int variableType, void *variablePtr);
 
 	void addCharLine();
+
 //
 // Set things
 	void setScreenSize(int consoleWinWidth, int consoleWinHeight);
@@ -85,6 +87,7 @@ public:
 	void setVarBool(const std::string &varName, bool variablePtr);
 
 	void setVar(const std::string &varName, const std::string &varParam);
+
 //
 // Get things
 	void getVariable(const std::vector<std::string> &commandLine);
@@ -98,6 +101,7 @@ public:
 	int getDefaultBlue() const;
 
 	int getDefaultAlpha() const;
+
 //
 // Process things
 	void prepare(float newPosX, float newPosY);
@@ -107,6 +111,8 @@ public:
 	void processVariable(std::vector<std::string> commandLine);
 
 	void listVariables();
+
+	void changeScrollBackOffset(int value);
 
 //
 // Misc things
@@ -130,12 +136,13 @@ public:
 
 	std::vector<_consoleLine>                   consoleText;
 	std::vector<std::string>                    userBuffer;        // Remember commands entered
-	float                                       posX            = 0;
-	float                                       posY            = 0;
-	int                                         userBufferIndex = 0;
+	float                                       posX             = 0;
+	float                                       posY             = 0;
+	int                                         userBufferIndex  = 0;
 	std::vector<_consoleLine>::reverse_iterator consoleItr;
 	std::map<std::string, _consoleCommand>      consoleCommands;
 	std::vector<_variables>                     consoleVariables;
+	int                                         scrollbackOffset = 0;
 
 private:
 	std::string enterLine;
