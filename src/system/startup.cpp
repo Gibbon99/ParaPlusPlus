@@ -15,38 +15,50 @@ PARA_Window *window = nullptr;
 PARA_Renderer *renderer = nullptr;
 
 // Target render texture
-PARA_Texture    *renderTargetTexture = nullptr;
+PARA_Texture *renderTargetTexture   = nullptr;
 
-int logicalWinWidth;
-int logicalWinHeight;
-int windowWidth;
-int windowHeight;
-int consoleWinWidth;
-int consoleWinHeight;
-int consoleNumColumns;
-int consoleFontSize;
-int windowFullscreen        = false;
-int windowFullscreenDesktop = false;
-int windowBorderless        = false;
-int windowInputGrabbed      = true;
-int windowInputFocus        = true;
-int windowAllowHighDPI      = false;
-int whichRenderer           = 0;
-int presentVSync            = true;
-int renderScaleQuality      = 0;
+// Variables needed to start everything
+int         logicalWinWidth;
+int         logicalWinHeight;
+int         windowWidth;
+int         windowHeight;
+int         consoleWinWidth;
+int         consoleWinHeight;
+int         consoleNumColumns;
+int         consoleFontSize;
+int         windowFullscreen        = false;
+int         windowFullscreenDesktop = false;
+int         windowBorderless        = false;
+int         windowInputGrabbed      = true;
+int         windowInputFocus        = true;
+int         windowAllowHighDPI      = false;
+int         whichRenderer           = 0;
+int         presentVSync            = true;
+int         renderScaleQuality      = 0;
+std::string consoleFontFilename;
 
 bool renderToTextureAvailable = false;
 
 struct __backingTexture
 {
-	PARA_Texture    *backingTexture;
-	int             width;
-	int             height;
+	PARA_Texture *backingTexture;
+	int          width;
+	int          height;
 };
 
-std::string activeBackingTexture;
-std::map<std::string, __backingTexture>     backingTextures;
-std::vector<SDL_RendererInfo>               rendererInfo;
+struct __rendererInfo
+{
+	SDL_RendererInfo rendererInfo;
+	std::string      rendererName;
+	bool             softwareFallback;
+	bool             hardwareAccelerated;
+	bool             supportsRenderToTexture;
+	bool             supportsVSync;
+};
+
+std::string                             activeBackingTexture;
+std::map<std::string, __backingTexture> backingTextures;
+std::vector<__rendererInfo>             rendererInfo;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -90,19 +102,22 @@ std::string sys_getCurrentBackingTexture()
 void sys_debugBackingTextures()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (const auto& textureItr : backingTextures)
+	for (const auto &textureItr : backingTextures)
 	{
-		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("[ %s ] - [ %i x %i ]", textureItr.first.c_str(), textureItr.second.width, textureItr.second.height));
+		if (!textureItr.first.empty())
+			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE,
+			             sys_getString("[ %s ] - [ %i x %i ]", textureItr.first.c_str(), textureItr.second.width,
+			                           textureItr.second.height));
 	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Make a new backing texture active
-void sys_setCurrentBackingTexture(const std::string& newActiveTexture)
+void sys_setCurrentBackingTexture(const std::string &newActiveTexture)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (const auto& textureItr : backingTextures)
+	for (const auto &textureItr : backingTextures)
 	{
 		if (newActiveTexture == textureItr.first)
 		{
@@ -116,14 +131,14 @@ void sys_setCurrentBackingTexture(const std::string& newActiveTexture)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the render target texture handle
-PARA_Texture *sys_getRenderTarget(const std::string& textureName)
+PARA_Texture *sys_getRenderTarget(const std::string &textureName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 //	SDL_assert_release(renderTargetTexture != nullptr);
 	if (backingTextures.empty())
 		sys_shutdownWithError(sys_getString("No backing textures exist."));
 
-	for (const auto& textureItr : backingTextures)
+	for (const auto &textureItr : backingTextures)
 	{
 		if (textureName == textureItr.first)
 		{
@@ -136,11 +151,11 @@ PARA_Texture *sys_getRenderTarget(const std::string& textureName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create the render target texture
-void sys_createRenderTargetTexture(const std::string& textureName, int targetWidth, int targetHeight)
+void sys_createRenderTargetTexture(const std::string &textureName, int targetWidth, int targetHeight)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	std::string hintValue;
-	__backingTexture    tempBackingTexture;
+	std::string      hintValue;
+	__backingTexture tempBackingTexture;
 
 //	0 or nearest 	nearest pixel sampling
 //	1 or linear 	linear filtering (supported by OpenGL and Direct3D)
@@ -153,14 +168,15 @@ void sys_createRenderTargetTexture(const std::string& textureName, int targetWid
 	{
 		if (textureItr.first == textureName)
 		{
-			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Backing texture [ %s ] already exists. Removing.", textureName.c_str()));
+			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE,
+			             sys_getString("Backing texture [ %s ] already exists. Removing.", textureName.c_str()));
 			SDL_DestroyTexture(textureItr.second.backingTexture);
 			backingTextures.erase(textureName);
 		}
 	}
 
-	tempBackingTexture.height = targetHeight;
-	tempBackingTexture.width = targetWidth;
+	tempBackingTexture.height         = targetHeight;
+	tempBackingTexture.width          = targetWidth;
 	tempBackingTexture.backingTexture = nullptr;
 	//
 	// Influence how the scaling is done when rendering the target texture to screen
@@ -170,7 +186,8 @@ void sys_createRenderTargetTexture(const std::string& textureName, int targetWid
 	else
 		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, "Hint SDL_HINT_RENDER_SCALE_QUALITY not applied.");
 
-	tempBackingTexture.backingTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, targetWidth, targetHeight);
+	tempBackingTexture.backingTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, targetWidth,
+	                                                      targetHeight);
 	if (nullptr == tempBackingTexture.backingTexture)
 	{
 //		renderToTextureAvailable = false;
@@ -179,7 +196,32 @@ void sys_createRenderTargetTexture(const std::string& textureName, int targetWid
 
 //	renderToTextureAvailable = true;
 
-	backingTextures.insert( std::pair<std::string, __backingTexture>(textureName, tempBackingTexture));
+	backingTextures.insert(std::pair<std::string, __backingTexture>(textureName, tempBackingTexture));
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Get information on the current renderer
+void sys_debugGetCurrentRenderer()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int rendererCount = 0;
+
+	if (rendererInfo.empty())
+	{
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, "Renderer information has not been populated.");
+		return;
+	}
+
+	if (whichRenderer < (int)(rendererInfo.size()))
+	{
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE,
+		             sys_getString("Renderer name [ %s ]", rendererInfo[whichRenderer].rendererName.c_str()));
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString(" - Hardware accelerated [ %s ]", rendererInfo[whichRenderer].hardwareAccelerated ? "Yes" : "No"));
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString(" - Render to texture [ %s ]", rendererInfo[whichRenderer].supportsRenderToTexture ? "Yes" : "No"));
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString(" - Render to VSync [ %s ]", rendererInfo[whichRenderer].supportsVSync ? "Yes" : "No"));
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString(" - Software fallback [ %s ]", rendererInfo[whichRenderer].softwareFallback ? "Yes" : "No"));
+	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -188,7 +230,9 @@ void sys_createRenderTargetTexture(const std::string& textureName, int targetWid
 void sys_getRendererInfo()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int              numRenderDrivers;
+	int            numRenderDrivers;
+	__rendererInfo tempRendererInfo;
+
 	SDL_RendererInfo renderDriverInfo;
 
 	numRenderDrivers = SDL_GetNumRenderDrivers();
@@ -201,18 +245,14 @@ void sys_getRendererInfo()
 		{
 			sys_shutdownWithError(sys_getString("Error. Unable to get render driver info [ %s ]", SDL_GetError()));
 		}
-		rendererInfo.push_back(renderDriverInfo);
+		tempRendererInfo.rendererInfo            = renderDriverInfo;
+		tempRendererInfo.rendererName            = renderDriverInfo.name;
+		tempRendererInfo.softwareFallback        = (renderDriverInfo.flags & SDL_RENDERER_SOFTWARE) ? true : false;
+		tempRendererInfo.hardwareAccelerated     = (renderDriverInfo.flags & SDL_RENDERER_ACCELERATED) ? true : false;
+		tempRendererInfo.supportsVSync           = (renderDriverInfo.flags & SDL_RENDERER_PRESENTVSYNC) ? true : false;
+		tempRendererInfo.supportsRenderToTexture = (renderDriverInfo.flags & SDL_RENDERER_TARGETTEXTURE) ? true : false;
 
-		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("%i. Renderer name [ %s ]", i, renderDriverInfo.name));
-
-		if (renderDriverInfo.flags & SDL_RENDERER_SOFTWARE)
-			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("          %i. Software fallback", i));
-		if (renderDriverInfo.flags & SDL_RENDERER_ACCELERATED)
-			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("          %i. Uses hardware acceleration", i));
-		if (renderDriverInfo.flags & SDL_RENDERER_PRESENTVSYNC)
-			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("          %i. Uses screen refresh rate to sync", i));
-		if (renderDriverInfo.flags & SDL_RENDERER_TARGETTEXTURE)
-			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("          %i. Supports render to texture", i));
+		rendererInfo.push_back(tempRendererInfo);
 	}
 }
 
@@ -230,13 +270,13 @@ Uint32 sys_createRendererFlags(int rendererIndex)
 	if (presentVSync)
 		newFlags = SDL_RENDERER_PRESENTVSYNC;
 
-	if (rendererInfo[rendererIndex].flags & SDL_RENDERER_SOFTWARE)
+	if (rendererInfo[rendererIndex].rendererInfo.flags & SDL_RENDERER_SOFTWARE)
 	{
 		newFlags = newFlags | SDL_RENDERER_SOFTWARE;
 		return newFlags;
 	}
 
-	if (rendererInfo[rendererIndex].flags & SDL_RENDERER_ACCELERATED)
+	if (rendererInfo[rendererIndex].rendererInfo.flags & SDL_RENDERER_ACCELERATED)
 	{
 		newFlags = newFlags | SDL_RENDERER_ACCELERATED;
 		return newFlags;
@@ -348,9 +388,10 @@ void sys_startSystems()
 
 	sys_verifyRenderer();
 
-	sys_createScreen(false, windowWidth, windowHeight, sys_createWindowFlags(), whichRenderer, sys_createRendererFlags(whichRenderer), logicalWinWidth,
+	sys_createScreen(false, windowWidth, windowHeight, sys_createWindowFlags(), whichRenderer, sys_createRendererFlags(whichRenderer),
+	                 logicalWinWidth,
 	                 logicalWinHeight);
-	con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Window system started. Renderer [ %s ]", rendererInfo[whichRenderer].name));
+	con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Window system started. Renderer [ %s ]", rendererInfo[whichRenderer].rendererName.c_str()));
 
 	con_initConsoleBackingTexture();
 
@@ -364,7 +405,7 @@ void sys_startSystems()
 
 	log_addEvent("About to load font.");
 
-	consoleFont.load(consoleFontSize, "data/console.ttf");
+	consoleFont.load(consoleFontSize, consoleFontFilename);
 	consoleFont.setColor(255, 255, 255, 255);
 
 #ifdef MY_DEBUG//=true
@@ -391,6 +432,7 @@ void sys_startSystems()
 void sys_createNewScreen(int winWidth, int winHeight, int newRenderer)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	sys_createScreen(true, winWidth, winHeight, sys_createWindowFlags(), newRenderer, sys_createRendererFlags(newRenderer), winWidth, winHeight);
-	con_addEvent(0, sys_getString("Window system started. Renderer [ %s ]", rendererInfo[newRenderer].name));
+	sys_createScreen(true, winWidth, winHeight, sys_createWindowFlags(), newRenderer, sys_createRendererFlags(newRenderer), winWidth,
+	                 winHeight);
+	con_addEvent(0, sys_getString("Window system started. Renderer [ %s ]", rendererInfo[newRenderer].rendererName.c_str()));
 }

@@ -37,7 +37,7 @@ bool paraFont::load(int fontSize, const std::string &fileName)
 	paraFont::fontHandle = TTF_OpenFont(fileName.c_str(), fontSize);
 	if (nullptr == paraFont::fontHandle)
 	{
-		log_addEvent(sys_getString("Unable to open font [ %s ] - ", fileName.c_str(), TTF_GetError()));
+		log_addEvent(sys_getString("Unable to open font [ %s ] - [ %s ]", fileName.c_str(), TTF_GetError()));
 		paraFont::available = false;
 		return false;
 	}

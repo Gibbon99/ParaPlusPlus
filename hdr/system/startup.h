@@ -2,6 +2,7 @@
 
 #include "../main.h"
 
+// Variables to start everything
 extern int logicalWinWidth;
 extern int logicalWinHeight;
 extern int windowWidth;
@@ -19,6 +20,7 @@ extern int windowAllowHighDPI;
 extern int whichRenderer;
 extern int presentVSync;
 extern int renderScaleQuality;
+extern std::string consoleFontFilename;
 
 extern std::string activeBackingTexture;
 
@@ -53,3 +55,6 @@ void sys_setCurrentBackingTexture(const std::string& newActiveTexture);
 
 // Display the current backing texture information to the console
 void sys_debugBackingTextures();
+
+// Get information on the current renderer
+void sys_debugGetCurrentRenderer();

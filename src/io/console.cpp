@@ -138,6 +138,7 @@ void con_initConsole()
 	console.addCommand("exit", "functionQuit", "Shutdown");
 
 	console.addCommand("d_showBackingTextures", "Show backing texture information.",sys_debugBackingTextures);
+	console.addCommand("d_rendererInfo", "Show available renderer information.", sys_debugGetCurrentRenderer);
 
 	console.addVariable("quitLoop", VAR_TYPE_BOOL, &quitLoop);
 	console.addVariable("height", VAR_TYPE_INT, &testVar);

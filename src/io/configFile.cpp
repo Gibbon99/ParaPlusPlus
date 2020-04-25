@@ -15,6 +15,9 @@ void io_readConfigValues(const std::string& fileName)
 		sys_shutdownWithError(sys_getString("Unable to open config file [ %s ]", fileName.c_str()));
 	}
 
+	if (!iniFile.GetValuesToString("Main", "consoleFontFilename", (std::string &)consoleFontFilename))
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleFontFilename"));
+
 	if (!iniFile.GetValueToInt("Main", "consoleWinWidth", (int &)consoleWinWidth, 0))
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleWinWidth"));
 
