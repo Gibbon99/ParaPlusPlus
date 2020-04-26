@@ -2,8 +2,11 @@
 #define PARA_PARAFILESYSTEM_H
 
 #include <string>
-#include "paraLogFile.h"
 #include "../physfs/physfs.h"
+
+typedef void (*functionPtrStr)(std::string);
+
+typedef char *(*functionPtrMalloc)(int, std::string);
 
 class paraFileSystem
 {
@@ -20,8 +23,16 @@ public:
 
 	std::string getString(const std::string &fileName);
 
+	std::string int_getString(std::string format, ...);
+
+	void setOutputFunction(functionPtrStr outputFunction);
+
+	void setMallocFunction(functionPtrMalloc mallocFunctionPtr);
+
 private:
-	bool fileSystemReady = false;
+	bool              fileSystemReady = false;
+	functionPtrStr    funcOutput;
+	functionPtrMalloc mallocFunction;
 };
 
 #endif //PARA_PARAFILESYSTEM_H

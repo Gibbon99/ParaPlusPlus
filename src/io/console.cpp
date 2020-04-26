@@ -164,47 +164,22 @@ void con_renderConsole()
 		consoleMutex = evt_getMutex(CONSOLE_MUTEX_NAME);    // cache the mutex value
 		if (nullptr == consoleMutex)
 			sys_shutdownWithError(
-				sys_getString("Unable to get Mutex value to render console [ %s ] - [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError()));
+					sys_getString("Unable to get Mutex value to render console [ %s ] - [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError()));
 	}
 
 	PARA_LockMutex(consoleMutex);
 
-		console.prepare(console.getDefaultPosX(), (float)consoleVirtualHeight - (consoleFont.lineHeight * 2));
-		for (; console.consoleItr != console.consoleText.rend(); ++console.consoleItr)
-		{
-			consoleFont.setColor(console.consoleItr->red, console.consoleItr->green, console.consoleItr->blue, console.consoleItr->alpha);
-			tempSurface = consoleFont.write(console.consoleItr->posX, console.posY, console.consoleItr->lineText);  // Surface is freed within console class
-			if (nullptr == tempSurface)
-			{
-				log_addEvent("Unable to create temp surface when rendering console.");
-				return;
-			}
-			tempTexture = SDL_CreateTextureFromSurface(sys_getRenderer(), tempSurface);
-			if (nullptr == tempTexture)
-			{
-				log_addEvent("Unable to create temp texture when rendering console.");
-				return;
-			}
+	console.isDrawing = true;
 
-			SDL_RenderCopy(sys_getRenderer(), tempTexture, nullptr, &consoleFont.pos);
-
-			SDL_DestroyTexture(tempTexture);
-
-			if ( console.consoleItr->posX < console.getDefaultPosX() * 4)
-				console.posY -= consoleFont.lineHeight;
-
-			if (console.posY < 0)
-				break;
-		}
-
-		//
-		// Render the current input entry line
-		console.prepare(1, (float)consoleVirtualHeight - consoleFont.lineHeight);
-		consoleFont.setColor(console.getDefaultRed(), console.getDefaultGreen(), console.getDefaultBlue(), console.getDefaultAlpha());
-		tempSurface = consoleFont.write(console.posX, console.posY, console.entryLine());
+	console.prepare(console.getDefaultPosX(), (float) consoleVirtualHeight - (consoleFont.lineHeight * 2));
+	for (; console.consoleItr != console.consoleText.rend(); ++console.consoleItr)
+	{
+		consoleFont.setColor(console.consoleItr->red, console.consoleItr->green, console.consoleItr->blue, console.consoleItr->alpha);
+		tempSurface = consoleFont.write(console.consoleItr->posX, console.posY,
+		                                console.consoleItr->lineText);  // Surface is freed within console class
 		if (nullptr == tempSurface)
 		{
-			log_addEvent("Unable to create temp surface when rendering console entry line.");
+			log_addEvent("Unable to create temp surface when rendering console.");
 			return;
 		}
 		tempTexture = SDL_CreateTextureFromSurface(sys_getRenderer(), tempSurface);
@@ -213,15 +188,46 @@ void con_renderConsole()
 			log_addEvent("Unable to create temp texture when rendering console.");
 			return;
 		}
+
 		SDL_RenderCopy(sys_getRenderer(), tempTexture, nullptr, &consoleFont.pos);
+
 		SDL_DestroyTexture(tempTexture);
+
+		if (console.consoleItr->posX < console.getDefaultPosX() * 4)
+			console.posY -= consoleFont.lineHeight;
+
+		if (console.posY < 0)
+			break;
+	}
+
+	//
+	// Render the current input entry line
+	console.prepare(1, (float) consoleVirtualHeight - consoleFont.lineHeight);
+	consoleFont.setColor(console.getDefaultRed(), console.getDefaultGreen(), console.getDefaultBlue(), console.getDefaultAlpha());
+	tempSurface = consoleFont.write(console.posX, console.posY, console.entryLine());
+	if (nullptr == tempSurface)
+	{
+		log_addEvent("Unable to create temp surface when rendering console entry line.");
+		return;
+	}
+	tempTexture = SDL_CreateTextureFromSurface(sys_getRenderer(), tempSurface);
+	if (nullptr == tempTexture)
+	{
+		log_addEvent("Unable to create temp texture when rendering console.");
+		return;
+	}
+	SDL_RenderCopy(sys_getRenderer(), tempTexture, nullptr, &consoleFont.pos);
+	SDL_DestroyTexture(tempTexture);
+
+	console.isDrawing = false;
 
 	PARA_UnlockMutex(consoleMutex);
 
 	//
 	// Show performance stats
-	consoleFont.setColor(255,0,255,255);
-	tempSurface = consoleFont.write(1, 10, sys_getString("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
+	consoleFont.setColor(255, 0, 255, 255);
+	tempSurface = consoleFont.write(1, 10,
+	                                sys_getString("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
 	if (nullptr == tempSurface)
 	{
 		log_addEvent("Unable to create temp surface when rendering console.");

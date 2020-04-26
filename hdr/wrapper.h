@@ -1,7 +1,3 @@
-//
-// Created by dberry on 16/04/2020.
-//
-
 #ifndef PARA_WRAPPER_H
 #define PARA_WRAPPER_H
 

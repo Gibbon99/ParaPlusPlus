@@ -1,6 +1,53 @@
+#include <vector>
+#include <cstdarg>
 #include "../../hdr/classes/paraFileSystem.h"
-#include "../../hdr/system/util.h"
-#include "../../hdr/io/logFile.h"
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Set a function to call when displaying any output
+void paraFileSystem::setOutputFunction(functionPtrStr outputFunction)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	paraFileSystem::funcOutput = outputFunction;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Set a function to call when allocating memory
+void paraFileSystem::setMallocFunction(functionPtrMalloc mallocFunctionPtr)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	paraFileSystem::mallocFunction = mallocFunctionPtr;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Pass in string and parameters to format and return a string
+// https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
+std::string paraFileSystem::int_getString(std::string format, ...)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	const char *const zcFormat = format.c_str();
+
+	// initialize use of the variable argument array
+	va_list vaArgs;
+	va_start(vaArgs, format);
+
+	// reliably acquire the size from a copy of the variable argument array
+	// and a functionally reliable call to mock the formatting
+	va_list vaCopy;
+	va_copy(vaCopy, vaArgs);
+	const int iLen = std::vsnprintf(nullptr, 0, zcFormat, vaCopy);
+	va_end(vaCopy);
+
+	// return a formatted string without risking memory mismanagement  and without assuming any compiler
+	// or platform specific behavior
+	std::vector<char> zc(iLen + 1);
+	std::vsnprintf(zc.data(), zc.size(), zcFormat, vaArgs);
+	va_end(vaArgs);
+
+	return std::string(zc.data());
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -13,7 +60,7 @@ bool paraFileSystem::init(const std::string &baseDirectory, const std::string &w
 
 	if (PHYSFS_init(nullptr) == 0)
 	{
-		log_addEvent(sys_getString("Error: Filesystem failed to start - [ %s ]", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		funcOutput(int_getString("Error: Filesystem failed to start - [ %s ]", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 		paraFileSystem::fileSystemReady = false;
 		return false;
 	}
@@ -21,15 +68,15 @@ bool paraFileSystem::init(const std::string &baseDirectory, const std::string &w
 	PHYSFS_VERSION (&compiled);
 	PHYSFS_getLinkedVersion(&linked);
 
-	log_addEvent(sys_getString("Compiled against PhysFS version %d.%d.%d.", compiled.major, compiled.minor, compiled.patch));
-	log_addEvent(sys_getString("Linked against PhysFS version %d.%d.%d.", linked.major, linked.minor, linked.patch));
+	funcOutput(int_getString("Compiled against PhysFS version %d.%d.%d.", compiled.major, compiled.minor, compiled.patch));
+	funcOutput(int_getString("Linked against PhysFS version %d.%d.%d.", linked.major, linked.minor, linked.patch));
 
 	//
 	// Setup directory to write if needed
 	if (0 == PHYSFS_setWriteDir(writeDirectory.c_str()))
 	{
-		log_addEvent(sys_getString("Failed to set write path [ %s ] - [ %s ]", writeDirectory.c_str(),
-		                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		funcOutput(int_getString("Failed to set write path [ %s ] - [ %s ]", writeDirectory.c_str(),
+		                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 		paraFileSystem::fileSystemReady = false;
 		return false;
 	}
@@ -37,11 +84,11 @@ bool paraFileSystem::init(const std::string &baseDirectory, const std::string &w
 	// Set base directory
 	if (0 == PHYSFS_mount(baseDirectory.c_str(), "/", 1))
 	{
-		log_addEvent(sys_getString("Failed to set search path [ %s ] - [ %s ]", baseDirectory.c_str(),
-		                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		funcOutput(int_getString("Failed to set search path [ %s ] - [ %s ]", baseDirectory.c_str(),
+		                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 
-		log_addEvent(sys_getString("The directory [ %s ] holding all the data files is not present. Check the installation.",
-		                            baseDirectory.c_str()));
+		funcOutput(int_getString("The directory [ %s ] holding all the data files is not present. Check the installation.",
+		                         baseDirectory.c_str()));
 
 		paraFileSystem::fileSystemReady = false;
 		return false;
@@ -66,8 +113,8 @@ bool paraFileSystem::addPath(const std::string &newDirectory)
 	// Add archive file
 	if (0 == PHYSFS_mount(newDirectory.c_str(), "/", 1))
 	{
-		log_addEvent(sys_getString("Failed to set search path - [ %s ] - [ %s ]", newDirectory.c_str(),
-		                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		funcOutput(int_getString("Failed to set search path - [ %s ] - [ %s ]", newDirectory.c_str(),
+		                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 		paraFileSystem::fileSystemReady = false;
 		return false;
 	}
@@ -85,7 +132,7 @@ PHYSFS_sint64 paraFileSystem::getFileSize(const std::string &fileName)
 
 	if (!paraFileSystem::fileSystemReady)
 	{
-		log_addEvent(sys_getString("PHYSFS system has not been initialised. Can't process [ %s ].", fileName.c_str()));
+		funcOutput(int_getString("PHYSFS system has not been initialised. Can't process [ %s ].", fileName.c_str()));
 		return -1;
 	}
 
@@ -95,8 +142,8 @@ PHYSFS_sint64 paraFileSystem::getFileSize(const std::string &fileName)
 
 	if (nullptr == compFile)
 	{
-		log_addEvent(sys_getString("Filesystem can't open file [ %s ] - [ %s ].", fileName.c_str(),
-		                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		funcOutput(int_getString("Filesystem can't open file [ %s ] - [ %s ].", fileName.c_str(),
+		                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 		return -1;
 	}
 
@@ -106,8 +153,8 @@ PHYSFS_sint64 paraFileSystem::getFileSize(const std::string &fileName)
 
 	if (-1 == fileLength)
 	{
-		log_addEvent(sys_getString("Unable to determine file length for [ %s ] - [ %s ].", fileName.c_str(),
-		                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		funcOutput(int_getString("Unable to determine file length for [ %s ] - [ %s ].", fileName.c_str(),
+		                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 		return -1;
 	}
 
@@ -118,11 +165,6 @@ PHYSFS_sint64 paraFileSystem::getFileSize(const std::string &fileName)
 	return fileLength;
 }
 
-
-//PHYSFS_sint64 PHYSFS_readBytes(
-//		PHYSFS_File *handle, void *buffer,
-//		PHYSFS_uint64 len);
-
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load a file into a pointer
@@ -131,12 +173,12 @@ std::string paraFileSystem::getString(const std::string &fileName)
 {
 	PHYSFS_file   *compFile = nullptr;
 	PHYSFS_sint64 fileLength;
-	char           *results;
-	std::string     stringResult;
+	char          *results;
+	std::string   stringResult;
 
 	if (!paraFileSystem::fileSystemReady)
 	{
-		log_addEvent(sys_getString("PHYSFS system has not been initialised. Can't load [ %s ].", fileName.c_str()));
+		funcOutput(int_getString("PHYSFS system has not been initialised. Can't load [ %s ].", fileName.c_str()));
 		return "";
 	}
 
@@ -146,8 +188,8 @@ std::string paraFileSystem::getString(const std::string &fileName)
 
 	if (nullptr == compFile)
 	{
-		log_addEvent(sys_getString("Filesystem can't open file [ %s ] - [ %s ].", fileName.c_str(),
-		                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		funcOutput(int_getString("Filesystem can't open file [ %s ] - [ %s ].", fileName.c_str(),
+		                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 		return "";
 	}
 
@@ -157,16 +199,16 @@ std::string paraFileSystem::getString(const std::string &fileName)
 
 	if (-1 == fileLength)
 	{
-		log_addEvent(sys_getString("Unable to determine file length for [ %s ] - [ %s ].", fileName.c_str(),
-		                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		funcOutput(int_getString("Unable to determine file length for [ %s ] - [ %s ].", fileName.c_str(),
+		                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 		PHYSFS_close(compFile);
 		return "";
 	}
 
-	results = sys_malloc(fileLength, fileName);
+	results = mallocFunction(fileLength, fileName);
 	if (nullptr == results)
 	{
-		log_addEvent(sys_getString("Memory error. Allocation failed for file [ %s ]", fileName.c_str()));
+		funcOutput(int_getString("Memory error. Allocation failed for file [ %s ]", fileName.c_str()));
 		return "";
 	}
 
@@ -176,8 +218,8 @@ std::string paraFileSystem::getString(const std::string &fileName)
 
 	if (-1 == returnCode)
 	{
-		log_addEvent(sys_getString("Filesystem read failed - [ %s ] for [ %s ].", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()),
-		                            fileName.c_str()));
+		funcOutput(int_getString("Filesystem read failed - [ %s ] for [ %s ].", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()),
+		                         fileName.c_str()));
 		PHYSFS_close(compFile);
 		return "";
 	}
@@ -202,7 +244,7 @@ int paraFileSystem::getFileIntoMemory(const std::string &fileName, void *results
 
 	if (!paraFileSystem::fileSystemReady)
 	{
-		log_addEvent(sys_getString("PHYSFS system has not been initialised. Can't load [ %s ].", fileName.c_str()));
+		funcOutput(int_getString("PHYSFS system has not been initialised. Can't load [ %s ].", fileName.c_str()));
 		return -1;
 	}
 
@@ -212,8 +254,8 @@ int paraFileSystem::getFileIntoMemory(const std::string &fileName, void *results
 
 	if (nullptr == compFile)
 	{
-		log_addEvent(sys_getString("Filesystem can't open file [ %s ] - [ %s ].", fileName.c_str(),
-		                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		funcOutput(int_getString("Filesystem can't open file [ %s ] - [ %s ].", fileName.c_str(),
+		                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 		return -1;
 	}
 
@@ -223,8 +265,8 @@ int paraFileSystem::getFileIntoMemory(const std::string &fileName, void *results
 
 	if (-1 == fileLength)
 	{
-		log_addEvent(sys_getString("Unable to determine file length for [ %s ] - [ %s ].", fileName.c_str(),
-		                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		funcOutput(int_getString("Unable to determine file length for [ %s ] - [ %s ].", fileName.c_str(),
+		                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
 		PHYSFS_close(compFile);
 		return -1;
 	}
@@ -235,8 +277,8 @@ int paraFileSystem::getFileIntoMemory(const std::string &fileName, void *results
 
 	if (-1 == returnCode)
 	{
-		log_addEvent(sys_getString("Filesystem read failed - [ %s ] for [ %s ].", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()),
-		                            fileName.c_str()));
+		funcOutput(int_getString("Filesystem read failed - [ %s ] for [ %s ].", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()),
+		                         fileName.c_str()));
 		PHYSFS_close(compFile);
 		return -1;
 	}
@@ -256,7 +298,7 @@ bool paraFileSystem::doesFileExist(const std::string &fileName)
 {
 	if (!paraFileSystem::fileSystemReady)
 	{
-		log_addEvent(sys_getString("File system not ready. Can not check for file [ %s ]", fileName.c_str()));
+		funcOutput(int_getString("File system not ready. Can not check for file [ %s ]", fileName.c_str()));
 		return false;
 	}
 

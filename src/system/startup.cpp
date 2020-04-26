@@ -322,9 +322,7 @@ Uint32 sys_createWindowFlags()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start the Windowing system
-void sys_createScreen(
-		bool restart, int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, int rendererFlags, int newLogicalWidth,
-		int newLogicalHeight)
+void sys_createScreen(bool restart, int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, int rendererFlags)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	//
@@ -388,13 +386,14 @@ void sys_startSystems()
 
 	sys_verifyRenderer();
 
-	sys_createScreen(false, windowWidth, windowHeight, sys_createWindowFlags(), whichRenderer, sys_createRendererFlags(whichRenderer),
-	                 logicalWinWidth,
-	                 logicalWinHeight);
-	con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Window system started. Renderer [ %s ]", rendererInfo[whichRenderer].rendererName.c_str()));
+	sys_createScreen(false, windowWidth, windowHeight, sys_createWindowFlags(), whichRenderer, sys_createRendererFlags(whichRenderer));
+	con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE,
+	             sys_getString("Window system started. Renderer [ %s ]", rendererInfo[whichRenderer].rendererName.c_str()));
 
 	con_initConsoleBackingTexture();
 
+	fileSystem.setOutputFunction(reinterpret_cast<functionPtrStr>(log_addEvent));
+	fileSystem.setMallocFunction(reinterpret_cast<functionPtrMalloc>(sys_malloc));
 	if (!fileSystem.init("data", "data"))
 		sys_shutdownWithError("Error. Could not start filesystem. Check directory structure.");
 
@@ -403,8 +402,7 @@ void sys_startSystems()
 	fileSystem.addPath("data/data");
 	fileSystem.addPath("data/scripts");
 
-	log_addEvent("About to load font.");
-
+	consoleFont.setOutputFunction(reinterpret_cast<functionPtrStr>(log_addEvent));
 	consoleFont.load(consoleFontSize, consoleFontFilename);
 	consoleFont.setColor(255, 255, 255, 255);
 
@@ -432,7 +430,6 @@ void sys_startSystems()
 void sys_createNewScreen(int winWidth, int winHeight, int newRenderer)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	sys_createScreen(true, winWidth, winHeight, sys_createWindowFlags(), newRenderer, sys_createRendererFlags(newRenderer), winWidth,
-	                 winHeight);
+	sys_createScreen(true, winWidth, winHeight, sys_createWindowFlags(), newRenderer, sys_createRendererFlags(newRenderer));
 	con_addEvent(0, sys_getString("Window system started. Renderer [ %s ]", rendererInfo[newRenderer].rendererName.c_str()));
 }

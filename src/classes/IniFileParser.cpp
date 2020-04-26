@@ -118,42 +118,44 @@ bool IniFileParser::ReadIniFile(std::ifstream& inifile)
     char ch = prech;
     while(inifile.good())
     {
-        if((prech == '\n' && ch == ' ') || (prech == '=' && ch == ' ') || (prech == ']' && ch!='\n'))
-        {
-            ch = inifile.get();
-            continue;
-        }
-        if(ch == '#' || ch == ';' || comment)
-        {
-            comment = true;
-            if(ch == '\n')
-                comment = false;
-            ch = inifile.get();
-            continue;
-        }
-        if((prech == '\n' && ch == '\n') )
-        {
-            prech = ch;
-            ch = inifile.get();
-            continue;
-        }
+	    if ((prech == '\n' && ch == ' ') || (prech == '=' && ch == ' ') || (prech == ']' && ch != '\n'))
+	    {
+		    ch = inifile.get();
+		    continue;
+	    }
+	    if (ch == '#' || ch == ';' || comment)
+	    {
+		    comment     = true;
+		    if (ch == '\n')
+			    comment = false;
+		    ch          = inifile.get();
+		    continue;
+	    }
+	    if ((prech == '\n' && ch == '\n'))
+	    {
+		    prech = ch;
+		    ch    = inifile.get();
+		    continue;
+	    }
 
-        if(prech==' ' && ch == '=')
-        {
-            long p = m_iniText.tellp();
-            m_iniText.seekp(p-1);
-        }
+	    if (prech == ' ' && ch == '=')
+	    {
+		    long p = m_iniText.tellp();
+		    m_iniText.seekp(p - 1);
+	    }
 
-        m_iniText << ch;
-        prech = ch;
-        ch = inifile.get();
+	    m_iniText << ch;
+	    prech = ch;
+	    ch    = inifile.get();
     }
+//
+// Remove console output from the library
+//
+//    std::cout << " ====================== Ini Config Start ================ " <<std::endl;
+//    std::cout << m_iniText.str();
+//    std::cout << " ====================== Ini Config End ================ " <<std::endl;
 
-    std::cout << " ====================== Ini Config Start ================ " <<std::endl;
-    std::cout << m_iniText.str();
-    std::cout << " ====================== Ini Config End ================ " <<std::endl;
-
-    return true;
+	return true;
 }
 
 bool IniFileParser::ParserKeyValue()

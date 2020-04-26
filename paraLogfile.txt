@@ -3,7 +3,7 @@ Linked against PhysFS version 3.0.2.
 Filesystem started.
 Failed to set search path - [ data/data ] - [ not found ]
 Failed to set search path - [ data/scripts ] - [ not found ]
-About to load font.
+Test output from font callback function
 Compiled with SDL_ttf version: 2.0.15
 Running with SDL_ttf version: 2.0.15
 Loaded font file [ data/console.ttf ]

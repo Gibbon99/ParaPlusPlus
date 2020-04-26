@@ -46,6 +46,19 @@ int paraConsole::getDefaultAlpha() const
 	return defaultAlpha;
 };
 
+void paraConsole::addTempLine(const _consoleLine &newTempLine)
+{
+	while (isDrawing)  // Wait until any drawing operation is completed
+	{
+		cout << "Cant add while drawing in operation" << endl;  // TODO - Remove after testing
+	}
+
+	if (paraConsole::consoleText.size() < CONSOLE_MEM_SIZE)
+		paraConsole::consoleText.push_back(newTempLine);
+	else
+		std::cout << "Error: Exceeded memory buffer for console text." << std::endl;
+}
+
 void paraConsole::add(float linePosX, int red, int green, int blue, int alpha, const std::string &newLine)
 {
 	_consoleLine tempLine;
@@ -56,14 +69,8 @@ void paraConsole::add(float linePosX, int red, int green, int blue, int alpha, c
 	tempLine.green    = green;
 	tempLine.blue     = blue;
 	tempLine.alpha    = alpha;
-	//
-	// May need mutex guard here to stop adding while drawing
-	// Event thread can generate new add outside mutex check
-	//
-	if (paraConsole::consoleText.size() < CONSOLE_MEM_SIZE)
-		paraConsole::consoleText.push_back(tempLine);
-	else
-		std::cout << "Error: Exceeded memory buffer for console text." << std::endl;
+
+	addTempLine(tempLine);
 }
 
 void paraConsole::add(float linePosX, const std::string &newLine)
@@ -76,14 +83,8 @@ void paraConsole::add(float linePosX, const std::string &newLine)
 	tempLine.green    = paraConsole::defaultGreen;
 	tempLine.blue     = paraConsole::defaultBlue;
 	tempLine.alpha    = paraConsole::defaultAlpha;
-	//
-	// May need mutex guard here to stop adding while drawing
-	// Event thread can generate new add outside mutex check
-	//
-	if (paraConsole::consoleText.size() < CONSOLE_MEM_SIZE)
-		paraConsole::consoleText.push_back(tempLine);
-	else
-		std::cout << "Error: Exceeded memory buffer for console text." << std::endl;
+
+	addTempLine(tempLine);
 }
 
 void paraConsole::add(const std::string &newLine)
@@ -96,14 +97,8 @@ void paraConsole::add(const std::string &newLine)
 	tempLine.green    = paraConsole::defaultGreen;
 	tempLine.blue     = paraConsole::defaultBlue;
 	tempLine.alpha    = paraConsole::defaultAlpha;
-	//
-	// May need mutex guard here to stop adding while drawing
-	// Event thread can generate new add outside mutex check
-	//
-	if (paraConsole::consoleText.size() < CONSOLE_MEM_SIZE)
-		paraConsole::consoleText.push_back(tempLine);
-	else
-		std::cout << "Error: Exceeded memory buffer for console text." << std::endl;
+
+	addTempLine(tempLine);
 }
 
 void paraConsole::addChar(const std::string &newChar)

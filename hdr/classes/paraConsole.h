@@ -56,6 +56,9 @@ public:
 
 //
 // Add things
+
+	void addTempLine(const _consoleLine &newTempLine);
+
 	void add(const std::string &newLine);
 
 	void add(float linePosX, const std::string &newLine);
@@ -143,6 +146,7 @@ public:
 	std::map<std::string, _consoleCommand>      consoleCommands;
 	std::vector<_variables>                     consoleVariables;
 	int                                         scrollbackOffset = 0;
+	bool                                        isDrawing        = false;
 
 private:
 	std::string enterLine;
