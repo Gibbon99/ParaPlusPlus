@@ -8,21 +8,7 @@
 void sys_prepareFrame()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	static int errorCount = 0;
-
-	if (sys_useRenderTarget())
-	{
-		if (SDL_SetRenderTarget(sys_getRenderer(), sys_getRenderTarget(sys_getCurrentBackingTexture())) < 0)
-		{
-			logFile.write(sys_getString("Unable to set render target [ %s ]", SDL_GetError));
-			errorCount++;
-			if (errorCount > ERROR_COUNT_LIMIT)
-				sys_shutdownWithError("Exceeded error count for set render target. Check logfile for details.");
-		}
-	}
-
-	SDL_SetRenderDrawColor(sys_getRenderer(), 0x00, 0x00, 0x00, 0x00);
-	SDL_RenderClear(sys_getRenderer());
+	renderer.prepareFrame ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -31,13 +17,7 @@ void sys_prepareFrame()
 void sys_completeFrame()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (sys_useRenderTarget())
-	{
-		SDL_SetRenderTarget(sys_getRenderer(), nullptr);
-		SDL_RenderCopy(sys_getRenderer(), sys_getRenderTarget(sys_getCurrentBackingTexture()), nullptr, nullptr);
-	}
-
-	SDL_RenderPresent(sys_getRenderer());
+	renderer.presentFrame ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------

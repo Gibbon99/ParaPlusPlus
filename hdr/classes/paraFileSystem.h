@@ -21,16 +21,17 @@ public:
 
 	bool doesFileExist(const std::string &fileName);
 
-	std::string getString(const std::string &fileName);
+	std::string getString (const std::string &fileName);
 
-	std::string int_getString(std::string format, ...);
+	std::string int_getString (std::string format, ...);
 
-	void setOutputFunction(functionPtrStr outputFunction);
+	void setOutputFunction (functionPtrStr outputFunction);
 
-	void setMallocFunction(functionPtrMalloc mallocFunctionPtr);
+	void setMallocFunction (functionPtrMalloc mallocFunctionPtr);
 
 private:
 	bool              fileSystemReady = false;
+	functionPtrStr    funcShutdown;
 	functionPtrStr    funcOutput;
 	functionPtrMalloc mallocFunction;
 };

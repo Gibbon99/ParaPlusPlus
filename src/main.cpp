@@ -1,5 +1,4 @@
-﻿
-#include "../hdr/main.h"
+﻿#include "../hdr/main.h"
 #include "../hdr/system/startup.h"
 #include "../hdr/system/frameUpdate.h"
 #include "../hdr/system/frameRender.h"
@@ -8,7 +7,8 @@ paraScript     paraScriptInstance;
 paraLogFile    logFile;
 paraFileSystem fileSystem;
 paraFont       consoleFont;
-paraConsole console(1, 255, 255, 255, 255);
+paraConsole    console (1, 255, 255, 255, 255);
+paraRenderer   renderer;
 
 #define TICKS_PER_SECOND 30.0f
 #define MAX_FRAMESKIP 5
@@ -23,7 +23,7 @@ double percentIntoNextFrame = 0.0f;
 
 
 std::string testVarString = "First string text";
-float testVarFloat = 3.145;
+float       testVarFloat  = 3.145;
 
 
 //----------------------------------------------------------------------------------------------------------------------

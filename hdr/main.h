@@ -24,6 +24,7 @@
 #include "system/shutdown.h"
 #include "system/util.h"
 #include "physfs/physfs.h"
+#include "classes/paraRenderer.h"
 
 #define ERROR_COUNT_LIMIT   10
 
@@ -38,6 +39,7 @@ extern paraLogFile    logFile;
 extern paraFileSystem fileSystem;
 extern paraFont       consoleFont;
 extern paraConsole    console;
+extern paraRenderer   renderer;
 
 extern bool   quitLoop;
 extern Uint32 fpsPrint;

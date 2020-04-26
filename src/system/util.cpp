@@ -24,15 +24,15 @@ void sys_setNewMode(int newMode)
 		case MODE_CONSOLE_EDIT:
 			//
 			// Change to new backing texture
-			sys_setCurrentBackingTexture(CONSOLE_BACKING_TEXTURE);
+			renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);
 			//
 			// Adjust virtual scaling
-			SDL_RenderSetLogicalSize(sys_getRenderer(), consoleVirtualWidth, consoleVirtualHeight);
+			SDL_RenderSetLogicalSize (renderer.renderer, consoleVirtualWidth, consoleVirtualHeight);
 			currentMode = newMode;
 			break;
 
 		default:
-			sys_shutdownWithError("Attempting to set an unknown mode.");
+			sys_shutdownWithError ("Attempting to set an unknown mode.");
 			break;
 	}
 }

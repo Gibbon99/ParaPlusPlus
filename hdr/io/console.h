@@ -10,6 +10,3 @@ void con_addEvent(int newAction, const std::string &newLine);
 
 // Start the console processing queue and thread
 void con_initConsole();
-
-// Create the console backing texture
-void con_initConsoleBackingTexture();

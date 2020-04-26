@@ -22,14 +22,14 @@ void sys_closeSystems()
 void sys_shutdownWithError(const std::string& errorMessage)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Fatal Error", errorMessage.c_str(), sys_getWindow()) < 0)
+	if (SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_ERROR, "Fatal Error", errorMessage.c_str (), renderer.window) < 0)
 	{
 		cout << "Fatal error : " << errorMessage << endl;
 	}
 
-	sys_closeSystems();
+	sys_closeSystems ();
 
-    exit(-1);
+	exit (-1);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
