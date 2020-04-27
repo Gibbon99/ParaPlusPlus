@@ -2015,8 +2015,7 @@ int asCCompiler::PrepareArgument(asCDataType *paramType, asCExprContext *ctx, as
 					{
 					if ( descr->inOutFlags[n] != asTM_INOUTREF && !args[n]->type.isRefSafe )
 					{
-#ifdef
-					AS_DEBUG
+#ifdef AS_DEBUG
 					// This assert is inside AS_DEBUG because of the variable makingCopy which is only defined in debug mode
 					asASSERT( args[n]->type.isVariable || args[n]->type.isTemporary || makingCopy );
 #endif
@@ -9816,8 +9815,7 @@ int asCCompiler::CompilePostFixExpression(asCArray<asCScriptNode *> *postfix, as
 			return -1;
 			}
 
-#if
-			AS_DEBUG
+#if AS_DEBUG
 			// If it is not a property, it may still be the name of a method which can be used to create delegates
 			asCObjectType *ot = outFunc->objectType;
 			asCScriptFunction *func = 0;
@@ -15488,8 +15486,7 @@ void asCCompiler::CompileBooleanOperator(asCScriptNode *node, asCExprContext *lc
 	}
 
 	// Compiler error, don't continue
-#if
-	AS_SIZEOF_BOOL == 1
+#if	AS_SIZEOF_BOOL == 1
 	ctx->type.SetConstantB(asCDataType::CreatePrimitive(ttBool, true), true);
 #else
 	ctx->type.SetConstantDW(asCDataType::CreatePrimitive(ttBool, true), true);

@@ -148,6 +148,10 @@ set (CXX_SRCS
 		src/box2d/dynamics/b2_world.cpp
 		src/box2d/dynamics/b2_world_callbacks.cpp
 
+		src/sdl2_gfx/SDL2_gfxPrimitives.cpp
+		src/sdl2_gfx/SDL2_imageFilter.cpp
+		src/sdl2_gfx/SDL2_rotozoom.cpp
+
 		src/system/scriptEngine.cpp hdr/system/scriptEngine.h
 		src/classes/paraLogFile.cpp hdr/classes/paraLogFile.h
 		src/system/shutdown.cpp hdr/system/shutdown.h
@@ -180,6 +184,7 @@ if (WIN32)
 		    ./hdr/physfs
 		    ./hsr
 		    ./hdr/box2d
+		    ./hdr/sdl2_gfx
     )
 
         if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -225,6 +230,7 @@ if (UNIX)
 		    ./hdr/physfs
 		    ./hdr
 		    ./hdr/box2d
+		    ./hdr/sdl2_gfx
     )
 
     if (CMAKE_BUILD_TYPE MATCHES debug)

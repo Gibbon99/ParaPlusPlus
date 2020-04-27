@@ -1,3 +1,4 @@
+#include <sdl2_gfx/SDL2_gfxPrimitives.h>
 #include "game/physicsCollisions.h"
 
 contactListener myContactListenerInstance;
@@ -40,7 +41,7 @@ void paraDebugDraw::DrawSolidPolygon (const b2Vec2 *vertices, int32 vertexCount,
 void paraDebugDraw::DrawCircle (const b2Vec2 &center, float radius, const b2Color &color)
 //----------------------------------------------------------------------------------------------------------------------
 {
-
+	circleRGBA (renderer.renderer, center.x, center.y, radius, color.r, color.g, color.b, color.a);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -49,7 +50,18 @@ void paraDebugDraw::DrawCircle (const b2Vec2 &center, float radius, const b2Colo
 void paraDebugDraw::DrawSolidCircle (const b2Vec2 &center, float radius, const b2Vec2 &axis, const b2Color &color)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	// TODO - Implement world size and physics in meters
+	/*
+	b2Vec2 tempPosition;
 
+	tempPosition = center;
+	tempPosition *= pixelsPerMeter;
+	radius *= pixelsPerMeter;
+
+	tempPosition = sys_worldToScreen (tempPosition, radius);
+	*/
+
+	filledCircleRGBA (renderer.renderer, center.x, center.y, radius, color.r, color.g, color.b, color.a);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -58,7 +70,7 @@ void paraDebugDraw::DrawSolidCircle (const b2Vec2 &center, float radius, const b
 void paraDebugDraw::DrawSegment (const b2Vec2 &p1, const b2Vec2 &p2, const b2Color &color)
 //----------------------------------------------------------------------------------------------------------------------
 {
-
+	lineRGBA (renderer.renderer, p1.x, p1.y, p2.x, p2.y, color.r, color.g, color.b, color.a);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -76,7 +88,7 @@ void paraDebugDraw::DrawTransform (const b2Transform &xf)
 void paraDebugDraw::DrawPoint (const b2Vec2 &p, float size, const b2Color &color)
 //----------------------------------------------------------------------------------------------------------------------
 {
-
+	pixelRGBA (renderer.renderer, p.x, p.y, color.r, color.g, color.b, color.a);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
