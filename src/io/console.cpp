@@ -1,4 +1,5 @@
 #include <queue>
+#include <system/physics.h>
 #include "../../hdr/io/console.h"
 #include "../../hdr/system/startup.h"
 #include "../../hdr/classes/paraEvent.h"
@@ -222,8 +223,9 @@ void con_initConsole ()
 
 	sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, sys_getString ("Console started [ %s ]", APP_NAME));
 
+	//
+	// TODO - Implement help to show help descriptions for all
 	console.addCommand ("help", "Show available commands", "functionHelp");
-	console.addCommand ("exit", "Shutdown", "functionQuit");
 
 	console.addCommand ("d_showCurrentBackingTexture", "Show backing texture information.", debug_getCurrentBackingTexture);
 	console.addCommand ("d_showAllBackingTextures", "List all backing textures", debug_getAllBackingTextures);
@@ -237,7 +239,12 @@ void con_initConsole ()
 	console.addCommand ("d_getOS", "Show which OS is in use.", sys_getOS);
 	console.addCommand ("quit", "Quit the game.", sys_shutdown);
 
+	//
+	// Variables accessible from the console
+	//
 	console.addVariable ("quitLoop", VAR_TYPE_BOOL, &quitLoop);
+	console.addVariable ("d_showPhysics", VAR_TYPE_BOOL, &d_showPhysics);
+
 	console.addVariable ("height", VAR_TYPE_INT, &testVar);
 	console.addVariable ("testString", VAR_TYPE_STRING, &testVarString);
 	console.addVariable ("testFloat", VAR_TYPE_FLOAT, &testVarFloat);

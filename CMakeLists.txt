@@ -83,24 +83,79 @@ set (CXX_SRCS
      src/physfs/physfs_archiver_vdf.cpp
      src/physfs/physfs_archiver_wad.cpp
      src/physfs/physfs_archiver_zip.cpp
-     src/physfs/physfs_byteorder.cpp
-     src/physfs/physfs_platform_haiku.cpp
-     src/physfs/physfs_platform_os2.cpp
-     src/physfs/physfs_platform_posix.cpp
-     src/physfs/physfs_platform_qnx.cpp
-     src/physfs/physfs_platform_unix.cpp
-     src/physfs/physfs_platform_windows.cpp
-     src/physfs/physfs_platform_winrt.cpp
-     src/physfs/physfs_unicode.cpp
+		src/physfs/physfs_byteorder.cpp
+		src/physfs/physfs_platform_haiku.cpp
+		src/physfs/physfs_platform_os2.cpp
+		src/physfs/physfs_platform_posix.cpp
+		src/physfs/physfs_platform_qnx.cpp
+		src/physfs/physfs_platform_unix.cpp
+		src/physfs/physfs_platform_windows.cpp
+		src/physfs/physfs_platform_winrt.cpp
+		src/physfs/physfs_unicode.cpp
 
-     src/system/scriptEngine.cpp hdr/system/scriptEngine.h
-     src/classes/paraLogFile.cpp hdr/classes/paraLogFile.h
-     src/system/shutdown.cpp hdr/system/shutdown.h
-     src/system/util.cpp hdr/system/util.h
-     src/classes/paraScript.cpp hdr/classes/paraScript.h
-     src/classes/paraFileSystem.cpp hdr/io/fileSystem.h
-     src/classes/IniFileParser.cpp
-     src/system/scriptConfig.cpp hdr/system/scriptConfig.h
+		src/box2d/collision/b2_broad_phase.cpp
+		src/box2d/collision/b2_chain_shape.cpp
+		src/box2d/collision/b2_circle_shape.cpp
+		src/box2d/collision/b2_collide_circle.cpp
+		src/box2d/collision/b2_collide_edge.cpp
+		src/box2d/collision/b2_collide_polygon.cpp
+		src/box2d/collision/b2_collision.cpp
+		src/box2d/collision/b2_distance.cpp
+		src/box2d/collision/b2_dynamic_tree.cpp
+		src/box2d/collision/b2_edge_shape.cpp
+		src/box2d/collision/b2_polygon_shape.cpp
+		src/box2d/collision/b2_time_of_impact.cpp
+		src/box2d/common/b2_block_allocator.cpp
+		src/box2d/common/b2_draw.cpp
+		src/box2d/common/b2_math.cpp
+		src/box2d/common/b2_settings.cpp
+		src/box2d/common/b2_stack_allocator.cpp
+		src/box2d/common/b2_timer.cpp
+		src/box2d/dynamics/b2_body.cpp
+		src/box2d/dynamics/b2_chain_circle_contact.cpp
+		hdr/box2d/dynamics/b2_chain_circle_contact.h
+		src/box2d/dynamics/b2_chain_polygon_contact.cpp
+		hdr/box2d/dynamics/b2_chain_polygon_contact.h
+		src/box2d/dynamics/b2_circle_contact.cpp
+		hdr/box2d/dynamics/b2_circle_contact.h
+		src/box2d/dynamics/b2_contact.cpp
+		src/box2d/dynamics/b2_contact_manager.cpp
+		src/box2d/dynamics/b2_contact_solver.cpp
+		hdr/box2d/dynamics/b2_contact_solver.h
+		src/box2d/dynamics/b2_distance_joint.cpp
+		src/box2d/dynamics/b2_edge_circle_contact.cpp
+		hdr/box2d/dynamics/b2_edge_circle_contact.h
+		src/box2d/dynamics/b2_edge_polygon_contact.cpp
+		hdr/box2d/dynamics/b2_edge_polygon_contact.h
+		src/box2d/dynamics/b2_fixture.cpp
+		src/box2d/dynamics/b2_friction_joint.cpp
+		src/box2d/dynamics/b2_gear_joint.cpp
+		src/box2d/dynamics/b2_island.cpp
+		hdr/box2d/dynamics/b2_island.h
+		src/box2d/dynamics/b2_joint.cpp
+		src/box2d/dynamics/b2_motor_joint.cpp
+		src/box2d/dynamics/b2_mouse_joint.cpp
+		src/box2d/dynamics/b2_polygon_circle_contact.cpp
+		hdr/box2d/dynamics/b2_polygon_circle_contact.h
+		src/box2d/dynamics/b2_polygon_contact.cpp
+		hdr/box2d/dynamics/b2_polygon_contact.h
+		src/box2d/dynamics/b2_prismatic_joint.cpp
+		src/box2d/dynamics/b2_pulley_joint.cpp
+		src/box2d/dynamics/b2_revolute_joint.cpp
+		src/box2d/dynamics/b2_rope_joint.cpp
+		src/box2d/dynamics/b2_weld_joint.cpp
+		src/box2d/dynamics/b2_wheel_joint.cpp
+		src/box2d/dynamics/b2_world.cpp
+		src/box2d/dynamics/b2_world_callbacks.cpp
+
+		src/system/scriptEngine.cpp hdr/system/scriptEngine.h
+		src/classes/paraLogFile.cpp hdr/classes/paraLogFile.h
+		src/system/shutdown.cpp hdr/system/shutdown.h
+		src/system/util.cpp hdr/system/util.h
+		src/classes/paraScript.cpp hdr/classes/paraScript.h
+		src/classes/paraFileSystem.cpp hdr/io/fileSystem.h
+		src/classes/IniFileParser.cpp
+		src/system/scriptConfig.cpp hdr/system/scriptConfig.h
 		src/system/startup.cpp hdr/system/startup.h
 		src/io/fileSystem.cpp hdr/classes/paraFileSystem.h
 		src/classes/paraFont.cpp hdr/classes/paraFont.h hdr/wrapper.h
@@ -111,7 +166,7 @@ set (CXX_SRCS
 		src/classes/paraEvent.cpp hdr/classes/paraEvent.h
 		src/system/eventsEngine.cpp hdr/system/eventsEngine.h
 		src/io/logFile.cpp hdr/io/logFile.h
-		src/classes/paraRenderer.cpp hdr/classes/paraRenderer.h src/io/consoleFunctions.cpp hdr/io/consoleFunctions.h src/system/gameEvents.cpp hdr/system/gameEvents.h)
+		src/classes/paraRenderer.cpp hdr/classes/paraRenderer.h src/io/consoleFunctions.cpp hdr/io/consoleFunctions.h src/system/gameEvents.cpp hdr/system/gameEvents.h src/system/physics.cpp hdr/system/physics.h src/game/physicsCollisions.cpp hdr/game/physicsCollisions.h)
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
 
@@ -120,9 +175,11 @@ if (WIN32)
     # Library path
     link_directories(./SDL2_WIN/lib/x86)
     include_directories(
-            ./SDL2_WIN/include
-            ./hdr/script
-            ./hdr/physfs
+		    ./SDL2_WIN/include
+		    ./hdr/script
+		    ./hdr/physfs
+		    ./hsr
+		    ./hdr/box2d
     )
 
         if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -162,10 +219,12 @@ if (UNIX)
     # Library path
     link_directories(/usr/local/lib)
     include_directories(
-            /usr/local/include
-            /usr/local/include/SDL2
-            ./hdr/script
-            ./hdr/physfs
+		    /usr/local/include
+		    /usr/local/include/SDL2
+		    ./hdr/script
+		    ./hdr/physfs
+		    ./hdr
+		    ./hdr/box2d
     )
 
     if (CMAKE_BUILD_TYPE MATCHES debug)

@@ -1,4 +1,4 @@
-
+#include <system/physics.h>
 #include "../../hdr/system/startup.h"
 #include "../../hdr/system/scriptEngine.h"
 #include "../../hdr/system/scriptConfig.h"
@@ -103,7 +103,6 @@ void sys_startSystems()
 	if (!paraScriptInstance.init (reinterpret_cast<asFUNCTION_t>(scr_Output)))
 		sys_shutdownWithError ("Error: Could not start Scripting engine.");
 
-
 	sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, ("Scripting started."));
 	sys_scriptInitScriptFunctions ();
 	sys_scriptInitFunctions ();
@@ -113,6 +112,9 @@ void sys_startSystems()
 	paraScriptInstance.cacheFunctions ();
 
 	evt_registerMutex (GAME_MUTEX_NAME);
+
+	sys_setupPhysicsEngine ();
+
 	//
 	// Start in interactive console mode
 	sys_setNewMode (MODE_CONSOLE_EDIT);

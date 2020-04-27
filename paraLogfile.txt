@@ -5,12 +5,12 @@ Compiled with SDL_ttf version: 2.0.15
 Running with SDL_ttf version: 2.0.15
 Loaded font file [ data/console.ttf ]
 Script: Script Engine started.
-Script: Script Engine version - [ 2.35.0 WIP ]
-Script: Options - [  AS_DEBUG AS_64BIT_PTR AS_LINUX AS_X64_GCC  ]
 Allocated [ 774 ] for [ consoleFunctions.as ]
 Script [ consoleFunctions.as ]
-Allocated [ 657 ] for [ enum.h ]
+Allocated [ 654 ] for [ enum.h ]
 Script [ enum.h ]
+Script: Script Engine version - [ 2.35.0 WIP ]
+Script: Options - [  AS_DEBUG AS_64BIT_PTR AS_LINUX AS_X64_GCC  ]
 Script: Registered function - [ void sys_printConInt(string &in, int param) ]
 Script: Registered function - [ void sys_addEvent(int eventType, int eventAction, int eventDelay, string &in) ]
 Script: Registered variable - [ int quitProgram ]
@@ -20,4 +20,4 @@ Compiled scripts.
 Func ID for [ void as_useNewRenderer(int &in newRenderer) ] - [ 49344 ]
 Func ID for [ void as_testFunction() ] - [ 49792 ]
 Free memory [ 774 bytes ] - [ consoleFunctions.as ]
-Free memory [ 657 bytes ] - [ enum.h ]
+Free memory [ 654 bytes ] - [ enum.h ]
