@@ -1,4 +1,5 @@
 #include "../../hdr/system/scriptEngine.h"
+#include "../../hdr/io/console.h"
 
 bool scriptReloaded = false;
 
@@ -19,10 +20,11 @@ void scr_Output(const asSMessageInfo *msg, void *param)
 		type = "INFO";
 	}
 
-	logFile.write(sys_getString("%s (%d, %d) : %s : %s", msg->section, msg->row, msg->col, type, msg->message));
+	logFile.write (sys_getString ("%s (%d, %d) : %s : %s", msg->section, msg->row, msg->col, type, msg->message));
 
-	printf("%s\n",
-	       sys_getString("%s (%d, %d) : %s : %s", msg->section, msg->row, msg->col, type, msg->message).c_str());
+	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%s (%d, %d) : %s : %s", msg->section, msg->row, msg->col, type, msg->message));
+
+	printf ("%s\n", sys_getString ("%s (%d, %d) : %s : %s", msg->section, msg->row, msg->col, type, msg->message).c_str ());
 }
 
 /*

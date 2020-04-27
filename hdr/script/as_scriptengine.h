@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2017 Andreas Jonsson
+   Copyright (c) 2003-2019 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -176,31 +176,52 @@ public:
 	virtual int               SetContextCallbacks(asREQUESTCONTEXTFUNC_t requestCtx, asRETURNCONTEXTFUNC_t returnCtx, void *param = 0);
 
 	// String interpretation
-	virtual asETokenClass ParseToken(const char *string, size_t stringLength = 0, asUINT *tokenLength = 0) const;
+	virtual asETokenClass ParseToken (const char *string, size_t stringLength = 0, asUINT *tokenLength = 0) const;
 
 	// Garbage collection
-	virtual int  GarbageCollect(asDWORD flags = asGC_FULL_CYCLE, asUINT numIterations = 1);
-	virtual void GetGCStatistics(asUINT *currentSize, asUINT *totalDestroyed, asUINT *totalDetected, asUINT *newObjects, asUINT *totalNewDestroyed) const;
-	virtual int  NotifyGarbageCollectorOfNewObject(void *obj, asITypeInfo *type);
-	virtual int  GetObjectInGC(asUINT idx, asUINT *seqNbr, void **obj = 0, asITypeInfo **type = 0);
-	virtual void GCEnumCallback(void *reference);
+	virtual int GarbageCollect (asDWORD flags = asGC_FULL_CYCLE, asUINT numIterations = 1);
+
+	virtual void GetGCStatistics (asUINT *currentSize, asUINT *totalDestroyed, asUINT *totalDetected, asUINT *newObjects, asUINT *totalNewDestroyed) const;
+
+	virtual int NotifyGarbageCollectorOfNewObject (void *obj, asITypeInfo *type);
+
+	virtual int GetObjectInGC (asUINT idx, asUINT *seqNbr, void **obj = 0, asITypeInfo **type = 0);
+
+	virtual void GCEnumCallback (void *reference);
+
+	virtual void ForwardGCEnumReferences (void *ref, asITypeInfo *type);
+
+	virtual void ForwardGCReleaseReferences (void *ref, asITypeInfo *type);
+
+	virtual void SetCircularRefDetectedCallback (asCIRCULARREFFUNC_t callback, void *param = 0);
 
 	// User data
-	virtual void *SetUserData(void *data, asPWORD type);
-	virtual void *GetUserData(asPWORD type) const;
-	virtual void  SetEngineUserDataCleanupCallback(asCLEANENGINEFUNC_t callback, asPWORD type);
-	virtual void  SetModuleUserDataCleanupCallback(asCLEANMODULEFUNC_t callback, asPWORD type);
-	virtual void  SetContextUserDataCleanupCallback(asCLEANCONTEXTFUNC_t callback, asPWORD type);
-	virtual void  SetFunctionUserDataCleanupCallback(asCLEANFUNCTIONFUNC_t callback, asPWORD type);
-	virtual void  SetTypeInfoUserDataCleanupCallback(asCLEANTYPEINFOFUNC_t callback, asPWORD type);
-	virtual void  SetScriptObjectUserDataCleanupCallback(asCLEANSCRIPTOBJECTFUNC_t callback, asPWORD type);
+	virtual void *SetUserData (void *data, asPWORD type);
+
+	virtual void *GetUserData (asPWORD type) const;
+
+	virtual void SetEngineUserDataCleanupCallback (asCLEANENGINEFUNC_t callback, asPWORD type);
+
+	virtual void SetModuleUserDataCleanupCallback (asCLEANMODULEFUNC_t callback, asPWORD type);
+
+	virtual void SetContextUserDataCleanupCallback (asCLEANCONTEXTFUNC_t callback, asPWORD type);
+
+	virtual void SetFunctionUserDataCleanupCallback (asCLEANFUNCTIONFUNC_t callback, asPWORD type);
+
+	virtual void SetTypeInfoUserDataCleanupCallback (asCLEANTYPEINFOFUNC_t callback, asPWORD type);
+
+	virtual void SetScriptObjectUserDataCleanupCallback (asCLEANSCRIPTOBJECTFUNC_t callback, asPWORD type);
+
+	// Exception handling
+	virtual int SetTranslateAppExceptionCallback (asSFuncPtr callback, void *param, int callConv);
 
 //===========================================================
 // internal methods
 //===========================================================
 public:
-	asCScriptEngine();
-	virtual ~asCScriptEngine();
+	asCScriptEngine ();
+
+	virtual ~asCScriptEngine ();
 
 //protected:
 	friend class asCBuilder;
@@ -289,33 +310,41 @@ public:
 	int                SetTemplateRestrictions(asCObjectType *templateType, asCScriptFunction *func, const char *caller, const char *decl);
 	asCObjectType     *GetTemplateInstanceType(asCObjectType *templateType, asCArray<asCDataType> &subTypes, asCModule *requestingModule);
 	asCScriptFunction *GenerateTemplateFactoryStub(asCObjectType *templateType, asCObjectType *templateInstanceType, int origFactoryId);
-	bool               GenerateNewTemplateFunction(asCObjectType *templateType, asCObjectType *templateInstanceType, asCScriptFunction *templateFunc, asCScriptFunction **newFunc);
-	asCFuncdefType    *GenerateNewTemplateFuncdef(asCObjectType *templateType, asCObjectType *templateInstanceType, asCFuncdefType *templateFuncdef);
-	asCDataType        DetermineTypeForTemplate(const asCDataType &orig, asCObjectType *tmpl, asCObjectType *ot);
-	bool               RequireTypeReplacement(asCDataType &type, asCObjectType *templateType);
 
-	asCModule         *FindNewOwnerForSharedType(asCTypeInfo *type, asCModule *mod);
-	asCModule         *FindNewOwnerForSharedFunc(asCScriptFunction *func, asCModule *mod);
+	bool GenerateNewTemplateFunction (asCObjectType *templateType, asCObjectType *templateInstanceType, asCScriptFunction *templateFunc, asCScriptFunction **newFunc);
 
-	asCFuncdefType    *FindMatchingFuncdef(asCScriptFunction *func, asCModule *mod);
+	asCFuncdefType *GenerateNewTemplateFuncdef (asCObjectType *templateType, asCObjectType *templateInstanceType, asCFuncdefType *templateFuncdef);
+
+	asCDataType DetermineTypeForTemplate (const asCDataType &orig, asCObjectType *tmpl, asCObjectType *ot);
+
+	bool RequireTypeReplacement (asCDataType &type, asCObjectType *templateType);
+
+	asCModule *FindNewOwnerForSharedType (asCTypeInfo *type, asCModule *mod);
+
+	asCModule *FindNewOwnerForSharedFunc (asCScriptFunction *func, asCModule *mod);
+
+	asCFuncdefType *FindMatchingFuncdef (asCScriptFunction *func, asCModule *mod);
+
+	int DetermineNameAndNamespace (const char *in_name, asSNameSpace *implicitNs, asCString &out_name, asSNameSpace *&out_ns) const;
 
 	// Global property management
-	asCGlobalProperty *AllocateGlobalProperty();
-	void RemoveGlobalProperty(asCGlobalProperty *prop);
+	asCGlobalProperty *AllocateGlobalProperty ();
 
-	int GetScriptSectionNameIndex(const char *name);
+	void RemoveGlobalProperty (asCGlobalProperty *prop);
+
+	int GetScriptSectionNameIndex (const char *name);
 
 	// Namespace management
-	asSNameSpace *AddNameSpace(const char *name);
-	asSNameSpace *FindNameSpace(const char *name) const;
-	asSNameSpace *GetParentNameSpace(asSNameSpace *ns) const;
+	asSNameSpace *AddNameSpace (const char *name);
+
+	asSNameSpace *FindNameSpace (const char *name) const;
+
+	asSNameSpace *GetParentNameSpace (asSNameSpace *ns) const;
 
 //===========================================================
 // internal properties
 //===========================================================
 	asCMemoryMgr memoryMgr;
-
-	asUINT initialContextStackSize;
 
 	asCObjectType   *defaultArrayObjectType;
 	asCObjectType    scriptTypeBehaviours;
@@ -469,6 +498,7 @@ public:
 		bool   optimizeByteCode;
 		bool   copyScriptSections;
 		asUINT maximumContextStackSize;
+		asUINT initContextStackSize;
 		bool   useCharacterLiterals;
 		bool   allowMultilineStrings;
 		bool   allowImplicitHandleTypes;
@@ -494,7 +524,17 @@ public:
 		bool   allowUnicodeIdentifiers;
 		int    heredocTrimMode;
 		asUINT maxNestedCalls;
+		asUINT genericCallMode;
+		asUINT initCallStackSize;
+		asUINT maxCallStackSize;
 	} ep;
+
+	// Callbacks
+#ifndef AS_NO_EXCEPTIONS
+	bool                       translateExceptionCallback;
+	asSSystemFunctionInterface translateExceptionCallbackFunc;
+	void *translateExceptionCallbackObj;
+#endif
 
 	// This flag is to allow a quicker shutdown when releasing the engine
 	bool shuttingDown;

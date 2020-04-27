@@ -1,37 +1,22 @@
 #pragma once
 
-#define CONSOLE_MUTEX_NAME		"consoleMutex"
-#define CONSOLE_THREAD_NAME		"consoleThread"
+#define CONSOLE_MUTEX_NAME        "consoleMutex"
+#define CONSOLE_THREAD_NAME        "consoleThread"
 
 #define LOGGING_MUTEX_NAME      "logfileMutex"
 #define LOGGING_THREAD_NAME     "logfileThread"
 
+#define GAME_MUTEX_NAME         "gameThread"
+
 #define THREAD_DELAY_MS         1       // in MS
-
-enum EVENT_TYPES
-{
-	EVENT_TYPE_CONSOLE = 0,
-	EVENT_TYPE_LOGFILE
-};
-
-enum EVENT_ACTIONS
-{
-	EVENT_ACTION_LOGFILE_OPEN = 0,
-	EVENT_ACTION_LOGFILE_WRITE,
-	EVENT_ACTION_LOGFILE_CLOSE,
-	EVENT_ACTION_CONSOLE_ADD_LINE,
-	EVENT_ACTION_CONSOLE_ADD_CHAR,
-	EVENT_ACTION_CONSOLE_DELETE_CHAR,
-	EVENT_ACTION_CONSOLE_ADD_CHAR_LINE
-};
 
 extern bool runThreads;     // Master flag to control state of detached threads
 
 // Keep a list of threads that have been created.
-void evt_registerThread(SDL_ThreadFunction threadFunction, const std::string& threadName);
+void evt_registerThread (SDL_ThreadFunction threadFunction, const std::string &threadName);
 
 // Keep a list of mutexes that have been created, and remove at shutdown
-void evt_registerMutex(const std::string& mutexName);
+void evt_registerMutex (const std::string &mutexName);
 
 // Add a new event to its queue
 void sys_addEvent(int eventType, int eventAction, int eventDelay, const std::string& eventText);

@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2014 Andreas Jonsson
+   Copyright (c) 2003-2018 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -93,26 +93,42 @@ public:
 	asDWORD GetReturnDWord();
 	asQWORD GetReturnQWord();
 	float   GetReturnFloat();
-	double  GetReturnDouble();
-	void   *GetReturnAddress();
-	void   *GetReturnObject();
-	void   *GetAddressOfReturnValue();
+
+	double GetReturnDouble ();
+
+	void *GetReturnAddress ();
+
+	void *GetReturnObject ();
+
+	void *GetAddressOfReturnValue ();
 
 	// Exception handling
-	int                SetException(const char *descr);
-	int                GetExceptionLineNumber(int *column, const char **sectionName);
-	asIScriptFunction *GetExceptionFunction();
-	const char *       GetExceptionString();
-	int                SetExceptionCallback(asSFuncPtr callback, void *obj, int callConv);
-	void               ClearExceptionCallback();
+	int SetException (const char *descr, bool allowCatch = true);
+
+	int GetExceptionLineNumber (int *column, const char **sectionName);
+
+	asIScriptFunction *GetExceptionFunction ();
+
+	const char *GetExceptionString ();
+
+	bool WillExceptionBeCaught ();
+
+	int SetExceptionCallback (asSFuncPtr callback, void *obj, int callConv);
+
+	void ClearExceptionCallback ();
 
 	// Debugging
-	int                SetLineCallback(asSFuncPtr callback, void *obj, int callConv);
-	void               ClearLineCallback();
-	asUINT             GetCallstackSize() const;
-	asIScriptFunction *GetFunction(asUINT stackLevel);
-	int                GetLineNumber(asUINT stackLevel, int *column, const char **sectionName);
-	int                GetVarCount(asUINT stackLevel);
+	int SetLineCallback (asSFuncPtr callback, void *obj, int callConv);
+
+	void ClearLineCallback ();
+
+	asUINT GetCallstackSize () const;
+
+	asIScriptFunction *GetFunction (asUINT stackLevel);
+
+	int GetLineNumber (asUINT stackLevel, int *column, const char **sectionName);
+
+	int GetVarCount (asUINT stackLevel);
 	const char        *GetVarName(asUINT varIndex, asUINT stackLevel);
 	const char        *GetVarDeclaration(asUINT varIndex, asUINT stackLevel, bool includeNamespace);
 	int                GetVarTypeId(asUINT varIndex, asUINT stackLevel);
@@ -128,40 +144,59 @@ public:
 
 public:
 	// Internal public functions
-	asCContext(asCScriptEngine *engine, bool holdRef);
-	virtual ~asCContext();
+	asCContext (asCScriptEngine *engine, bool holdRef);
+
+	virtual ~asCContext ();
 
 //protected:
 	friend class asCScriptEngine;
 
-	void CallLineCallback();
-	void CallExceptionCallback();
+	void CallLineCallback ();
 
-	int  CallGeneric(asCScriptFunction *func);
+	void CallExceptionCallback ();
 
-	void DetachEngine();
+	int CallGeneric (asCScriptFunction *func);
 
-	void ExecuteNext();
-	void CleanStack();
-	void CleanStackFrame();
-	void CleanArgsOnStack();
-	void CleanReturnObject();
-	void DetermineLiveObjects(asCArray<int> &liveObjects, asUINT stackLevel);
+#ifndef AS_NO_EXCEPTIONS
 
-	void PushCallState();
-	void PopCallState();
-	void CallScriptFunction(asCScriptFunction *func);
-	void CallInterfaceMethod(asCScriptFunction *func);
-	void PrepareScriptFunction();
+	void HandleAppException ();
 
-	bool ReserveStackSpace(asUINT size);
+#endif
 
-	void SetInternalException(const char *descr);
+	void DetachEngine ();
+
+	void ExecuteNext ();
+
+	void CleanStack (bool catchException = false);
+
+	bool CleanStackFrame (bool catchException = false);
+
+	void CleanArgsOnStack ();
+
+	void CleanReturnObject ();
+
+	void DetermineLiveObjects (asCArray<int> &liveObjects, asUINT stackLevel);
+
+	int PushCallState ();
+
+	void PopCallState ();
+
+	void CallScriptFunction (asCScriptFunction *func);
+
+	void CallInterfaceMethod (asCScriptFunction *func);
+
+	void PrepareScriptFunction ();
+
+	bool ReserveStackSpace (asUINT size);
+
+	void SetInternalException (const char *descr, bool allowCatch = true);
+
+	bool FindExceptionTryCatch ();
 
 	// Must be protected for multiple accesses
 	mutable asCAtomic m_refCount;
 
-	bool             m_holdEngineRef;
+	bool            m_holdEngineRef;
 	asCScriptEngine *m_engine;
 
 	asEContextState m_status;
@@ -190,16 +225,17 @@ public:
 	int       m_exceptionSectionIdx;
 	int       m_exceptionLine;
 	int       m_exceptionColumn;
+	bool      m_exceptionWillBeCaught;
 
 	// The last prepared function, and some cached values related to it
 	asCScriptFunction *m_initialFunction;
-	int                m_returnValueSize;
-	int                m_argumentsSize;
+	int               m_returnValueSize;
+	int               m_argumentsSize;
 
 	// callbacks
 	bool                       m_lineCallback;
 	asSSystemFunctionInterface m_lineCallbackFunc;
-	void *                     m_lineCallbackObj;
+	void *m_lineCallbackObj;
 
 	bool                       m_exceptionCallback;
 	asSSystemFunctionInterface m_exceptionCallbackFunc;

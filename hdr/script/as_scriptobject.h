@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2017 Andreas Jonsson
+   Copyright (c) 2003-2019 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -84,52 +84,70 @@ public:
 
 	// Type info
 	int            GetTypeId() const;
-	asITypeInfo   *GetObjectType() const;
+
+	asITypeInfo *GetObjectType () const;
 
 	// Class properties
-	asUINT      GetPropertyCount() const;
-	int         GetPropertyTypeId(asUINT prop) const;
-	const char *GetPropertyName(asUINT prop) const;
-	void       *GetAddressOfProperty(asUINT prop);
+	asUINT GetPropertyCount () const;
+
+	int GetPropertyTypeId (asUINT prop) const;
+
+	const char *GetPropertyName (asUINT prop) const;
+
+	void *GetAddressOfProperty (asUINT prop);
 
 	// Miscellaneous
-	asIScriptEngine *GetEngine() const;
-	int              CopyFrom(asIScriptObject *other);
+	asIScriptEngine *GetEngine () const;
+
+	int CopyFrom (const asIScriptObject *other);
 
 	// User data
-	void *SetUserData(void *data, asPWORD type = 0);
-	void *GetUserData(asPWORD type = 0) const;
+	void *SetUserData (void *data, asPWORD type = 0);
+
+	void *GetUserData (asPWORD type = 0) const;
 
 //====================================
 // Internal
 //====================================
-	asCScriptObject(asCObjectType *objType, bool doInitialize = true);
-	virtual ~asCScriptObject();
+	asCScriptObject (asCObjectType *objType, bool doInitialize = true);
+
+	virtual ~asCScriptObject ();
 
 	asCScriptObject &operator=(const asCScriptObject &other);
 
 	// GC methods
-	void Destruct();
-	int  GetRefCount();
-	void SetFlag();
-	bool GetFlag();
-	void EnumReferences(asIScriptEngine *engine);
-	void ReleaseAllHandles(asIScriptEngine *engine);
+	void Destruct ();
+
+	int GetRefCount ();
+
+	void SetFlag ();
+
+	bool GetFlag ();
+
+	void EnumReferences (asIScriptEngine *engine);
+
+	void ReleaseAllHandles (asIScriptEngine *engine);
 
 	// Used for properties
-	void *AllocateUninitializedObject(asCObjectType *objType, asCScriptEngine *engine);
-	void FreeObject(void *ptr, asCObjectType *objType, asCScriptEngine *engine);
-	void CopyObject(void *src, void *dst, asCObjectType *objType, asCScriptEngine *engine);
-	void CopyHandle(asPWORD *src, asPWORD *dst, asCObjectType *objType, asCScriptEngine *engine);
+	void *AllocateUninitializedObject (asCObjectType *objType, asCScriptEngine *engine);
 
-	void CallDestructor();
+	void FreeObject (void *ptr, asCObjectType *objType, asCScriptEngine *engine);
+
+	void CopyObject (const void *src, void *dst, asCObjectType *objType, asCScriptEngine *engine);
+
+	void CopyHandle (asPWORD *src, asPWORD *dst, asCObjectType *objType, asCScriptEngine *engine);
+
+	int CopyFromAs (const asCScriptObject *other, asCObjectType *objType);
+
+	void CallDestructor ();
 
 //=============================================
 // Properties
 //=============================================
 protected:
 	friend class asCContext;
-	asCObjectType    *objType;
+
+	asCObjectType *objType;
 
 	mutable asCAtomic refCount;
 	mutable asBYTE    gcFlag:1;
@@ -156,7 +174,9 @@ void ScriptObject_ConstructUnitialized(asCObjectType *objType, asCScriptObject *
 
 void RegisterScriptObject(asCScriptEngine *engine);
 
-asIScriptObject *ScriptObjectFactory(const asCObjectType *objType, asCScriptEngine *engine);
+asIScriptObject *ScriptObjectFactory (const asCObjectType *objType, asCScriptEngine *engine);
+
+asIScriptObject *ScriptObjectCopyFactory (const asCObjectType *objType, void *origObj, asCScriptEngine *engine);
 
 END_AS_NAMESPACE
 

@@ -8,38 +8,44 @@
 #include "../script/scriptbuilder.h"
 #include "../script/scriptstdstring.h"
 
+typedef int (*functionPtr) (...);
+
 class paraScript
 {
 public:
-	bool init(asSFuncPtr &outputFunction);
+	bool init (asFUNCTION_t outputFunction);
 
-	void addHostVariable(const std::string &varName, void *varPtr);
+	void addHostVariable (const std::string &varName, void *varPtr);
 
-	void addScriptFunction(const std::string &funcName, std::string hostCallName);
+	void addScriptFunction (const std::string &funcName, std::string hostCallName);
 
-	void addHostFunction(const std::string &funcName, asSFuncPtr &funcPtr);
+	void addHostFunction (const std::string &funcName, functionPtr funcPtr);
 
-	void stop();
+	void stop ();
 
-	void debugState();
+	void debugState ();
 
-	bool loadAndCompile();
+	bool loadAndCompile ();
 
-	void addScript(std::string sectionName, std::string scriptContents);
+	void addScript (std::string sectionName, std::string scriptContents);
 
-	void cacheFunctions();
+	void cacheFunctions ();
 
-	void run(const std::string &functionName, const std::string &param);
+	void run (const std::string &functionName, const std::string &param);
+
+	asIScriptEngine *scriptEngine = nullptr;
 
 private:
-	static std::string getScriptError(int errNo);
+	static std::string getScriptError (int errNo);
+
+	std::string getContextState (int whichState);
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // AngelScript engine
 //
 //----------------------------------------------------------------------------------------------------------------------
-	asIScriptEngine  *scriptEngine       = nullptr;
+
 	asIScriptContext *context            = nullptr;
 	CScriptBuilder   builder;
 	bool             scriptEngineStarted = false;
@@ -68,7 +74,7 @@ private:
 		bool              param1; // Does this function need something passed to it
 	}                _scriptFunctionName;
 
-	std::vector<_scriptFunctionName> scriptFunctions;
+	std::vector<_scriptFunctionName>  scriptFunctions;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -79,14 +85,14 @@ private:
 	typedef struct
 	{
 		std::string scriptFunctionName;
-		asSFuncPtr  hostFunctionPtr;
-	}                                _hostScriptFunctions;
+		void        *hostFunctionPtr;
+	}                                 _hostScriptFunctions;
 
 	typedef struct
 	{
 		std::string scriptFunctionName;
-		void *hostFunctionPtr;
-	}                                _hostScriptVariables;
+		void        *hostFunctionPtr;
+	}                                 _hostScriptVariables;
 	std::vector<_hostScriptVariables> hostVariables;
 
 //----------------------------------------------------------------------------------------------------------------------

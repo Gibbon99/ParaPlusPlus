@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2017 Andreas Jonsson
+   Copyright (c) 2003-2020 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -583,10 +583,8 @@ bool asCScriptFunction::IsCompatibleWithTypeId(int typeId) const
 // interface
 const char *asCScriptFunction::GetModuleName() const
 {
-	if( module )
-	{
-		return module->name.AddressOf();
-	}
+	if (module)
+		return module->GetName ();
 
 	return 0;
 }
@@ -709,7 +707,7 @@ asCString asCScriptFunction::GetDeclarationStr(bool includeObjectName, bool incl
 		else
 			str += "_unnamed_type_::";
 	}
-	else if( includeNamespace && nameSpace->name != "" )
+	else if (includeNamespace && nameSpace->name != "" && !objectType)
 	{
 		str += nameSpace->name + "::";
 	}
@@ -1683,7 +1681,7 @@ void asCScriptFunction::ReleaseAllHandles(asIScriptEngine *)
 	objForDelegate = 0;
 }
 
-// internal
+// interface
 bool asCScriptFunction::IsShared() const
 {
 	// All system functions are shared
@@ -1700,16 +1698,28 @@ bool asCScriptFunction::IsShared() const
 	return traits.GetTrait(asTRAIT_SHARED);
 }
 
-// internal
+// interface
 bool asCScriptFunction::IsFinal() const
 {
-	return traits.GetTrait(asTRAIT_FINAL);
+	return traits.GetTrait (asTRAIT_FINAL);
 }
 
-// internal
-bool asCScriptFunction::IsOverride() const
+// interface
+bool asCScriptFunction::IsOverride () const
 {
-	return traits.GetTrait(asTRAIT_OVERRIDE);
+	return traits.GetTrait (asTRAIT_OVERRIDE);
+}
+
+// interface
+bool asCScriptFunction::IsExplicit () const
+{
+	return traits.GetTrait (asTRAIT_EXPLICIT);
+}
+
+// interface
+bool asCScriptFunction::IsProperty () const
+{
+	return traits.GetTrait (asTRAIT_PROPERTY);
 }
 
 END_AS_NAMESPACE

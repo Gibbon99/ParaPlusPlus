@@ -4,7 +4,6 @@
 #include "../../hdr/classes/paraEvent.h"
 #include "../../hdr/io/logFile.h"
 #include "../main.h"
-#include "../../hdr/system/enum.h"
 #include "../../hdr/io/consoleFunctions.h"
 
 std::queue<paraEventConsole *> consoleEvents;
@@ -51,6 +50,9 @@ void con_processConsoleEventQueue (void *data)
 					{
 						case EVENT_ACTION_CONSOLE_ADD_LINE:
 							console.add (tempEvent->newConsoleLine);
+
+							std::cout << "Console text : " << tempEvent->newConsoleLine << std::endl;
+
 							break;
 
 						case EVENT_ACTION_CONSOLE_ADD_CHAR:
@@ -220,8 +222,8 @@ void con_initConsole ()
 
 	sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, sys_getString ("Console started [ %s ]", APP_NAME));
 
-	console.addCommand ("help", "functionHelp", "Show available commands");
-	console.addCommand ("exit", "functionQuit", "Shutdown");
+	console.addCommand ("help", "Show available commands", "functionHelp");
+	console.addCommand ("exit", "Shutdown", "functionQuit");
 
 	console.addCommand ("d_showCurrentBackingTexture", "Show backing texture information.", debug_getCurrentBackingTexture);
 	console.addCommand ("d_showAllBackingTextures", "List all backing textures", debug_getAllBackingTextures);
@@ -229,7 +231,8 @@ void con_initConsole ()
 	console.addCommand ("d_showCurrentRendererInfo", "Show available renderer information.", debug_getRenderInfo);
 	console.addCommand ("d_showAllRenderers", "Shows information on all renderers available", debug_getAllRenderers);
 
-	console.addCommand ("d_useRenderers", "Shows information on all renderers available", "script_useRenderer");
+	console.addCommand ("d_useRenderer", "Use a new renderer - pass in index", "as_useNewRenderer");
+	console.addCommand ("testScript", "test", "as_testFunction");
 
 	console.addCommand ("d_getOS", "Show which OS is in use.", sys_getOS);
 	console.addCommand ("quit", "Quit the game.", sys_shutdown);

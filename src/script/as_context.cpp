@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2017 Andreas Jonsson
+   Copyright (c) 2003-2019 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -78,14 +78,17 @@ public:
 		// This code writes out some statistics for the VM.
 		// It's useful for determining what needs to be optimized.
 
+#ifndef __MINGW32__
+		// _mkdir is broken on mingw
 		_mkdir("AS_DEBUG");
-		#if _MSC_VER >= 1500 && !defined(AS_MARMALADE)
-			FILE *f;
-			fopen_s(&f, "AS_DEBUG/stats.txt", "wt");
-		#else
-			FILE *f = fopen("AS_DEBUG/stats.txt", "wt");
-		#endif
-		if( f )
+#endif
+#if _MSC_VER >= 1500 && !defined(AS_MARMALADE)
+		FILE *f;
+		fopen_s(&f, "AS_DEBUG/stats.txt", "wt");
+#else
+		FILE *f = fopen ("AS_DEBUG/stats.txt", "wt");
+#endif
+		if (f)
 		{
 			// Output instruction statistics
 			fprintf(f, "\nTotal count\n");
@@ -189,14 +192,15 @@ asCContext::asCContext(asCScriptEngine *engine, bool holdRef)
 	m_needToCleanupArgs         = false;
 	m_currentFunction           = 0;
 	m_callingSystemFunction     = 0;
-	m_regs.objectRegister       = 0;
-	m_initialFunction           = 0;
-	m_lineCallback              = false;
-	m_exceptionCallback         = false;
-	m_regs.doProcessSuspend     = false;
-	m_doSuspend                 = false;
-	m_userData                  = 0;
-	m_regs.ctx                  = this;
+	m_regs.objectRegister = 0;
+	m_initialFunction   = 0;
+	m_lineCallback      = false;
+	m_exceptionCallback = false;
+	m_regs.doProcessSuspend = false;
+	m_doSuspend = false;
+	m_userData  = 0;
+	m_regs.ctx = this;
+	m_exceptionWillBeCaught = false;
 }
 
 asCContext::~asCContext()
@@ -374,16 +378,16 @@ int asCContext::Prepare(asIScriptFunction *func)
 	if( func == 0 )
 	{
 		asCString str;
-		str.Format(TXT_FAILED_IN_FUNC_s_WITH_s_d, "Prepare", "null", asNO_FUNCTION);
-		m_engine->WriteMessage("", 0, 0, asMSGTYPE_ERROR, str.AddressOf());
+		str.Format (TXT_FAILED_IN_FUNC_s_WITH_s_s_d, "Prepare", "null", errorNames[-asNO_FUNCTION], asNO_FUNCTION);
+		m_engine->WriteMessage ("", 0, 0, asMSGTYPE_ERROR, str.AddressOf ());
 		return asNO_FUNCTION;
 	}
 
 	if( m_status == asEXECUTION_ACTIVE || m_status == asEXECUTION_SUSPENDED )
 	{
 		asCString str;
-		str.Format(TXT_FAILED_IN_FUNC_s_WITH_s_d, "Prepare", func->GetDeclaration(true, true), asCONTEXT_ACTIVE);
-		m_engine->WriteMessage("", 0, 0, asMSGTYPE_ERROR, str.AddressOf());
+		str.Format (TXT_FAILED_IN_FUNC_s_WITH_s_s_d, "Prepare", func->GetDeclaration (true, true), errorNames[-asCONTEXT_ACTIVE], asCONTEXT_ACTIVE);
+		m_engine->WriteMessage ("", 0, 0, asMSGTYPE_ERROR, str.AddressOf ());
 		return asCONTEXT_ACTIVE;
 	}
 
@@ -424,8 +428,8 @@ int asCContext::Prepare(asIScriptFunction *func)
 		if( m_engine != func->GetEngine() )
 		{
 			asCString str;
-			str.Format(TXT_FAILED_IN_FUNC_s_WITH_s_d, "Prepare", func->GetDeclaration(true, true), asINVALID_ARG);
-			m_engine->WriteMessage("", 0, 0, asMSGTYPE_ERROR, str.AddressOf());
+			str.Format (TXT_FAILED_IN_FUNC_s_WITH_s_s_d, "Prepare", func->GetDeclaration (true, true), errorNames[-asINVALID_ARG], asINVALID_ARG);
+			m_engine->WriteMessage ("", 0, 0, asMSGTYPE_ERROR, str.AddressOf ());
 			return asINVALID_ARG;
 		}
 
@@ -460,12 +464,16 @@ int asCContext::Prepare(asIScriptFunction *func)
 
 		// Determine the minimum stack size needed
 		int stackSize = m_argumentsSize + m_returnValueSize;
-		if( m_currentFunction->scriptData )
+		if (m_currentFunction->scriptData)
 			stackSize += m_currentFunction->scriptData->stackNeeded;
 
 		// Make sure there is enough space on the stack for the arguments and return value
-		if( !ReserveStackSpace(stackSize) )
+		if (!ReserveStackSpace (stackSize))
 			return asOUT_OF_MEMORY;
+
+		// Set up the call stack too
+		if (m_callStack.GetCapacity () < m_engine->ep.initCallStackSize)
+			m_callStack.AllocateNoConstruct (m_engine->ep.initCallStackSize * CALLSTACK_FRAME_SIZE, true);
 	}
 
 	// Reset state
@@ -1200,8 +1208,8 @@ int asCContext::Execute()
 	if( m_status != asEXECUTION_SUSPENDED && m_status != asEXECUTION_PREPARED )
 	{
 		asCString str;
-		str.Format(TXT_FAILED_IN_FUNC_s_d, "Execute", asCONTEXT_NOT_PREPARED);
-		m_engine->WriteMessage("", 0, 0, asMSGTYPE_ERROR, str.AddressOf());
+		str.Format (TXT_FAILED_IN_FUNC_s_s_d, "Execute", errorNames[-asCONTEXT_NOT_PREPARED], asCONTEXT_NOT_PREPARED);
+		m_engine->WriteMessage ("", 0, 0, asMSGTYPE_ERROR, str.AddressOf ());
 		return asCONTEXT_NOT_PREPARED;
 	}
 
@@ -1306,22 +1314,29 @@ int asCContext::Execute()
 		{
 			// This shouldn't happen unless there was an error in which
 			// case an exception should have been raised already
-			asASSERT( m_status == asEXECUTION_EXCEPTION );
+			asASSERT(m_status == asEXECUTION_EXCEPTION);
 		}
 	}
 
 	asUINT gcPreObjects = 0;
-	if( m_engine->ep.autoGarbageCollect )
-		m_engine->gc.GetStatistics(&gcPreObjects, 0, 0, 0, 0);
+	if (m_engine->ep.autoGarbageCollect)
+		m_engine->gc.GetStatistics (&gcPreObjects, 0, 0, 0, 0);
 
-	while( m_status == asEXECUTION_ACTIVE )
-		ExecuteNext();
+	while (m_status == asEXECUTION_ACTIVE)
+	{
+		ExecuteNext ();
 
-	if( m_lineCallback )
+		// If an exception was raised that will be caught, then unwind the stack
+		// and move the program pointer to the catch block before proceeding
+		if (m_status == asEXECUTION_EXCEPTION && m_exceptionWillBeCaught)
+			CleanStack (true);
+	}
+
+	if (m_lineCallback)
 	{
 		// Call the line callback one last time before leaving
 		// so anyone listening can catch the state change
-		CallLineCallback();
+		CallLineCallback ();
 		m_regs.doProcessSuspend = true;
 	}
 	else
@@ -1376,28 +1391,38 @@ int asCContext::PushState()
 	// Only allow the state to be pushed when active
 	// TODO: Can we support a suspended state too? So the reuse of
 	//       the context can be done outside the Execute() call?
-	if( m_status != asEXECUTION_ACTIVE )
+	if (m_status != asEXECUTION_ACTIVE)
 	{
 		// TODO: Write message. Wrong usage
 		return asERROR;
 	}
 
+	// Allocate space on the callstack for at least two states
+	if (m_callStack.GetLength () >= m_callStack.GetCapacity () - 2 * CALLSTACK_FRAME_SIZE)
+	{
+		if (m_engine->ep.maxCallStackSize > 0 && m_callStack.GetLength () >= m_engine->ep.maxCallStackSize * CALLSTACK_FRAME_SIZE)
+		{
+			// The call stack is too big to grow further
+			// If an error occurs, no change to the context should be done
+			return asOUT_OF_MEMORY;
+		}
+
+		// Allocate space for 10 call states at a time to save time
+		m_callStack.AllocateNoConstruct (m_callStack.GetLength () + 10 * CALLSTACK_FRAME_SIZE, true);
+	}
+
 	// Push the current script function that is calling the system function
-	PushCallState();
+	// This cannot fail, since the memory was already allocated above
+	PushCallState ();
 
 	// Push the system function too, which will serve both as a marker and
 	// informing which system function that created the nested call
-	if( m_callStack.GetLength() == m_callStack.GetCapacity() )
-	{
-		// Allocate space for 10 call states at a time to save time
-		m_callStack.AllocateNoConstruct(m_callStack.GetLength() + 10*CALLSTACK_FRAME_SIZE, true);
-	}
-	m_callStack.SetLengthNoConstruct(m_callStack.GetLength() + CALLSTACK_FRAME_SIZE);
+	m_callStack.SetLengthNoConstruct (m_callStack.GetLength () + CALLSTACK_FRAME_SIZE);
 
 	// Need to push m_initialFunction as it must be restored later
-	asPWORD *tmp = m_callStack.AddressOf() + m_callStack.GetLength() - CALLSTACK_FRAME_SIZE;
+	asPWORD *tmp = m_callStack.AddressOf () + m_callStack.GetLength () - CALLSTACK_FRAME_SIZE;
 	tmp[0] = 0;
-	tmp[1] = (asPWORD)m_callingSystemFunction;
+	tmp[1] = (asPWORD) m_callingSystemFunction;
 	tmp[2] = (asPWORD)m_initialFunction;
 	tmp[3] = (asPWORD)m_originalStackPointer;
 	tmp[4] = (asPWORD)m_argumentsSize;
@@ -1467,12 +1492,19 @@ int asCContext::PopState()
 	return asSUCCESS;
 }
 
-void asCContext::PushCallState()
+int asCContext::PushCallState ()
 {
-	if( m_callStack.GetLength() == m_callStack.GetCapacity() )
+	if (m_callStack.GetLength () == m_callStack.GetCapacity ())
 	{
+		if (m_engine->ep.maxCallStackSize > 0 && m_callStack.GetLength () >= m_engine->ep.maxCallStackSize * CALLSTACK_FRAME_SIZE)
+		{
+			// The call stack is too big to grow further
+			SetInternalException (TXT_STACK_OVERFLOW);
+			return asERROR;
+		}
+
 		// Allocate space for 10 call states at a time to save time
-		m_callStack.AllocateNoConstruct(m_callStack.GetLength() + 10*CALLSTACK_FRAME_SIZE, true);
+		m_callStack.AllocateNoConstruct (m_callStack.GetLength () + 10 * CALLSTACK_FRAME_SIZE, true);
 	}
 	m_callStack.SetLengthNoConstruct(m_callStack.GetLength() + CALLSTACK_FRAME_SIZE);
 
@@ -1486,16 +1518,18 @@ void asCContext::PushCallState()
 	asPWORD s[5];
 	s[0] = (asPWORD)m_regs.stackFramePointer;
 	s[1] = (asPWORD)m_currentFunction;
-	s[2] = (asPWORD)m_regs.programPointer;
-	s[3] = (asPWORD)m_regs.stackPointer;
+	s[2] = (asPWORD) m_regs.programPointer;
+	s[3] = (asPWORD) m_regs.stackPointer;
 	s[4] = m_stackIndex;
 
-	asPWORD *tmp = m_callStack.AddressOf() + m_callStack.GetLength() - CALLSTACK_FRAME_SIZE;
+	asPWORD *tmp = m_callStack.AddressOf () + m_callStack.GetLength () - CALLSTACK_FRAME_SIZE;
 	tmp[0] = s[0];
 	tmp[1] = s[1];
 	tmp[2] = s[2];
 	tmp[3] = s[3];
 	tmp[4] = s[4];
+
+	return asSUCCESS;
 }
 
 void asCContext::PopCallState()
@@ -1602,15 +1636,15 @@ bool asCContext::ReserveStackSpace(asUINT size)
 	// Make sure the first stack block is allocated
 	if( m_stackBlocks.GetLength() == 0 )
 	{
-		m_stackBlockSize = m_engine->initialContextStackSize;
-		asASSERT( m_stackBlockSize > 0 );
+		m_stackBlockSize = m_engine->ep.initContextStackSize;
+		asASSERT(m_stackBlockSize > 0);
 
 #ifndef WIP_16BYTE_ALIGN
-		asDWORD *stack = asNEWARRAY(asDWORD,m_stackBlockSize);
+		asDWORD *stack = asNEWARRAY(asDWORD, m_stackBlockSize);
 #else
 		asDWORD *stack = asNEWARRAYALIGNED(asDWORD, m_stackBlockSize, MAX_TYPE_ALIGNMENT);
 #endif
-		if( stack == 0 )
+		if (stack == 0)
 		{
 			// Out of memory
 			return false;
@@ -1639,15 +1673,15 @@ bool asCContext::ReserveStackSpace(asUINT size)
 		// Make sure we don't allocate more space than allowed
 		if( m_engine->ep.maximumContextStackSize )
 		{
-			// This test will only stop growth once it has already crossed the limit
-			if( m_stackBlockSize * ((1 << (m_stackIndex+1)) - 1) > m_engine->ep.maximumContextStackSize )
+			// This test will only stop growth once it is on or already crossed the limit
+			if (m_stackBlockSize * ((1 << (m_stackIndex + 1)) - 1) >= m_engine->ep.maximumContextStackSize)
 			{
 				m_isStackMemoryNotAllocated = true;
 
 				// Set the stackFramePointer, even though the stackPointer wasn't updated
 				m_regs.stackFramePointer = m_regs.stackPointer;
 
-				SetInternalException(TXT_STACK_OVERFLOW);
+				SetInternalException (TXT_STACK_OVERFLOW);
 				return false;
 			}
 		}
@@ -1702,17 +1736,18 @@ bool asCContext::ReserveStackSpace(asUINT size)
 // internal
 void asCContext::CallScriptFunction(asCScriptFunction *func)
 {
-	asASSERT( func->scriptData );
+	asASSERT(func->scriptData);
 
 	// Push the framepointer, function id and programCounter on the stack
-	PushCallState();
+	if (PushCallState () < 0)
+		return;
 
 	// Update the current function and program position before increasing the stack
 	// so the exception handler will know what to do if there is a stack overflow
 	m_currentFunction = func;
-	m_regs.programPointer = m_currentFunction->scriptData->byteCode.AddressOf();
+	m_regs.programPointer = m_currentFunction->scriptData->byteCode.AddressOf ();
 
-	PrepareScriptFunction();
+	PrepareScriptFunction ();
 }
 
 void asCContext::PrepareScriptFunction()
@@ -2850,11 +2885,11 @@ void asCContext::ExecuteNext()
 			if( !(objType->flags & asOBJ_NOCOUNT) )
 			{
 				// Release previous object held by destination pointer
-				if( *d != 0 )
-					m_engine->CallObjectMethod(*d, beh->release);
+				if (*d != 0 && beh->release)
+					m_engine->CallObjectMethod (*d, beh->release);
 				// Increase ref counter of wanted object
-				if( s != 0 )
-					m_engine->CallObjectMethod(s, beh->addref);
+				if (s != 0 && beh->addref)
+					m_engine->CallObjectMethod (s, beh->addref);
 			}
 
 			// Set the new object in the destination
@@ -4109,11 +4144,11 @@ void asCContext::ExecuteNext()
 			if( !(objType->flags & asOBJ_NOCOUNT) )
 			{
 				// Release previous object held by destination pointer
-				if( *d != 0 )
-					m_engine->CallObjectMethod(*d, beh->release);
+				if (*d != 0 && beh->release)
+					m_engine->CallObjectMethod (*d, beh->release);
 				// Increase ref counter of wanted object
-				if( s != 0 )
-					m_engine->CallObjectMethod(s, beh->addref);
+				if (s != 0 && beh->addref)
+					m_engine->CallObjectMethod (s, beh->addref);
 			}
 
 			// Set the new object in the destination
@@ -4487,25 +4522,27 @@ void asCContext::ExecuteNext()
 	}
 }
 
-int asCContext::SetException(const char *descr)
+// interface
+int asCContext::SetException (const char *descr, bool allowCatch)
 {
 	// Only allow this if we're executing a CALL byte code
-	if( m_callingSystemFunction == 0 ) return asERROR;
+	if (m_callingSystemFunction == 0)
+		return asERROR;
 
-	SetInternalException(descr);
+	SetInternalException (descr, allowCatch);
 
 	return 0;
 }
 
-void asCContext::SetInternalException(const char *descr)
+void asCContext::SetInternalException (const char *descr, bool allowCatch)
 {
-	if( m_inExceptionHandler )
+	if (m_inExceptionHandler)
 	{
 		asASSERT(false); // Shouldn't happen
 		return; // but if it does, at least this will not crash the application
 	}
 
-	m_status                = asEXECUTION_EXCEPTION;
+	m_status = asEXECUTION_EXCEPTION;
 	m_regs.doProcessSuspend = true;
 
 	m_exceptionString       = descr;
@@ -4513,9 +4550,9 @@ void asCContext::SetInternalException(const char *descr)
 
 	if( m_currentFunction->scriptData )
 	{
-		m_exceptionLine    = m_currentFunction->GetLineNumber(int(m_regs.programPointer - m_currentFunction->scriptData->byteCode.AddressOf()), &m_exceptionSectionIdx);
-		m_exceptionColumn  = m_exceptionLine >> 20;
-		m_exceptionLine   &= 0xFFFFF;
+		m_exceptionLine   = m_currentFunction->GetLineNumber(int(m_regs.programPointer - m_currentFunction->scriptData->byteCode.AddressOf()), &m_exceptionSectionIdx);
+		m_exceptionColumn = m_exceptionLine >> 20;
+		m_exceptionLine &= 0xFFFFF;
 	}
 	else
 	{
@@ -4524,17 +4561,26 @@ void asCContext::SetInternalException(const char *descr)
 		m_exceptionColumn     = 0;
 	}
 
-	if( m_exceptionCallback )
-		CallExceptionCallback();
+	// Recursively search the callstack for try/catch blocks
+	m_exceptionWillBeCaught = allowCatch && FindExceptionTryCatch ();
+
+	if (m_exceptionCallback)
+		CallExceptionCallback ();
 }
 
-void asCContext::CleanReturnObject()
+// interface
+bool asCContext::WillExceptionBeCaught ()
 {
-	if( m_initialFunction && m_initialFunction->DoesReturnOnStack() && m_status == asEXECUTION_FINISHED )
+	return m_exceptionWillBeCaught;
+}
+
+void asCContext::CleanReturnObject ()
+{
+	if (m_initialFunction && m_initialFunction->DoesReturnOnStack () && m_status == asEXECUTION_FINISHED)
 	{
 		// If function returns on stack we need to call the destructor on the returned object
-		if(CastToObjectType(m_initialFunction->returnType.GetTypeInfo())->beh.destruct )
-			m_engine->CallObjectMethod(GetReturnObject(), CastToObjectType(m_initialFunction->returnType.GetTypeInfo())->beh.destruct);
+		if (CastToObjectType (m_initialFunction->returnType.GetTypeInfo ())->beh.destruct)
+			m_engine->CallObjectMethod (GetReturnObject (), CastToObjectType (m_initialFunction->returnType.GetTypeInfo ())->beh.destruct);
 
 		return;
 	}
@@ -4577,29 +4623,36 @@ void asCContext::CleanReturnObject()
 	}
 }
 
-void asCContext::CleanStack()
+void asCContext::CleanStack (bool catchException)
 {
 	m_inExceptionHandler = true;
 
-	// Run the clean up code for each of the functions called
-	CleanStackFrame();
-
-	// Set the status to exception so that the stack unwind is done correctly.
-	// This shouldn't be done for the current function, which is why we only
-	// do this after the first CleanStackFrame() is done.
-	m_status = asEXECUTION_EXCEPTION;
-
-	while( m_callStack.GetLength() > 0 )
+	// Run the clean up code and move to catch block
+	bool caught = CleanStackFrame (catchException);
+	if (!caught)
 	{
-		// Only clean up until the top most marker for a nested call
-		asPWORD *s = m_callStack.AddressOf() + m_callStack.GetLength() - CALLSTACK_FRAME_SIZE;
-		if( s[0] == 0 )
-			break;
+		// Set the status to exception so that the stack unwind is done correctly.
+		// This shouldn't be done for the current function, which is why we only
+		// do this after the first CleanStackFrame() is done.
+		m_status = asEXECUTION_EXCEPTION;
 
-		PopCallState();
+		while (!caught && m_callStack.GetLength () > 0)
+		{
+			// Only clean up until the top most marker for a nested call
+			asPWORD *s = m_callStack.AddressOf () + m_callStack.GetLength () - CALLSTACK_FRAME_SIZE;
+			if (s[0] == 0)
+				break;
 
-		CleanStackFrame();
+			PopCallState ();
+
+			caught = CleanStackFrame (catchException);
+		}
 	}
+
+	// If the exception was caught, then move the status to 
+	// active as is now possible to resume the execution
+	if (caught)
+		m_status = asEXECUTION_ACTIVE;
 
 	m_inExceptionHandler = false;
 }
@@ -4745,19 +4798,19 @@ void asCContext::DetermineLiveObjects(asCArray<int> &liveObjects, asUINT stackLe
 						liveObjects[var] += 1;
 					}
 					break;
-				case asBLOCK_BEGIN: // Start block
-					// We should ignore start blocks, since it just means the
-					// program was within the block when the exception ocurred
-					break;
-				case asBLOCK_END: // End block
-					// We need to skip the entire block, as the objects created
-					// and destroyed inside this block are already out of scope
+					case asBLOCK_BEGIN: // Start block
+						// We should ignore start blocks, since it just means the
+						// program was within the block when the exception occurred
+						break;
+					case asBLOCK_END: // End block
+						// We need to skip the entire block, as the objects created
+						// and destroyed inside this block are already out of scope
 					{
 						int nested = 1;
-						while( nested > 0 )
+						while (nested > 0)
 						{
 							int option = func->scriptData->objVariableInfo[--n].option;
-							if( option == 3 )
+							if (option == 3)
 								nested++;
 							if( option == 2 )
 								nested--;
@@ -4874,47 +4927,138 @@ void asCContext::CleanArgsOnStack()
 					// Free the memory
 					m_engine->CallFree((void*)*(asPWORD*)&m_regs.stackPointer[offset]);
 				}
-				*(asPWORD*)&m_regs.stackPointer[offset] = 0;
+				*(asPWORD *) &m_regs.stackPointer[offset] = 0;
 			}
 		}
 
-		offset += func->parameterTypes[n].GetSizeOnStackDWords();
+		offset += func->parameterTypes[n].GetSizeOnStackDWords ();
 	}
 
 	m_needToCleanupArgs = false;
 }
 
-void asCContext::CleanStackFrame()
+bool asCContext::FindExceptionTryCatch ()
 {
+	// Check each of the script functions on the callstack to see if 
+	// the current program position is within a try/catch block
+	if (m_currentFunction && m_currentFunction->scriptData)
+	{
+		asUINT      currPos = asUINT (m_regs.programPointer - m_currentFunction->scriptData->byteCode.AddressOf ());
+		for (asUINT n       = 0; n < m_currentFunction->scriptData->tryCatchInfo.GetLength (); n++)
+		{
+			if (currPos >= m_currentFunction->scriptData->tryCatchInfo[n].tryPos && currPos < m_currentFunction->scriptData->tryCatchInfo[n].catchPos)
+				return true;
+		}
+	}
+
+	int      stackSize = GetCallstackSize ();
+	for (int level     = 1; level < stackSize; level++)
+	{
+		asPWORD           *s    = m_callStack.AddressOf () + (stackSize - level - 1) * CALLSTACK_FRAME_SIZE;
+		asCScriptFunction *func = (asCScriptFunction *) s[1];
+		if (func && func->scriptData)
+		{
+			asUINT      currPos = asUINT ((asDWORD *) s[2] - func->scriptData->byteCode.AddressOf ());
+			for (asUINT n       = 0; n < func->scriptData->tryCatchInfo.GetLength (); n++)
+			{
+				if (currPos >= func->scriptData->tryCatchInfo[n].tryPos && currPos < func->scriptData->tryCatchInfo[n].catchPos)
+					return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+bool asCContext::CleanStackFrame (bool catchException)
+{
+	bool            exceptionCaught = false;
+	asSTryCatchInfo *tryCatchInfo   = 0;
+
 	// Clean object variables on the stack
 	// If the stack memory is not allocated or the program pointer
 	// is not set, then there is nothing to clean up on the stack frame
-	if( !m_isStackMemoryNotAllocated && m_regs.programPointer )
+	if (!m_isStackMemoryNotAllocated && m_regs.programPointer)
 	{
 		// If the exception occurred while calling a function it is necessary
 		// to clean up the arguments that were put on the stack.
-		CleanArgsOnStack();
+		CleanArgsOnStack ();
+
+		// Check if this function will catch the exception
+		// Try blocks can be nested, so use the innermost block
+		asASSERT(m_currentFunction->scriptData);
+		if (catchException && m_currentFunction->scriptData)
+		{
+			asUINT currPos = asUINT (m_regs.programPointer - m_currentFunction->scriptData->byteCode.AddressOf ());
+
+			for (asUINT n = 0; n < m_currentFunction->scriptData->tryCatchInfo.GetLength (); n++)
+			{
+				if (currPos >= m_currentFunction->scriptData->tryCatchInfo[n].tryPos && currPos < m_currentFunction->scriptData->tryCatchInfo[n].catchPos)
+				{
+					tryCatchInfo    = &m_currentFunction->scriptData->tryCatchInfo[n];
+					exceptionCaught = true;
+				}
+				if (currPos < m_currentFunction->scriptData->tryCatchInfo[n].tryPos)
+					break;
+			}
+		}
 
 		// Restore the stack pointer
-		asASSERT( m_currentFunction->scriptData );
-		m_regs.stackPointer += m_currentFunction->scriptData->variableSpace;
+		if (!exceptionCaught)
+			m_regs.stackPointer += m_currentFunction->scriptData->variableSpace;
 
 		// Determine which object variables that are really live ones
 		asCArray<int> liveObjects;
-		DetermineLiveObjects(liveObjects, 0);
+		DetermineLiveObjects (liveObjects, 0);
 
-		for( asUINT n = 0; n < m_currentFunction->scriptData->objVariablePos.GetLength(); n++ )
+		for (asUINT n = 0; n < m_currentFunction->scriptData->objVariablePos.GetLength (); n++)
 		{
 			int pos = m_currentFunction->scriptData->objVariablePos[n];
-			if( n < m_currentFunction->scriptData->objVariablesOnHeap )
+
+			// If the exception was caught, then only clean up objects within the try block
+			if (exceptionCaught)
+			{
+				// Find out where the variable was declared, and skip cleaning of those that were declared before the try catch
+				// Multiple variables in different scopes may occupy the same slot on the stack so it is necessary to search
+				// the entire list to determine which variable occupies the slot now. 
+				int         skipClean = 0;
+				for (asUINT p         = 0; p < m_currentFunction->scriptData->objVariableInfo.GetLength (); p++)
+				{
+					asSObjectVariableInfo &info = m_currentFunction->scriptData->objVariableInfo[p];
+					if (info.variableOffset == pos && info.option == asOBJ_VARDECL)
+					{
+						asUINT progPos = info.programPos;
+						if (progPos < tryCatchInfo->tryPos)
+						{
+							if (skipClean >= 0)
+								skipClean = 1;
+							break;
+						}
+						else if (progPos < tryCatchInfo->catchPos)
+						{
+							skipClean = -1;
+							break;
+						}
+					}
+				}
+
+				// Skip only variables that have been declared before the try block. Variables declared 
+				// within the try block and variables whose declaration was not identified (temporary objects)
+				// will not be skipped.
+				// TODO: What if a temporary variable reuses a slot from a declared variable that is no longer in scope?
+				if (skipClean > 0)
+					continue;
+			}
+
+			if (n < m_currentFunction->scriptData->objVariablesOnHeap)
 			{
 				// Check if the pointer is initialized
-				if( *(asPWORD*)&m_regs.stackFramePointer[-pos] )
+				if (*(asPWORD *) &m_regs.stackFramePointer[-pos])
 				{
 					// Call the object's destructor
 					if (m_currentFunction->scriptData->objVariableTypes[n]->flags & asOBJ_FUNCDEF)
 					{
-						(*(asCScriptFunction**)&m_regs.stackFramePointer[-pos])->Release();
+						(*(asCScriptFunction **) &m_regs.stackFramePointer[-pos])->Release ();
 					}
 					else if( m_currentFunction->scriptData->objVariableTypes[n]->flags & asOBJ_REF )
 					{
@@ -4944,9 +5088,9 @@ void asCContext::CleanStackFrame()
 				// Only destroy the object if it is truly alive
 				if( liveObjects[n] > 0 )
 				{
-					asSTypeBehaviour *beh = &CastToObjectType(m_currentFunction->scriptData->objVariableTypes[n])->beh;
-					if( beh->destruct )
-						m_engine->CallObjectMethod((void*)(asPWORD*)&m_regs.stackFramePointer[-pos], beh->destruct);
+					asSTypeBehaviour *beh = &CastToObjectType (m_currentFunction->scriptData->objVariableTypes[n])->beh;
+					if (beh->destruct)
+						m_engine->CallObjectMethod ((void *) (asPWORD *) &m_regs.stackFramePointer[-pos], beh->destruct);
 				}
 			}
 		}
@@ -4954,15 +5098,22 @@ void asCContext::CleanStackFrame()
 	else
 		m_isStackMemoryNotAllocated = false;
 
+	// If the exception was caught then move the program position to the catch block then stop the unwinding
+	if (exceptionCaught)
+	{
+		m_regs.programPointer = m_currentFunction->scriptData->byteCode.AddressOf () + tryCatchInfo->catchPos;
+		return exceptionCaught;
+	}
+
 	// Functions that do not own the object and parameters shouldn't do any clean up
-	if( m_currentFunction->dontCleanUpOnException )
-		return;
+	if (m_currentFunction->dontCleanUpOnException)
+		return exceptionCaught;
 
 	// Clean object and parameters
 	int offset = 0;
-	if( m_currentFunction->objectType )
+	if (m_currentFunction->objectType)
 		offset += AS_PTR_SIZE;
-	if( m_currentFunction->DoesReturnOnStack() )
+	if (m_currentFunction->DoesReturnOnStack ())
 		offset += AS_PTR_SIZE;
 	for( asUINT n = 0; n < m_currentFunction->parameterTypes.GetLength(); n++ )
 	{
@@ -4989,28 +5140,32 @@ void asCContext::CleanStackFrame()
 						m_engine->CallObjectMethod((void*)*(asPWORD*)&m_regs.stackFramePointer[offset], beh->destruct);
 
 					// Free the memory
-					m_engine->CallFree((void*)*(asPWORD*)&m_regs.stackFramePointer[offset]);
+					m_engine->CallFree ((void *) *(asPWORD *) &m_regs.stackFramePointer[offset]);
 				}
-				*(asPWORD*)&m_regs.stackFramePointer[offset] = 0;
+				*(asPWORD *) &m_regs.stackFramePointer[offset] = 0;
 			}
 		}
 
-		offset += m_currentFunction->parameterTypes[n].GetSizeOnStackDWords();
+		offset += m_currentFunction->parameterTypes[n].GetSizeOnStackDWords ();
 	}
+
+	return exceptionCaught;
 }
 
 // interface
 int asCContext::GetExceptionLineNumber(int *column, const char **sectionName)
 {
-	if( GetState() != asEXECUTION_EXCEPTION ) return asERROR;
+	// Return the last exception even if the context is no longer in the exception state
+	// if( GetState() != asEXECUTION_EXCEPTION ) return asERROR;
 
-	if( column ) *column = m_exceptionColumn;
+	if (column)
+		*column = m_exceptionColumn;
 
-	if( sectionName )
+	if (sectionName)
 	{
 		// The section index can be -1 if the exception was raised in a generated function, e.g. $fact for templates
-		if( m_exceptionSectionIdx >= 0 )
-			*sectionName = m_engine->scriptSectionNames[m_exceptionSectionIdx]->AddressOf();
+		if (m_exceptionSectionIdx >= 0)
+			*sectionName = m_engine->scriptSectionNames[m_exceptionSectionIdx]->AddressOf ();
 		else
 			*sectionName = 0;
 	}
@@ -5021,7 +5176,8 @@ int asCContext::GetExceptionLineNumber(int *column, const char **sectionName)
 // interface
 asIScriptFunction *asCContext::GetExceptionFunction()
 {
-	if( GetState() != asEXECUTION_EXCEPTION ) return 0;
+	// Return the last exception even if the context is no longer in the exception state
+	// if( GetState() != asEXECUTION_EXCEPTION ) return 0;
 
 	return m_engine->scriptFunctions[m_exceptionFunction];
 }
@@ -5029,9 +5185,10 @@ asIScriptFunction *asCContext::GetExceptionFunction()
 // interface
 const char *asCContext::GetExceptionString()
 {
-	if( GetState() != asEXECUTION_EXCEPTION ) return 0;
+	// Return the last exception even if the context is no longer in the exception state
+	// if( GetState() != asEXECUTION_EXCEPTION ) return 0;
 
-	return m_exceptionString.AddressOf();
+	return m_exceptionString.AddressOf ();
 }
 
 // interface
@@ -5106,23 +5263,45 @@ int asCContext::SetExceptionCallback(asSFuncPtr callback, void *obj, int callCon
 	return r;
 }
 
-void asCContext::CallExceptionCallback()
+void asCContext::CallExceptionCallback ()
 {
-	if( m_exceptionCallbackFunc.callConv < ICC_THISCALL )
-		m_engine->CallGlobalFunction(this, m_exceptionCallbackObj, &m_exceptionCallbackFunc, 0);
+	if (m_exceptionCallbackFunc.callConv < ICC_THISCALL)
+		m_engine->CallGlobalFunction (this, m_exceptionCallbackObj, &m_exceptionCallbackFunc, 0);
 	else
-		m_engine->CallObjectMethod(m_exceptionCallbackObj, this, &m_exceptionCallbackFunc, 0);
+		m_engine->CallObjectMethod (m_exceptionCallbackObj, this, &m_exceptionCallbackFunc, 0);
 }
 
+#ifndef AS_NO_EXCEPTIONS
+
+// internal
+void asCContext::HandleAppException ()
+{
+	// This method is called from within a catch(...) block
+	if (m_engine->translateExceptionCallback)
+	{
+		// Allow the application to translate the application exception to a proper exception string
+		if (m_engine->translateExceptionCallbackFunc.callConv < ICC_THISCALL)
+			m_engine->CallGlobalFunction (this, m_engine->translateExceptionCallbackObj, &m_engine->translateExceptionCallbackFunc, 0);
+		else
+			m_engine->CallObjectMethod (m_engine->translateExceptionCallbackObj, this, &m_engine->translateExceptionCallbackFunc, 0);
+	}
+
+	// Make sure an exception is set even if the application decides not to do any specific translation
+	if (m_status != asEXECUTION_EXCEPTION)
+		SetException (TXT_EXCEPTION_CAUGHT);
+}
+
+#endif
+
 // interface
-void asCContext::ClearLineCallback()
+void asCContext::ClearLineCallback ()
 {
 	m_lineCallback = false;
 	m_regs.doProcessSuspend = m_doSuspend;
 }
 
 // interface
-void asCContext::ClearExceptionCallback()
+void asCContext::ClearExceptionCallback ()
 {
 	m_exceptionCallback = false;
 }
@@ -5179,24 +5358,32 @@ int asCContext::CallGeneric(asCScriptFunction *descr)
 	{
 		// Convert the exception to a script exception so the VM can 
 		// properly report the error to the application and then clean up
-		SetException(TXT_EXCEPTION_CAUGHT);
+		HandleAppException ();
 	}
 #endif
 	m_callingSystemFunction = 0;
 
-	m_regs.valueRegister = gen.returnVal;
+	m_regs.valueRegister  = gen.returnVal;
 	m_regs.objectRegister = gen.objectRegister;
-	m_regs.objectType = descr->returnType.GetTypeInfo();
+	m_regs.objectType     = descr->returnType.GetTypeInfo ();
+
+	// Increase the returned handle if the function has been declared with autohandles
+	// and the engine is not set to use the old mode for the generic calling convention
+	if (sysFunc->returnAutoHandle && m_engine->ep.genericCallMode == 1 && m_regs.objectRegister)
+	{
+		asASSERT(!(descr->returnType.GetTypeInfo ()->flags & asOBJ_NOCOUNT));
+		m_engine->CallObjectMethod (m_regs.objectRegister, CastToObjectType (descr->returnType.GetTypeInfo ())->beh.addref);
+	}
 
 	// Clean up arguments
-	const asUINT cleanCount = sysFunc->cleanArgs.GetLength();
-	if( cleanCount )
+	const asUINT cleanCount = sysFunc->cleanArgs.GetLength ();
+	if (cleanCount)
 	{
-		asSSystemFunctionInterface::SClean *clean = sysFunc->cleanArgs.AddressOf();
-		for( asUINT n = 0; n < cleanCount; n++, clean++ )
+		asSSystemFunctionInterface::SClean *clean = sysFunc->cleanArgs.AddressOf ();
+		for (asUINT                        n      = 0; n < cleanCount; n++, clean++)
 		{
-			void **addr = (void**)&args[clean->off];
-			if( clean->op == 0 )
+			void **addr = (void **) &args[clean->off];
+			if (clean->op == 0)
 			{
 				if( *addr != 0 )
 				{
@@ -5360,7 +5547,7 @@ void *asCContext::GetAddressOfVar(asUINT varIndex, asUINT stackLevel)
 }
 
 // interface
-// returns the typeId of the 'this' object at the given call stack level (-1 for current)
+// returns the typeId of the 'this' object at the given call stack level (0 for current)
 // returns 0 if the function call at the given stack level is not a method
 int asCContext::GetThisTypeId(asUINT stackLevel)
 {
@@ -5378,7 +5565,7 @@ int asCContext::GetThisTypeId(asUINT stackLevel)
 }
 
 // interface
-// returns the 'this' object pointer at the given call stack level (-1 for current)
+// returns the 'this' object pointer at the given call stack level (0 for current)
 // returns 0 if the function call at the given stack level is not a method
 void *asCContext::GetThisPointer(asUINT stackLevel)
 {
@@ -5433,72 +5620,70 @@ struct POW_INFO
 	char    HighBit;
 };
 
-const POW_INFO pow_info[] =
-{
-	{          0ULL,          0UL,     0,     0, 0 },  // 0 is a special case
-	{          0ULL,          0UL,     0,     0, 1 },  // 1 is a special case
-    { 3037000499ULL, 2147483647UL, 65535, 46340, 2 },  // 2
-    {    2097152ULL,    1664510UL,  1625,  1290, 2 },  // 3
-    {      55108ULL,      46340UL,   255,   215, 3 },  // 4
-    {       6208ULL,       5404UL,    84,    73, 3 },  // 5
-    {       1448ULL,       1290UL,    40,    35, 3 },  // 6
-    {        511ULL,        463UL,    23,    21, 3 },  // 7
-    {        234ULL,        215UL,    15,    14, 4 },  // 8
-    {        128ULL,        118UL,    11,    10, 4 },  // 9
-    {         78ULL,         73UL,     9,     8, 4 },  // 10
-    {         52ULL,         49UL,     7,     7, 4 },  // 11
-    {         38ULL,         35UL,     6,     5, 4 },  // 12
-    {         28ULL,         27UL,     5,     5, 4 },  // 13
-    {         22ULL,         21UL,     4,     4, 4 },  // 14
-    {         18ULL,         17UL,     4,     4, 4 },  // 15
-    {         15ULL,         14UL,     3,     3, 5 },  // 16
-    {         13ULL,         12UL,     3,     3, 5 },  // 17
-    {         11ULL,         10UL,     3,     3, 5 },  // 18
-    {          9ULL,          9UL,     3,     3, 5 },  // 19
-    {          8ULL,          8UL,     3,     2, 5 },  // 20
-    {          8ULL,          7UL,     2,     2, 5 },  // 21
-    {          7ULL,          7UL,     2,     2, 5 },  // 22
-    {          6ULL,          6UL,     2,     2, 5 },  // 23
-    {          6ULL,          5UL,     2,     2, 5 },  // 24
-    {          5ULL,          5UL,     2,     2, 5 },  // 25
-    {          5ULL,          5UL,     2,     2, 5 },  // 26
-    {          5ULL,          4UL,     2,     2, 5 },  // 27
-    {          4ULL,          4UL,     2,     2, 5 },  // 28
-    {          4ULL,          4UL,     2,     2, 5 },  // 29
-    {          4ULL,          4UL,     2,     2, 5 },  // 30
-    {          4ULL,          4UL,     2,     1, 5 },  // 31
-    {          3ULL,          3UL,     1,     1, 6 },  // 32
-    {          3ULL,          3UL,     1,     1, 6 },  // 33
-    {          3ULL,          3UL,     1,     1, 6 },  // 34
-    {          3ULL,          3UL,     1,     1, 6 },  // 35
-    {          3ULL,          3UL,     1,     1, 6 },  // 36
-    {          3ULL,          3UL,     1,     1, 6 },  // 37
-    {          3ULL,          3UL,     1,     1, 6 },  // 38
-    {          3ULL,          3UL,     1,     1, 6 },  // 39
-    {          2ULL,          2UL,     1,     1, 6 },  // 40
-    {          2ULL,          2UL,     1,     1, 6 },  // 41
-    {          2ULL,          2UL,     1,     1, 6 },  // 42
-    {          2ULL,          2UL,     1,     1, 6 },  // 43
-    {          2ULL,          2UL,     1,     1, 6 },  // 44
-    {          2ULL,          2UL,     1,     1, 6 },  // 45
-    {          2ULL,          2UL,     1,     1, 6 },  // 46
-    {          2ULL,          2UL,     1,     1, 6 },  // 47
-    {          2ULL,          2UL,     1,     1, 6 },  // 48
-    {          2ULL,          2UL,     1,     1, 6 },  // 49
-    {          2ULL,          2UL,     1,     1, 6 },  // 50
-    {          2ULL,          2UL,     1,     1, 6 },  // 51
-    {          2ULL,          2UL,     1,     1, 6 },  // 52
-    {          2ULL,          2UL,     1,     1, 6 },  // 53
-    {          2ULL,          2UL,     1,     1, 6 },  // 54
-    {          2ULL,          2UL,     1,     1, 6 },  // 55
-    {          2ULL,          2UL,     1,     1, 6 },  // 56
-    {          2ULL,          2UL,     1,     1, 6 },  // 57
-    {          2ULL,          2UL,     1,     1, 6 },  // 58
-    {          2ULL,          2UL,     1,     1, 6 },  // 59
-    {          2ULL,          2UL,     1,     1, 6 },  // 60
-    {          2ULL,          2UL,     1,     1, 6 },  // 61
-    {          2ULL,          2UL,     1,     1, 6 },  // 62
-	{          2ULL,          1UL,     1,     1, 6 },  // 63
+const POW_INFO pow_info[] = {{0ULL,          0UL,          0,     0,     0},  // 0 is a special case
+                             {0ULL,          0UL,          0,     0,     1},  // 1 is a special case
+                             {3037000499ULL, 2147483647UL, 65535, 46340, 2},  // 2
+                             {2097152ULL,    1664510UL,    1625,  1290,  2},  // 3
+                             {55108ULL,      46340UL,      255,   215,   3},  // 4
+                             {6208ULL,       5404UL,       84,    73,    3},  // 5
+                             {1448ULL,       1290UL,       40,    35,    3},  // 6
+                             {511ULL,        463UL,        23,    21,    3},  // 7
+                             {234ULL,        215UL,        15,    14,    4},  // 8
+                             {128ULL,        118UL,        11,    10,    4},  // 9
+                             {78ULL,         73UL,         9,     8,     4},  // 10
+                             {52ULL,         49UL,         7,     7,     4},  // 11
+                             {38ULL,         35UL,         6,     5,     4},  // 12
+                             {28ULL,         27UL,         5,     5,     4},  // 13
+                             {22ULL,         21UL,         4,     4,     4},  // 14
+                             {18ULL,         17UL,         4,     4,     4},  // 15
+                             {15ULL,         14UL,         3,     3,     5},  // 16
+                             {13ULL,         12UL,         3,     3,     5},  // 17
+                             {11ULL,         10UL,         3,     3,     5},  // 18
+                             {9ULL,          9UL,          3,     3,     5},  // 19
+                             {8ULL,          8UL,          3,     2,     5},  // 20
+                             {8ULL,          7UL,          2,     2,     5},  // 21
+                             {7ULL,          7UL,          2,     2,     5},  // 22
+                             {6ULL,          6UL,          2,     2,     5},  // 23
+                             {6ULL,          5UL,          2,     2,     5},  // 24
+                             {5ULL,          5UL,          2,     2,     5},  // 25
+                             {5ULL,          5UL,          2,     2,     5},  // 26
+                             {5ULL,          4UL,          2,     2,     5},  // 27
+                             {4ULL,          4UL,          2,     2,     5},  // 28
+                             {4ULL,          4UL,          2,     2,     5},  // 29
+                             {4ULL,          4UL,          2,     2,     5},  // 30
+                             {4ULL,          4UL,          2,     1,     5},  // 31
+                             {3ULL,          3UL,          1,     1,     6},  // 32
+                             {3ULL,          3UL,          1,     1,     6},  // 33
+                             {3ULL,          3UL,          1,     1,     6},  // 34
+                             {3ULL,          3UL,          1,     1,     6},  // 35
+                             {3ULL,          3UL,          1,     1,     6},  // 36
+                             {3ULL,          3UL,          1,     1,     6},  // 37
+                             {3ULL,          3UL,          1,     1,     6},  // 38
+                             {3ULL,          3UL,          1,     1,     6},  // 39
+                             {2ULL,          2UL,          1,     1,     6},  // 40
+                             {2ULL,          2UL,          1,     1,     6},  // 41
+                             {2ULL,          2UL,          1,     1,     6},  // 42
+                             {2ULL,          2UL,          1,     1,     6},  // 43
+                             {2ULL,          2UL,          1,     1,     6},  // 44
+                             {2ULL,          2UL,          1,     1,     6},  // 45
+                             {2ULL,          2UL,          1,     1,     6},  // 46
+                             {2ULL,          2UL,          1,     1,     6},  // 47
+                             {2ULL,          2UL,          1,     1,     6},  // 48
+                             {2ULL,          2UL,          1,     1,     6},  // 49
+                             {2ULL,          2UL,          1,     1,     6},  // 50
+                             {2ULL,          2UL,          1,     1,     6},  // 51
+                             {2ULL,          2UL,          1,     1,     6},  // 52
+                             {2ULL,          2UL,          1,     1,     6},  // 53
+                             {2ULL,          2UL,          1,     1,     6},  // 54
+                             {2ULL,          2UL,          1,     1,     6},  // 55
+                             {2ULL,          2UL,          1,     1,     6},  // 56
+                             {2ULL,          2UL,          1,     1,     6},  // 57
+                             {2ULL,          2UL,          1,     1,     6},  // 58
+                             {2ULL,          2UL,          1,     1,     6},  // 59
+                             {2ULL,          2UL,          1,     1,     6},  // 60
+                             {2ULL,          2UL,          1,     1,     6},  // 61
+                             {2ULL,          2UL,          1,     1,     6},  // 62
+                             {2ULL,          1UL,          1,     1,     6},  // 63
 };
 
 int as_powi(int base, int exponent, bool& isOverflow)

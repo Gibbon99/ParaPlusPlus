@@ -4,7 +4,7 @@
 #include "../../hdr/classes/paraConsole.h"
 #include "../../hdr/wrapper.h"
 #include "../../hdr/main.h"
-#include "../../hdr/system/enum.h"
+#include "../../hdr/system/gameEvents.h"
 
 paraConsole::paraConsole(float defaultPosX, int red, int green, int blue, int alpha)
 {
@@ -240,7 +240,7 @@ void paraConsole::addCommand(const std::string &commandName, const std::string &
 	console.add(console.defaultPosX, 255, 0, 0, 0, "Add console commands must include a valid commandName and functionName.");
 }
 
-void paraConsole::addCommand(const std::string &commandName, const std::string &functionName, const std::string &functionHelp)
+void paraConsole::addCommand (const std::string &commandName, const std::string &functionHelp, const std::string &functionName)
 {
 	_consoleCommand tempCommand;
 
@@ -248,9 +248,9 @@ void paraConsole::addCommand(const std::string &commandName, const std::string &
 	tempCommand.commandHelp = functionHelp;
 	tempCommand.commandPtr  = nullptr;
 
-	if ((!commandName.empty() || !functionName.empty()))
+	if ((!commandName.empty () || !functionName.empty ()))
 	{
-		paraConsole::consoleCommands.insert(std::pair<std::string, _consoleCommand>(commandName, tempCommand));
+		paraConsole::consoleCommands.insert (std::pair<std::string, _consoleCommand> (commandName, tempCommand));
 		return;
 	}
 	std::cout << "Adding console commands must include a valid commandName and functionName." << endl;
@@ -530,10 +530,11 @@ void paraConsole::processCommand(std::vector<std::string> commandLine)
 	//
 	//
 	if (localConsoleItr->second.commandPtr != nullptr)      // Is this an internal function
-		localConsoleItr->second.commandPtr();
+		localConsoleItr->second.commandPtr ();
 	else
-		paraConsole::add(sys_getString("Run script function [ %s ] with [ %s ]", localConsoleItr->second.commandName.c_str(),
-		                               parameterList.c_str()));
+	{
+		paraScriptInstance.run (localConsoleItr->second.commandName, parameterList);
+	}
 }
 
 bool paraConsole::stringStartsWith(const std::string &lookIn, const std::string &lookFor)

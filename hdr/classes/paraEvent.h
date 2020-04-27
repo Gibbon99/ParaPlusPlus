@@ -6,9 +6,9 @@
 class paraEvent
 {
 public:
-	paraEvent(int actionType)
+	paraEvent (int actionType)
 	{
-		action = actionType;
+		action  = actionType;
 		counter = 0;
 	}
 
@@ -24,7 +24,7 @@ public:
 class paraEventConsole : public paraEvent
 {
 public:
-	paraEventConsole (int newAction, const std::string& newLine) : paraEvent(newAction)
+	paraEventConsole (int newAction, const std::string &newLine) : paraEvent (newAction)
 	{
 		newConsoleLine = newLine;
 	}
@@ -40,7 +40,7 @@ public:
 class paraEventLogfile : public paraEvent
 {
 public:
-	paraEventLogfile(int newAction, const std::string &newText) : paraEvent(newAction)
+	paraEventLogfile (int newAction, const std::string &newText) : paraEvent (newAction)
 	{
 		newLogfileLine = newText;
 	}
@@ -51,10 +51,32 @@ private:
 
 };
 
+//------------------------------------------------------------------------------------------------------------------
+//
+// Game - main thread
+//
+//------------------------------------------------------------------------------------------------------------------
+class paraEventGame : public paraEvent
+{
+public:
+	paraEventGame (int newAction, int newCounter, const std::string &newText) : paraEvent (newAction)
+	{
+		action   = newAction;
+		counter  = newCounter;
+		gameText = newText;
+	}
+
+	std::string gameText;
+	int         action;
+	int         counter;
+private:
+
+};
+
 class paraEventAudio : public paraEvent
 {
 public:
-	paraEventAudio(int newAction, int soundIndex) : paraEvent(newAction)
+	paraEventAudio (int newAction, int soundIndex) : paraEvent (newAction)
 	{
 		sounds = soundIndex;
 	}

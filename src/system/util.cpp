@@ -1,5 +1,4 @@
 #include "../../hdr/system/util.h"
-#include "../../hdr/system/enum.h"
 #include "../../hdr/system/startup.h"
 #include "../../hdr/io/console.h"
 

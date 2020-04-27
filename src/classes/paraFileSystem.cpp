@@ -1,5 +1,6 @@
 #include <vector>
 #include <cstdarg>
+#include <cstring>
 #include "../../hdr/classes/paraFileSystem.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -218,17 +219,19 @@ std::string paraFileSystem::getString(const std::string &fileName)
 
 	if (-1 == returnCode)
 	{
-		funcOutput(int_getString("Filesystem read failed - [ %s ] for [ %s ].", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()),
-		                         fileName.c_str()));
-		PHYSFS_close(compFile);
+		funcOutput (int_getString ("Filesystem read failed - [ %s ] for [ %s ].", PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ()), fileName.c_str ()));
+		PHYSFS_close (compFile);
 		return "";
 	}
 
 	//
 	// Finished with it now so close it
-	PHYSFS_close(compFile);
+	PHYSFS_close (compFile);
 
-	stringResult = results;
+	for (int i = 0; i != fileLength; i++)
+	{
+		stringResult.push_back (results[i]);
+	}
 
 	return stringResult;
 }

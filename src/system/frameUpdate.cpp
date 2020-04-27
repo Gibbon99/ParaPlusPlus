@@ -1,5 +1,6 @@
 #include "../../hdr/system/frameUpdate.h"
 #include "../main.h"
+#include "../../hdr/system/gameEvents.h"
 
 SDL_Event evt;
 
@@ -9,18 +10,18 @@ SDL_Event evt;
 void sys_gameTickRun()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	while (SDL_PollEvent(&evt) != 0)
+	gam_processGameEventQueue ();
+
+	while (SDL_PollEvent (&evt) != 0)
 	{
 //User requests quit
 		switch (evt.type)
 		{
-		case SDL_QUIT:
-			quitLoop = true;
-			break;
+			case SDL_QUIT:
+				quitLoop = true;
+				break;
 
 		case SDL_KEYDOWN:
-//			if (evt.key.keysym.sym == SDLK_R)
-	//			sys_createNewScreen(1024, 768, 0);
 
 			if (evt.key.keysym.sym == SDLK_ESCAPE)
 				quitLoop = true;		

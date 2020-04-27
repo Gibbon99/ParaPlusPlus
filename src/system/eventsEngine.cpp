@@ -1,8 +1,7 @@
 #include "../main.h"
-#include "../../hdr/system/eventsEngine.h"
 #include "../../hdr/io/console.h"
 #include "../../hdr/io/logFile.h"
-#include "../../hdr/classes/paraEvent.h"
+#include "../../hdr/system/gameEvents.h"
 
 typedef struct
 {
@@ -29,10 +28,13 @@ bool runThreads = true;     // Master flag to control state of detached threads
 void evt_setThreadReady(const std::string& threadName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (registeredThreads.empty())
+	//
+	// registerThreads.empty profiles at 9%;
+	// registerThreads.size() == 0 profiles at < 1%
+	if (registeredThreads.size () == 0)
 		return;
 
-	for (auto& threadItr : registeredThreads)
+	for (auto &threadItr : registeredThreads)
 	{
 		if (threadName == threadItr.name)
 		{
@@ -73,14 +75,14 @@ bool evt_isThreadReady(const std::string& threadName)
 bool evt_shouldThreadRun(const std::string& threadName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (registeredThreads.empty())
+	if (registeredThreads.size () == 0)
 	{
 		cout << "Attempting to start thread [ " << threadName << " ] but thread is not created." << endl;
-		PARA_Delay(100);     // Give thread time to startup
+		PARA_Delay (100);     // Give thread time to startup
 		return false;
 	}
 
-	for (const auto& threadItr : registeredThreads)
+	for (const auto &threadItr : registeredThreads)
 	{
 		if (threadName == threadItr.name)
 			return threadItr.run;
@@ -218,16 +220,20 @@ void sys_addEvent(int eventType, int eventAction, int eventDelay, const std::str
 			tempMutex = evt_getMutex(LOGGING_MUTEX_NAME);
 
 			if (nullptr == tempMutex)
-				sys_shutdownWithError(sys_getString("Unable to get mutex details [ %s ] [ %s ]", LOGGING_MUTEX_NAME, SDL_GetError()));
+				sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", LOGGING_MUTEX_NAME, SDL_GetError ()));
 			//
 			// Put the new event onto the logfile queue
-			PARA_LockMutex(evt_getMutex(LOGGING_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
-				loggingEventQueue.push(new paraEventLogfile(eventAction, eventText));
-			PARA_UnlockMutex(evt_getMutex(LOGGING_MUTEX_NAME));
+			PARA_LockMutex (evt_getMutex (LOGGING_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
+			loggingEventQueue.push (new paraEventLogfile (eventAction, eventText));
+			PARA_UnlockMutex (evt_getMutex (LOGGING_MUTEX_NAME));
 			break;
 
+		case EVENT_TYPE_GAME:   // Push an event back into the main thread
+			gam_addEvent (eventAction, eventDelay, eventText);
+			return;
+
 		default:
-			logFile.write(sys_getString("Unknown event type used. [ %s ]", eventText.c_str()));
+			logFile.write (sys_getString ("Unknown event type used. [ %s ]", eventText.c_str ()));
 			break;
 	}
 }

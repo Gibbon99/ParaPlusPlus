@@ -111,7 +111,7 @@ set (CXX_SRCS
 		src/classes/paraEvent.cpp hdr/classes/paraEvent.h
 		src/system/eventsEngine.cpp hdr/system/eventsEngine.h
 		src/io/logFile.cpp hdr/io/logFile.h
-		src/classes/paraRenderer.cpp hdr/classes/paraRenderer.h src/io/consoleFunctions.cpp hdr/io/consoleFunctions.h)
+		src/classes/paraRenderer.cpp hdr/classes/paraRenderer.h src/io/consoleFunctions.cpp hdr/io/consoleFunctions.h src/system/gameEvents.cpp hdr/system/gameEvents.h)
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
 

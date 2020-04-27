@@ -1,9 +1,5 @@
-//
-// Created by dberry on 26/4/20.
-//
 
 #include "../../hdr/io/consoleFunctions.h"
-#include "../../hdr/main.h"
 
 void debug_getCurrentBackingTexture ()
 {

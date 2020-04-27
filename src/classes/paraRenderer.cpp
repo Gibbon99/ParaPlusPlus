@@ -2,6 +2,7 @@
 #include <SDL_video.h>
 #include <SDL_render.h>
 #include <SDL_hints.h>
+#include <iostream>
 #include "../../hdr/classes/paraRenderer.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -15,6 +16,16 @@ paraRenderer::paraRenderer ()
 	windowWidth  = 0;
 
 	getRendererInfo ();
+}
+
+void paraRenderer::AddRef ()
+{
+
+}
+
+void paraRenderer::ReleaseRef ()
+{
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -107,6 +118,8 @@ void paraRenderer::create (int newWinWidth, int newWinHeight, int winFlags, int 
 	{
 		SDL_DestroyRenderer (renderer);
 		SDL_DestroyWindow (window);
+
+		renderer = nullptr;
 	}
 
 	int_useVSync  = useVSync;
@@ -122,9 +135,10 @@ void paraRenderer::create (int newWinWidth, int newWinHeight, int winFlags, int 
 	if (nullptr == renderer)
 		shutdownFunc (int_getString ("Renderer could not be created. [ %s ]", SDL_GetError ()));
 
-	windowWidth   = newWinWidth;
-	windowHeight  = newWinHeight;
-	cacheWinFlags = winFlags;
+	windowWidth      = newWinWidth;
+	windowHeight     = newWinHeight;
+	cacheWinFlags    = winFlags;
+	changingRenderer = false;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -133,13 +147,43 @@ void paraRenderer::create (int newWinWidth, int newWinHeight, int winFlags, int 
 void paraRenderer::useNewRenderer (int newRendererIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	__backingTexture                        tempBackingTexture;
+	std::string                             tempBackingTextureName;
+	std::string                             tempCurrentBackingTexture;
+	std::map<std::string, __backingTexture> tempBackingTextures;
+
 	if ((newRendererIndex < 0) || (newRendererIndex > rendererInfo.size () - 1))
 	{
 		consoleOutFunc (-1, int_getString ("Invalid renderer index [ %i ]", newRendererIndex));
 		return;
 	}
 
+	tempCurrentBackingTexture = getCurrentBackingTexture ();
+
+	SDL_SetRenderTarget (renderer, nullptr);
+
 	create (windowWidth, windowHeight, cacheWinFlags, newRendererIndex, int_useVSync, cacheTitle);
+
+	targetTextureAvailable = false;
+
+	for (auto &backingItr : backingTextures)
+	{
+		tempBackingTextureName = backingItr.first;
+		tempBackingTexture     = backingItr.second;
+
+		backingTextures.insert (std::pair<std::string, __backingTexture> (tempBackingTextureName, tempBackingTexture));
+	}
+
+	for (auto &backingItr : tempBackingTextures)
+	{
+		createRenderTargetTexture (backingItr.first, backingItr.second.logicalWidth, backingItr.second.logicalHeight, 1);
+	}
+
+	setCurrentBackingTexture (tempCurrentBackingTexture);
+
+	SDL_SetRenderTarget (renderer, getRenderTarget (tempCurrentBackingTexture));
+
+	targetTextureAvailable = true;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -148,10 +192,24 @@ void paraRenderer::useNewRenderer (int newRendererIndex)
 void paraRenderer::getRendererInfo ()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	static bool oktouse = false;
+
 	int            numRenderDrivers;
 	__rendererInfo tempRendererInfo;
 
 	SDL_RendererInfo renderDriverInfo;
+
+	if (!rendererInfo.empty ())
+	{
+		rendererInfo.clear ();
+	}
+
+	std::cout << "Inside getRenderInfo" << std::endl;
+
+	if (oktouse)
+		consoleOutFunc (-1, "Inside getRenderInfo");
+
+	oktouse = true;
 
 	numRenderDrivers = SDL_GetNumRenderDrivers ();
 	if (numRenderDrivers <= 0)
@@ -237,6 +295,8 @@ void paraRenderer::d_getAllRenderers ()
 {
 	int currentCount = 0;
 
+	std::cout << "Inside getAllRenders" << std::endl;
+
 	if (rendererInfo.empty ())
 	{
 		consoleOutFunc (-1, "Renderer information has not been populated.");
@@ -274,6 +334,8 @@ void paraRenderer::setCurrentBackingTexture (const std::string &newActiveTexture
 		if (newActiveTexture == textureItr.first)
 		{
 			activeBackingTexture = newActiveTexture;
+			SDL_SetRenderTarget (renderer, getRenderTarget (newActiveTexture));
+			targetTextureAvailable = true;
 			return;
 		}
 	}
@@ -287,6 +349,7 @@ PARA_Texture *paraRenderer::getRenderTarget (const std::string &textureName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 //	SDL_assert_release(renderTargetTexture != nullptr);
+
 	if (backingTextures.empty ())
 		shutdownFunc (int_getString ("No backing textures exist."));
 
@@ -356,7 +419,7 @@ void paraRenderer::presentFrame ()
 	if (targetTextureAvailable)
 	{
 		SDL_SetRenderTarget (renderer, nullptr);
-		SDL_RenderCopy (renderer, getRenderTarget (getCurrentBackingTexture ()), nullptr, nullptr);
+		SDL_RenderCopy (renderer, SDL_GetRenderTarget (paraRenderer::renderer), nullptr, nullptr);
 	}
 
 	SDL_RenderPresent (renderer);
@@ -372,7 +435,7 @@ void paraRenderer::prepareFrame ()
 
 	if (targetTextureAvailable)
 	{
-		if (SDL_SetRenderTarget (paraRenderer::renderer, getRenderTarget (getCurrentBackingTexture ())) < 0)
+		if (SDL_SetRenderTarget (paraRenderer::renderer, SDL_GetRenderTarget (paraRenderer::renderer)) < 0)
 		{
 			errorCount++;
 			if (errorCount > 5)

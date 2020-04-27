@@ -1,22 +1,15 @@
 #include "../../hdr/system/scriptConfig.h"
 
-bool quitProgram;
-
 //----------------------------------------------------------------------------------------------------------------------
 //
 // This is how we call a script from the Host program : Name in Script : Name to call from host
 void sys_scriptInitScriptFunctions ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraScriptInstance.addScriptFunction("void script_loadAllResources()", "script_loadAllResources");
-	paraScriptInstance.addScriptFunction("void script_initGUI()", "script_initGUI");
-	paraScriptInstance.addScriptFunction("void as_guiHandleElementAction(string &in objectID)", "as_guiHandleElementAction");
-	paraScriptInstance.addScriptFunction("void as_guiHandleTerminalAction(string &in objectID)", "as_guiHandleTerminalAction");
-	paraScriptInstance.addScriptFunction("void as_guiHandleDatabaseAction(string &in objectID)", "as_guiHandleDatabaseAction");
-	paraScriptInstance.addScriptFunction("void as_guiHandleTransferAction(string &in objectID)", "as_guiHandleTransferAction");
-	paraScriptInstance.addScriptFunction("void as_guiHandleDialogAction(string &in objectID)", "as_guiHandleDialogAction");
-}
+	paraScriptInstance.addScriptFunction ("void as_useNewRenderer(int &in newRenderer)", "as_useNewRenderer");
 
+	paraScriptInstance.addScriptFunction ("void as_testFunction()", "as_testFunction");
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -27,18 +20,33 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable("int quitProgram", &quitLoop);
 }
 
-int sys_scriptPrintInt()
+void sys_scriptPrintInt (std::string inStr, int inInt)
 {
-
-	return 0;
+	std::cout << "String : " << inStr << "Int : " << inInt << endl;
 }
-
+/*
+// Function implementation with generic script interface
+void PrintString_Generic(asIScriptGeneric *gen)
+{
+	string *str = (string*)gen->GetArgAddress(0);
+	cout << *str;
+}
+*/
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Setup all the globals functions that the scripts can call for action in the host
 void sys_scriptInitFunctions ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraScriptInstance.addHostFunction("void sys_printConInt(string &in, uint param)", reinterpret_cast<asSFuncPtr &>(sys_scriptPrintInt));
+//	paraScriptInstance.scriptEngine->RegisterObjectMethod("paraRenderer", "void useNewRenderer(int)", asMETHOD(paraRenderer, useNewRenderer), asCALL_THISCALL);
 
+	paraScriptInstance.scriptEngine->RegisterObjectType ("paraRenderer", 0, asOBJ_REF);
+	paraScriptInstance.scriptEngine->RegisterObjectBehaviour ("paraRenderer", asBEHAVE_ADDREF, "void f()", asMETHOD(paraRenderer, AddRef), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterObjectBehaviour ("paraRenderer", asBEHAVE_RELEASE, "void f()", asMETHOD(paraRenderer, ReleaseRef), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraRenderer", "void getRendererInfo()", asMETHOD(paraRenderer, getRendererInfo), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraRenderer", "void d_getAllRenderers()", asMETHOD(paraRenderer, d_getAllRenderers), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterGlobalProperty ("paraRenderer as_renderer", &renderer);
+
+	paraScriptInstance.addHostFunction ("void sys_printConInt(string &in, int param)", (functionPtr) &sys_scriptPrintInt);
+	paraScriptInstance.addHostFunction ("void sys_addEvent(int eventType, int eventAction, int eventDelay, string &in)", (functionPtr) &sys_addEvent);
 }

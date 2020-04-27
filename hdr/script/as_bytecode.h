@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2015 Andreas Jonsson
+   Copyright (c) 2003-2018 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied 
    warranty. In no event will the authors be held liable for any 
@@ -62,25 +62,33 @@ public:
 	asCByteCode(asCScriptEngine *engine);
 	~asCByteCode();
 
-	void ClearAll();
+	void ClearAll ();
 
-	int GetSize();
+	int GetSize ();
 
-	void Finalize(const asCArray<int> &tempVariableOffsets);
+	void Finalize (const asCArray<int> &tempVariableOffsets);
 
-	void Optimize();
-	void OptimizeLocally(const asCArray<int> &tempVariableOffsets);
-	void ExtractLineNumbers();
-	void ExtractObjectVariableInfo(asCScriptFunction *outFunc);
-	int  ResolveJumpAddresses();
-	int  FindLabel(int label, asCByteInstruction *from, asCByteInstruction **dest, int *positionDelta);
+	void Optimize ();
 
-	void AddPath(asCArray<asCByteInstruction *> &paths, asCByteInstruction *instr, int stackSize);
+	void OptimizeLocally (const asCArray<int> &tempVariableOffsets);
 
-	void Output(asDWORD *array);
-	void AddCode(asCByteCode *bc);
+	void ExtractLineNumbers ();
 
-	void PostProcess();
+	void ExtractObjectVariableInfo (asCScriptFunction *outFunc);
+
+	void ExtractTryCatchInfo (asCScriptFunction *outFunc);
+
+	int ResolveJumpAddresses ();
+
+	int FindLabel (int label, asCByteInstruction *from, asCByteInstruction **dest, int *positionDelta);
+
+	void AddPath (asCArray<asCByteInstruction *> &paths, asCByteInstruction *instr, int stackSize);
+
+	void Output (asDWORD *array);
+
+	void AddCode (asCByteCode *bc);
+
+	void PostProcess ();
 
 #ifdef AS_DEBUG
 	void DebugOutput(const char *name, asCScriptFunction *func);
@@ -90,25 +98,41 @@ public:
 	int  RemoveLastInstr();
 	asDWORD GetLastInstrValueDW();
 
-	void InsertIfNotExists(asCArray<int> &vars, int var);
-	void GetVarsUsed(asCArray<int> &vars);
-	bool IsVarUsed(int offset);
-	void ExchangeVar(int oldOffset, int newOffset);
-	bool IsSimpleExpression();
+	void InsertIfNotExists (asCArray<int> &vars, int var);
 
-	void Label(short label);
-	void Line(int line, int column, int scriptIdx);
-	void ObjInfo(int offset, int info);
-	void Block(bool start);
-	void VarDecl(int varDeclIdx);
-	void Call(asEBCInstr bc, int funcID, int pop);
-	void CallPtr(asEBCInstr bc, int funcPtrVar, int pop);
-	void Alloc(asEBCInstr bc, void *objID, int funcID, int pop);
-	void Ret(int pop);
-	void JmpP(int var, asDWORD max);
+	void GetVarsUsed (asCArray<int> &vars);
 
-	int InsertFirstInstrDWORD(asEBCInstr bc, asDWORD param);
-	int InsertFirstInstrQWORD(asEBCInstr bc, asQWORD param);
+	bool IsVarUsed (int offset);
+
+	void ExchangeVar (int oldOffset, int newOffset);
+
+	bool IsSimpleExpression ();
+
+	void Label (short label);
+
+	void Line (int line, int column, int scriptIdx);
+
+	void ObjInfo (int offset, int info);
+
+	void Block (bool start);
+
+	void TryBlock (short catchLabel);
+
+	void VarDecl (int varDeclIdx);
+
+	void Call (asEBCInstr bc, int funcID, int pop);
+
+	void CallPtr (asEBCInstr bc, int funcPtrVar, int pop);
+
+	void Alloc (asEBCInstr bc, void *objID, int funcID, int pop);
+
+	void Ret (int pop);
+
+	void JmpP (int var, asDWORD max);
+
+	int InsertFirstInstrDWORD (asEBCInstr bc, asDWORD param);
+
+	int InsertFirstInstrQWORD (asEBCInstr bc, asQWORD param);
 	int Instr(asEBCInstr bc);
 	int InstrQWORD(asEBCInstr bc, asQWORD param);
 	int InstrDOUBLE(asEBCInstr bc, double param);

@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2017 Andreas Jonsson
+   Copyright (c) 2003-2019 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -49,26 +49,32 @@
  #define END_AS_NAMESPACE }
  #define AS_NAMESPACE_QUALIFIER AngelScript::
 #else
- #define BEGIN_AS_NAMESPACE
- #define END_AS_NAMESPACE
- #define AS_NAMESPACE_QUALIFIER ::
+#define BEGIN_AS_NAMESPACE
+#define END_AS_NAMESPACE
+#define AS_NAMESPACE_QUALIFIER ::
 #endif
 
 BEGIN_AS_NAMESPACE
 
 // AngelScript version
 
-#define ANGELSCRIPT_VERSION        23200
-#define ANGELSCRIPT_VERSION_STRING "2.32.0"
+#define ANGELSCRIPT_VERSION        23500
+#define ANGELSCRIPT_VERSION_STRING "2.35.0 WIP"
 
 // Data types
 
 class asIScriptEngine;
+
 class asIScriptModule;
+
 class asIScriptContext;
+
 class asIScriptGeneric;
+
 class asIScriptObject;
+
 class asITypeInfo;
+
 class asIScriptFunction;
 class asIBinaryStream;
 class asIJITCompiler;
@@ -142,6 +148,10 @@ enum asEEngineProp
 	asEP_ALLOW_UNICODE_IDENTIFIERS          = 25,
 	asEP_HEREDOC_TRIM_MODE                  = 26,
 	asEP_MAX_NESTED_CALLS                   = 27,
+	asEP_GENERIC_CALL_MODE                  = 28,
+	asEP_INIT_STACK_SIZE                    = 29,
+	asEP_INIT_CALL_STACK_SIZE               = 30,
+	asEP_MAX_CALL_STACK_SIZE                = 31,
 
 	asEP_LAST_PROPERTY
 };
@@ -398,7 +408,10 @@ typedef void (*asCLEANFUNCTIONFUNC_t)(asIScriptFunction *);
 typedef void (*asCLEANTYPEINFOFUNC_t)(asITypeInfo *);
 typedef void (*asCLEANSCRIPTOBJECTFUNC_t)(asIScriptObject *);
 typedef asIScriptContext *(*asREQUESTCONTEXTFUNC_t)(asIScriptEngine *, void *);
-typedef void (*asRETURNCONTEXTFUNC_t)(asIScriptEngine *, asIScriptContext *, void *);
+
+typedef void (*asRETURNCONTEXTFUNC_t) (asIScriptEngine *, asIScriptContext *, void *);
+
+typedef void (*asCIRCULARREFFUNC_t) (asITypeInfo *, const void *, void *);
 
 // Check if the compiler can use C++11 features
 #if !defined(_MSC_VER) || _MSC_VER >= 1700   // MSVC 2012
@@ -413,7 +426,7 @@ typedef void (*asRETURNCONTEXTFUNC_t)(asIScriptEngine *, asIScriptContext *, voi
 
 // This macro does basically the same thing as offsetof defined in stddef.h, but
 // GNUC should not complain about the usage as I'm not using 0 as the base pointer.
-#define asOFFSET(s,m) ((size_t)(&reinterpret_cast<s*>(100000)->m)-100000)
+#define asOFFSET(s, m) ((int)(size_t)(&reinterpret_cast<s*>(100000)->m)-100000)
 
 #define asFUNCTION(f) asFunctionPtr(f)
 #if (defined(_MSC_VER) && _MSC_VER <= 1200) || (defined(__BORLANDC__) && __BORLANDC__ < 0x590)
@@ -752,27 +765,49 @@ public:
 	virtual int                    SetContextCallbacks(asREQUESTCONTEXTFUNC_t requestCtx, asRETURNCONTEXTFUNC_t returnCtx, void *param = 0) = 0;
 
 	// String interpretation
-	virtual asETokenClass ParseToken(const char *string, size_t stringLength = 0, asUINT *tokenLength = 0) const = 0;
+	virtual asETokenClass ParseToken (const char *string, size_t stringLength = 0, asUINT *tokenLength = 0) const = 0;
 
 	// Garbage collection
-	virtual int  GarbageCollect(asDWORD flags = asGC_FULL_CYCLE, asUINT numIterations = 1) = 0;
-	virtual void GetGCStatistics(asUINT *currentSize, asUINT *totalDestroyed = 0, asUINT *totalDetected = 0, asUINT *newObjects = 0, asUINT *totalNewDestroyed = 0) const = 0;
-	virtual int  NotifyGarbageCollectorOfNewObject(void *obj, asITypeInfo *type) = 0;
-	virtual int  GetObjectInGC(asUINT idx, asUINT *seqNbr = 0, void **obj = 0, asITypeInfo **type = 0) = 0;
-	virtual void GCEnumCallback(void *reference) = 0;
+	virtual int GarbageCollect (asDWORD flags = asGC_FULL_CYCLE, asUINT numIterations = 1) = 0;
+
+	virtual void GetGCStatistics (asUINT *currentSize, asUINT *totalDestroyed = 0, asUINT *totalDetected = 0, asUINT *newObjects = 0, asUINT *totalNewDestroyed = 0) const = 0;
+
+	virtual int NotifyGarbageCollectorOfNewObject (void *obj, asITypeInfo *type) = 0;
+
+	virtual int GetObjectInGC (asUINT idx, asUINT *seqNbr = 0, void **obj = 0, asITypeInfo **type = 0) = 0;
+
+	virtual void GCEnumCallback (void *reference) = 0;
+
+	virtual void ForwardGCEnumReferences (void *ref, asITypeInfo *type) = 0;
+
+	virtual void ForwardGCReleaseReferences (void *ref, asITypeInfo *type) = 0;
+
+	virtual void SetCircularRefDetectedCallback (asCIRCULARREFFUNC_t callback, void *param = 0) = 0;
 
 	// User data
-	virtual void *SetUserData(void *data, asPWORD type = 0) = 0;
-	virtual void *GetUserData(asPWORD type = 0) const = 0;
-	virtual void  SetEngineUserDataCleanupCallback(asCLEANENGINEFUNC_t callback, asPWORD type = 0) = 0;
-	virtual void  SetModuleUserDataCleanupCallback(asCLEANMODULEFUNC_t callback, asPWORD type = 0) = 0;
-	virtual void  SetContextUserDataCleanupCallback(asCLEANCONTEXTFUNC_t callback, asPWORD type = 0) = 0;
-	virtual void  SetFunctionUserDataCleanupCallback(asCLEANFUNCTIONFUNC_t callback, asPWORD type = 0) = 0;
-	virtual void  SetTypeInfoUserDataCleanupCallback(asCLEANTYPEINFOFUNC_t callback, asPWORD type = 0) = 0;
-	virtual void  SetScriptObjectUserDataCleanupCallback(asCLEANSCRIPTOBJECTFUNC_t callback, asPWORD type = 0) = 0;
+	virtual void *SetUserData (void *data, asPWORD type = 0) = 0;
+
+	virtual void *GetUserData (asPWORD type = 0) const = 0;
+
+	virtual void SetEngineUserDataCleanupCallback (asCLEANENGINEFUNC_t callback, asPWORD type = 0) = 0;
+
+	virtual void SetModuleUserDataCleanupCallback (asCLEANMODULEFUNC_t callback, asPWORD type = 0) = 0;
+
+	virtual void SetContextUserDataCleanupCallback (asCLEANCONTEXTFUNC_t callback, asPWORD type = 0) = 0;
+
+	virtual void SetFunctionUserDataCleanupCallback (asCLEANFUNCTIONFUNC_t callback, asPWORD type = 0) = 0;
+
+	virtual void SetTypeInfoUserDataCleanupCallback (asCLEANTYPEINFOFUNC_t callback, asPWORD type = 0) = 0;
+
+	virtual void SetScriptObjectUserDataCleanupCallback (asCLEANSCRIPTOBJECTFUNC_t callback, asPWORD type = 0) = 0;
+
+	// Exception handling
+	virtual int SetTranslateAppExceptionCallback (asSFuncPtr callback, void *param, int callConv) = 0;
 
 protected:
-	virtual ~asIScriptEngine() {}
+	virtual ~asIScriptEngine ()
+	{
+	}
 };
 
 class asIStringFactory
@@ -905,26 +940,42 @@ public:
 	virtual asDWORD GetReturnDWord() = 0;
 	virtual asQWORD GetReturnQWord() = 0;
 	virtual float   GetReturnFloat() = 0;
-	virtual double  GetReturnDouble() = 0;
-	virtual void   *GetReturnAddress() = 0;
-	virtual void   *GetReturnObject() = 0;
-	virtual void   *GetAddressOfReturnValue() = 0;
+
+	virtual double GetReturnDouble () = 0;
+
+	virtual void *GetReturnAddress () = 0;
+
+	virtual void *GetReturnObject () = 0;
+
+	virtual void *GetAddressOfReturnValue () = 0;
 
 	// Exception handling
-	virtual int                SetException(const char *string) = 0;
-	virtual int                GetExceptionLineNumber(int *column = 0, const char **sectionName = 0) = 0;
-	virtual asIScriptFunction *GetExceptionFunction() = 0;
-	virtual const char *       GetExceptionString() = 0;
-	virtual int                SetExceptionCallback(asSFuncPtr callback, void *obj, int callConv) = 0;
-	virtual void               ClearExceptionCallback() = 0;
+	virtual int SetException (const char *info, bool allowCatch = true) = 0;
+
+	virtual int GetExceptionLineNumber (int *column = 0, const char **sectionName = 0) = 0;
+
+	virtual asIScriptFunction *GetExceptionFunction () = 0;
+
+	virtual const char *GetExceptionString () = 0;
+
+	virtual bool WillExceptionBeCaught () = 0;
+
+	virtual int SetExceptionCallback (asSFuncPtr callback, void *obj, int callConv) = 0;
+
+	virtual void ClearExceptionCallback () = 0;
 
 	// Debugging
-	virtual int                SetLineCallback(asSFuncPtr callback, void *obj, int callConv) = 0;
-	virtual void               ClearLineCallback() = 0;
-	virtual asUINT             GetCallstackSize() const = 0;
-	virtual asIScriptFunction *GetFunction(asUINT stackLevel = 0) = 0;
-	virtual int                GetLineNumber(asUINT stackLevel = 0, int *column = 0, const char **sectionName = 0) = 0;
-	virtual int                GetVarCount(asUINT stackLevel = 0) = 0;
+	virtual int SetLineCallback (asSFuncPtr callback, void *obj, int callConv) = 0;
+
+	virtual void ClearLineCallback () = 0;
+
+	virtual asUINT GetCallstackSize () const = 0;
+
+	virtual asIScriptFunction *GetFunction (asUINT stackLevel = 0) = 0;
+
+	virtual int GetLineNumber (asUINT stackLevel = 0, int *column = 0, const char **sectionName = 0) = 0;
+
+	virtual int GetVarCount (asUINT stackLevel = 0) = 0;
 	virtual const char        *GetVarName(asUINT varIndex, asUINT stackLevel = 0) = 0;
 	virtual const char        *GetVarDeclaration(asUINT varIndex, asUINT stackLevel = 0, bool includeNamespace = false) = 0;
 	virtual int                GetVarTypeId(asUINT varIndex, asUINT stackLevel = 0) = 0;
@@ -993,24 +1044,32 @@ public:
 
 	// Type info
 	virtual int            GetTypeId() const = 0;
-	virtual asITypeInfo   *GetObjectType() const = 0;
+
+	virtual asITypeInfo *GetObjectType () const = 0;
 
 	// Class properties
-	virtual asUINT      GetPropertyCount() const = 0;
-	virtual int         GetPropertyTypeId(asUINT prop) const = 0;
-	virtual const char *GetPropertyName(asUINT prop) const = 0;
-	virtual void       *GetAddressOfProperty(asUINT prop) = 0;
+	virtual asUINT GetPropertyCount () const = 0;
+
+	virtual int GetPropertyTypeId (asUINT prop) const = 0;
+
+	virtual const char *GetPropertyName (asUINT prop) const = 0;
+
+	virtual void *GetAddressOfProperty (asUINT prop) = 0;
 
 	// Miscellaneous
-	virtual asIScriptEngine *GetEngine() const = 0;
-	virtual int              CopyFrom(asIScriptObject *other) = 0;
+	virtual asIScriptEngine *GetEngine () const = 0;
+
+	virtual int CopyFrom (const asIScriptObject *other) = 0;
 
 	// User data
-	virtual void *SetUserData(void *data, asPWORD type = 0) = 0;
-	virtual void *GetUserData(asPWORD type = 0) const = 0;
+	virtual void *SetUserData (void *data, asPWORD type = 0) = 0;
+
+	virtual void *GetUserData (asPWORD type = 0) const = 0;
 
 protected:
-	virtual ~asIScriptObject() {}
+	virtual ~asIScriptObject ()
+	{
+	}
 };
 
 class asITypeInfo
@@ -1107,26 +1166,44 @@ public:
 
 	// Function signature
 	virtual asITypeInfo     *GetObjectType() const = 0;
-	virtual const char      *GetObjectName() const = 0;
-	virtual const char      *GetName() const = 0;
-	virtual const char      *GetNamespace() const = 0;
-	virtual const char      *GetDeclaration(bool includeObjectName = true, bool includeNamespace = false, bool includeParamNames = false) const = 0;
-	virtual bool             IsReadOnly() const = 0;
-	virtual bool             IsPrivate() const = 0;
-	virtual bool             IsProtected() const = 0;
-	virtual bool             IsFinal() const = 0;
-	virtual bool             IsOverride() const = 0;
-	virtual bool             IsShared() const = 0;
-	virtual asUINT           GetParamCount() const = 0;
-	virtual int              GetParam(asUINT index, int *typeId, asDWORD *flags = 0, const char **name = 0, const char **defaultArg = 0) const = 0;
-	virtual int              GetReturnTypeId(asDWORD *flags = 0) const = 0;
+
+	virtual const char *GetObjectName () const = 0;
+
+	virtual const char *GetName () const = 0;
+
+	virtual const char *GetNamespace () const = 0;
+
+	virtual const char *GetDeclaration (bool includeObjectName = true, bool includeNamespace = false, bool includeParamNames = false) const = 0;
+
+	virtual bool IsReadOnly () const = 0;
+
+	virtual bool IsPrivate () const = 0;
+
+	virtual bool IsProtected () const = 0;
+
+	virtual bool IsFinal () const = 0;
+
+	virtual bool IsOverride () const = 0;
+
+	virtual bool IsShared () const = 0;
+
+	virtual bool IsExplicit () const = 0;
+
+	virtual bool IsProperty () const = 0;
+
+	virtual asUINT GetParamCount () const = 0;
+
+	virtual int GetParam (asUINT index, int *typeId, asDWORD *flags = 0, const char **name = 0, const char **defaultArg = 0) const = 0;
+
+	virtual int GetReturnTypeId (asDWORD *flags = 0) const = 0;
 
 	// Type id for function pointers
-	virtual int              GetTypeId() const = 0;
-	virtual bool             IsCompatibleWithTypeId(int typeId) const = 0;
+	virtual int GetTypeId () const = 0;
+
+	virtual bool IsCompatibleWithTypeId (int typeId) const = 0;
 
 	// Delegates
-	virtual void              *GetDelegateObject() const = 0;
+	virtual void *GetDelegateObject () const = 0;
 	virtual asITypeInfo       *GetDelegateObjectType() const = 0;
 	virtual asIScriptFunction *GetDelegateFunction() const = 0;
 
@@ -1553,31 +1630,32 @@ enum asEBCInstr
 	asBC_MODu			= 181,
 	asBC_DIVu64			= 182,
 	asBC_MODu64			= 183,
-	asBC_LoadRObjR		= 184,
-	asBC_LoadVObjR		= 185,
-	asBC_RefCpyV		= 186,
-	asBC_JLowZ			= 187,
-	asBC_JLowNZ			= 188,
-	asBC_AllocMem		= 189,
-	asBC_SetListSize	= 190,
-	asBC_PshListElmnt	= 191,
-	asBC_SetListType	= 192,
-	asBC_POWi			= 193,
-	asBC_POWu			= 194,
-	asBC_POWf			= 195,
-	asBC_POWd			= 196,
-	asBC_POWdi			= 197,
-	asBC_POWi64			= 198,
-	asBC_POWu64			= 199,
-	asBC_Thiscall1		= 200,
-	asBC_MAXBYTECODE	= 201,
+	asBC_LoadRObjR    = 184,
+	asBC_LoadVObjR    = 185,
+	asBC_RefCpyV      = 186,
+	asBC_JLowZ        = 187,
+	asBC_JLowNZ       = 188,
+	asBC_AllocMem     = 189,
+	asBC_SetListSize  = 190,
+	asBC_PshListElmnt = 191,
+	asBC_SetListType  = 192,
+	asBC_POWi         = 193,
+	asBC_POWu         = 194,
+	asBC_POWf         = 195,
+	asBC_POWd         = 196,
+	asBC_POWdi        = 197,
+	asBC_POWi64       = 198,
+	asBC_POWu64       = 199,
+	asBC_Thiscall1    = 200,
+	asBC_MAXBYTECODE  = 201,
 
 	// Temporary tokens. Can't be output to the final program
-	asBC_VarDecl		= 251,
-	asBC_Block			= 252,
-	asBC_ObjInfo		= 253,
-	asBC_LINE			= 254,
-	asBC_LABEL			= 255
+	asBC_TryBlock = 250,
+	asBC_VarDecl  = 251,
+	asBC_Block    = 252,
+	asBC_ObjInfo  = 253,
+	asBC_LINE     = 254,
+	asBC_LABEL    = 255
 };
 
 // Instruction types
@@ -1664,265 +1742,250 @@ struct asSBCInfo
 
 const asSBCInfo asBCInfo[256] =
 {
-	asBCINFO(PopPtr,	NO_ARG,			-AS_PTR_SIZE),
-	asBCINFO(PshGPtr,	PTR_ARG,		AS_PTR_SIZE),
-	asBCINFO(PshC4,		DW_ARG,			1),
-	asBCINFO(PshV4,		rW_ARG,			1),
-	asBCINFO(PSF,		rW_ARG,			AS_PTR_SIZE),
-	asBCINFO(SwapPtr,	NO_ARG,			0),
-	asBCINFO(NOT,		rW_ARG,			0),
-	asBCINFO(PshG4,		PTR_ARG,		1),
-	asBCINFO(LdGRdR4,	wW_PTR_ARG,		0),
-	asBCINFO(CALL,		DW_ARG,			0xFFFF),
-	asBCINFO(RET,		W_ARG,			0xFFFF),
-	asBCINFO(JMP,		DW_ARG,			0),
-	asBCINFO(JZ,		DW_ARG,			0),
-	asBCINFO(JNZ,		DW_ARG,			0),
-	asBCINFO(JS,		DW_ARG,			0),
-	asBCINFO(JNS,		DW_ARG,			0),
-	asBCINFO(JP,		DW_ARG,			0),
-	asBCINFO(JNP,		DW_ARG,			0),
-	asBCINFO(TZ,		NO_ARG,			0),
-	asBCINFO(TNZ,		NO_ARG,			0),
-	asBCINFO(TS,		NO_ARG,			0),
-	asBCINFO(TNS,		NO_ARG,			0),
-	asBCINFO(TP,		NO_ARG,			0),
-	asBCINFO(TNP,		NO_ARG,			0),
-	asBCINFO(NEGi,		rW_ARG,			0),
-	asBCINFO(NEGf,		rW_ARG,			0),
-	asBCINFO(NEGd,		rW_ARG,			0),
-	asBCINFO(INCi16,	NO_ARG,			0),
-	asBCINFO(INCi8,		NO_ARG,			0),
-	asBCINFO(DECi16,	NO_ARG,			0),
-	asBCINFO(DECi8,		NO_ARG,			0),
-	asBCINFO(INCi,		NO_ARG,			0),
-	asBCINFO(DECi,		NO_ARG,			0),
-	asBCINFO(INCf,		NO_ARG,			0),
-	asBCINFO(DECf,		NO_ARG,			0),
-	asBCINFO(INCd,		NO_ARG,			0),
-	asBCINFO(DECd,		NO_ARG,			0),
-	asBCINFO(IncVi,		rW_ARG,			0),
-	asBCINFO(DecVi,		rW_ARG,			0),
-	asBCINFO(BNOT,		rW_ARG,			0),
-	asBCINFO(BAND,		wW_rW_rW_ARG,	0),
-	asBCINFO(BOR,		wW_rW_rW_ARG,	0),
-	asBCINFO(BXOR,		wW_rW_rW_ARG,	0),
-	asBCINFO(BSLL,		wW_rW_rW_ARG,	0),
-	asBCINFO(BSRL,		wW_rW_rW_ARG,	0),
-	asBCINFO(BSRA,		wW_rW_rW_ARG,	0),
-	asBCINFO(COPY,		W_DW_ARG,		-AS_PTR_SIZE),
-	asBCINFO(PshC8,		QW_ARG,			2),
-	asBCINFO(PshVPtr,	rW_ARG,			AS_PTR_SIZE),
-	asBCINFO(RDSPtr,	NO_ARG,			0),
-	asBCINFO(CMPd,		rW_rW_ARG,		0),
-	asBCINFO(CMPu,		rW_rW_ARG,		0),
-	asBCINFO(CMPf,		rW_rW_ARG,		0),
-	asBCINFO(CMPi,		rW_rW_ARG,		0),
-	asBCINFO(CMPIi,		rW_DW_ARG,		0),
-	asBCINFO(CMPIf,		rW_DW_ARG,		0),
-	asBCINFO(CMPIu,		rW_DW_ARG,		0),
-	asBCINFO(JMPP,		rW_ARG,			0),
-	asBCINFO(PopRPtr,	NO_ARG,			-AS_PTR_SIZE),
-	asBCINFO(PshRPtr,	NO_ARG,			AS_PTR_SIZE),
-	asBCINFO(STR,		W_ARG,			1+AS_PTR_SIZE),
-	asBCINFO(CALLSYS,	DW_ARG,			0xFFFF),
-	asBCINFO(CALLBND,	DW_ARG,			0xFFFF),
-	asBCINFO(SUSPEND,	NO_ARG,			0),
-	asBCINFO(ALLOC,		PTR_DW_ARG,		0xFFFF),
-	asBCINFO(FREE,		wW_PTR_ARG,		0),
-	asBCINFO(LOADOBJ,	rW_ARG,			0),
-	asBCINFO(STOREOBJ,	wW_ARG,			0),
-	asBCINFO(GETOBJ,	W_ARG,			0),
-	asBCINFO(REFCPY,	PTR_ARG,		-AS_PTR_SIZE),
-	asBCINFO(CHKREF,	NO_ARG,			0),
-	asBCINFO(GETOBJREF,	W_ARG,			0),
-	asBCINFO(GETREF,	W_ARG,			0),
-	asBCINFO(PshNull,	NO_ARG,			AS_PTR_SIZE),
-	asBCINFO(ClrVPtr,	wW_ARG,			0),
-	asBCINFO(OBJTYPE,	PTR_ARG,		AS_PTR_SIZE),
-	asBCINFO(TYPEID,	DW_ARG,			1),
-	asBCINFO(SetV4,		wW_DW_ARG,		0),
-	asBCINFO(SetV8,		wW_QW_ARG,		0),
-	asBCINFO(ADDSi,		W_DW_ARG,		0),
-	asBCINFO(CpyVtoV4,	wW_rW_ARG,		0),
-	asBCINFO(CpyVtoV8,	wW_rW_ARG,		0),
-	asBCINFO(CpyVtoR4,	rW_ARG,			0),
-	asBCINFO(CpyVtoR8,	rW_ARG,			0),
-	asBCINFO(CpyVtoG4,	rW_PTR_ARG,		0),
-	asBCINFO(CpyRtoV4,	wW_ARG,			0),
-	asBCINFO(CpyRtoV8,	wW_ARG,			0),
-	asBCINFO(CpyGtoV4,	wW_PTR_ARG,		0),
-	asBCINFO(WRTV1,		rW_ARG,			0),
-	asBCINFO(WRTV2,		rW_ARG,			0),
-	asBCINFO(WRTV4,		rW_ARG,			0),
-	asBCINFO(WRTV8,		rW_ARG,			0),
-	asBCINFO(RDR1,		wW_ARG,			0),
-	asBCINFO(RDR2,		wW_ARG,			0),
-	asBCINFO(RDR4,		wW_ARG,			0),
-	asBCINFO(RDR8,		wW_ARG,			0),
-	asBCINFO(LDG,		PTR_ARG,		0),
-	asBCINFO(LDV,		rW_ARG,			0),
-	asBCINFO(PGA,		PTR_ARG,		AS_PTR_SIZE),
-	asBCINFO(CmpPtr,	rW_rW_ARG,		0),
-	asBCINFO(VAR,		rW_ARG,			AS_PTR_SIZE),
-	asBCINFO(iTOf,		rW_ARG,			0),
-	asBCINFO(fTOi,		rW_ARG,			0),
-	asBCINFO(uTOf,		rW_ARG,			0),
-	asBCINFO(fTOu,		rW_ARG,			0),
-	asBCINFO(sbTOi,		rW_ARG,			0),
-	asBCINFO(swTOi,		rW_ARG,			0),
-	asBCINFO(ubTOi,		rW_ARG,			0),
-	asBCINFO(uwTOi,		rW_ARG,			0),
-	asBCINFO(dTOi,		wW_rW_ARG,		0),
-	asBCINFO(dTOu,		wW_rW_ARG,		0),
-	asBCINFO(dTOf,		wW_rW_ARG,		0),
-	asBCINFO(iTOd,		wW_rW_ARG,		0),
-	asBCINFO(uTOd,		wW_rW_ARG,		0),
-	asBCINFO(fTOd,		wW_rW_ARG,		0),
-	asBCINFO(ADDi,		wW_rW_rW_ARG,	0),
-	asBCINFO(SUBi,		wW_rW_rW_ARG,	0),
-	asBCINFO(MULi,		wW_rW_rW_ARG,	0),
-	asBCINFO(DIVi,		wW_rW_rW_ARG,	0),
-	asBCINFO(MODi,		wW_rW_rW_ARG,	0),
-	asBCINFO(ADDf,		wW_rW_rW_ARG,	0),
-	asBCINFO(SUBf,		wW_rW_rW_ARG,	0),
-	asBCINFO(MULf,		wW_rW_rW_ARG,	0),
-	asBCINFO(DIVf,		wW_rW_rW_ARG,	0),
-	asBCINFO(MODf,		wW_rW_rW_ARG,	0),
-	asBCINFO(ADDd,		wW_rW_rW_ARG,	0),
-	asBCINFO(SUBd,		wW_rW_rW_ARG,	0),
-	asBCINFO(MULd,		wW_rW_rW_ARG,	0),
-	asBCINFO(DIVd,		wW_rW_rW_ARG,	0),
-	asBCINFO(MODd,		wW_rW_rW_ARG,	0),
-	asBCINFO(ADDIi,		wW_rW_DW_ARG,	0),
-	asBCINFO(SUBIi,		wW_rW_DW_ARG,	0),
-	asBCINFO(MULIi,		wW_rW_DW_ARG,	0),
-	asBCINFO(ADDIf,		wW_rW_DW_ARG,	0),
-	asBCINFO(SUBIf,		wW_rW_DW_ARG,	0),
-	asBCINFO(MULIf,		wW_rW_DW_ARG,	0),
-	asBCINFO(SetG4,		PTR_DW_ARG,		0),
-	asBCINFO(ChkRefS,	NO_ARG,			0),
-	asBCINFO(ChkNullV,	rW_ARG,			0),
-	asBCINFO(CALLINTF,	DW_ARG,			0xFFFF),
-	asBCINFO(iTOb,		rW_ARG,			0),
-	asBCINFO(iTOw,		rW_ARG,			0),
-	asBCINFO(SetV1,		wW_DW_ARG,		0),
-	asBCINFO(SetV2,		wW_DW_ARG,		0),
-	asBCINFO(Cast,		DW_ARG,			-AS_PTR_SIZE),
-	asBCINFO(i64TOi,	wW_rW_ARG,		0),
-	asBCINFO(uTOi64,	wW_rW_ARG,		0),
-	asBCINFO(iTOi64,	wW_rW_ARG,		0),
-	asBCINFO(fTOi64,	wW_rW_ARG,		0),
-	asBCINFO(dTOi64,	rW_ARG,			0),
-	asBCINFO(fTOu64,	wW_rW_ARG,		0),
-	asBCINFO(dTOu64,	rW_ARG,			0),
-	asBCINFO(i64TOf,	wW_rW_ARG,		0),
-	asBCINFO(u64TOf,	wW_rW_ARG,		0),
-	asBCINFO(i64TOd,	rW_ARG,			0),
-	asBCINFO(u64TOd,	rW_ARG,			0),
-	asBCINFO(NEGi64,	rW_ARG,			0),
-	asBCINFO(INCi64,	NO_ARG,			0),
-	asBCINFO(DECi64,	NO_ARG,			0),
-	asBCINFO(BNOT64,	rW_ARG,			0),
-	asBCINFO(ADDi64,	wW_rW_rW_ARG,	0),
-	asBCINFO(SUBi64,	wW_rW_rW_ARG,	0),
-	asBCINFO(MULi64,	wW_rW_rW_ARG,	0),
-	asBCINFO(DIVi64,	wW_rW_rW_ARG,	0),
-	asBCINFO(MODi64,	wW_rW_rW_ARG,	0),
-	asBCINFO(BAND64,	wW_rW_rW_ARG,	0),
-	asBCINFO(BOR64,		wW_rW_rW_ARG,	0),
-	asBCINFO(BXOR64,	wW_rW_rW_ARG,	0),
-	asBCINFO(BSLL64,	wW_rW_rW_ARG,	0),
-	asBCINFO(BSRL64,	wW_rW_rW_ARG,	0),
-	asBCINFO(BSRA64,	wW_rW_rW_ARG,	0),
-	asBCINFO(CMPi64,	rW_rW_ARG,		0),
-	asBCINFO(CMPu64,	rW_rW_ARG,		0),
-	asBCINFO(ChkNullS,	W_ARG,			0),
-	asBCINFO(ClrHi,		NO_ARG,			0),
-	asBCINFO(JitEntry,	PTR_ARG,		0),
-	asBCINFO(CallPtr,	rW_ARG,			0xFFFF),
-	asBCINFO(FuncPtr,	PTR_ARG,		AS_PTR_SIZE),
-	asBCINFO(LoadThisR,	W_DW_ARG,		0),
-	asBCINFO(PshV8,		rW_ARG,			2),
-	asBCINFO(DIVu,		wW_rW_rW_ARG,	0),
-	asBCINFO(MODu,		wW_rW_rW_ARG,	0),
-	asBCINFO(DIVu64,	wW_rW_rW_ARG,	0),
-	asBCINFO(MODu64,	wW_rW_rW_ARG,	0),
-	asBCINFO(LoadRObjR,	rW_W_DW_ARG,	0),
-	asBCINFO(LoadVObjR,	rW_W_DW_ARG,	0),
-	asBCINFO(RefCpyV,	wW_PTR_ARG,		0),
-	asBCINFO(JLowZ,		DW_ARG,			0),
-	asBCINFO(JLowNZ,	DW_ARG,			0),
-	asBCINFO(AllocMem,	wW_DW_ARG,		0),
-	asBCINFO(SetListSize, rW_DW_DW_ARG,	0),
-	asBCINFO(PshListElmnt, rW_DW_ARG,	AS_PTR_SIZE),
-	asBCINFO(SetListType, rW_DW_DW_ARG,	0),
-	asBCINFO(POWi,		wW_rW_rW_ARG,	0),
-	asBCINFO(POWu,		wW_rW_rW_ARG,	0),
-	asBCINFO(POWf,		wW_rW_rW_ARG,	0),
-	asBCINFO(POWd,		wW_rW_rW_ARG,	0),
-	asBCINFO(POWdi,		wW_rW_rW_ARG,	0),
-	asBCINFO(POWi64,	wW_rW_rW_ARG,	0),
-	asBCINFO(POWu64,	wW_rW_rW_ARG,	0),
-	asBCINFO(Thiscall1, DW_ARG,			-AS_PTR_SIZE-1),
+		asBCINFO(PopPtr,	NO_ARG,			-AS_PTR_SIZE),
+		asBCINFO(PshGPtr,	PTR_ARG,		AS_PTR_SIZE),
+		asBCINFO(PshC4,		DW_ARG,			1),
+		asBCINFO(PshV4,		rW_ARG,			1),
+		asBCINFO(PSF,		rW_ARG,			AS_PTR_SIZE),
+		asBCINFO(SwapPtr,	NO_ARG,			0),
+		asBCINFO(NOT,		rW_ARG,			0),
+		asBCINFO(PshG4,		PTR_ARG,		1),
+		asBCINFO(LdGRdR4,	wW_PTR_ARG,		0),
+		asBCINFO(CALL,		DW_ARG,			0xFFFF),
+		asBCINFO(RET,		W_ARG,			0xFFFF),
+		asBCINFO(JMP,		DW_ARG,			0),
+		asBCINFO(JZ,		DW_ARG,			0),
+		asBCINFO(JNZ,		DW_ARG,			0),
+		asBCINFO(JS,		DW_ARG,			0),
+		asBCINFO(JNS,		DW_ARG,			0),
+		asBCINFO(JP,		DW_ARG,			0),
+		asBCINFO(JNP,		DW_ARG,			0),
+		asBCINFO(TZ,		NO_ARG,			0),
+		asBCINFO(TNZ,		NO_ARG,			0),
+		asBCINFO(TS,		NO_ARG,			0),
+		asBCINFO(TNS,		NO_ARG,			0),
+		asBCINFO(TP,		NO_ARG,			0),
+		asBCINFO(TNP,		NO_ARG,			0),
+		asBCINFO(NEGi,		rW_ARG,			0),
+		asBCINFO(NEGf,		rW_ARG,			0),
+		asBCINFO(NEGd,		rW_ARG,			0),
+		asBCINFO(INCi16,	NO_ARG,			0),
+		asBCINFO(INCi8,		NO_ARG,			0),
+		asBCINFO(DECi16,	NO_ARG,			0),
+		asBCINFO(DECi8,		NO_ARG,			0),
+		asBCINFO(INCi,		NO_ARG,			0),
+		asBCINFO(DECi,		NO_ARG,			0),
+		asBCINFO(INCf,		NO_ARG,			0),
+		asBCINFO(DECf,		NO_ARG,			0),
+		asBCINFO(INCd,		NO_ARG,			0),
+		asBCINFO(DECd,		NO_ARG,			0),
+		asBCINFO(IncVi,		rW_ARG,			0),
+		asBCINFO(DecVi,		rW_ARG,			0),
+		asBCINFO(BNOT,		rW_ARG,			0),
+		asBCINFO(BAND,		wW_rW_rW_ARG,	0),
+		asBCINFO(BOR,		wW_rW_rW_ARG,	0),
+		asBCINFO(BXOR,		wW_rW_rW_ARG,	0),
+		asBCINFO(BSLL,		wW_rW_rW_ARG,	0),
+		asBCINFO(BSRL,		wW_rW_rW_ARG,	0),
+		asBCINFO(BSRA,		wW_rW_rW_ARG,	0),
+		asBCINFO(COPY,		W_DW_ARG,		-AS_PTR_SIZE),
+		asBCINFO(PshC8,		QW_ARG,			2),
+		asBCINFO(PshVPtr,	rW_ARG,			AS_PTR_SIZE),
+		asBCINFO(RDSPtr,	NO_ARG,			0),
+		asBCINFO(CMPd,		rW_rW_ARG,		0),
+		asBCINFO(CMPu,		rW_rW_ARG,		0),
+		asBCINFO(CMPf,		rW_rW_ARG,		0),
+		asBCINFO(CMPi,		rW_rW_ARG,		0),
+		asBCINFO(CMPIi,		rW_DW_ARG,		0),
+		asBCINFO(CMPIf,		rW_DW_ARG,		0),
+		asBCINFO(CMPIu,		rW_DW_ARG,		0),
+		asBCINFO(JMPP,		rW_ARG,			0),
+		asBCINFO(PopRPtr,	NO_ARG,			-AS_PTR_SIZE),
+		asBCINFO(PshRPtr,	NO_ARG,			AS_PTR_SIZE),
+		asBCINFO(STR,		W_ARG,			1+AS_PTR_SIZE),
+		asBCINFO(CALLSYS,	DW_ARG,			0xFFFF),
+		asBCINFO(CALLBND,	DW_ARG,			0xFFFF),
+		asBCINFO(SUSPEND,	NO_ARG,			0),
+		asBCINFO(ALLOC,		PTR_DW_ARG,		0xFFFF),
+		asBCINFO(FREE,		wW_PTR_ARG,		0),
+		asBCINFO(LOADOBJ,	rW_ARG,			0),
+		asBCINFO(STOREOBJ,	wW_ARG,			0),
+		asBCINFO(GETOBJ,	W_ARG,			0),
+		asBCINFO(REFCPY,	PTR_ARG,		-AS_PTR_SIZE),
+		asBCINFO(CHKREF,	NO_ARG,			0),
+		asBCINFO(GETOBJREF,	W_ARG,			0),
+		asBCINFO(GETREF,	W_ARG,			0),
+		asBCINFO(PshNull,	NO_ARG,			AS_PTR_SIZE),
+		asBCINFO(ClrVPtr,	wW_ARG,			0),
+		asBCINFO(OBJTYPE,	PTR_ARG,		AS_PTR_SIZE),
+		asBCINFO(TYPEID,	DW_ARG,			1),
+		asBCINFO(SetV4,		wW_DW_ARG,		0),
+		asBCINFO(SetV8,		wW_QW_ARG,		0),
+		asBCINFO(ADDSi,		W_DW_ARG,		0),
+		asBCINFO(CpyVtoV4,	wW_rW_ARG,		0),
+		asBCINFO(CpyVtoV8,	wW_rW_ARG,		0),
+		asBCINFO(CpyVtoR4,	rW_ARG,			0),
+		asBCINFO(CpyVtoR8,	rW_ARG,			0),
+		asBCINFO(CpyVtoG4,	rW_PTR_ARG,		0),
+		asBCINFO(CpyRtoV4,	wW_ARG,			0),
+		asBCINFO(CpyRtoV8,	wW_ARG,			0),
+		asBCINFO(CpyGtoV4,	wW_PTR_ARG,		0),
+		asBCINFO(WRTV1,		rW_ARG,			0),
+		asBCINFO(WRTV2,		rW_ARG,			0),
+		asBCINFO(WRTV4,		rW_ARG,			0),
+		asBCINFO(WRTV8,		rW_ARG,			0),
+		asBCINFO(RDR1,		wW_ARG,			0),
+		asBCINFO(RDR2,		wW_ARG,			0),
+		asBCINFO(RDR4,		wW_ARG,			0),
+		asBCINFO(RDR8,		wW_ARG,			0),
+		asBCINFO(LDG,		PTR_ARG,		0),
+		asBCINFO(LDV,		rW_ARG,			0),
+		asBCINFO(PGA,		PTR_ARG,		AS_PTR_SIZE),
+		asBCINFO(CmpPtr,	rW_rW_ARG,		0),
+		asBCINFO(VAR,		rW_ARG,			AS_PTR_SIZE),
+		asBCINFO(iTOf,		rW_ARG,			0),
+		asBCINFO(fTOi,		rW_ARG,			0),
+		asBCINFO(uTOf,		rW_ARG,			0),
+		asBCINFO(fTOu,		rW_ARG,			0),
+		asBCINFO(sbTOi,		rW_ARG,			0),
+		asBCINFO(swTOi,		rW_ARG,			0),
+		asBCINFO(ubTOi,		rW_ARG,			0),
+		asBCINFO(uwTOi,		rW_ARG,			0),
+		asBCINFO(dTOi,		wW_rW_ARG,		0),
+		asBCINFO(dTOu,		wW_rW_ARG,		0),
+		asBCINFO(dTOf,		wW_rW_ARG,		0),
+		asBCINFO(iTOd,		wW_rW_ARG,		0),
+		asBCINFO(uTOd,		wW_rW_ARG,		0),
+		asBCINFO(fTOd,		wW_rW_ARG,		0),
+		asBCINFO(ADDi,		wW_rW_rW_ARG,	0),
+		asBCINFO(SUBi,		wW_rW_rW_ARG,	0),
+		asBCINFO(MULi,		wW_rW_rW_ARG,	0),
+		asBCINFO(DIVi,		wW_rW_rW_ARG,	0),
+		asBCINFO(MODi,		wW_rW_rW_ARG,	0),
+		asBCINFO(ADDf,		wW_rW_rW_ARG,	0),
+		asBCINFO(SUBf,		wW_rW_rW_ARG,	0),
+		asBCINFO(MULf,		wW_rW_rW_ARG,	0),
+		asBCINFO(DIVf,		wW_rW_rW_ARG,	0),
+		asBCINFO(MODf,		wW_rW_rW_ARG,	0),
+		asBCINFO(ADDd,		wW_rW_rW_ARG,	0),
+		asBCINFO(SUBd,		wW_rW_rW_ARG,	0),
+		asBCINFO(MULd,		wW_rW_rW_ARG,	0),
+		asBCINFO(DIVd,		wW_rW_rW_ARG,	0),
+		asBCINFO(MODd,		wW_rW_rW_ARG,	0),
+		asBCINFO(ADDIi,		wW_rW_DW_ARG,	0),
+		asBCINFO(SUBIi,		wW_rW_DW_ARG,	0),
+		asBCINFO(MULIi,		wW_rW_DW_ARG,	0),
+		asBCINFO(ADDIf,		wW_rW_DW_ARG,	0),
+		asBCINFO(SUBIf,		wW_rW_DW_ARG,	0),
+		asBCINFO(MULIf,		wW_rW_DW_ARG,	0),
+		asBCINFO(SetG4,		PTR_DW_ARG,		0),
+		asBCINFO(ChkRefS,	NO_ARG,			0),
+		asBCINFO(ChkNullV,	rW_ARG,			0),
+		asBCINFO(CALLINTF,	DW_ARG,			0xFFFF),
+		asBCINFO(iTOb,		rW_ARG,			0),
+		asBCINFO(iTOw,		rW_ARG,			0),
+		asBCINFO(SetV1,		wW_DW_ARG,		0),
+		asBCINFO(SetV2,		wW_DW_ARG,		0),
+		asBCINFO(Cast,		DW_ARG,			-AS_PTR_SIZE),
+		asBCINFO(i64TOi,	wW_rW_ARG,		0),
+		asBCINFO(uTOi64,	wW_rW_ARG,		0),
+		asBCINFO(iTOi64,	wW_rW_ARG,		0),
+		asBCINFO(fTOi64,	wW_rW_ARG,		0),
+		asBCINFO(dTOi64,	rW_ARG,			0),
+		asBCINFO(fTOu64,	wW_rW_ARG,		0),
+		asBCINFO(dTOu64,	rW_ARG,			0),
+		asBCINFO(i64TOf,	wW_rW_ARG,		0),
+		asBCINFO(u64TOf,	wW_rW_ARG,		0),
+		asBCINFO(i64TOd,	rW_ARG,			0),
+		asBCINFO(u64TOd,	rW_ARG,			0),
+		asBCINFO(NEGi64,	rW_ARG,			0),
+		asBCINFO(INCi64,	NO_ARG,			0),
+		asBCINFO(DECi64,	NO_ARG,			0),
+		asBCINFO(BNOT64,	rW_ARG,			0),
+		asBCINFO(ADDi64,	wW_rW_rW_ARG,	0),
+		asBCINFO(SUBi64,	wW_rW_rW_ARG,	0),
+		asBCINFO(MULi64,	wW_rW_rW_ARG,	0),
+		asBCINFO(DIVi64,	wW_rW_rW_ARG,	0),
+		asBCINFO(MODi64,	wW_rW_rW_ARG,	0),
+		asBCINFO(BAND64,	wW_rW_rW_ARG,	0),
+		asBCINFO(BOR64,		wW_rW_rW_ARG,	0),
+		asBCINFO(BXOR64,	wW_rW_rW_ARG,	0),
+		asBCINFO(BSLL64,	wW_rW_rW_ARG,	0),
+		asBCINFO(BSRL64,	wW_rW_rW_ARG,	0),
+		asBCINFO(BSRA64,	wW_rW_rW_ARG,	0),
+		asBCINFO(CMPi64,	rW_rW_ARG,		0),
+		asBCINFO(CMPu64,	rW_rW_ARG,		0),
+		asBCINFO(ChkNullS,	W_ARG,			0),
+		asBCINFO(ClrHi,		NO_ARG,			0),
+		asBCINFO(JitEntry,	PTR_ARG,		0),
+		asBCINFO(CallPtr,	rW_ARG,			0xFFFF),
+		asBCINFO(FuncPtr,	PTR_ARG,		AS_PTR_SIZE),
+		asBCINFO(LoadThisR,	W_DW_ARG,		0),
+		asBCINFO(PshV8,		rW_ARG,			2),
+		asBCINFO(DIVu,		wW_rW_rW_ARG,	0),
+		asBCINFO(MODu,		wW_rW_rW_ARG,	0),
+		asBCINFO(DIVu64,	wW_rW_rW_ARG,	0),
+		asBCINFO(MODu64,	wW_rW_rW_ARG,	0),
+		asBCINFO(LoadRObjR,	rW_W_DW_ARG,	0),
+		asBCINFO(LoadVObjR,	rW_W_DW_ARG,	0),
+		asBCINFO(RefCpyV,	wW_PTR_ARG,		0),
+		asBCINFO(JLowZ,		DW_ARG,			0),
+		asBCINFO(JLowNZ,	DW_ARG,			0),
+		asBCINFO(AllocMem,	wW_DW_ARG,		0),
+		asBCINFO(SetListSize, rW_DW_DW_ARG,	0),
+		asBCINFO(PshListElmnt, rW_DW_ARG,	AS_PTR_SIZE),
+		asBCINFO(SetListType, rW_DW_DW_ARG,	0),
+		asBCINFO(POWi,		wW_rW_rW_ARG,	0),
+		asBCINFO(POWu,		wW_rW_rW_ARG,	0),
+		asBCINFO(POWf,		wW_rW_rW_ARG,	0),
+		asBCINFO(POWd,		wW_rW_rW_ARG,	0),
+		asBCINFO(POWdi,		wW_rW_rW_ARG,	0),
+		asBCINFO(POWi64,	wW_rW_rW_ARG,	0),
+		asBCINFO(POWu64,	wW_rW_rW_ARG,	0),
+		asBCINFO(Thiscall1, DW_ARG,			-AS_PTR_SIZE-1),
 
-	asBCINFO_DUMMY(201),
-	asBCINFO_DUMMY(202),
-	asBCINFO_DUMMY(203),
-	asBCINFO_DUMMY(204),
-	asBCINFO_DUMMY(205),
-	asBCINFO_DUMMY(206),
-	asBCINFO_DUMMY(207),
-	asBCINFO_DUMMY(208),
-	asBCINFO_DUMMY(209),
-	asBCINFO_DUMMY(210),
-	asBCINFO_DUMMY(211),
-	asBCINFO_DUMMY(212),
-	asBCINFO_DUMMY(213),
-	asBCINFO_DUMMY(214),
-	asBCINFO_DUMMY(215),
-	asBCINFO_DUMMY(216),
-	asBCINFO_DUMMY(217),
-	asBCINFO_DUMMY(218),
-	asBCINFO_DUMMY(219),
-	asBCINFO_DUMMY(220),
-	asBCINFO_DUMMY(221),
-	asBCINFO_DUMMY(222),
-	asBCINFO_DUMMY(223),
-	asBCINFO_DUMMY(224),
-	asBCINFO_DUMMY(225),
-	asBCINFO_DUMMY(226),
-	asBCINFO_DUMMY(227),
-	asBCINFO_DUMMY(228),
-	asBCINFO_DUMMY(229),
-	asBCINFO_DUMMY(230),
-	asBCINFO_DUMMY(231),
-	asBCINFO_DUMMY(232),
-	asBCINFO_DUMMY(233),
-	asBCINFO_DUMMY(234),
-	asBCINFO_DUMMY(235),
-	asBCINFO_DUMMY(236),
-	asBCINFO_DUMMY(237),
-	asBCINFO_DUMMY(238),
-	asBCINFO_DUMMY(239),
-	asBCINFO_DUMMY(240),
-	asBCINFO_DUMMY(241),
-	asBCINFO_DUMMY(242),
-	asBCINFO_DUMMY(243),
-	asBCINFO_DUMMY(244),
-	asBCINFO_DUMMY(245),
-	asBCINFO_DUMMY(246),
-	asBCINFO_DUMMY(247),
-	asBCINFO_DUMMY(248),
-	asBCINFO_DUMMY(249),
-	asBCINFO_DUMMY(250),
+		asBCINFO_DUMMY(201),
+		asBCINFO_DUMMY(202),
+		asBCINFO_DUMMY(203),
+		asBCINFO_DUMMY(204),
+		asBCINFO_DUMMY(205),
+		asBCINFO_DUMMY(206),
+		asBCINFO_DUMMY(207),
+		asBCINFO_DUMMY(208),
+		asBCINFO_DUMMY(209),
+		asBCINFO_DUMMY(210),
+		asBCINFO_DUMMY(211),
+		asBCINFO_DUMMY(212),
+		asBCINFO_DUMMY(213),
+		asBCINFO_DUMMY(214),
+		asBCINFO_DUMMY(215),
+		asBCINFO_DUMMY(216),
+		asBCINFO_DUMMY(217),
+		asBCINFO_DUMMY(218),
+		asBCINFO_DUMMY(219),
+		asBCINFO_DUMMY(220),
+		asBCINFO_DUMMY(221),
+		asBCINFO_DUMMY(222),
+		asBCINFO_DUMMY(223),
+		asBCINFO_DUMMY(224),
+		asBCINFO_DUMMY(225),
+		asBCINFO_DUMMY(226),
+		asBCINFO_DUMMY(227),
+		asBCINFO_DUMMY(228),
+		asBCINFO_DUMMY(229),
+		asBCINFO_DUMMY(230),
+		asBCINFO_DUMMY(231),
+		asBCINFO_DUMMY(232),
+		asBCINFO_DUMMY(233),
+		asBCINFO_DUMMY(234),
+		asBCINFO_DUMMY(235),
+		asBCINFO_DUMMY(236),
+		asBCINFO_DUMMY(237),
+		asBCINFO_DUMMY(238),
+		asBCINFO_DUMMY(239),
+		asBCINFO_DUMMY(240), asBCINFO_DUMMY(241), asBCINFO_DUMMY(242), asBCINFO_DUMMY(243), asBCINFO_DUMMY(244), asBCINFO_DUMMY(245), asBCINFO_DUMMY(246), asBCINFO_DUMMY(247), asBCINFO_DUMMY(248), asBCINFO_DUMMY(249),
 
-	asBCINFO(VarDecl,		W_ARG,			0),
-	asBCINFO(Block,			INFO,			0),
-	asBCINFO(ObjInfo,		rW_DW_ARG,		0),
-	asBCINFO(LINE,			INFO,			0),
-	asBCINFO(LABEL,			INFO,			0)
-};
+		asBCINFO(TryBlock, DW_ARG, 0), asBCINFO(VarDecl, W_ARG, 0), asBCINFO(Block, INFO, 0), asBCINFO(ObjInfo, rW_DW_ARG, 0), asBCINFO(LINE, INFO, 0), asBCINFO(LABEL, INFO, 0)};
 
 // Macros to access bytecode instruction arguments
 #define asBC_DWORDARG(x)  (*(((asDWORD*)x)+1))

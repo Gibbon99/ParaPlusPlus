@@ -73,12 +73,17 @@ public:
 	// Utils
 	void verifyRenderer ();
 
+	void AddRef ();
+
+	void ReleaseRef ();
+
 	std::string int_getString (std::string format, ...);
 
 	// The window we'll be rendering to
 	PARA_Window   *window                                          = nullptr;
 	// Renderer associated with the window
 	PARA_Renderer *renderer                                        = nullptr;
+	bool          changingRenderer                                 = false;
 private:
 	int                                     windowWidth;
 	int                                     windowHeight;
@@ -92,6 +97,8 @@ private:
 	std::map<std::string, __backingTexture> backingTextures;
 	std::string                             activeBackingTexture;
 	std::string                             cacheTitle;
+
+
 };
 
 #endif //PARA_PARARENDERER_H

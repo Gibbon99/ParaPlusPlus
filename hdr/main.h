@@ -14,7 +14,7 @@
 #endif
 
 #define APP_NAME    "Para++"
-
+#include "../data/scripts/enum.h"
 #include "classes/paraScript.h"
 #include "classes/paraLogFile.h"
 #include "classes/paraFileSystem.h"

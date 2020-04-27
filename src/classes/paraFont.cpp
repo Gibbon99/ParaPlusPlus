@@ -56,8 +56,6 @@ bool paraFont::load(int fontSize, const std::string &fileName)
 		}
 		SDL_version compile_version, *link_version;
 
-		funcOutput("Test output from font callback function");
-
 		TTF_VERSION(&compile_version)
 		funcOutput(int_getString("Compiled with SDL_ttf version: %d.%d.%d",
 		                         compile_version.major,

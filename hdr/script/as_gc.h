@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2015 Andreas Jonsson
+   Copyright (c) 2003-2018 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied 
    warranty. In no event will the authors be held liable for any 
@@ -56,20 +56,37 @@ public:
 	asCGarbageCollector();
 	~asCGarbageCollector();
 
-	int    GarbageCollect(asDWORD flags, asUINT iterations);
-	void   GetStatistics(asUINT *currentSize, asUINT *totalDestroyed, asUINT *totalDetected, asUINT *newObjects, asUINT *totalNewDestroyed) const;
-	void   GCEnumCallback(void *reference);
-	int    AddScriptObjectToGC(void *obj, asCObjectType *objType);
-	int    GetObjectInGC(asUINT idx, asUINT *seqNbr, void **obj, asITypeInfo **type);
+	int GarbageCollect (asDWORD flags, asUINT iterations);
 
-	int    ReportAndReleaseUndestroyedObjects();
+	void GetStatistics (asUINT *currentSize, asUINT *totalDestroyed, asUINT *totalDetected, asUINT *newObjects, asUINT *totalNewDestroyed) const;
+
+	void GCEnumCallback (void *reference);
+
+	int AddScriptObjectToGC (void *obj, asCObjectType *objType);
+
+	int GetObjectInGC (asUINT idx, asUINT *seqNbr, void **obj, asITypeInfo **type);
+
+	int ReportAndReleaseUndestroyedObjects ();
 
 	asCScriptEngine *engine;
 
+	// Callback for when circular reference are detected
+	asCIRCULARREFFUNC_t circularRefDetectCallbackFunc;
+	void                                       *circularRefDetectCallbackParam;
+
 protected:
-	struct asSObjTypePair {void *obj; asCObjectType *type; asUINT seqNbr;};
-	struct asSIntTypePair {int i; asCObjectType *type;};
-	typedef asSMapNode<void*, asSIntTypePair> asSMapNode_t;
+	struct asSObjTypePair
+	{
+		void          *obj;
+		asCObjectType *type;
+		asUINT        seqNbr;
+	};
+	struct asSIntTypePair
+	{
+		int           i;
+		asCObjectType *type;
+	};
+	typedef asSMapNode<void *, asSIntTypePair> asSMapNode_t;
 
 	enum egcDestroyState
 	{

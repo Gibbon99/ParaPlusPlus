@@ -1,22 +1,23 @@
 Running DEBUG version.
 Compiled against PhysFS version 3.0.2.
 Linked against PhysFS version 3.0.2.
-Failed to set search path - [ data/data ] - [ not found ]
-Failed to set search path - [ data/scripts ] - [ not found ]
-Test output from font callback function
 Compiled with SDL_ttf version: 2.0.15
 Running with SDL_ttf version: 2.0.15
 Loaded font file [ data/console.ttf ]
 Script: Script Engine started.
-Script: Script Engine version - [ 2.32.0 ]
-Script: Options - [  AS_64BIT_PTR AS_LINUX AS_X64_GCC  ]
-Script: Registered function - [ void sys_printConInt(string &in, uint param) ]
+Script: Script Engine version - [ 2.35.0 WIP ]
+Script: Options - [  AS_DEBUG AS_64BIT_PTR AS_LINUX AS_X64_GCC  ]
+Allocated [ 774 ] for [ consoleFunctions.as ]
+Script [ consoleFunctions.as ]
+Allocated [ 657 ] for [ enum.h ]
+Script [ enum.h ]
+Script: Registered function - [ void sys_printConInt(string &in, int param) ]
+Script: Registered function - [ void sys_addEvent(int eventType, int eventAction, int eventDelay, string &in) ]
 Script: Registered variable - [ int quitProgram ]
+Section has been added [ consoleFunctions.as ]
+Section has been added [ enum.h ]
 Compiled scripts.
-Failed to get function ID for [ void script_loadAllResources() ]
-Failed to get function ID for [ void script_initGUI() ]
-Failed to get function ID for [ void as_guiHandleElementAction(string &in objectID) ]
-Failed to get function ID for [ void as_guiHandleTerminalAction(string &in objectID) ]
-Failed to get function ID for [ void as_guiHandleDatabaseAction(string &in objectID) ]
-Failed to get function ID for [ void as_guiHandleTransferAction(string &in objectID) ]
-Failed to get function ID for [ void as_guiHandleDialogAction(string &in objectID) ]
+Func ID for [ void as_useNewRenderer(int &in newRenderer) ] - [ 49344 ]
+Func ID for [ void as_testFunction() ] - [ 49792 ]
+Free memory [ 774 bytes ] - [ consoleFunctions.as ]
+Free memory [ 657 bytes ] - [ enum.h ]
