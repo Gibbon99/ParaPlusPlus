@@ -69,7 +69,10 @@ bool paraFileSystem::init(const std::string &baseDirectory, const std::string &w
 	PHYSFS_VERSION (&compiled);
 	PHYSFS_getLinkedVersion(&linked);
 
-	funcOutput(int_getString("Compiled against PhysFS version %d.%d.%d.", compiled.major, compiled.minor, compiled.patch));
+	std::string outputTest;
+	outputTest = int_getString("Compiled against PhysFS version %d.%d.%d.", compiled.major, compiled.minor, compiled.patch);
+
+	funcOutput((std::string)outputTest);
 	funcOutput(int_getString("Linked against PhysFS version %d.%d.%d.", linked.major, linked.minor, linked.patch));
 
 	//
@@ -169,7 +172,7 @@ PHYSFS_sint64 paraFileSystem::getFileSize(const std::string &fileName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load a file into a pointer
-std::string paraFileSystem::getString(const std::string &fileName)
+std::string paraFileSystem::getString(std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_file   *compFile = nullptr;

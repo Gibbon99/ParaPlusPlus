@@ -21,7 +21,7 @@ public:
 
 	bool doesFileExist(const std::string &fileName);
 
-	std::string getString (const std::string &fileName);
+	std::string getString (std::string fileName);
 
 	std::string int_getString (std::string format, ...);
 

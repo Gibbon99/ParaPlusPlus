@@ -7,7 +7,7 @@
 std::string sys_getString (std::string format, ...);
 
 // Allocate memory and return pointer - record the size as well
-char *sys_malloc (int memorySize, const std::string& keyName);
+char *sys_malloc (int memorySize, std::string keyName);
 
 // Go through memory map and free allocations
 void sys_freeMemory ();

@@ -9,7 +9,8 @@ std::queue<paraEventLogfile *> loggingEventQueue;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Push an event onto the logging queue
-void log_addEvent(const std::string& newLine)
+//void log_addEvent(std::string & newLine)
+void log_addEvent(std::string newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Mutex *tempMutex;

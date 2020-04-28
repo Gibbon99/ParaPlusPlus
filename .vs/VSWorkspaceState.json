@@ -1,8 +1,8 @@
 {
   "ExpandedNodes": [
     "",
+    "\\data",
     "\\hdr",
-    "\\hdr\\classes",
     "\\hdr\\io",
     "\\hdr\\system",
     "\\SDL2_WIN",
@@ -11,6 +11,6 @@
     "\\src\\io",
     "\\src\\system"
   ],
-  "SelectedNode": "\\.gitignore",
+  "SelectedNode": "\\hdr\\classes\\paraConsole.h",
   "PreviewInSolutionExplorer": false
 }

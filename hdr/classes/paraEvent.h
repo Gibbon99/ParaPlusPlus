@@ -40,7 +40,7 @@ public:
 class paraEventLogfile : public paraEvent
 {
 public:
-	paraEventLogfile (int newAction, const std::string &newText) : paraEvent (newAction)
+	paraEventLogfile (int newAction, std::string newText) : paraEvent (newAction)
 	{
 		newLogfileLine = newText;
 	}

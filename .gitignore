@@ -16,3 +16,10 @@
 /Win32_Para++_debug.exe
 /.vs/ParaPlusPlus/v16
 /.vs
+/AS_DEBUG
+/out/build/x86-Release
+/Win32_ParaPlusPlus_debug.pdb
+/Win32_ParaPlusPlus_debug.lib
+/Win32_ParaPlusPlus_debug.ilk
+/Win32_ParaPlusPlus_debug.exp
+/Win32_ParaPlusPlus_debug.exe

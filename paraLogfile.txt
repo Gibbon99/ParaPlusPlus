@@ -1,23 +1,22 @@
-Running DEBUG version.
 Compiled against PhysFS version 3.0.2.
 Linked against PhysFS version 3.0.2.
+Allocated [ 798 ] for [ consoleFunctions.as ]
+Script [ consoleFunctions.as ]
+Allocated [ 693 ] for [ enum.h ]
+Script [ enum.h ]
 Compiled with SDL_ttf version: 2.0.15
 Running with SDL_ttf version: 2.0.15
 Loaded font file [ data/console.ttf ]
 Script: Script Engine started.
-Allocated [ 774 ] for [ consoleFunctions.as ]
-Script [ consoleFunctions.as ]
-Allocated [ 654 ] for [ enum.h ]
-Script [ enum.h ]
-Script: Script Engine version - [ 2.35.0 WIP ]
-Script: Options - [  AS_DEBUG AS_64BIT_PTR AS_LINUX AS_X64_GCC  ]
+Script: Script Engine version - [ 2.35.0 WIP DEBUG ]
+Script: Options - [  AS_DEBUG AS_WIN AS_X86  ]
 Script: Registered function - [ void sys_printConInt(string &in, int param) ]
 Script: Registered function - [ void sys_addEvent(int eventType, int eventAction, int eventDelay, string &in) ]
 Script: Registered variable - [ int quitProgram ]
 Section has been added [ consoleFunctions.as ]
 Section has been added [ enum.h ]
 Compiled scripts.
-Func ID for [ void as_useNewRenderer(int &in newRenderer) ] - [ 49344 ]
-Func ID for [ void as_testFunction() ] - [ 49792 ]
-Free memory [ 774 bytes ] - [ consoleFunctions.as ]
-Free memory [ 654 bytes ] - [ enum.h ]
+Func ID for [ void as_useNewRenderer(int &in newRenderer) ] - [ 138535656 ]
+Func ID for [ void as_testFunction() ] - [ 138538472 ]
+Free memory [ 798 bytes ] - [ consoleFunctions.as ]
+Free memory [ 693 bytes ] - [ enum.h ]

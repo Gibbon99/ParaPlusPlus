@@ -107,7 +107,7 @@ void sys_startSystems()
 	sys_scriptInitScriptFunctions ();
 	sys_scriptInitFunctions ();
 	sys_scriptInitVariables ();
-	io_getScriptFileNames ("scripts");
+	io_getScriptFileNames ((std::string)"scripts");
 	paraScriptInstance.loadAndCompile ();
 	paraScriptInstance.cacheFunctions ();
 

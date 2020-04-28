@@ -85,13 +85,13 @@ private:
 	typedef struct
 	{
 		std::string scriptFunctionName;
-		void        *hostFunctionPtr;
+		void        *hostFunctionPtr = nullptr;
 	}                                 _hostScriptFunctions;
 
 	typedef struct
 	{
 		std::string scriptFunctionName;
-		void        *hostFunctionPtr;
+		void        *hostFunctionPtr = nullptr;
 	}                                 _hostScriptVariables;
 	std::vector<_hostScriptVariables> hostVariables;
 

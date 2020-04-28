@@ -182,7 +182,7 @@ if (WIN32)
 		    ./SDL2_WIN/include
 		    ./hdr/script
 		    ./hdr/physfs
-		    ./hsr
+		    ./hdr
 		    ./hdr/box2d
 		    ./hdr/sdl2_gfx
     )
@@ -202,7 +202,7 @@ if (WIN32)
             message("-")
             message("Doing DEBUG build")
             message("-")
-            add_executable (Win32_Para++_debug ${CXX_SRCS})
+            add_executable (Win32_ParaPlusPlus_debug ${CXX_SRCS})
         elseif (CMAKE_BUILD_TYPE MATCHES Release)
 
             link_libraries(
@@ -216,7 +216,7 @@ if (WIN32)
             message("-")
             message("Doing RELEASE build")
             message("-")
-            add_executable (Win32_Para++_release ${CXX_SRCS})
+            add_executable (Win32_ParaPlusPlus_release ${CXX_SRCS})
         endif (CMAKE_BUILD_TYPE MATCHES Debug)
 endif (WIN32)
 

@@ -85,7 +85,7 @@ void con_processConsoleEventQueue (void *data)
 // Add a new event to the console queue - only added when mutex is free. ie: Thread is not accessing the queue
 //
 // -1 is passed in from classes to add a line to avoid including the additional header
-void con_addEvent (int newAction, const std::string &newLine)
+void con_addEvent (int newAction, std::string newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Mutex *tempMutex;
@@ -136,13 +136,13 @@ void con_renderConsole ()
 		tempSurface = consoleFont.write (console.consoleItr->posX, console.posY, console.consoleItr->lineText);  // Surface is freed within console class
 		if (nullptr == tempSurface)
 		{
-			log_addEvent ("Unable to create temp surface when rendering console.");
+			log_addEvent (sys_getString("%s", "Unable to create temp surface when rendering console."));
 			return;
 		}
 		tempTexture = SDL_CreateTextureFromSurface (renderer.renderer, tempSurface);
 		if (nullptr == tempTexture)
 		{
-			log_addEvent ("Unable to create temp texture when rendering console.");
+			log_addEvent (sys_getString("%s", "Unable to create temp texture when rendering console."));
 			return;
 		}
 
@@ -164,13 +164,13 @@ void con_renderConsole ()
 	tempSurface = consoleFont.write (console.posX, console.posY, console.entryLine ());
 	if (nullptr == tempSurface)
 	{
-		log_addEvent ("Unable to create temp surface when rendering console entry line.");
+		log_addEvent (sys_getString("%s", "Unable to create temp surface when rendering console entry line."));
 		return;
 	}
 	tempTexture = SDL_CreateTextureFromSurface (renderer.renderer, tempSurface);
 	if (nullptr == tempTexture)
 	{
-		log_addEvent ("Unable to create temp texture when rendering console.");
+		log_addEvent (sys_getString("%s", "Unable to create temp texture when rendering console."));
 		return;
 	}
 	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &consoleFont.pos);
@@ -186,13 +186,13 @@ void con_renderConsole ()
 	tempSurface = consoleFont.write (1, 10, sys_getString ("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
 	if (nullptr == tempSurface)
 	{
-		log_addEvent ("Unable to create temp surface when rendering console.");
+		log_addEvent (sys_getString("%s", "Unable to create temp surface when rendering console."));
 		return;
 	}
 	tempTexture = SDL_CreateTextureFromSurface (renderer.renderer, tempSurface);
 	if (nullptr == tempTexture)
 	{
-		log_addEvent ("Unable to create temp texture when rendering console.");
+		log_addEvent(sys_getString("%s", "Unable to create temp texture when rendering console."));
 		return;
 	}
 	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &consoleFont.pos);
