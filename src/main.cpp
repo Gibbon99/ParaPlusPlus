@@ -9,6 +9,7 @@ paraFileSystem fileSystem;
 paraFont       consoleFont;
 paraConsole    console (1, 255, 255, 255, 255);
 paraRenderer   renderer;
+paraAudio      audio;
 
 #define TICKS_PER_SECOND 30.0f
 #define MAX_FRAMESKIP 5
@@ -29,7 +30,7 @@ float       testVarFloat  = 3.145;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Timer callback to track the Update and Render FPS
-Uint32 fpsCallback(Uint32 interval, void *param)
+Uint32 fpsCallback (Uint32 interval, void *param)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	thinkFPSPrint = thinkFPS;
@@ -42,29 +43,29 @@ Uint32 fpsCallback(Uint32 interval, void *param)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Entry point - fixed update time step with unrestricted rendering
-int main(int argc, char *argv[])
+int main (int argc, char *argv[])
 //----------------------------------------------------------------------------------------------------------------------
 {
 	double msPerUpdate  = 1000.0f / TICKS_PER_SECOND;
 	double timeLag      = 0.0f;
-	Uint32 previousTime = PARA_GetTicks();
+	Uint32 previousTime = PARA_GetTicks ();
 	Uint32 currentTime  = 0;
 
-	sys_startSystems();
+	sys_startSystems ();
 
-	SDL_TimerID myTimer = SDL_AddTimer(1000, fpsCallback, nullptr);
+	SDL_TimerID myTimer = SDL_AddTimer (1000, fpsCallback, nullptr);
 
 	while (!quitLoop)
 	{
 		previousTime             = currentTime;
-		currentTime              = PARA_GetTicks();
+		currentTime              = PARA_GetTicks ();
 		maxNumUpdateLoops        = 0;
 
 		timeLag += (currentTime - previousTime);
 
 		while (timeLag >= msPerUpdate && maxNumUpdateLoops < MAX_FRAMESKIP)
 		{
-			sys_gameTickRun();
+			sys_gameTickRun ();
 			timeLag -= msPerUpdate;
 			thinkFPS++;
 			maxNumUpdateLoops++;
@@ -73,11 +74,11 @@ int main(int argc, char *argv[])
 		if (percentIntoNextFrame > 1.0f)
 			percentIntoNextFrame = 1.0f;
 
-		sys_renderFrame(percentIntoNextFrame);
+		sys_renderFrame (percentIntoNextFrame);
 		fps++;
 	}
 
-	sys_shutdown();
+	sys_shutdown ();
 
 	return 0;
 }

@@ -21,4 +21,7 @@ void debug_getAllRenderers ()
 	renderer.d_getAllRenderers ();
 }
 
-
+void testPlay ()
+{
+	audio.play("start1", false);
+}

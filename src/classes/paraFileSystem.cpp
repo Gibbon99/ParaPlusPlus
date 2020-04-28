@@ -128,7 +128,7 @@ bool paraFileSystem::addPath(const std::string &newDirectory)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the length of a file
-PHYSFS_sint64 paraFileSystem::getFileSize(const std::string &fileName)
+PHYSFS_sint64 paraFileSystem::getFileSize(std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_file   *compFile;
@@ -242,7 +242,7 @@ std::string paraFileSystem::getString(std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load a file into a pointer
-int paraFileSystem::getFileIntoMemory(const std::string &fileName, void *results)
+int paraFileSystem::getFileIntoMemory(std::string fileName, void *results)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_file   *compFile = nullptr;

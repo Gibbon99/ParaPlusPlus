@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <classes/paraAudio.h>
 
 #ifdef WIN32
   #include "SDL.h"
@@ -20,6 +21,7 @@
 #include "classes/paraFileSystem.h"
 #include "classes/paraFont.h"
 #include "classes/paraConsole.h"
+#include "classes/paraAudio.h"
 #include "system/eventsEngine.h"
 #include "system/shutdown.h"
 #include "system/util.h"
@@ -40,6 +42,7 @@ extern paraFileSystem fileSystem;
 extern paraFont       consoleFont;
 extern paraConsole    console;
 extern paraRenderer   renderer;
+extern paraAudio      audio;
 
 extern bool   quitLoop;
 extern Uint32 fpsPrint;

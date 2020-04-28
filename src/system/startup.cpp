@@ -1,4 +1,5 @@
 #include <system/physics.h>
+#include <game/audio.h>
 #include "../../hdr/system/startup.h"
 #include "../../hdr/system/scriptEngine.h"
 #include "../../hdr/system/scriptConfig.h"
@@ -114,6 +115,9 @@ void sys_startSystems()
 	evt_registerMutex (GAME_MUTEX_NAME);
 
 	sys_setupPhysicsEngine ();
+
+	audio.init (reinterpret_cast<functionPtrStr>(con_addEvent), io_loadAudioFile);
+	audio.load("start1", "start1.wav");
 
 	//
 	// Start in interactive console mode

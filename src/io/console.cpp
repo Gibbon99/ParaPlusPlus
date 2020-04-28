@@ -239,6 +239,9 @@ void con_initConsole ()
 	console.addCommand ("d_getOS", "Show which OS is in use.", sys_getOS);
 	console.addCommand ("quit", "Quit the game.", sys_shutdown);
 
+	console.addCommand("testPlay", "Play sound", testPlay);
+
+
 	//
 	// Variables accessible from the console
 	//

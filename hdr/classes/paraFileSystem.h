@@ -15,9 +15,9 @@ public:
 
 	bool addPath(const std::string &newDirectory);
 
-	PHYSFS_sint64 getFileSize(const std::string &fileName);
+	PHYSFS_sint64 getFileSize(std::string fileName);
 
-	int getFileIntoMemory(const std::string &fileName, void *results);
+	int getFileIntoMemory(std::string fileName, void *results);
 
 	bool doesFileExist(const std::string &fileName);
 

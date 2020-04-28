@@ -1,6 +1,8 @@
 #ifndef PARA_WRAPPER_H
 #define PARA_WRAPPER_H
 
+#include <SDL.h>
+
 #define PARA_Color          SDL_Color
 #define PARA_Surface        SDL_Surface
 #define PARA_Texture        SDL_Texture
