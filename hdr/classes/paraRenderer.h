@@ -5,6 +5,13 @@
 #include <map>
 #include "../wrapper.h"
 
+enum FADE_STATE
+{
+	FADE_STATE_NONE = 0,
+	FADE_STATE_OFF,
+	FADE_STATE_ON
+};
+
 struct __backingTexture
 {
 	PARA_Texture *backingTexture;
@@ -60,6 +67,12 @@ public:
 
 	void presentFrame ();
 
+	void copyTexture ();
+
+	void updateFade ();
+
+	void prepareFade ();
+
 	// Debug
 	void d_getAllBackingTextures ();
 
@@ -89,16 +102,18 @@ private:
 	int                                     windowHeight;
 	int                                     cacheWinFlags;
 	int                                     whichRenderer;
+	int                                     currentFadeState       = FADE_STATE_NONE;
+	double                                  currentFadeAlpha;
 	bool                                    int_useVSync;
 	bool                                    targetTextureAvailable = false;
+	double                                  fadeAmount;
 	functionPtrStr                          shutdownFunc;
 	functionPtrOut                          consoleOutFunc;
+	PARA_Texture  *fadeTextureCopy;   // Destination to copy the current backing texture to
 	std::vector<__rendererInfo>             rendererInfo;
 	std::map<std::string, __backingTexture> backingTextures;
 	std::string                             activeBackingTexture;
 	std::string                             cacheTitle;
-
-
 };
 
 #endif //PARA_PARARENDERER_H

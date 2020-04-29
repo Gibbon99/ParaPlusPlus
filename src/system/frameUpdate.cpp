@@ -11,6 +11,7 @@ void sys_gameTickRun()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	gam_processGameEventQueue ();
+	renderer.updateFade();
 
 	while (SDL_PollEvent (&evt) != 0)
 	{
@@ -46,6 +47,9 @@ void sys_gameTickRun()
 
 			if (evt.key.keysym.sym == SDLK_PAGEDOWN)
 				console.changeScrollBackOffset(1);
+
+			if (evt.key.keysym.sym == SDLK_F1)
+				sys_setNewMode (MODE_SHOW_SPLASH, true);
 
 			break;
 

@@ -62,15 +62,6 @@ std::string paraAudio::int_getString (std::string format, ...)
 	return std::string (zc.data ());
 }
 
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Set a function to call when displaying any output
-void paraAudio::setOutputFunction (audioFunctionPtrStr outputFunction)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	paraAudio::funcOutput = outputFunction;
-}
-
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Init the audio system
@@ -79,8 +70,9 @@ int paraAudio::init (int numMaxActiveChannels, audioFunctionPtrStr outputFunctio
 {
 	__audioActiveSounds tempActiveSounds;
 
-	setOutputFunction (outputFunction);
+	paraAudio::funcOutput = outputFunction;
 	paraAudio::funcLoad = loadFunction;
+
 	audioDeviceOpened   = false;
 
 	// Open 44.1KHz, signed 16bit, system byte order, stereo audio, using 1024 byte chunks
@@ -219,7 +211,7 @@ bool paraAudio::load (std::string fileName)
 	if (fileName.empty ())
 	{
 		funcOutput (-1, int_getString ("Audio load - missing filename."));
-		return -1;
+		return false;
 	}
 
 	tempAudio.fileName = fileName;

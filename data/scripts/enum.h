@@ -56,5 +56,6 @@ enum consoleFunctionSource
 
 enum CURRENT_MODES
 {
-	MODE_CONSOLE_EDIT = 0
+	MODE_CONSOLE_EDIT = 0,
+	MODE_SHOW_SPLASH
 };

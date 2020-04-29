@@ -139,6 +139,9 @@ void paraRenderer::create (int newWinWidth, int newWinHeight, int winFlags, int 
 	windowHeight     = newWinHeight;
 	cacheWinFlags    = winFlags;
 	changingRenderer = false;
+	currentFadeState = FADE_STATE_NONE;
+	currentFadeAlpha = 255;
+	fadeAmount       = 10.0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -412,14 +415,113 @@ void paraRenderer::createRenderTargetTexture (const std::string &textureName, in
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Create a copy of the existing backing texture
+void paraRenderer::copyTexture ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	Uint32 format;
+	int    access;
+	int    width;
+	int    height;
+
+	if (SDL_QueryTexture (getRenderTarget (getCurrentBackingTexture ()), &format, &access, &width, &height) < 0)
+		shutdownFunc (int_getString ("Unable to query texture for fade [ %s ]", SDL_GetError ()));
+
+	fadeTextureCopy = SDL_CreateTexture (renderer, format, access, width, height);
+	if (nullptr == fadeTextureCopy)
+		shutdownFunc ("Unable to create texture copy for fade.");
+
+	if (SDL_SetRenderTarget (renderer, fadeTextureCopy) < 0)
+		shutdownFunc (int_getString ("Unable to set render target for fade [ %s ]", SDL_GetError ()));
+
+	if (SDL_RenderCopy (renderer, getRenderTarget (getCurrentBackingTexture ()), nullptr, nullptr) < 0)
+		shutdownFunc (int_getString ("Unable to copy fade textures [ %s ].", SDL_GetError ()));
+
+	if (SDL_SetRenderTarget (renderer, nullptr) < 0)
+		shutdownFunc (int_getString ("Unable to reset render target to default [ %s ]", SDL_GetError ()));
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Prepare to start a fade cycle
+void paraRenderer::prepareFade ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	copyTexture ();
+
+	if (SDL_SetTextureAlphaMod (fadeTextureCopy, currentFadeAlpha) < 0)
+		shutdownFunc (int_getString ("Unable to set texture alpha mod [ %s ]", SDL_GetError ()));
+
+	if (SDL_SetRenderDrawBlendMode (renderer, SDL_BLENDMODE_BLEND) < 0)
+		shutdownFunc (int_getString ("Unable to set renderDrawBlendMode [ %s ]", SDL_GetError ()));
+
+	if (SDL_SetRenderDrawColor (renderer, 0, 0, 0, currentFadeAlpha) < 0)
+		shutdownFunc (int_getString ("Unable to set renderDrawColor [ %s ]", SDL_GetError ()));
+
+	currentFadeState = FADE_STATE_OFF;
+	currentFadeAlpha = 0;
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Called to update the fade counter and state
+void paraRenderer::updateFade ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if (SDL_SetRenderDrawColor (renderer, 0, 0, 0, currentFadeAlpha) < 0)
+		shutdownFunc (int_getString ("Unable to set renderDrawColor [ %s ]", SDL_GetError ()));
+
+	switch (currentFadeState)
+	{
+		case FADE_STATE_OFF:
+			currentFadeAlpha += 1.0 * fadeAmount;
+
+			if (currentFadeAlpha > (254 - (fadeAmount + 1)))
+			{
+				currentFadeState = FADE_STATE_ON;
+			}
+			break;
+
+		case FADE_STATE_ON:
+			currentFadeAlpha -= 1.0 * fadeAmount;
+
+			if (currentFadeAlpha < 0)
+			{
+				currentFadeState = FADE_STATE_NONE;
+				currentFadeAlpha = 0;
+			}
+			break;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Reset target texture to screen, and present current texture if required
 void paraRenderer::presentFrame ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (targetTextureAvailable)
 	{
-		SDL_SetRenderTarget (renderer, nullptr);
-		SDL_RenderCopy (renderer, SDL_GetRenderTarget (paraRenderer::renderer), nullptr, nullptr);
+		switch (currentFadeState)
+		{
+			case FADE_STATE_NONE:
+				SDL_SetRenderTarget (renderer, nullptr);
+				SDL_RenderCopy (renderer, SDL_GetRenderTarget (paraRenderer::renderer), nullptr, nullptr);
+				break;
+
+			case FADE_STATE_OFF:
+				SDL_SetRenderTarget (renderer, nullptr);
+				SDL_RenderCopy(renderer, fadeTextureCopy, nullptr, nullptr);
+				SDL_RenderFillRect (renderer, nullptr);
+				break;
+
+			case FADE_STATE_ON:
+				SDL_SetRenderTarget (renderer, nullptr);
+				SDL_RenderCopy (renderer, SDL_GetRenderTarget (paraRenderer::renderer), nullptr, nullptr);
+				SDL_RenderFillRect (renderer, nullptr);
+				break;
+		}
 	}
 
 	SDL_RenderPresent (renderer);
@@ -443,6 +545,9 @@ void paraRenderer::prepareFrame ()
 		}
 	}
 
-	SDL_SetRenderDrawColor (paraRenderer::renderer, 0x00, 0x00, 0x00, 0x00);
-	SDL_RenderClear (paraRenderer::renderer);
+	if (currentFadeState == FADE_STATE_NONE)
+	{
+		SDL_SetRenderDrawColor (paraRenderer::renderer, 0x00, 0x00, 0x00, 0x00);
+		SDL_RenderClear (paraRenderer::renderer);
+	}
 }

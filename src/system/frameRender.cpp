@@ -28,7 +28,16 @@ void sys_renderFrame (double interpolation)
 {
 	sys_prepareFrame();
 
-	con_renderConsole();
+	switch (currentMode)
+	{
+		case MODE_CONSOLE_EDIT:
+			con_renderConsole();
+			break;
+
+		case MODE_SHOW_SPLASH:
+			texture.render("splash");
+			break;
+	}
 
 	sys_completeFrame();
 }

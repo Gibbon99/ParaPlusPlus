@@ -10,10 +10,12 @@
 
 typedef int (*functionPtr) (...);
 
+typedef void      (*scriptFunctionPtrStr) (int, std::string);
+
 class paraScript
 {
 public:
-	bool init (asFUNCTION_t outputFunction);
+	bool init (scriptFunctionPtrStr outputFunction);
 
 	void addHostVariable (const std::string &varName, void *varPtr);
 
@@ -39,6 +41,7 @@ private:
 	static std::string getScriptError (int errNo);
 
 	std::string getContextState (int whichState);
+	scriptFunctionPtrStr              funcOutput{};
 
 //----------------------------------------------------------------------------------------------------------------------
 //

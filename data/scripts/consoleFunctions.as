@@ -11,15 +11,6 @@ void as_getAudioSpecs()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Load all the Audio sound files
-void as_loadAudioResources()
-//----------------------------------------------------------------------------------------------------------------------
-{
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "start1.wav");
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
 // Set the master volume to a new level
 void as_setVolume(int &in newVolume)
 //----------------------------------------------------------------------------------------------------------------------
@@ -75,4 +66,3 @@ void as_testFunction()
 	sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, "Text from inside the script");
 
 }
-

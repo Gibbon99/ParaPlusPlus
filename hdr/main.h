@@ -5,16 +5,18 @@
 #include <string>
 #include <vector>
 #include <classes/paraAudio.h>
+#include <classes/paraTexture.h>
 
 #ifdef WIN32
-  #include "SDL.h"
+#include "SDL.h"
 #else
 
-  #include "SDL2/SDL.h"
+#include "SDL2/SDL.h"
 
 #endif
 
 #define APP_NAME    "Para++"
+
 #include "../data/scripts/enum.h"
 #include "classes/paraScript.h"
 #include "classes/paraLogFile.h"
@@ -34,7 +36,7 @@
 
 using namespace std;
 
-typedef int (*functionPtr)(...);
+typedef int (*functionPtr) (...);
 
 extern paraScript     paraScriptInstance;
 extern paraLogFile    logFile;
@@ -43,11 +45,13 @@ extern paraFont       consoleFont;
 extern paraConsole    console;
 extern paraRenderer   renderer;
 extern paraAudio      audio;
+extern paraTexture    texture;
 
 extern bool   quitLoop;
 extern Uint32 fpsPrint;
 extern Uint32 thinkFPSPrint;
 extern double percentIntoNextFrame;
+extern int currentMode;
 
 extern std::string testVarString;
 extern float       testVarFloat;

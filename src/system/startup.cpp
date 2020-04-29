@@ -80,8 +80,8 @@ void sys_startSystems ()
 	con_initConsole ();
 	//
 	// Create window and renderer
-	renderer.setShutdownFunction (reinterpret_cast<functionPtrStr>(sys_shutdownWithError));
-	renderer.setConOutFunction (reinterpret_cast<functionPtrOut>(con_addEvent));
+	renderer.setShutdownFunction (sys_shutdownWithError);
+	renderer.setConOutFunction (con_addEvent);
 	renderer.create (windowWidth, windowHeight, sys_createWindowFlags (), whichRenderer, presentVSync, APP_NAME);
 	//
 	// Create target texture for rendering the console onto
@@ -89,21 +89,22 @@ void sys_startSystems ()
 	renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);
 	//
 	// Start the filesystem
-	fileSystem.setOutputFunction (reinterpret_cast<functionPtrStr>(log_addEvent));
-	fileSystem.setMallocFunction (reinterpret_cast<functionPtrMalloc>(sys_malloc));
+	fileSystem.setOutputFunction (con_addEvent);
+	fileSystem.setMallocFunction (sys_malloc);
 	if (!fileSystem.init ("data", "data"))
 		sys_shutdownWithError ("Error. Could not start filesystem. Check directory structure.");
 
 //	fileSystem.addPath ("data/data");
 	fileSystem.addPath ("data/scripts");
+	fileSystem.addPath ("data/data.zip");
 	//
 	// Load and create the font for the console
-	consoleFont.setOutputFunction (reinterpret_cast<functionPtrStr>(log_addEvent));
+	consoleFont.setOutputFunction (log_addEvent);
 	consoleFont.load (consoleFontSize, consoleFontFilename);
 	consoleFont.setColor (255, 255, 255, 255);
 	//
 	// Start the scripting engine
-	if (!paraScriptInstance.init (reinterpret_cast<asFUNCTION_t>(scr_Output)))
+	if (!paraScriptInstance.init (con_addEvent))
 		sys_shutdownWithError ("Error: Could not start Scripting engine.");
 
 	sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, ("Scripting started."));
@@ -119,10 +120,14 @@ void sys_startSystems ()
 	sys_setupPhysicsEngine ();
 
 	gam_initAudio();
+	//
+	// Textures are done from the same thread as window creation
+	texture.init(con_addEvent, io_loadRawFile);
+	paraScriptInstance.run("as_loadTextureResources", "");
 
 //	audio.load("start1", "start1.wav");
 
 	//
 	// Start in interactive console mode
-	sys_setNewMode (MODE_CONSOLE_EDIT);
+	sys_setNewMode (MODE_CONSOLE_EDIT, false);
 }

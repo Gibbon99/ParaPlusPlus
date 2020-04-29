@@ -2,8 +2,6 @@
 #include "../../hdr/system/startup.h"
 #include "../../hdr/io/console.h"
 
-int currentMode;
-
 struct paraMemoryMap
 {
 	char *pointer;
@@ -15,9 +13,15 @@ std::map<std::string, paraMemoryMap> memoryMap;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a new mode
-void sys_setNewMode(int newMode)
+void sys_setNewMode (int newMode, bool doFade)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	if (doFade)
+	{
+		renderer.prepareFade();
+
+	}
+
 	switch (newMode)
 	{
 		case MODE_CONSOLE_EDIT:
@@ -30,6 +34,10 @@ void sys_setNewMode(int newMode)
 			currentMode = newMode;
 			break;
 
+		case MODE_SHOW_SPLASH:
+			currentMode = newMode;
+			break;
+
 		default:
 			sys_shutdownWithError ("Attempting to set an unknown mode.");
 			break;
@@ -39,10 +47,10 @@ void sys_setNewMode(int newMode)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the operating system we are running on
-void sys_getOS()
+void sys_getOS ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("[ %s ]", SDL_GetPlatform()));
+	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("[ %s ]", SDL_GetPlatform ()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -52,26 +60,26 @@ void sys_getOS()
 std::string sys_getString (std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 {
-    const char *const zcFormat = format.c_str ();
+	const char *const zcFormat = format.c_str ();
 
-    // initialize use of the variable argument array
-    va_list vaArgs;
-    va_start(vaArgs, format);
+	// initialize use of the variable argument array
+	va_list vaArgs;
+	va_start(vaArgs, format);
 
-    // reliably acquire the size from a copy of the variable argument array
-    // and a functionally reliable call to mock the formatting
-    va_list vaCopy;
-    va_copy(vaCopy, vaArgs);
-    const int iLen = std::vsnprintf (nullptr, 0, zcFormat, vaCopy);
-    va_end(vaCopy);
+	// reliably acquire the size from a copy of the variable argument array
+	// and a functionally reliable call to mock the formatting
+	va_list vaCopy;
+	va_copy(vaCopy, vaArgs);
+	const int iLen = std::vsnprintf (nullptr, 0, zcFormat, vaCopy);
+	va_end(vaCopy);
 
-    // return a formatted string without risking memory mismanagement  and without assuming any compiler
-    // or platform specific behavior
-    std::vector<char> zc (iLen + 1);
-    std::vsnprintf (zc.data (), zc.size (), zcFormat, vaArgs);
-    va_end(vaArgs);
+	// return a formatted string without risking memory mismanagement  and without assuming any compiler
+	// or platform specific behavior
+	std::vector<char> zc (iLen + 1);
+	std::vsnprintf (zc.data (), zc.size (), zcFormat, vaArgs);
+	va_end(vaArgs);
 
-    return std::string (zc.data ());
+	return std::string (zc.data ());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -85,16 +93,37 @@ char *sys_malloc (int memorySize, std::string keyName)
 	newMemoryMapEntry.pointer = (char *) malloc (sizeof (char) * memorySize);
 	if (newMemoryMapEntry.pointer == nullptr)
 	{
-		logFile.write(sys_getString ("Memory allocation error for [ %s ]", keyName.c_str ()));
+		logFile.write (sys_getString ("Memory allocation error for [ %s ]", keyName.c_str ()));
 	}
 
 	newMemoryMapEntry.size = memorySize;
 
 	memoryMap.insert (std::pair<std::string, paraMemoryMap> (keyName, newMemoryMapEntry));
 
-	logFile.write(sys_getString("Allocated [ %i ] for [ %s ]", memorySize, keyName.c_str()));
+	logFile.write (sys_getString ("Allocated [ %i ] for [ %s ]", memorySize, keyName.c_str ()));
 
 	return newMemoryMapEntry.pointer;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Free a memory slot by name
+void sys_freeMemory (std::string keyName)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if (memoryMap.size () == 0)
+		return;
+
+	auto memoryItr = memoryMap.find (keyName);
+
+	if (nullptr != memoryItr->second.pointer)
+	{
+		logFile.write (sys_getString ("Free memory [ %i bytes ] - [ %s ]", memoryItr->second.size, memoryItr->first.c_str ()));
+
+		free (memoryItr->second.pointer);
+		memoryMap.erase (memoryItr);
+		return;
+	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -103,14 +132,14 @@ char *sys_malloc (int memorySize, std::string keyName)
 void sys_freeMemory ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (memoryMap.empty ())
+	if (memoryMap.size () == 0)
 	{
 		return;
 	}
 
 	for (auto &memoryItr : memoryMap)
 	{
-		logFile.write(sys_getString ("Free memory [ %i bytes ] - [ %s ]", memoryItr.second.size, memoryItr.first.c_str ()));
+		logFile.write (sys_getString ("Free memory [ %i bytes ] - [ %s ]", memoryItr.second.size, memoryItr.first.c_str ()));
 
 		if (memoryItr.second.pointer != nullptr)
 		{
