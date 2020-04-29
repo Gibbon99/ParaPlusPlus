@@ -136,13 +136,13 @@ void con_renderConsole ()
 		tempSurface = consoleFont.write (console.consoleItr->posX, console.posY, console.consoleItr->lineText);  // Surface is freed within console class
 		if (nullptr == tempSurface)
 		{
-			log_addEvent (sys_getString("%s", "Unable to create temp surface when rendering console."));
+			log_addEvent (sys_getString ("%s", "Unable to create temp surface when rendering console."));
 			return;
 		}
 		tempTexture = SDL_CreateTextureFromSurface (renderer.renderer, tempSurface);
 		if (nullptr == tempTexture)
 		{
-			log_addEvent (sys_getString("%s", "Unable to create temp texture when rendering console."));
+			log_addEvent (sys_getString ("%s", "Unable to create temp texture when rendering console."));
 			return;
 		}
 
@@ -164,13 +164,13 @@ void con_renderConsole ()
 	tempSurface = consoleFont.write (console.posX, console.posY, console.entryLine ());
 	if (nullptr == tempSurface)
 	{
-		log_addEvent (sys_getString("%s", "Unable to create temp surface when rendering console entry line."));
+		log_addEvent (sys_getString ("%s", "Unable to create temp surface when rendering console entry line."));
 		return;
 	}
 	tempTexture = SDL_CreateTextureFromSurface (renderer.renderer, tempSurface);
 	if (nullptr == tempTexture)
 	{
-		log_addEvent (sys_getString("%s", "Unable to create temp texture when rendering console."));
+		log_addEvent (sys_getString ("%s", "Unable to create temp texture when rendering console."));
 		return;
 	}
 	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &consoleFont.pos);
@@ -186,13 +186,13 @@ void con_renderConsole ()
 	tempSurface = consoleFont.write (1, 10, sys_getString ("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
 	if (nullptr == tempSurface)
 	{
-		log_addEvent (sys_getString("%s", "Unable to create temp surface when rendering console."));
+		log_addEvent (sys_getString ("%s", "Unable to create temp surface when rendering console."));
 		return;
 	}
 	tempTexture = SDL_CreateTextureFromSurface (renderer.renderer, tempSurface);
 	if (nullptr == tempTexture)
 	{
-		log_addEvent(sys_getString("%s", "Unable to create temp texture when rendering console."));
+		log_addEvent (sys_getString ("%s", "Unable to create temp texture when rendering console."));
 		return;
 	}
 	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &consoleFont.pos);
@@ -234,12 +234,17 @@ void con_initConsole ()
 	console.addCommand ("d_showAllRenderers", "Shows information on all renderers available", debug_getAllRenderers);
 
 	console.addCommand ("d_useRenderer", "Use a new renderer - pass in index", "as_useNewRenderer");
+	console.addCommand ("d_audioSpecs", "Show the audio device specs in use.", "as_getAudioSpecs");
+	console.addCommand ("loadAudioResources", "Load all the audio files.", "as_loadAudioResources");
+	console.addCommand ("setVolume", "Change Volume level.", "as_setVolume");
+	console.addCommand ("getVolume", "View the current Volume level.", "as_getVolume");
+
 	console.addCommand ("testScript", "test", "as_testFunction");
 
 	console.addCommand ("d_getOS", "Show which OS is in use.", sys_getOS);
 	console.addCommand ("quit", "Quit the game.", sys_shutdown);
 
-	console.addCommand("testPlay", "Play sound", testPlay);
+	console.addCommand ("testPlay", "Play sound", testPlay);
 
 
 	//

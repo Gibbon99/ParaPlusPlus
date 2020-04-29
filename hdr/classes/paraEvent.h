@@ -18,7 +18,7 @@ public:
 
 //------------------------------------------------------------------------------------------------------------------
 //
-// Console
+// Console - detached thread
 //
 //------------------------------------------------------------------------------------------------------------------
 class paraEventConsole : public paraEvent
@@ -34,7 +34,7 @@ public:
 
 //------------------------------------------------------------------------------------------------------------------
 //
-// Logfile
+// Logfile - detached thread
 //
 //------------------------------------------------------------------------------------------------------------------
 class paraEventLogfile : public paraEvent
@@ -73,15 +73,19 @@ private:
 
 };
 
-class paraEventAudio : public paraEvent
+//------------------------------------------------------------------------------------------------------------------
+//
+// Audio - detached thread
+//
+//------------------------------------------------------------------------------------------------------------------
+class paraEventAudio
 {
 public:
-	paraEventAudio (int newAction, int soundIndex) : paraEvent (newAction)
-	{
-		sounds = soundIndex;
-	}
-
-	int sounds;
+	int         action;
+	int         distance;
+	int         pan;
+	bool        loop;
+	std::string keyName;
 };
 
 #endif //PARA_PARAEVENT_H

@@ -6,6 +6,9 @@
 #define LOGGING_MUTEX_NAME      "logfileMutex"
 #define LOGGING_THREAD_NAME     "logfileThread"
 
+#define AUDIO_MUTEX_NAME        "audioMutex"
+#define AUDIO_THREAD_NAME       "audioThread"
+
 #define GAME_MUTEX_NAME         "gameThread"
 
 #define THREAD_DELAY_MS         1       // in MS

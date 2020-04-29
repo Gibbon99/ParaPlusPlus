@@ -1,3 +1,4 @@
+#include <io/configFile.h>
 #include "../../hdr/system/shutdown.h"
 #include "../../hdr/system/startup.h"
 
@@ -14,6 +15,8 @@ void sys_closeSystems()
 	evt_stopThreads();
 
 	evt_destroyMutexes();
+
+	io_saveConfigValues();
 }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-
+#include <game/audio.h>
 #include "../../hdr/io/consoleFunctions.h"
 
 void debug_getCurrentBackingTexture ()
@@ -23,5 +23,7 @@ void debug_getAllRenderers ()
 
 void testPlay ()
 {
-	audio.play("start1", false);
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "start1");
+
+	//audio.play ("start1", false, 0, 127);
 }

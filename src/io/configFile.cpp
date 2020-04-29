@@ -1,6 +1,44 @@
 #include "../../hdr/io/configFile.h"
 #include "../../hdr/system/shutdown.h"
 #include "../../hdr/system/startup.h"
+#include "../../hdr/classes/SimpleIni.h"
+
+CSimpleIniA iniFile;
+std::string configFileName = "";
+
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Save the in memory config file to disk
+void io_saveConfigValues()
+//--------------------------------------------------------------------------------------------------------------------
+{
+	auto returnCode = iniFile.Save(configFileName);
+	if (returnCode < 0)
+		sys_shutdownWithError(sys_getString("Unable to save config file [ %s ]", configFileName.c_str()));
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Update a value to be saved into the config file - INT version
+void io_updateConfigValue(std::string keyName, int newValue)
+//--------------------------------------------------------------------------------------------------------------------
+{
+	auto returnCode = iniFile.SetValue("Main", keyName.c_str(), sys_getString("%i", newValue).c_str());
+	if (returnCode < 0)
+		sys_shutdownWithError(sys_getString("Unable to update config file value [ %s ]", keyName.c_str()));
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Update a value to be saved into the config file - STRING version
+void io_updateConfigValue(std::string keyName, std::string newValue)
+//--------------------------------------------------------------------------------------------------------------------
+{
+	auto returnCode = iniFile.SetValue("Main", keyName.c_str(), newValue.c_str());
+	if (returnCode < 0)
+		sys_shutdownWithError(sys_getString("Unable to update config file value [ %s ]", keyName.c_str()));
+}
+
 
 //--------------------------------------------------------------------------------------------------------------------
 //
@@ -8,95 +46,92 @@
 void io_readConfigValues(const std::string& fileName)
 //--------------------------------------------------------------------------------------------------------------------
 {
-	IniFileParser iniFile;
+	configFileName = fileName;
 
-	if (!iniFile.Open(fileName))
+	auto returnCode = iniFile.LoadFile(fileName.c_str());
+	if (returnCode < 0)
 	{
-		sys_shutdownWithError(sys_getString("Unable to open config file [ %s ]", fileName.c_str()));
+		sys_shutdownWithError("Unable to open config file.");
 	}
 
-	if (!iniFile.GetValuesToString("Main", "consoleFontFilename", (std::string &)consoleFontFilename))
+	auto returnValue = iniFile.GetValue ("Main", "consoleFontFilename", "default");
+	if (strcmp(returnValue, "default") == 0)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleFontFilename"));
+	consoleFontFilename = returnValue;
 
-	if (!iniFile.GetValueToInt("Main", "consoleVirtualWidth", (int&)consoleVirtualWidth, 0))
+	consoleVirtualWidth = (int)iniFile.GetLongValue ("Main", "consoleVirtualWidth", 0);
+	if (consoleVirtualWidth == 0)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleVirtualWidth"));
 
-	if (!iniFile.GetValueToInt("Main", "consoleVirtualHeight", (int&)consoleVirtualHeight, 0))
+	consoleVirtualHeight = (int)iniFile.GetLongValue("Main", "consoleVirtualHeight", 0);
+	if (consoleVirtualHeight == 0)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleVirtualHeight"));
 
-	if (!iniFile.GetValueToInt("Main", "consoleNumColumns", (int &)consoleNumColumns, 0))
+	consoleNumColumns = (int)iniFile.GetLongValue("Main", "consoleNumColumns", 0);
+	if (consoleNumColumns == 0)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleNumColumns"));
 
-	if (!iniFile.GetValueToInt("Main", "consoleFontSize", (int &)consoleFontSize, 0))
+	consoleFontSize = (int)iniFile.GetLongValue("Main", "consoleFontSize", 0);
+	if (consoleFontSize == 0)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleFontSize"));
 
-	if (!iniFile.GetValueToInt("Main", "logicalWinWidth", (int &)logicalWinWidth, 0))
+	logicalWinWidth = (int)iniFile.GetLongValue("Main", "logicalWinWidth", 0);
+	if (logicalWinWidth == 0)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "logicalWinWidth"));
 
-	if (!iniFile.GetValueToInt("Main", "logicalWinHeight", (int &)logicalWinHeight, 0))
+	logicalWinHeight = (int)iniFile.GetLongValue("Main", "logicalWinHeight", 0);
+	if (logicalWinHeight == 0)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "logicalWinHeight"));
 
-	if (!iniFile.GetValueToInt("Main", "windowWidth", (int &)windowWidth, 0))
+	windowWidth = (int)iniFile.GetLongValue("Main", "windowWidth", 0);
+	if (windowWidth == 0)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowWidth"));
 
-	if (!iniFile.GetValueToInt("Main", "windowHeight", (int &)windowHeight, 0))
+	windowHeight = (int)iniFile.GetLongValue("Main", "windowHeight", 0);
+	if (windowHeight == 0)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowHeight"));
 
-	if (!iniFile.GetValueToInt("Main", "windowFullscreen", (int &)windowFullscreen, 0))
+	windowFullscreen = (int)iniFile.GetLongValue("Main", "windowFullscreen", -1);
+	if (windowFullscreen == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowFullscreen"));
 
-	if (!iniFile.GetValueToInt("Main", "windowFullscreenDesktop", (int &)windowFullscreenDesktop, 0))
+	windowFullscreenDesktop = (int)iniFile.GetLongValue("Main", "windowFullscreenDesktop", -1);
+	if (windowFullscreenDesktop == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowFullscreenDesktop"));
 
-	if (!iniFile.GetValueToInt("Main", "windowBorderless", (int &)windowBorderless, 0))
+	windowBorderless = (int)iniFile.GetLongValue("Main", "windowBorderless", -1);
+	if (windowBorderless == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowBorderless"));
 
-	if (!iniFile.GetValueToInt("Main", "windowInputGrabbed", (int &)windowInputGrabbed, 0))
+	windowInputGrabbed = (int)iniFile.GetLongValue("Main", "windowInputGrabbed", -1);
+	if (windowInputGrabbed == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowInputGrabbed"));
 
-	if (!iniFile.GetValueToInt("Main", "windowInputFocus", (int &)windowInputFocus, 0))
+	windowInputFocus = (int)iniFile.GetLongValue("Main", "windowInputFocus", -1);
+	if (windowInputFocus == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowInputFocus"));
 
-	if (!iniFile.GetValueToInt("Main", "windowAllowHighDPI", (int &)windowAllowHighDPI, 0))
+	windowAllowHighDPI = (int)iniFile.GetLongValue("Main", "windowAllowHighDPI", -1);
+	if (windowAllowHighDPI == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowAllowHighDPI"));
 
-	if (!iniFile.GetValueToInt("Main", "whichRenderer", (int &)whichRenderer, 0))
+	whichRenderer = (int)iniFile.GetLongValue("Main", "whichRenderer", -1);
+	if (whichRenderer == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "whichRenderer"));
 
-	if (!iniFile.GetValueToInt("Main", "presentVSync", (int &)presentVSync, 0))
+	presentVSync = (int)iniFile.GetLongValue("Main", "presentVSync", -1);
+	if (presentVSync == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "presentVSync"));
 
-	if (!iniFile.GetValueToInt("Main", "renderScaleQuality", (int &)renderScaleQuality, 0))
+	renderScaleQuality = (int)iniFile.GetLongValue("Main", "renderScaleQuality", -1);
+	if (renderScaleQuality == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "renderScaleQuality"));
+
+	volumeLevel = (int)iniFile.GetLongValue("Main", "volumeLevel", -1);
+	if (volumeLevel == -1)
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "volumeLevel"));
+
+	maxNumChannels = (int)iniFile.GetLongValue("Main", "maxNumChannels", -1);
+	if (volumeLevel == -1)
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "maxNumChannels"));
 }
-
-//std::stoi( str )
-//There are version for all flavours of numbers:
-// long stol(string), float stof(string), double stod(string),... see http://en.cppreference.com/w/cpp/string/basic_string/stol
-
-/*
-#include "iniparser.h"
-using IniParser = ini::IniParser;
-// ...
-
-// first example (savest)
-IniParser ipa;
-if(ini.readFile("test.ini")) {
-// only if file is successful red
-// parse value to std::map
-auto ini_data = ipa.parse();
-
-std::string val = ini_data["Test"]["value"] // "120"
-ini_data["Test"]["value"] = "90" // set value
-ini_data
-// add new value
-ini_data["New"]["counter"] = 20;
-
-//remove value from existing
-ini_data["Test"].erase("value");
-
-if(ipa.writeFile("test.ini", ini_data)) {
-// do something if writing was successful ...
-}
-}
-*/

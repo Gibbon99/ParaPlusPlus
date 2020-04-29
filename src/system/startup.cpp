@@ -13,8 +13,8 @@ int         logicalWinWidth;
 int         logicalWinHeight;
 int         windowWidth;
 int         windowHeight;
-int			consoleVirtualWidth;
-int			consoleVirtualHeight;
+int         consoleVirtualWidth;
+int         consoleVirtualHeight;
 int         consoleNumColumns;
 int         consoleFontSize;
 int         windowFullscreen        = false;
@@ -26,12 +26,14 @@ int         windowAllowHighDPI      = false;
 int         whichRenderer           = 0;
 int         presentVSync            = true;
 int         renderScaleQuality      = 0;
+int         volumeLevel             = 0;
+int         maxNumChannels          = 0;
 std::string consoleFontFilename;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create the flags to be used to create a window with
-Uint32 sys_createWindowFlags()
+Uint32 sys_createWindowFlags ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	Uint32 newFlags = 0;
@@ -60,7 +62,7 @@ Uint32 sys_createWindowFlags()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start systems - Logfile, Script, Filesystem ( Physfs ), Event queues
-void sys_startSystems()
+void sys_startSystems ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (!SDL_WasInit (SDL_INIT_EVERYTHING))
@@ -108,7 +110,7 @@ void sys_startSystems()
 	sys_scriptInitScriptFunctions ();
 	sys_scriptInitFunctions ();
 	sys_scriptInitVariables ();
-	io_getScriptFileNames ((std::string)"scripts");
+	io_getScriptFileNames ((std::string) "scripts");
 	paraScriptInstance.loadAndCompile ();
 	paraScriptInstance.cacheFunctions ();
 
@@ -116,8 +118,9 @@ void sys_startSystems()
 
 	sys_setupPhysicsEngine ();
 
-	audio.init (reinterpret_cast<functionPtrStr>(con_addEvent), io_loadAudioFile);
-	audio.load("start1", "start1.wav");
+	gam_initAudio();
+
+//	audio.load("start1", "start1.wav");
 
 	//
 	// Start in interactive console mode

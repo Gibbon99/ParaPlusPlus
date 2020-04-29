@@ -148,6 +148,8 @@ set (CXX_SRCS
 		src/box2d/dynamics/b2_world.cpp
 		src/box2d/dynamics/b2_world_callbacks.cpp
 
+		src/classes/ConvertUTF.cpp
+
 		src/sdl2_gfx/SDL2_gfxPrimitives.cpp
 		src/sdl2_gfx/SDL2_imageFilter.cpp
 		src/sdl2_gfx/SDL2_rotozoom.cpp
@@ -158,7 +160,6 @@ set (CXX_SRCS
 		src/system/util.cpp hdr/system/util.h
 		src/classes/paraScript.cpp hdr/classes/paraScript.h
 		src/classes/paraFileSystem.cpp hdr/io/fileSystem.h
-		src/classes/IniFileParser.cpp
 		src/system/scriptConfig.cpp hdr/system/scriptConfig.h
 		src/system/startup.cpp hdr/system/startup.h
 		src/io/fileSystem.cpp hdr/classes/paraFileSystem.h
@@ -185,6 +186,7 @@ if (WIN32)
 		    ./hdr
 		    ./hdr/box2d
 		    ./hdr/sdl2_gfx
+		    ./hdr/sdl_config
     )
 
         if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -231,6 +233,7 @@ if (UNIX)
 		    ./hdr
 		    ./hdr/box2d
 		    ./hdr/sdl2_gfx
+		    ./hdr/sdl_config
     )
 
     if (CMAKE_BUILD_TYPE MATCHES debug)
