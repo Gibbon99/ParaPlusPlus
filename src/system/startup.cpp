@@ -1,5 +1,6 @@
 #include <system/physics.h>
 #include <game/audio.h>
+#include <io/fileWatch.h>
 #include "../../hdr/system/startup.h"
 #include "../../hdr/system/scriptEngine.h"
 #include "../../hdr/system/scriptConfig.h"
@@ -28,6 +29,8 @@ int         presentVSync            = true;
 int         renderScaleQuality      = 0;
 int         volumeLevel             = 0;
 int         maxNumChannels          = 0;
+int         guiFontSize             = 0;
+std::string guiFontFileName;
 std::string consoleFontFilename;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -77,6 +80,8 @@ void sys_startSystems ()
 #endif
 	io_readConfigValues ("data/config.ini");
 
+	io_startFileWatcher ();
+
 	con_initConsole ();
 	//
 	// Create window and renderer
@@ -98,10 +103,11 @@ void sys_startSystems ()
 	fileSystem.addPath ("data/scripts");
 	fileSystem.addPath ("data/data.zip");
 	//
-	// Load and create the font for the console
-	consoleFont.setOutputFunction (log_addEvent);
-	consoleFont.load (consoleFontSize, consoleFontFilename);
-	consoleFont.setColor (255, 255, 255, 255);
+	// Load and create the fontClass for the console
+	fontClass.setOutputFunction (con_addEvent);
+	fontClass.load (consoleFontSize, "consoleFont", consoleFontFilename);
+	fontClass.use ("consoleFont");
+	fontClass.setColor (255, 255, 255, 255);
 	//
 	// Start the scripting engine
 	if (!paraScriptInstance.init (con_addEvent))
@@ -119,12 +125,17 @@ void sys_startSystems ()
 
 	sys_setupPhysicsEngine ();
 
-	gam_initAudio();
+	gam_initAudio ();
 	//
 	// Textures are done from the same thread as window creation
-	texture.init(con_addEvent, io_loadRawFile);
-	paraScriptInstance.run("as_loadTextureResources", "");
+	texture.init (con_addEvent, io_loadRawFile);
+	paraScriptInstance.run ("as_loadTextureResources", "");
 
+	fontClass.load (guiFontSize, "guiFont", guiFontFileName);
+	fontClass.use ("guiFont");
+
+	gui.init (con_addEvent, windowWidth, windowHeight);
+	paraScriptInstance.run ("as_createGUI", "");
 //	audio.load("start1", "start1.wav");
 
 	//

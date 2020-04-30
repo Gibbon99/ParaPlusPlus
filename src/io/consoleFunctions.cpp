@@ -25,6 +25,7 @@ void testPlay ()
 {
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "start1");
 
-	texture.render("splash");
+	paraScriptInstance.restart();
+
 	//audio.play ("start1", false, 0, 127);
 }

@@ -1,11 +1,11 @@
-#include "../../hdr/system/frameRender.h"
-#include "../../hdr/system/startup.h"
-#include "../../hdr/io/console.h"
+#include "gui/guiRender.h"
+#include "system/frameRender.h"
+#include "io/console.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Prepare the frame for rendering
-void sys_prepareFrame()
+void sys_prepareFrame ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	renderer.prepareFrame ();
@@ -14,7 +14,7 @@ void sys_prepareFrame()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Complete a frame and present to the screen
-void sys_completeFrame()
+void sys_completeFrame ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	renderer.presentFrame ();
@@ -26,18 +26,27 @@ void sys_completeFrame()
 void sys_renderFrame (double interpolation)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	sys_prepareFrame();
+	sys_prepareFrame ();
+
+	if (renderer.currentFadeState == FADE_STATE_OFF)
+	{
+		sys_completeFrame ();
+		return;
+	}
 
 	switch (currentMode)
 	{
 		case MODE_CONSOLE_EDIT:
-			con_renderConsole();
+			con_renderConsole ();
 			break;
 
 		case MODE_SHOW_SPLASH:
-			texture.render("splash");
+			texture.render ("splash");
+			break;
+
+		case MODE_GUI:
+			gui_renderGUI ();
 			break;
 	}
-
-	sys_completeFrame();
+	sys_completeFrame ();
 }

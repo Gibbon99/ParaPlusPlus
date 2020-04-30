@@ -40,40 +40,33 @@ void con_processConsoleEventQueue (void *data)
 				tempEvent = consoleEvents.front ();
 				PARA_UnlockMutex (consoleMutex);
 
-				if (tempEvent->counter > 0)  // If not 0 - re-add to the queue with the reduced count
+				switch (tempEvent->action)
 				{
-					tempEvent->counter--;
-					con_addEvent (tempEvent->counter, tempEvent->newConsoleLine);    // TODO - need to add counter as parameter - currently newAction
+					case EVENT_ACTION_CONSOLE_ADD_LINE:
+						console.add (tempEvent->newConsoleLine);
+
+						std::cout << "Console text : " << tempEvent->newConsoleLine << std::endl;
+
+						break;
+
+					case EVENT_ACTION_CONSOLE_ADD_CHAR:
+						console.addChar (tempEvent->newConsoleLine);
+						break;
+
+					case EVENT_ACTION_CONSOLE_DELETE_CHAR:
+						console.deleteChar ();
+						break;
+
+					case EVENT_ACTION_CONSOLE_ADD_CHAR_LINE:
+						console.addCharLine ();
+						break;
 				}
-				else
-				{
-					switch (tempEvent->action)
-					{
-						case EVENT_ACTION_CONSOLE_ADD_LINE:
-							console.add (tempEvent->newConsoleLine);
 
-							std::cout << "Console text : " << tempEvent->newConsoleLine << std::endl;
+				PARA_LockMutex (consoleMutex);           // Blocks if the mutex is locked by another thread
+				delete (consoleEvents.front ());         // Free memory
+				consoleEvents.pop ();
+				PARA_UnlockMutex (consoleMutex);
 
-							break;
-
-						case EVENT_ACTION_CONSOLE_ADD_CHAR:
-							console.addChar (tempEvent->newConsoleLine);
-							break;
-
-						case EVENT_ACTION_CONSOLE_DELETE_CHAR:
-							console.deleteChar ();
-							break;
-
-						case EVENT_ACTION_CONSOLE_ADD_CHAR_LINE:
-							console.addCharLine ();
-							break;
-					}
-
-					PARA_LockMutex (consoleMutex);           // Blocks if the mutex is locked by another thread
-					delete (consoleEvents.front ());         // Free memory
-					consoleEvents.pop ();
-					PARA_UnlockMutex (consoleMutex);
-				}
 			}
 		}
 	}
@@ -88,10 +81,13 @@ void con_processConsoleEventQueue (void *data)
 void con_addEvent (int newAction, std::string newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	PARA_Mutex *tempMutex;
+	PARA_Mutex       *tempMutex;
+	paraEventConsole *tempEventConsole; //(newAction, newLine);
 
 	if (newAction == -1)
 		newAction = EVENT_ACTION_CONSOLE_ADD_LINE;
+
+	tempEventConsole = new paraEventConsole (newAction, newLine);
 
 	tempMutex = evt_getMutex (CONSOLE_MUTEX_NAME);
 	if (nullptr == tempMutex)
@@ -99,7 +95,7 @@ void con_addEvent (int newAction, std::string newLine)
 
 	if (PARA_LockMutex (tempMutex) == 0)
 	{
-		consoleEvents.push (new paraEventConsole (newAction, newLine));
+		consoleEvents.push (tempEventConsole);
 		PARA_UnlockMutex (tempMutex);
 	}
 	else
@@ -125,15 +121,16 @@ void con_renderConsole ()
 			sys_shutdownWithError (sys_getString ("Unable to get Mutex value to render console [ %s ] - [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
 	}
 
+	fontClass.use ("consoleFont");
 	PARA_LockMutex (consoleMutex);
 
 	console.isDrawing = true;
 
-	console.prepare (console.getDefaultPosX (), (float) consoleVirtualHeight - (consoleFont.lineHeight * 2));
+	console.prepare (console.getDefaultPosX (), (float) consoleVirtualHeight - (fontClass.height () * 2));
 	for (; console.consoleItr != console.consoleText.rend (); ++console.consoleItr)
 	{
-		consoleFont.setColor (console.consoleItr->red, console.consoleItr->green, console.consoleItr->blue, console.consoleItr->alpha);
-		tempSurface = consoleFont.write (console.consoleItr->posX, console.posY, console.consoleItr->lineText);  // Surface is freed within console class
+		fontClass.setColor (console.consoleItr->red, console.consoleItr->green, console.consoleItr->blue, console.consoleItr->alpha);
+		tempSurface = fontClass.write (console.consoleItr->posX, console.posY, console.consoleItr->lineText);  // Surface is freed within console class
 		if (nullptr == tempSurface)
 		{
 			log_addEvent (sys_getString ("%s", "Unable to create temp surface when rendering console."));
@@ -146,12 +143,12 @@ void con_renderConsole ()
 			return;
 		}
 
-		SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &consoleFont.pos);
+		SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
 
 		SDL_DestroyTexture (tempTexture);
 
 		if (console.consoleItr->posX < console.getDefaultPosX () * 4)
-			console.posY -= consoleFont.lineHeight;
+			console.posY -= fontClass.height ();
 
 		if (console.posY < 0)
 			break;
@@ -159,9 +156,9 @@ void con_renderConsole ()
 
 	//
 	// Render the current input entry line
-	console.prepare (1, (float) consoleVirtualHeight - consoleFont.lineHeight);
-	consoleFont.setColor (console.getDefaultRed (), console.getDefaultGreen (), console.getDefaultBlue (), console.getDefaultAlpha ());
-	tempSurface = consoleFont.write (console.posX, console.posY, console.entryLine ());
+	console.prepare (1, (float) consoleVirtualHeight - fontClass.height ());
+	fontClass.setColor (console.getDefaultRed (), console.getDefaultGreen (), console.getDefaultBlue (), console.getDefaultAlpha ());
+	tempSurface = fontClass.write (console.posX, console.posY, console.entryLine ());
 	if (nullptr == tempSurface)
 	{
 		log_addEvent (sys_getString ("%s", "Unable to create temp surface when rendering console entry line."));
@@ -173,7 +170,7 @@ void con_renderConsole ()
 		log_addEvent (sys_getString ("%s", "Unable to create temp texture when rendering console."));
 		return;
 	}
-	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &consoleFont.pos);
+	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
 	SDL_DestroyTexture (tempTexture);
 
 	console.isDrawing = false;
@@ -182,8 +179,8 @@ void con_renderConsole ()
 
 	//
 	// Show performance stats
-	consoleFont.setColor (255, 0, 255, 255);
-	tempSurface = consoleFont.write (1, 10, sys_getString ("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
+	fontClass.setColor (255, 0, 255, 255);
+	tempSurface = fontClass.write (1, 10, sys_getString ("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
 	if (nullptr == tempSurface)
 	{
 		log_addEvent (sys_getString ("%s", "Unable to create temp surface when rendering console."));
@@ -195,7 +192,7 @@ void con_renderConsole ()
 		log_addEvent (sys_getString ("%s", "Unable to create temp texture when rendering console."));
 		return;
 	}
-	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &consoleFont.pos);
+	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
 	SDL_DestroyTexture (tempTexture);
 }
 

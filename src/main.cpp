@@ -6,11 +6,12 @@
 paraScript     paraScriptInstance;
 paraLogFile    logFile;
 paraFileSystem fileSystem;
-paraFont       consoleFont;
+paraFont       fontClass;
 paraConsole    console (1, 255, 255, 255, 255);
 paraRenderer   renderer;
 paraAudio      audio;
 paraTexture    texture;
+paraGui        gui;
 
 #define TICKS_PER_SECOND 30.0f
 #define MAX_FRAMESKIP 5
@@ -22,7 +23,7 @@ Uint32 fpsPrint             = 0;
 Uint32 thinkFPS             = 0;
 Uint32 thinkFPSPrint        = 0;
 double percentIntoNextFrame = 0.0f;
-int currentMode;
+int    currentMode;
 
 // TODO Remove these
 std::string testVarString = "First string text";

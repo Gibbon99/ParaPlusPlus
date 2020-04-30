@@ -5,7 +5,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a function to call when displaying any output
-void paraFont::setOutputFunction(functionPtrStr outputFunction)
+void paraFont::setOutputFunction(funcPtrIntStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraFont::funcOutput = outputFunction;
@@ -42,44 +42,64 @@ std::string paraFont::int_getString(std::string format, ...)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Start the TTF if required, load a font file with a size
-bool paraFont::load(int fontSize, const std::string &fileName)
+// Set the new font to use
+void paraFont::use(std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	auto fontItr = fonts.find(keyName);
+	if (fontItr == fonts.end())
+	{
+		funcOutput(-1, int_getString("Unable to find font [ %s ]", keyName.c_str()));
+		return;
+	}
+
+	currentFont = keyName;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Start the TTF if required, load a font file with a size
+bool paraFont::load (int fontSize, std::string keyName, std::string fileName)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	__PARA_FONT     tempFont{};
+
 	if (!TTF_WasInit())
 	{
 		if (-1 == TTF_Init())
 		{
 			paraFont::fontSystemAvailable = false;
-			funcOutput(int_getString("Unable to start font system [ %s ]", TTF_GetError()));
+			funcOutput(-1, int_getString("Unable to start font system [ %s ]", TTF_GetError()));
 			return false;
 		}
 		SDL_version compile_version, *link_version;
 
 		TTF_VERSION(&compile_version)
-		funcOutput(int_getString("Compiled with SDL_ttf version: %d.%d.%d",
+		funcOutput(-1, int_getString("Compiled with SDL_ttf version: %d.%d.%d",
 		                         compile_version.major,
 		                         compile_version.minor,
 		                         compile_version.patch));
 
 		link_version = const_cast<SDL_version *>(TTF_Linked_Version());
-		funcOutput(int_getString("Running with SDL_ttf version: %d.%d.%d",
+		funcOutput(-1, int_getString("Running with SDL_ttf version: %d.%d.%d",
 		                         link_version->major,
 		                         link_version->minor,
 		                         link_version->patch));
 	}
 
-	paraFont::fontHandle = TTF_OpenFont(fileName.c_str(), fontSize);
-	if (nullptr == paraFont::fontHandle)
+	tempFont.handle = TTF_OpenFont(fileName.c_str(), fontSize);
+	if (nullptr == tempFont.handle)
 	{
-		funcOutput(int_getString("Unable to open font [ %s ] - [ %s ]", fileName.c_str(), TTF_GetError()));
-		paraFont::available = false;
+		funcOutput(-1, int_getString("Unable to open font [ %s ] - [ %s ]", fileName.c_str(), TTF_GetError()));
+		tempFont.available = false;
 		return false;
 	}
-	paraFont::available  = true;
-	paraFont::lineHeight = TTF_FontLineSkip(paraFont::fontHandle);
+	tempFont.available  = true;
+	tempFont.lineHeight = TTF_FontLineSkip(tempFont.handle);
 
-	funcOutput(int_getString("Loaded font file [ %s ]", fileName.c_str()));
+	fonts.insert(std::pair<std::string, __PARA_FONT>(keyName, tempFont));
+
+	funcOutput(-1, int_getString("Loaded font file [ %s ]", fileName.c_str()));
 
 	return true;
 }
@@ -99,7 +119,7 @@ void paraFont::close()
 void paraFont::setColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (paraFont::available)
+	if (fonts[currentFont].available)
 	{
 		paraFont::color.r = red;
 		paraFont::color.g = green;
@@ -111,7 +131,7 @@ void paraFont::setColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a surface to hold the text and return pointer to the surface
-PARA_Surface *paraFont::write(float X, float Y, const std::string &fontText)
+PARA_Surface *paraFont::write(double X, double Y, std::string fontText)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (nullptr != paraFont::surface)
@@ -119,10 +139,10 @@ PARA_Surface *paraFont::write(float X, float Y, const std::string &fontText)
 		SDL_FreeSurface(paraFont::surface);
 	}
 
-	paraFont::surface = TTF_RenderText_Blended(paraFont::fontHandle, fontText.c_str(), paraFont::color);
+	paraFont::surface = TTF_RenderText_Blended(fonts[currentFont].handle, fontText.c_str(), paraFont::color);
 	if (nullptr == paraFont::surface)
 	{
-		funcOutput(int_getString("Unable to render font to surface [ %s ]", TTF_GetError()));
+		funcOutput(-1, int_getString("Unable to render font to surface [ %s ]", TTF_GetError()));
 		return nullptr;
 	}
 	paraFont::pos.x = (int) X;
@@ -131,4 +151,33 @@ PARA_Surface *paraFont::write(float X, float Y, const std::string &fontText)
 	paraFont::pos.h = paraFont::surface->h;
 
 	return paraFont::surface;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the height of the currently set font
+int paraFont::height()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return fonts[currentFont].lineHeight;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the length of a string when rendered in the current font
+int paraFont::width(std::string fontText)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int textWidth;
+	int textHeight;
+	int returnCode;
+
+	returnCode = TTF_SizeText(fonts[currentFont].handle, fontText.c_str(), &textWidth, &textHeight);
+	if (returnCode < 0)
+	{
+		funcOutput(-1, int_getString("Unable to get text width. Font [ %s ]", currentFont.c_str()));
+		return -1;
+	}
+
+	return textWidth;
 }

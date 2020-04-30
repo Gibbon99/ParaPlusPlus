@@ -1,8 +1,49 @@
 #include "../../hdr/classes/paraScript.h"
-
 #include <utility>
+#include <system/scriptConfig.h>
+#include <io/fileSystem.h>
 #include "../main.h"
-#include "../../hdr/io/logFile.h"
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Restart the script engine - stop and free memory - clear all arrays
+void paraScript::restart()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	scriptEngineRunning = false;
+
+	stop();
+	scriptFunctions.clear();
+	hostVariables.clear();
+	scriptFileCache.clear();
+	scriptFunctionName.clear();
+	hostScriptFunctions.clear();
+
+	scriptEngine = asCreateScriptEngine (ANGELSCRIPT_VERSION);
+
+	if (nullptr == scriptEngine)
+	{
+		scriptEngineRunning = false;
+		funcOutput ( -1, sys_getString ("Script: Error: Failed to create script engine- [ %s ]", paraScript::getScriptError (0).c_str ()));
+		return;
+	}
+
+	// The script compiler will write any compiler messages to the callback.
+	scriptEngine->SetMessageCallback (asFUNCTION(funcOutput), nullptr, asCALL_CDECL);
+
+	funcOutput ( -1, sys_getString ("Script: Script Engine restarted."));
+
+	RegisterStdString (scriptEngine);
+
+	sys_scriptInitScriptFunctions ();
+	sys_scriptInitFunctions ();
+	sys_scriptInitVariables ();
+	io_getScriptFileNames ((std::string) "scripts");
+	paraScriptInstance.loadAndCompile ();
+	paraScriptInstance.cacheFunctions ();
+
+	scriptEngineRunning = true;
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -10,7 +51,7 @@
 bool paraScript::init (scriptFunctionPtrStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
-//	io_getScriptFileNames();
+	scriptEngineRunning = false;
 
 	paraScript::funcOutput = outputFunction;
 
@@ -18,7 +59,7 @@ bool paraScript::init (scriptFunctionPtrStr outputFunction)
 
 	if (nullptr == scriptEngine)
 	{
-		scriptEngineStarted = false;
+		scriptEngineRunning = false;
 		funcOutput ( -1, sys_getString ("Script: Error: Failed to create script engine- [ %s ]", paraScript::getScriptError (0).c_str ()));
 	}
 
@@ -37,7 +78,9 @@ bool paraScript::init (scriptFunctionPtrStr outputFunction)
 	// What options are compiled
 	funcOutput ( -1, sys_getString ("Script: Options - [ %s ]", asGetLibraryOptions ()));
 
-	return true;
+	scriptEngineRunning = true;
+
+	return scriptEngineRunning;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -48,6 +91,9 @@ void paraScript::run (const std::string &functionName, const std::string &param)
 {
 	int returnCode = 0;
 	int testInt    = 0;
+
+	if (!scriptEngineRunning)
+		return;
 
 	if (nullptr == context)
 	{
@@ -137,7 +183,6 @@ void paraScript::cacheFunctions ()
 	_scriptFunctionName tempFunctionName;
 	asIScriptModule     *mod;
 
-
 	mod = scriptEngine->GetModule (MODULE_NAME);
 
 	//
@@ -170,9 +215,22 @@ void paraScript::cacheFunctions ()
 	// Do some preparation before execution
 	context = scriptEngine->CreateContext ();
 
-	scriptEngineStarted = true;
+	scriptEngineRunning = true;
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Check if a filename is a valid script name
+bool paraScript::isScriptName(std::string scriptName)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	for (auto fileItr : scriptFileCache)
+	{
+		if (scriptName == fileItr.sectionName)
+			return true;
+	}
+	return false;
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -221,6 +279,8 @@ bool paraScript::loadAndCompile ()
 				funcOutput ( -1, sys_getString ("Failed to add script section [ %s ].", scriptItr.sectionName.c_str ()));
 				break;
 		}
+
+		sys_freeMemory(scriptItr.sectionName);
 	}
 	//
 	// Build the script from the loaded sections using ScriptBuilder
@@ -234,9 +294,6 @@ bool paraScript::loadAndCompile ()
 	}
 
 	funcOutput ( -1, sys_getString ("Compiled scripts."));
-
-	// Cache the functionID from functions in the scripts
-//	sys_scriptCacheScriptFunctions();
 
 	return true;
 }
@@ -312,6 +369,9 @@ void paraScript::debugState ()
 {
 	asUINT stackLevel = 0;
 
+	if (!scriptEngineRunning)
+		return;
+
 	asIScriptContext *ctx    = asGetActiveContext ();
 	asIScriptEngine  *engine = ctx->GetEngine ();
 
@@ -365,6 +425,7 @@ void paraScript::stop ()
 		context->Release ();
 		context = nullptr;
 	}
+
 	if (scriptEngine != nullptr)
 	{
 		scriptEngine->ShutDownAndRelease ();

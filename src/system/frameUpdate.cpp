@@ -1,3 +1,4 @@
+#include <io/fileWatch.h>
 #include "../../hdr/system/frameUpdate.h"
 #include "../main.h"
 #include "../../hdr/system/gameEvents.h"
@@ -11,11 +12,14 @@ void sys_gameTickRun()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	gam_processGameEventQueue ();
-	renderer.updateFade();
+	if (renderer.currentFadeState != FADE_STATE_NONE)
+		renderer.updateFade();
+
+	io_checkFileWatcher ();
 
 	while (SDL_PollEvent (&evt) != 0)
 	{
-//User requests quit
+
 		switch (evt.type)
 		{
 			case SDL_QUIT:
@@ -50,6 +54,12 @@ void sys_gameTickRun()
 
 			if (evt.key.keysym.sym == SDLK_F1)
 				sys_setNewMode (MODE_SHOW_SPLASH, true);
+
+			if (evt.key.keysym.sym == SDLK_F2)
+				sys_setNewMode(MODE_GUI, true);
+
+			if (evt.key.keysym.sym == SDLK_F3)
+				sys_setNewMode(MODE_CONSOLE_EDIT, true);
 
 			break;
 

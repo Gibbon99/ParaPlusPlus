@@ -3,7 +3,6 @@
 
 #define MODULE_NAME                 "clientModule"
 
-#include "paraLogFile.h"
 #include "../script/angelscript.h"
 #include "../script/scriptbuilder.h"
 #include "../script/scriptstdstring.h"
@@ -26,6 +25,10 @@ public:
 	void stop ();
 
 	void debugState ();
+
+	bool isScriptName(std::string scriptName);
+
+	void restart();
 
 	bool loadAndCompile ();
 
@@ -51,7 +54,7 @@ private:
 
 	asIScriptContext *context            = nullptr;
 	CScriptBuilder   builder;
-	bool             scriptEngineStarted = false;
+	bool             scriptEngineRunning = false;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -120,7 +123,6 @@ private:
 
 	std::vector<_scriptFunctionName>  scriptFunctionName;
 	std::vector<_hostScriptFunctions> hostScriptFunctions;
-
 };
 
 #endif //PARA_PARASCRIPT_H

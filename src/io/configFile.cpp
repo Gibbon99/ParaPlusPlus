@@ -59,6 +59,15 @@ void io_readConfigValues(const std::string& fileName)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleFontFilename"));
 	consoleFontFilename = returnValue;
 
+	returnValue = iniFile.GetValue ("Main", "guiFontFileName", "default");
+	if (strcmp(returnValue, "default") == 0)
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "guiFontFileName"));
+	guiFontFileName = returnValue;
+
+	guiFontSize = (int)iniFile.GetLongValue ("Main", "guiFontSize", 0);
+	if (guiFontSize == 0)
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "guiFontSize"));
+
 	consoleVirtualWidth = (int)iniFile.GetLongValue ("Main", "consoleVirtualWidth", 0);
 	if (consoleVirtualWidth == 0)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleVirtualWidth"));

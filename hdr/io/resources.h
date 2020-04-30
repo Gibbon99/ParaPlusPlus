@@ -20,13 +20,6 @@ struct __bitmap
 	__resourceCommon common;
 };
 
-typedef struct
-{
-//	ALLEGRO_FONT     *font;
-	int              size;
-	__resourceCommon common;
-} __font;
-
 typedef struct {
 	int *memLevel;
 } __level;
@@ -42,7 +35,6 @@ typedef struct {
 } __sprite;
 
 extern std::map<std::string, __bitmap> bitmap;
-extern std::map<std::string, __font>   fonts;
 extern std::map<std::string, __level>  levels;
 //extern std::map<std::string, __highScore> highScore;
 extern std::map<std::string, __sprite> sprites;

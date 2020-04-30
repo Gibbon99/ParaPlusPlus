@@ -58,6 +58,13 @@ void gam_processGameEventQueue ()
 			{
 				tempEvent->counter--;
 				gam_addEvent (tempEvent->action, tempEvent->counter, tempEvent->gameText);
+
+				PARA_LockMutex (gameMutex);           // Blocks if the mutex is locked by another thread
+				delete (gameEvents.front ());         // Free memory
+				gameEvents.pop ();
+				PARA_UnlockMutex (gameMutex);
+
+				return;
 			}
 			else
 			{
@@ -65,6 +72,12 @@ void gam_processGameEventQueue ()
 				{
 					case EVENT_ACTION_GAME_USE_NEW_RENDERER:
 						renderer.useNewRenderer (std::stoi (tempEvent->gameText));
+						break;
+
+					case EVENT_ACTION_GAME_SCRIPT_RESTART:
+						paraScriptInstance.restart();
+						gui.restart();
+						paraScriptInstance.run ("as_createGUI", "");
 						break;
 				}
 

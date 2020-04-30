@@ -42,7 +42,7 @@ public:
 	// Create things
 	void create (int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, bool useVSync, const std::string &windowTitle);
 
-	void createRenderTargetTexture (const std::string &textureName, int logicalWidth, int logicalHeight, int setRenderScaleQuality);
+	void createRenderTargetTexture (std::string textureName, int logicalWidth, int logicalHeight, int setRenderScaleQuality);
 
 	Uint32 createRendererFlags (int rendererIndex);
 
@@ -51,14 +51,14 @@ public:
 
 	std::string getCurrentBackingTexture ();
 
-	PARA_Texture *getRenderTarget (const std::string &textureName);
+	PARA_Texture *getRenderTarget (std::string textureName);
 
 	// Set things
 	void setShutdownFunction (functionPtrStr outputFunction);
 
 	void setConOutFunction (functionPtrOut outputFunction);
 
-	void setCurrentBackingTexture (const std::string &newActiveTexture);
+	void setCurrentBackingTexture (std::string newActiveTexture);
 
 	void useNewRenderer (int newRendererIndex);
 
@@ -67,7 +67,7 @@ public:
 
 	void presentFrame ();
 
-	void copyTexture ();
+	void copyCurrentRenderTarget ();
 
 	void updateFade ();
 
@@ -90,6 +90,8 @@ public:
 
 	void ReleaseRef ();
 
+	PARA_Texture *getFadeOffTexture();
+
 	std::string int_getString (std::string format, ...);
 
 	// The window we'll be rendering to
@@ -97,12 +99,13 @@ public:
 	// Renderer associated with the window
 	PARA_Renderer *renderer                                        = nullptr;
 	bool          changingRenderer                                 = false;
+	int                                     currentFadeState       = FADE_STATE_NONE;
 private:
 	int                                     windowWidth;
 	int                                     windowHeight;
 	int                                     cacheWinFlags;
 	int                                     whichRenderer;
-	int                                     currentFadeState       = FADE_STATE_NONE;
+
 	double                                  currentFadeAlpha;
 	bool                                    int_useVSync;
 	bool                                    targetTextureAvailable = false;

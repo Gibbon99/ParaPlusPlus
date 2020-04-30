@@ -22,6 +22,8 @@ extern int         presentVSync;
 extern int         renderScaleQuality;
 extern int         volumeLevel;
 extern int         maxNumChannels;
+extern int         guiFontSize;
+extern std::string guiFontFileName;
 extern std::string consoleFontFilename;
 
 extern std::string activeBackingTexture;

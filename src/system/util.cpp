@@ -19,7 +19,6 @@ void sys_setNewMode (int newMode, bool doFade)
 	if (doFade)
 	{
 		renderer.prepareFade();
-
 	}
 
 	switch (newMode)
@@ -36,6 +35,12 @@ void sys_setNewMode (int newMode, bool doFade)
 
 		case MODE_SHOW_SPLASH:
 			currentMode = newMode;
+			renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);
+			break;
+
+		case MODE_GUI:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);
 			break;
 
 		default:

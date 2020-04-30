@@ -94,7 +94,7 @@ void io_processLoggingEventQueue(void *data)
 		}
 	}
 #ifdef MY_DEBUG
-	cout << "LOGGING thread stopped." << endl;
+	cout << "LOGGING thread stopped.\n" << endl;
 #endif
 	return;
 }

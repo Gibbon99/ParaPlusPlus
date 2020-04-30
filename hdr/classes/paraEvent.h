@@ -21,14 +21,16 @@ public:
 // Console - detached thread
 //
 //------------------------------------------------------------------------------------------------------------------
-class paraEventConsole : public paraEvent
+class paraEventConsole
 {
 public:
-	paraEventConsole (int newAction, const std::string &newLine) : paraEvent (newAction)
+	paraEventConsole (int newAction, const std::string &newLine)
 	{
+		action = newAction;
 		newConsoleLine = newLine;
 	}
 
+	int action;
 	std::string newConsoleLine;
 };
 
@@ -56,10 +58,11 @@ private:
 // Game - main thread
 //
 //------------------------------------------------------------------------------------------------------------------
-class paraEventGame : public paraEvent
+class paraEventGame
 {
 public:
-	paraEventGame (int newAction, int newCounter, const std::string &newText) : paraEvent (newAction)
+
+	paraEventGame (int newAction, int newCounter, const std::string &newText)
 	{
 		action   = newAction;
 		counter  = newCounter;

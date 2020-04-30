@@ -6,6 +6,7 @@
 #include <vector>
 #include <classes/paraAudio.h>
 #include <classes/paraTexture.h>
+#include <classes/paraGui.h>
 
 #ifdef WIN32
 #include "SDL.h"
@@ -41,17 +42,18 @@ typedef int (*functionPtr) (...);
 extern paraScript     paraScriptInstance;
 extern paraLogFile    logFile;
 extern paraFileSystem fileSystem;
-extern paraFont       consoleFont;
+extern paraFont       fontClass;
 extern paraConsole    console;
 extern paraRenderer   renderer;
 extern paraAudio      audio;
 extern paraTexture    texture;
+extern paraGui        gui;
 
 extern bool   quitLoop;
 extern Uint32 fpsPrint;
 extern Uint32 thinkFPSPrint;
 extern double percentIntoNextFrame;
-extern int currentMode;
+extern int    currentMode;
 
 extern std::string testVarString;
 extern float       testVarFloat;

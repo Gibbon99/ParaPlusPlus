@@ -63,6 +63,6 @@ void as_useNewRenderer(int &in newRenderer)
 
 void as_testFunction()
 {
-	sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, "Text from inside the script");
+	sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, "Text from script after restart...");
 
 }

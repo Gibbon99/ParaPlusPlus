@@ -154,6 +154,10 @@ set (CXX_SRCS
 		src/sdl2_gfx/SDL2_imageFilter.cpp
 		src/sdl2_gfx/SDL2_rotozoom.cpp
 
+		src/fileWatcher/FileWatcher.cpp
+		src/fileWatcher/FileWatcherLinux.cpp
+		src/fileWatcher/FileWatcherWin32.cpp
+
 		src/system/scriptEngine.cpp hdr/system/scriptEngine.h
 		src/classes/paraLogFile.cpp hdr/classes/paraLogFile.h
 		src/system/shutdown.cpp hdr/system/shutdown.h
@@ -171,7 +175,7 @@ set (CXX_SRCS
 		src/classes/paraEvent.cpp hdr/classes/paraEvent.h
 		src/system/eventsEngine.cpp hdr/system/eventsEngine.h
 		src/io/logFile.cpp hdr/io/logFile.h
-		src/classes/paraRenderer.cpp hdr/classes/paraRenderer.h src/io/consoleFunctions.cpp hdr/io/consoleFunctions.h src/system/gameEvents.cpp hdr/system/gameEvents.h src/system/physics.cpp hdr/system/physics.h src/game/physicsCollisions.cpp hdr/game/physicsCollisions.h src/io/resources.cpp hdr/io/resources.h src/classes/paraAudio.cpp hdr/classes/paraAudio.h src/game/audio.cpp hdr/game/audio.h src/classes/paraTexture.cpp hdr/classes/paraTexture.h src/game/texture.cpp hdr/game/texture.h)
+		src/classes/paraRenderer.cpp hdr/classes/paraRenderer.h src/io/consoleFunctions.cpp hdr/io/consoleFunctions.h src/system/gameEvents.cpp hdr/system/gameEvents.h src/system/physics.cpp hdr/system/physics.h src/game/physicsCollisions.cpp hdr/game/physicsCollisions.h src/io/resources.cpp hdr/io/resources.h src/classes/paraAudio.cpp hdr/classes/paraAudio.h src/game/audio.cpp hdr/game/audio.h src/classes/paraTexture.cpp hdr/classes/paraTexture.h src/game/texture.cpp hdr/game/texture.h src/classes/paraGui.cpp hdr/classes/paraGui.h src/gui/guiButton.cpp hdr/gui/guiButton.h src/gui/guiRender.cpp hdr/gui/guiRender.h src/io/fileWatch.cpp hdr/io/fileWatch.h)
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
 
@@ -186,7 +190,7 @@ if (WIN32)
 		    ./hdr
 		    ./hdr/box2d
 		    ./hdr/sdl2_gfx
-		    ./hdr/sdl_config
+		    ./hdr/fileWatcher
     )
 
         if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -233,7 +237,7 @@ if (UNIX)
 		    ./hdr
 		    ./hdr/box2d
 		    ./hdr/sdl2_gfx
-		    ./hdr/sdl_config
+		    ./hdr/fileWatcher
     )
 
     if (CMAKE_BUILD_TYPE MATCHES debug)
