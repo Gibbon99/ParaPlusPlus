@@ -137,11 +137,10 @@ void sys_startSystems ()
 	fontClass.load (guiFontSize, "guiFont", guiFontFileName);
 	fontClass.use ("guiFont");
 
-	gui.init (con_addEvent, windowWidth, windowHeight);
+	gui.init (con_addEvent, gui_getString, windowWidth, windowHeight, "keybinding.para");
 	paraScriptInstance.run ("as_createGUI", "");
 //	audio.load("start1", "start1.wav");
 
-	input.init("keybinding.para", con_addEvent, gui_getString);
 	io_initJoystick ();
 	//
 	// Start in interactive console mode

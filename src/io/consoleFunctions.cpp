@@ -27,7 +27,7 @@ void testPlay ()
 
 //	paraScriptInstance.restart();
 
-	input.print();
+	gui.print();
 
 	//input.save();
 

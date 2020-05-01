@@ -3,10 +3,14 @@
 
 #include <string>
 #include <vector>
+#include <wrapper.h>
+#include "../../data/scripts/enum.h"
 
 #define DEBUG_GUI_SETUP 1
 
 typedef void (*funcPtrIntStr) (int, std::string);
+
+typedef std::string (*funcStrIn) (std::string);     // Function to provide the key descriptions
 
 struct __BOUNDING_BOX
 {
@@ -53,6 +57,13 @@ struct __GUI_OBJECT
 	__BOUNDING_BOX boundingBox;
 };
 
+struct __KeyBindings
+{
+	std::string text;
+	PARA_Scancode keyValue;
+	bool        currentlyPressed;
+};
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Class definition for GUI
@@ -63,16 +74,18 @@ public:
 
 	void AddRef ();
 
-	void ReleaseRef();
+	void ReleaseRef ();
 
-	void init (funcPtrIntStr outputFunction, int newRenderWidth, int newRenderHeight);
+	void init (funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, std::string newFileName);
 
 	std::string int_getString (std::string format, ...);
+
 	//
 	// Set things
 	void setOutputFunction (funcPtrIntStr outputFunction);
 
 	void setRenderDimensions (int width, int height);
+
 	//
 	// Functions used in GUI script
 	void setLabel (int objectType, std::string objectID, int gapSize, int newLabelPos, std::string newLabel);
@@ -92,15 +105,16 @@ public:
 	void setReady (int objectType, std::string objectID, bool newState);
 
 	void create (int objectType, std::string objectID);
+
 	//
 	// Used to get attributes when rendering
-	int numElements();
+	int numElements ();
 
-	int selectedObject();
+	int selectedObject ();
 
-	int typeByIndex(int whichObject);
+	int typeByIndex (int whichObject);
 
-	int indexByIndex(int whichObject);
+	int indexByIndex (int whichObject);
 
 	int getIndex (int objectType, std::string objectID);
 
@@ -118,14 +132,55 @@ public:
 
 	std::string getFontName (int objectType, int objectIndex);
 
-	void restart();
+	void restart ();
 
 	bool isReady (int objectType, int objectIndex);
+
+	bool pointInBox(int x, int y, __BOUNDING_BOX checkBox);
+
+	bool canBeSelected (int objectType);
+
+	void checkMousePosition();
+
+	void checkMovementActions();
+
+	void processAction();
+
+	void process();
+//
+// Input related functions
+//
+
+	void setDefaultKeybindings ();
+
+	void setKeyDescription ();
+
+	void load ();
+
+	void save ();
+
+	void update ();
+
+	void print ();
+
+	bool keyDown (int whichKey);
+
+	void setState (int whichKey, bool newState, int newActionSource);
+
+	void setMouse (int newPosX, int newPosY);
+
+	const Uint8 *keyboardState;
 
 private:
 
 	void setColorByIndex (int objectType, int objectIndex, int whichColor, int red, int green, int blue, int alpha);
 
+	int                          mouseX;
+	int                          mouseY;
+	int                          actionSource;
+	__KeyBindings                keyBinding[KEY_NUMBER_ACTIONS];
+	std::string                  fileName;
+	funcStrIn                    funcGetString;
 	int                          currentScreen = 0;
 	double                       renderWidth   = 0;
 	double                       renderHeight  = 0;

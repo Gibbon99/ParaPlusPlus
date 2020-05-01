@@ -22,14 +22,12 @@ SDL_Joystick *joy;
 void io_initJoystick ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-
-// Initialize the joystick subsystem
-//	SDL_InitSubSystem (SDL_INIT_JOYSTICK);
-
-// Check for joystick
+	//
+	// Check for joystick
 	if (SDL_NumJoysticks () > 0)
 	{
-// Open joystick
+		//
+		// Open joystick - currently only the first one
 		joy = SDL_JoystickOpen (0);
 
 		if (joy)
@@ -50,13 +48,12 @@ void io_initJoystick ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Close any open joysticks
-void io_closeJoystick()
+void io_closeJoystick ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	// Close if opened
 	if (SDL_JoystickGetAttached (joy))
 	{
-//			SDL_JoystickClose (joy);
+		SDL_JoystickClose (joy);
 	}
 }
 
@@ -97,23 +94,21 @@ void io_mapJoyToInput ()
 	if (joystickState.joyAxisX != 0)
 	{
 		if (joystickState.joyAxisX < 0)
-			input.setState (KEY_LEFT, true);
+			gui.setState (KEY_LEFT, true, KEY_ACTION_NO_SOURCE);
 
 		if (joystickState.joyAxisX > 0)
-			input.setState (KEY_RIGHT, true);
+			gui.setState (KEY_RIGHT, true, KEY_ACTION_NO_SOURCE);
 	}
 
 	if (joystickState.joyAxisY != 0)
 	{
 		if (joystickState.joyAxisY < 0)
-			input.setState (KEY_UP, true);
+			gui.setState (KEY_UP, true, KEY_ACTION_NO_SOURCE);
 
 		if (joystickState.joyAxisY > 0)
-			input.setState (KEY_DOWN, true);
+			gui.setState (KEY_DOWN, true, KEY_ACTION_NO_SOURCE);
 	}
 
-	if (SDL_JoystickGetButton(joy, 0) == 1)
-	{
-		input.setState(KEY_ACTION, true);
-	}
+	if (SDL_JoystickGetButton (joy, 0) == 1)     // Only update if actually down
+		gui.setState (KEY_ACTION, true, KEY_ACTION_JOYSTICK);
 }

@@ -1,6 +1,8 @@
 #include <cstdarg>
+#include <physfs.h>
+#include <iostream>
+#include <game/audio.h>
 #include "classes/paraGui.h"
-#include "../../data/scripts/enum.h"
 
 void paraGui::AddRef ()
 {
@@ -15,7 +17,7 @@ void paraGui::ReleaseRef ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index of the object index - by the passed in index
-int paraGui::indexByIndex(int whichObject)
+int paraGui::indexByIndex (int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScreens[currentScreen].objectIDIndex[whichObject];
@@ -24,7 +26,7 @@ int paraGui::indexByIndex(int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index into the objectType array by index
-int paraGui::typeByIndex(int whichObject)
+int paraGui::typeByIndex (int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScreens[currentScreen].objectType[whichObject];
@@ -33,7 +35,7 @@ int paraGui::typeByIndex(int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the currently selected object on the current screen
-int paraGui::selectedObject()
+int paraGui::selectedObject ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScreens[currentScreen].selectedObject;
@@ -42,10 +44,10 @@ int paraGui::selectedObject()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return how many elements are on the currently active screen
-int paraGui::numElements()
+int paraGui::numElements ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	return guiScreens[currentScreen].objectIDIndex.size();
+	return guiScreens[currentScreen].objectIDIndex.size ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -60,6 +62,24 @@ void paraGui::setRenderDimensions (int width, int height)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Check if a mouse point is inside a bounding box
+bool paraGui::pointInBox (int x, int y, __BOUNDING_BOX checkBox)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if (x < checkBox.x1)
+		return false;
+	if (y < checkBox.y1)
+		return false;
+	if (x > checkBox.x2)
+		return false;
+	if (y > checkBox.y2)
+		return false;
+
+	return true;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Set a function to call when displaying any output
 void paraGui::setOutputFunction (funcPtrIntStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
@@ -70,21 +90,26 @@ void paraGui::setOutputFunction (funcPtrIntStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Init the GUI system
-void paraGui::init (funcPtrIntStr outputFunction, int newRenderWidth, int newRenderHeight)
+void paraGui::init (funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, std::string newFileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	setOutputFunction (outputFunction);
 	setRenderDimensions (newRenderWidth, newRenderHeight);
+
+	funcOutput    = outputFunction;
+	funcGetString = getStringFunc;
+	fileName      = newFileName;
+	load ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Called after the scripting engine restarts
-void paraGui::restart()
+void paraGui::restart ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	guiScreens.clear();
-	guiButtons.clear();
+	guiScreens.clear ();
+	guiButtons.clear ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -407,7 +432,7 @@ void paraGui::setLabel (int objectType, std::string objectID, int gapSize, int n
 		case GUI_OBJECT_BUTTON:
 			guiButtons[objectIndex].label    = newLabel;
 			guiButtons[objectIndex].labelPos = newLabelPos;
-			guiButtons[objectIndex].gapSize = gapSize;
+			guiButtons[objectIndex].gapSize  = gapSize;
 			break;
 
 		default:
@@ -594,7 +619,7 @@ std::string paraGui::getLabelText (int objectType, int objectIndex)
 				return "";
 			}
 
-			if (guiButtons[objectIndex].label.size() == 0)
+			if (guiButtons[objectIndex].label.size () == 0)
 			{
 				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no label set.", objectIndex, guiButtons[objectIndex].label.empty () ? "Unknown" : guiButtons[objectIndex].label.c_str ()));
 				return "";
@@ -856,4 +881,343 @@ bool paraGui::isReady (int objectType, int objectIndex)
 			return false;
 			break;
 	}
+}
+
+//-----------------------------------------------------------------------------
+//
+// Return if an object can be selected or not
+bool paraGui::canBeSelected (int objectType)
+//-----------------------------------------------------------------------------
+{
+	switch (objectType)
+	{
+		case GUI_OBJECT_BUTTON:
+//		case GUI_OBJECT_CHECKBOX:
+//		case GUI_OBJECT_SLIDER:
+//		case GUI_OBJECT_KEYCODE:
+			return true;
+
+		default:
+			return false;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Check if the mouse is inside an elements bounding box - activate it if it is
+void paraGui::checkMousePosition ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	static int previousElement = 0;
+
+	for (auto index = 0; index != guiScreens[currentScreen].objectType.size (); index++)
+	{
+		if (canBeSelected (guiScreens[currentScreen].objectType[index]))
+		{
+			switch (guiScreens[currentScreen].objectType[index])
+			{
+				case GUI_OBJECT_BUTTON:
+					if (pointInBox (mouseX, mouseY, guiButtons[guiScreens[currentScreen].objectIDIndex[index]].boundingBox))
+					{
+						guiScreens[currentScreen].selectedObject = index;
+						if (previousElement != index)
+						{
+							gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+							previousElement = index;
+						}
+					}
+					break;
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Check movement actions
+void paraGui::checkMovementActions ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int indexCount = 1;
+
+	if (keyBinding[KEY_DOWN].currentlyPressed)
+	{
+		if (guiScreens[currentScreen].selectedObject != (int) guiScreens[currentScreen].objectIDIndex.size () - 1)    // Don't go past number on screen
+		{
+			while (!canBeSelected (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject + indexCount]))
+			{
+				indexCount++;
+			}
+
+			guiScreens[currentScreen].selectedObject += indexCount;
+			if (indexCount > (int) guiScreens[currentScreen].objectIDIndex.size ())
+			{
+				indexCount = (int) guiScreens[currentScreen].objectIDIndex.size ();
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+			}
+			else
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+		}
+		else
+		{
+			// play bad sound
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+		}
+	}
+
+	if (keyBinding[KEY_UP].currentlyPressed)
+	{
+		indexCount = 1;
+		if (guiScreens[currentScreen].selectedObject > 0)
+		{
+			while (!canBeSelected (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject - indexCount]))
+			{
+				indexCount++;
+			}
+
+			if (guiScreens[currentScreen].selectedObject - indexCount == 0)
+			{
+				guiScreens[currentScreen].selectedObject = 0;
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+				return;
+			}
+
+			if (guiScreens[currentScreen].selectedObject - indexCount < 0)
+			{
+				guiScreens[currentScreen].selectedObject = 0;
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+				return;
+			}
+			guiScreens[currentScreen].selectedObject -= indexCount;
+			// Play good sound
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+			if (guiScreens[currentScreen].selectedObject < 0)
+				guiScreens[currentScreen].selectedObject = 0;
+		}
+		else if (guiScreens[currentScreen].selectedObject == 0)
+		{
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+		}
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Process any actions keys
+void paraGui::processAction ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int currentElement;
+
+	if (keyBinding[KEY_ACTION].currentlyPressed)
+	{
+		currentElement = guiScreens[currentScreen].selectedObject;
+		// Play good sound
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+
+		switch (guiScreens[currentScreen].objectType[currentElement])
+		{
+			case GUI_OBJECT_BUTTON:
+				if (actionSource == KEY_ACTION_MOUSE)
+				{
+					if (pointInBox (mouseX, mouseY, guiButtons[currentElement].boundingBox))
+					{
+						std::cout << "Run function : " << guiButtons[currentElement].action << std::endl;
+					}
+				}
+				else
+				{
+					std::cout << "Run function : " << guiButtons[currentElement].action << std::endl;
+				}
+				break;
+		}
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Update the mouse positions
+void paraGui::setMouse (int newPosX, int newPosY)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	mouseX = newPosX;
+	mouseY = newPosY;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Write the keyboard layout to disk - currently using physfs library - assuming its been started
+//
+// TODO: read / write to platforms native byte order
+void paraGui::save ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	PHYSFS_file   *fileHandle;
+	PHYSFS_sint64 returnCode;
+
+	if (!PHYSFS_isInit ())
+	{
+		funcOutput (-1, int_getString ("PHYSFS has not been started."));
+		return;
+	}
+
+	fileHandle = PHYSFS_openWrite (fileName.c_str ());
+	if (nullptr == fileHandle)
+	{
+		funcOutput (-1, int_getString ("Unable to open keybinding file for writing [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+		return;
+	}
+
+	for (auto keyIndex = 0; keyIndex != KEY_NUMBER_ACTIONS; keyIndex++)
+	{
+		returnCode = PHYSFS_writeBytes (fileHandle, &keyBinding[keyIndex].keyValue, sizeof (keyBinding[keyIndex].keyValue));
+		if (returnCode < (PHYSFS_sint64) sizeof (keyBinding[keyIndex].keyValue))
+			funcOutput (-1, int_getString ("Unable to write keybinding file [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+	}
+
+	if (PHYSFS_close (fileHandle) == 0)
+		funcOutput (-1, int_getString ("Unable to close keybinding file [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Read in the keyboard binding file - currently using physfs library - assuming its been started
+void paraGui::load ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	PHYSFS_file   *fileHandle;
+	PHYSFS_sint64 returnCode;
+
+	if (!PHYSFS_isInit ())
+	{
+		funcOutput (-1, int_getString ("PHYSFS has not been started."));
+		return;
+	}
+
+	fileHandle = PHYSFS_openRead (fileName.c_str ());
+	if (nullptr == fileHandle)
+	{
+		funcOutput (-1, int_getString ("Unable to open keybinding file [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+		setDefaultKeybindings ();
+		setKeyDescription ();
+		return;
+	}
+
+	for (auto keyIndex = 0; keyIndex != KEY_NUMBER_ACTIONS; keyIndex++)
+	{
+		returnCode = PHYSFS_readBytes (fileHandle, &keyBinding[keyIndex].keyValue, sizeof (keyBinding[keyIndex].keyValue));
+		if (returnCode < 0)
+		{
+			funcOutput (-1, int_getString ("Unable to read keybinding file [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+			return;
+		}
+	}
+
+	setKeyDescription ();   // Get text for current language after loading the key values
+
+	if (PHYSFS_close (fileHandle) == 0)
+		funcOutput (-1, int_getString ("Unable to close keybinding file [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Display the keybinding table
+void paraGui::print ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	funcOutput (-1, int_getString ("--- Key Binding Table ---"));
+
+	for (auto keyCounter = 0; keyCounter != KEY_NUMBER_ACTIONS; keyCounter++)
+	{
+		funcOutput (-1, int_getString ("Key [ %i ] - [ %s ]", keyBinding[keyCounter].keyValue, keyBinding[keyCounter].text.c_str ()));
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the state of a key based on PARA_KEY
+bool paraGui::keyDown (int whichKey)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if ((whichKey < KEY_FIRST) || (whichKey > KEY_NUMBER_ACTIONS))
+	{
+		funcOutput (-1, "Invalid key index requesting key state.");
+		return false;
+	}
+
+	return keyBinding[whichKey].currentlyPressed;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Set the state of a key based on PARA_Key index. This will be overwritten next frame when the array is updated
+void paraGui::setState (int whichKey, bool newState, int newActionSource)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if ((whichKey < KEY_FIRST) || (whichKey > KEY_NUMBER_ACTIONS))
+	{
+		funcOutput (-1, "Invalid key index requesting key state.");
+		return;
+	}
+
+	keyBinding[whichKey].currentlyPressed = newState;
+	if (whichKey == KEY_ACTION)
+		newActionSource = newActionSource;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Assign the text description for each key
+void paraGui::setKeyDescription ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	keyBinding[KEY_LEFT].text       = funcGetString ("gameLeft");
+	keyBinding[KEY_RIGHT].text      = funcGetString ("gameRight");
+	keyBinding[KEY_DOWN].text       = funcGetString ("gameDown");
+	keyBinding[KEY_UP].text         = funcGetString ("gameUp");
+	keyBinding[KEY_PAUSE].text      = funcGetString ("gamePause");
+	keyBinding[KEY_ACTION].text     = funcGetString ("gameAction");
+	keyBinding[KEY_ESCAPE].text     = funcGetString ("gameEscape");
+	keyBinding[KEY_CONSOLE].text    = funcGetString ("consoleAction");
+	keyBinding[KEY_SCREENSHOT].text = funcGetString ("gameScreenShot");
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Set the default values for keybindings
+void paraGui::setDefaultKeybindings ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	keyBinding[KEY_LEFT].keyValue       = SDL_SCANCODE_LEFT;
+	keyBinding[KEY_RIGHT].keyValue      = SDL_SCANCODE_RIGHT;
+	keyBinding[KEY_DOWN].keyValue       = SDL_SCANCODE_DOWN;
+	keyBinding[KEY_UP].keyValue         = SDL_SCANCODE_UP;
+	keyBinding[KEY_PAUSE].keyValue      = SDL_SCANCODE_P;
+	keyBinding[KEY_ACTION].keyValue     = SDL_SCANCODE_LCTRL;
+	keyBinding[KEY_ESCAPE].keyValue     = SDL_SCANCODE_ESCAPE;
+	keyBinding[KEY_CONSOLE].keyValue    = SDL_SCANCODE_GRAVE;
+	keyBinding[KEY_SCREENSHOT].keyValue = SDL_SCANCODE_S;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Update the state of the keyboard mappings from the system keyboard state
+void paraGui::update ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	for (auto keyCounter = 0; keyCounter != KEY_NUMBER_ACTIONS; keyCounter++)
+	{
+		keyboardState[keyBinding[keyCounter].keyValue] ? keyBinding[keyCounter].currentlyPressed = true : keyBinding[keyCounter].currentlyPressed = false;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Process the key events
+void paraGui::process ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	checkMousePosition ();
+	checkMovementActions ();
+	processAction ();
 }

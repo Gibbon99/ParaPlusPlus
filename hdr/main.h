@@ -7,7 +7,6 @@
 #include <classes/paraAudio.h>
 #include <classes/paraTexture.h>
 #include <classes/paraGui.h>
-#include <classes/paraInput.h>
 
 #ifdef WIN32
 #include "SDL.h"
@@ -49,7 +48,6 @@ extern paraRenderer   renderer;
 extern paraAudio      audio;
 extern paraTexture    texture;
 extern paraGui        gui;
-extern paraInput      input;
 
 extern bool   quitLoop;
 extern Uint32 fpsPrint;

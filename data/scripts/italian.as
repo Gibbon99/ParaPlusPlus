@@ -17,5 +17,8 @@ void as_setItalianText ()
 	gui_addKeyAndText("gameScreenShot", "Fai uno screenshot");
 
 	gui_addKeyAndText ("mainMenu.startGameButton", "Inizia il gioco");
+	gui_addKeyAndText ("mainMenu.optionsButton", "Opzioni");
+	gui_addKeyAndText ("mainMenu.tutorialButton", "lezione");
+	gui_addKeyAndText ("mainMenu.briefingButton", "Riunione");
 	gui_addKeyAndText ("mainMenu.quitButton", "Abbandonare il gioco");
 }

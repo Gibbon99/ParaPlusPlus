@@ -17,6 +17,9 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("gameScreenShot", "Take a screenshot");
 
 	gui_addKeyAndText ("mainMenu.startGameButton", "Start Game");
+	gui_addKeyAndText ("mainMenu.optionsButton", "Options");
+	gui_addKeyAndText ("mainMenu.tutorialButton", "Tutorial");
+	gui_addKeyAndText ("mainMenu.briefingButton", "Briefing");
 	gui_addKeyAndText ("mainMenu.quitButton", "Quit Game");
 }
 

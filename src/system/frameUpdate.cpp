@@ -1,9 +1,8 @@
 #include <io/fileWatch.h>
 #include <io/keyboard.h>
 #include <io/joystick.h>
+#include <io/mouse.h>
 #include "../../hdr/system/frameUpdate.h"
-#include "../main.h"
-#include "../../hdr/system/gameEvents.h"
 
 SDL_Event evt;
 
@@ -13,7 +12,7 @@ SDL_Event evt;
 void sys_processSystemEvents ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	input.keyboardState = SDL_GetKeyboardState (nullptr);
+
 
 	while (SDL_PollEvent (&evt) != 0)
 	{
@@ -40,6 +39,23 @@ void sys_processSystemEvents ()
 
 			case SDL_JOYAXISMOTION:
 				io_joyMovement(evt.jaxis.which, evt.jaxis.axis, evt.jaxis.value);
+				break;
+
+			case SDL_MOUSEMOTION:
+				io_mouseMovement(evt.motion.x, evt.motion.y, evt.motion.state);
+				break;
+
+			case SDL_MOUSEWHEEL:
+				if (evt.wheel.y > 0)    // Scroll Up
+					io_mouseWheel(KEY_UP);
+
+				if (evt.wheel.y < 0)    // Scroll down
+					io_mouseWheel(KEY_DOWN);
+				break;
+
+			case SDL_MOUSEBUTTONDOWN:
+				if (evt.button.button == SDL_BUTTON_LEFT)
+					io_mouseButtonDown();
 				break;
 
 			case SDL_KEYDOWN:

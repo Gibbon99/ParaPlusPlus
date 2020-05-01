@@ -17,5 +17,8 @@ void as_setGermanText ()
 	gui_addKeyAndText("gameScreenShot", "Mach ein Bildschirmfoto");
 
 	gui_addKeyAndText ("mainMenu.startGameButton", "Spiel starten");
+	gui_addKeyAndText ("mainMenu.optionsButton", "Optionen");
+	gui_addKeyAndText ("mainMenu.tutorialButton", "Tutorial");
+	gui_addKeyAndText ("mainMenu.briefingButton", "Anweisung");
 	gui_addKeyAndText ("mainMenu.quitButton", "Spiel verlassen");
 }

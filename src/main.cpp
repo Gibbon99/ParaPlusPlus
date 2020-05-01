@@ -12,7 +12,6 @@ paraRenderer   renderer;
 paraAudio      audio;
 paraTexture    texture;
 paraGui        gui;
-paraInput      input;
 
 #define TICKS_PER_SECOND 30.0f
 #define MAX_FRAMESKIP 5
