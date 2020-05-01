@@ -25,7 +25,11 @@ void testPlay ()
 {
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "start1");
 
-	paraScriptInstance.restart();
+//	paraScriptInstance.restart();
+
+	input.print();
+
+	//input.save();
 
 	//audio.play ("start1", false, 0, 127);
 }

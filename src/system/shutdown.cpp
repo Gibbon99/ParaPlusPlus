@@ -1,6 +1,5 @@
-#include <io/configFile.h>
+
 #include "../../hdr/system/shutdown.h"
-#include "../../hdr/system/startup.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -8,6 +7,7 @@
 void sys_closeSystems()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	io_closeJoystick();
 	paraScriptInstance.stop();
 	sys_freeMemory ();
 	logFile.close();

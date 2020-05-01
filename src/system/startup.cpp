@@ -1,6 +1,9 @@
 #include <system/physics.h>
 #include <game/audio.h>
 #include <io/fileWatch.h>
+#include <io/keyboard.h>
+#include <gui/guiLanguage.h>
+#include <io/joystick.h>
 #include "../../hdr/system/startup.h"
 #include "../../hdr/system/scriptEngine.h"
 #include "../../hdr/system/scriptConfig.h"
@@ -138,6 +141,8 @@ void sys_startSystems ()
 	paraScriptInstance.run ("as_createGUI", "");
 //	audio.load("start1", "start1.wav");
 
+	input.init("keybinding.para", con_addEvent, gui_getString);
+	io_initJoystick ();
 	//
 	// Start in interactive console mode
 	sys_setNewMode (MODE_CONSOLE_EDIT, false);

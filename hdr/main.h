@@ -7,6 +7,7 @@
 #include <classes/paraAudio.h>
 #include <classes/paraTexture.h>
 #include <classes/paraGui.h>
+#include <classes/paraInput.h>
 
 #ifdef WIN32
 #include "SDL.h"
@@ -18,7 +19,7 @@
 
 #define APP_NAME    "Para++"
 
-#include "../data/scripts/enum.h"
+//#include "../data/scripts/enum.h"
 #include "classes/paraScript.h"
 #include "classes/paraLogFile.h"
 #include "classes/paraFileSystem.h"
@@ -48,6 +49,7 @@ extern paraRenderer   renderer;
 extern paraAudio      audio;
 extern paraTexture    texture;
 extern paraGui        gui;
+extern paraInput      input;
 
 extern bool   quitLoop;
 extern Uint32 fpsPrint;

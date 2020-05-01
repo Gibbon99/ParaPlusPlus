@@ -147,6 +147,5 @@ void io_readConfigValues(const std::string& fileName)
 	currentLanguage = (int)iniFile.GetLongValue("Main", "currentLanguage", -1);
 	if (currentLanguage == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "currentLanguage"));
-
 }
 

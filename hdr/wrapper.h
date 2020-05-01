@@ -18,5 +18,6 @@
 #define PARA_UnlockMutex    SDL_UnlockMutex
 #define PARA_DestroyMutex   SDL_DestroyMutex
 #define PARA_Delay          SDL_Delay
+#define PARA_Scancode       SDL_Scancode
 
 #endif //PARA_WRAPPER_H
