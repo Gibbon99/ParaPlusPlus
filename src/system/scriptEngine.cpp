@@ -1,7 +1,4 @@
 #include "../../hdr/system/scriptEngine.h"
-#include "../../hdr/io/console.h"
-
-bool scriptReloaded = false;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -9,38 +6,23 @@ bool scriptReloaded = false;
 void scr_Output(const asSMessageInfo *msg, void *param)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	int alertColor = 255;
 	const char *type = "ERR ";
 
 	if (msg->type == asMSGTYPE_WARNING)
 	{
 		type = "WARN";
+		alertColor = 200;
 	}
 	else if (msg->type == asMSGTYPE_INFORMATION)
 	{
 		type = "INFO";
+		alertColor = 150;
 	}
 
 	logFile.write (sys_getString ("%s (%d, %d) : %s : %s", msg->section, msg->row, msg->col, type, msg->message));
 
-	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%s (%d, %d) : %s : %s", msg->section, msg->row, msg->col, type, msg->message));
+	console.add(1, alertColor, 0, 0, 255, sys_getString ("%s (%d, %d) : %s : %s", msg->section, msg->row, msg->col, type, msg->message));
 
 	printf ("%s\n", sys_getString ("%s (%d, %d) : %s : %s", msg->section, msg->row, msg->col, type, msg->message).c_str ());
 }
-
-/*
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Restart the script engine
-void sys_restartScriptEngine()
-//----------------------------------------------------------------------------------------------------------------------
-{
-	sys_stopScriptEngine();
-
-	scriptFunctions.clear();
-	scriptFunctionName.clear();
-
-	scriptReloaded = true;
-
-	sys_initScriptEngine();
-}
-*/

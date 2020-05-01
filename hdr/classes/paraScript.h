@@ -14,7 +14,7 @@ typedef void      (*scriptFunctionPtrStr) (int, std::string);
 class paraScript
 {
 public:
-	bool init (scriptFunctionPtrStr outputFunction);
+	bool init (scriptFunctionPtrStr outputFunction, asFUNCTION_t scriptOutputFunction);
 
 	void addHostVariable (const std::string &varName, void *varPtr);
 

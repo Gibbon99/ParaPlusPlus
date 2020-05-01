@@ -78,23 +78,25 @@ void con_processConsoleEventQueue (void *data)
 // Add a new event to the console queue - only added when mutex is free. ie: Thread is not accessing the queue
 //
 // -1 is passed in from classes to add a line to avoid including the additional header
-void con_addEvent (int newAction, std::string newLine)
+void con_addEvent (int newAction, string newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Mutex       *tempMutex;
 	paraEventConsole *tempEventConsole; //(newAction, newLine);
 
-	if (newAction == -1)
-		newAction = EVENT_ACTION_CONSOLE_ADD_LINE;
-
-	tempEventConsole = new paraEventConsole (newAction, newLine);
-
 	tempMutex = evt_getMutex (CONSOLE_MUTEX_NAME);
 	if (nullptr == tempMutex)
 		sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
 
+
 	if (PARA_LockMutex (tempMutex) == 0)
 	{
+
+		if (newAction == -1)
+			newAction = EVENT_ACTION_CONSOLE_ADD_LINE;
+
+		tempEventConsole = new paraEventConsole (newAction, newLine);
+
 		consoleEvents.push (tempEventConsole);
 		PARA_UnlockMutex (tempMutex);
 	}

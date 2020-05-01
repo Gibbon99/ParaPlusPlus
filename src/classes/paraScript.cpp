@@ -48,7 +48,7 @@ void paraScript::restart()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start the script engine
-bool paraScript::init (scriptFunctionPtrStr outputFunction)
+bool paraScript::init (scriptFunctionPtrStr outputFunction, asFUNCTION_t scriptOutputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	scriptEngineRunning = false;
@@ -64,7 +64,7 @@ bool paraScript::init (scriptFunctionPtrStr outputFunction)
 	}
 
 	// The script compiler will write any compiler messages to the callback.
-	scriptEngine->SetMessageCallback (asFUNCTION(outputFunction), nullptr, asCALL_CDECL);
+	scriptEngine->SetMessageCallback (asFUNCTION(scriptOutputFunction), nullptr, asCALL_CDECL);
 
 	funcOutput ( -1, sys_getString ("Script: Script Engine started."));
 
@@ -288,8 +288,7 @@ bool paraScript::loadAndCompile ()
 	retCode = builder.BuildModule ();
 	if (retCode < 0)
 	{
-		sys_shutdownWithError ("Failed to build the script module.");
-		//sleep(25);
+		//sys_shutdownWithError ("Failed to build the script module.");
 		return false;
 	}
 

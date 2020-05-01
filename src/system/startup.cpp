@@ -110,7 +110,7 @@ void sys_startSystems ()
 	fontClass.setColor (255, 255, 255, 255);
 	//
 	// Start the scripting engine
-	if (!paraScriptInstance.init (con_addEvent))
+	if (!paraScriptInstance.init (con_addEvent, reinterpret_cast<asFUNCTION_t>(scr_Output)))
 		sys_shutdownWithError ("Error: Could not start Scripting engine.");
 
 	sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, ("Scripting started."));

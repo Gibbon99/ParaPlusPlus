@@ -175,7 +175,7 @@ set (CXX_SRCS
 		src/classes/paraEvent.cpp hdr/classes/paraEvent.h
 		src/system/eventsEngine.cpp hdr/system/eventsEngine.h
 		src/io/logFile.cpp hdr/io/logFile.h
-		src/classes/paraRenderer.cpp hdr/classes/paraRenderer.h src/io/consoleFunctions.cpp hdr/io/consoleFunctions.h src/system/gameEvents.cpp hdr/system/gameEvents.h src/system/physics.cpp hdr/system/physics.h src/game/physicsCollisions.cpp hdr/game/physicsCollisions.h src/io/resources.cpp hdr/io/resources.h src/classes/paraAudio.cpp hdr/classes/paraAudio.h src/game/audio.cpp hdr/game/audio.h src/classes/paraTexture.cpp hdr/classes/paraTexture.h src/game/texture.cpp hdr/game/texture.h src/classes/paraGui.cpp hdr/classes/paraGui.h src/gui/guiButton.cpp hdr/gui/guiButton.h src/gui/guiRender.cpp hdr/gui/guiRender.h src/io/fileWatch.cpp hdr/io/fileWatch.h)
+		src/classes/paraRenderer.cpp hdr/classes/paraRenderer.h src/io/consoleFunctions.cpp hdr/io/consoleFunctions.h src/system/gameEvents.cpp hdr/system/gameEvents.h src/system/physics.cpp hdr/system/physics.h src/game/physicsCollisions.cpp hdr/game/physicsCollisions.h src/io/resources.cpp hdr/io/resources.h src/classes/paraAudio.cpp hdr/classes/paraAudio.h src/game/audio.cpp hdr/game/audio.h src/classes/paraTexture.cpp hdr/classes/paraTexture.h src/game/texture.cpp hdr/game/texture.h src/classes/paraGui.cpp hdr/classes/paraGui.h src/gui/guiButton.cpp hdr/gui/guiButton.h src/gui/guiRender.cpp hdr/gui/guiRender.h src/io/fileWatch.cpp hdr/io/fileWatch.h src/gui/guiLanguage.cpp hdr/gui/guiLanguage.h)
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
 

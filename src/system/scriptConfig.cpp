@@ -1,4 +1,5 @@
 #include <game/audio.h>
+#include <gui/guiLanguage.h>
 #include "../../hdr/system/scriptConfig.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -15,7 +16,7 @@ void sys_scriptInitScriptFunctions ()
 	paraScriptInstance.addScriptFunction ("int as_getVolume()", "as_getVolume");
 	paraScriptInstance.addScriptFunction ("void as_setVolume(int &in newVolume)", "as_setVolume");
 
-	paraScriptInstance.addScriptFunction("void as_createGUI()", "as_createGUI");
+	paraScriptInstance.addScriptFunction ("void as_createGUI()", "as_createGUI");
 
 	paraScriptInstance.addScriptFunction ("void as_testFunction()", "as_testFunction");
 }
@@ -26,7 +27,8 @@ void sys_scriptInitScriptFunctions ()
 void sys_scriptInitVariables ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraScriptInstance.addHostVariable("int quitProgram", &quitLoop);
+	paraScriptInstance.addHostVariable ("int quitProgram", &quitLoop);
+	paraScriptInstance.addHostVariable ("int currentLanguage", &currentLanguage);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)
@@ -92,5 +94,8 @@ void sys_scriptInitFunctions ()
 
 	paraScriptInstance.addHostFunction ("void sys_printConInt(string &in, int param)", (functionPtr) &sys_scriptPrintInt);
 	paraScriptInstance.addHostFunction ("void sys_addEvent(int eventType, int eventAction, int eventDelay, string &in)", (functionPtr) &sys_addEvent);
-	paraScriptInstance.addHostFunction("void gam_addAudioEvent(int action, bool loop, int distance, int pan, string &in)", (functionPtr)&gam_addAudioEvent);
+	paraScriptInstance.addHostFunction ("void gam_addAudioEvent(int action, bool loop, int distance, int pan, string &in)", (functionPtr)&gam_addAudioEvent);
+
+	paraScriptInstance.addHostFunction ("void gui_addKeyAndText(string &in, string &in)", (functionPtr) &gui_addKeyAndText);
+	paraScriptInstance.addHostFunction ("string gui_getString(string &in)", (functionPtr) &gui_getString);
 }

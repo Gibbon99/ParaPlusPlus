@@ -1,7 +1,7 @@
+#include <gui/guiRender.h>
+#include <gui/guiLanguage.h>
 #include "../../hdr/io/configFile.h"
-#include "../../hdr/system/shutdown.h"
 #include "../../hdr/system/startup.h"
-#include "../../hdr/classes/SimpleIni.h"
 
 CSimpleIniA iniFile;
 std::string configFileName = "";
@@ -143,4 +143,10 @@ void io_readConfigValues(const std::string& fileName)
 	maxNumChannels = (int)iniFile.GetLongValue("Main", "maxNumChannels", -1);
 	if (volumeLevel == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "maxNumChannels"));
+
+	currentLanguage = (int)iniFile.GetLongValue("Main", "currentLanguage", -1);
+	if (currentLanguage == -1)
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "currentLanguage"));
+
 }
+
