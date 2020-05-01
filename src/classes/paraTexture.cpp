@@ -49,6 +49,8 @@ int paraTexture::init (textureFunctionPtrStr outputFunction, textureFunctionPtrL
 {
 	paraTexture::funcOutput = outputFunction;
 	paraTexture::funcLoad   = loadFunction;
+
+	return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

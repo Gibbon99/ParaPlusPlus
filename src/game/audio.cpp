@@ -11,17 +11,13 @@ std::queue<paraEventAudio *> audioEventQueue;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Put a new audio event onto the queue
-void gam_addAudioEvent(int action, bool loop, int distance, int pan, std::string keyName)
+void gam_addAudioEvent(int action, bool loop, int distance, int pan, const std::string &keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Mutex *tempMutex;
-	auto tempAudioEvent = new paraEventAudio;
+	paraEventAudio* tempAudioEvent;
 
-	tempAudioEvent->action = action;
-	tempAudioEvent->loop = loop;
-	tempAudioEvent->distance = distance;
-	tempAudioEvent->pan = pan;
-	tempAudioEvent->keyName = keyName;
+	tempAudioEvent = new paraEventAudio(action, distance, pan, loop, keyName);
 
 	tempMutex = evt_getMutex(AUDIO_MUTEX_NAME);
 
@@ -33,7 +29,6 @@ void gam_addAudioEvent(int action, bool loop, int distance, int pan, std::string
 	PARA_LockMutex(evt_getMutex(AUDIO_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
 	audioEventQueue.push(tempAudioEvent);
 	PARA_UnlockMutex(evt_getMutex(AUDIO_MUTEX_NAME));
-
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -72,7 +67,7 @@ void gam_processAudioEventQueue ()
 					case EVENT_ACTION_AUDIO_INIT:
 						audio.init (maxNumChannels, con_addEvent, io_loadRawFile);
 						audio.setMasterVolume(volumeLevel); // Loaded from config file
-						paraScriptInstance.run("as_loadAudioResources", "");    // TODO - conflict when adding to console or running two scripts??
+						paraScriptInstance.run("as_loadAudioResources", "");
 						break;
 
 					case EVENT_ACTION_AUDIO_PLAY:

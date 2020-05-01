@@ -567,7 +567,8 @@ void paraRenderer::prepareFrame ()
 				break;
 
 			case FADE_STATE_NONE:
-				if (SDL_SetRenderTarget (paraRenderer::renderer, getRenderTarget (getCurrentBackingTexture ())) < 0)
+				if (SDL_SetRenderTarget(paraRenderer::renderer, SDL_GetRenderTarget(paraRenderer::renderer)))
+//				if (SDL_SetRenderTarget (paraRenderer::renderer, getRenderTarget (getCurrentBackingTexture ())) < 0)
 				{
 					errorCount++;
 					if (errorCount > 5)

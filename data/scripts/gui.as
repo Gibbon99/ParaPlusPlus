@@ -17,7 +17,7 @@ void createMainMenu()
 	as_paraGui.addToScreen(GUI_OBJECT_BUTTON, "mainMenu.startGame", "mainMenu");
 	as_paraGui.setLabel(GUI_OBJECT_BUTTON, "mainMenu.startGame", 3, GUI_LABEL_CENTER, "Start Game");
 	as_paraGui.setFontName(GUI_OBJECT_BUTTON, "mainMenu.startGame", "guiFont");
-	as_paraGui.setPosition(GUI_OBJECT_BUTTON, "mainMenu.startGame", 8, GUI_COORD_ABSOLUTE, 100, 60, 179, 59);
+	as_paraGui.setPosition(GUI_OBJECT_BUTTON, "mainMenu.startGame", 8, GUI_COORD_ABSOLUTE, 100, 60, 295, 59);
 	as_paraGui.setAction(GUI_OBJECT_BUTTON, "mainMenu.startGame", "TODO-Function");
 
 	as_paraGui.setColor (GUI_OBJECT_BUTTON, "ALL", GUI_COL_ACTIVE, 50, 50, 200, 255);

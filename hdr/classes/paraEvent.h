@@ -84,6 +84,15 @@ private:
 class paraEventAudio
 {
 public:
+	paraEventAudio(int newAction, int newDistance, int newPan, bool newLoop, const std::string &newKeyName)
+	{
+		action = newAction;
+		distance = newDistance;
+		pan = newPan;
+		loop = newLoop;
+		keyName = newKeyName;
+	}
+
 	int         action;
 	int         distance;
 	int         pan;

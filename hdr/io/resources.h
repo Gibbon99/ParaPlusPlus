@@ -4,17 +4,19 @@
 #include <SDL_mixer.h>
 //#include "../main.h"
 #include "../wrapper.h"
+#include <string>
+
 
 struct __resourceCommon
 {
 	bool        loaded = false;
-	std::string fileName = "";
+	//std::string fileName = "";
 };
 
 struct __bitmap
 {
 	PARA_Texture    *texture = nullptr;
-	std::string      fileName = "";
+	//std::string      fileName = "";
 	int              width;
 	int              height;
 	__resourceCommon common;
@@ -41,4 +43,4 @@ extern std::map<std::string, __sprite> sprites;
 //extern std::map<std::string, __tiles> tiles;
 
 // Called from script to load a resource
-void sys_loadResource (const std::string &key, const std::string &fileName, int type, int numFrames, int size);
+//void sys_loadResource (const std::string &key, const std::string &fileName, int type, int numFrames, int size);

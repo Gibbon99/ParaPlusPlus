@@ -112,6 +112,8 @@ void con_renderConsole ()
 	PARA_Texture      *tempTexture  = nullptr;
 	static PARA_Mutex *consoleMutex = nullptr;
 
+	if (console.consoleText.size() == 0)
+		return;
 	//
 	// Block the thread from inserting new text while the iterator is rendering the array
 	if (nullptr == consoleMutex)
@@ -127,7 +129,7 @@ void con_renderConsole ()
 	console.isDrawing = true;
 
 	console.prepare (console.getDefaultPosX (), (float) consoleVirtualHeight - (fontClass.height () * 2));
-	for (; console.consoleItr != console.consoleText.rend (); ++console.consoleItr)
+	for (; console.consoleItr < console.consoleText.rend (); ++console.consoleItr)
 	{
 		fontClass.setColor (console.consoleItr->red, console.consoleItr->green, console.consoleItr->blue, console.consoleItr->alpha);
 		tempSurface = fontClass.write (console.consoleItr->posX, console.posY, console.consoleItr->lineText);  // Surface is freed within console class

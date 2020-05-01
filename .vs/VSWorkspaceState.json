@@ -2,15 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\data",
+    "\\data\\scripts",
     "\\hdr",
-    "\\hdr\\io",
+    "\\hdr\\classes",
+    "\\hdr\\game",
     "\\hdr\\system",
-    "\\SDL2_WIN",
     "\\src",
-    "\\src\\classes",
     "\\src\\io",
     "\\src\\system"
   ],
-  "SelectedNode": "\\hdr\\classes\\paraConsole.h",
+  "SelectedNode": "\\src\\classes\\paraRenderer.cpp",
   "PreviewInSolutionExplorer": false
 }

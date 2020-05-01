@@ -6,4 +6,4 @@
 void gam_initAudio();
 
 // Put a new audio event onto the queue
-void gam_addAudioEvent(int action, bool loop, int distance, int pan, std::string keyName);
+void gam_addAudioEvent(int action, bool loop, int distance, int pan, const std::string &keyName);
