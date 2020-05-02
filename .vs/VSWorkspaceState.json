@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\data",
-    "\\data\\scripts",
     "\\hdr",
     "\\hdr\\classes",
     "\\hdr\\game",
     "\\hdr\\system",
     "\\src",
+    "\\src\\classes",
+    "\\src\\gui",
     "\\src\\io",
     "\\src\\system"
   ],
-  "SelectedNode": "\\src\\classes\\paraRenderer.cpp",
+  "SelectedNode": "\\src\\gui\\guiLanguage.cpp",
   "PreviewInSolutionExplorer": false
 }

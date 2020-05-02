@@ -93,8 +93,8 @@ void gui_renderButton (int whichButton, bool hasFocus)
 		return;
 	}
 
-	auto buttonHeight = (bb.y2 - bb.y1);
-	auto fontHeight = fontClass.height();
+	const auto buttonHeight = (bb.y2 - bb.y1);
+	const auto fontHeight = fontClass.height();
 	textPosY = bb.y1 + ( (buttonHeight - fontHeight) / 2);
 
 	switch (labelPos)

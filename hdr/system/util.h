@@ -10,7 +10,7 @@ std::string sys_getString (std::string format, ...);
 char *sys_malloc (int memorySize, std::string keyName);
 
 // Free a memory slot by name
-void sys_freeMemory (std::string keyName);
+void sys_freeMemory (const std::string keyName);
 
 // Go through memory map and free allocations
 void sys_freeMemory ();

@@ -530,7 +530,7 @@ void paraConsole::processCommand(std::vector<std::string> commandLine)
 	//
 	//
 	if (localConsoleItr->second.commandPtr != nullptr)      // Is this an internal function
-		localConsoleItr->second.commandPtr ();
+		localConsoleItr->second.commandPtr ();	// "quit" command crashing here in windows
 	else
 	{
 		paraScriptInstance.run (localConsoleItr->second.commandName, parameterList);

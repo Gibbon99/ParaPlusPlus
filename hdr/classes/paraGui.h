@@ -10,7 +10,8 @@
 
 typedef void (*funcPtrIntStr) (int, std::string);
 
-typedef std::string (*funcStrIn) (std::string);     // Function to provide the key descriptions
+typedef std::string &string1;
+typedef std::string (*funcStrIn) (string1);     // Function to provide the key descriptions
 
 struct __BOUNDING_BOX
 {

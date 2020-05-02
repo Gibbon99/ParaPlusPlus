@@ -38,7 +38,7 @@ void paraScript::restart()
 	sys_scriptInitScriptFunctions ();
 	sys_scriptInitFunctions ();
 	sys_scriptInitVariables ();
-	io_getScriptFileNames ((std::string) "scripts");
+	io_getScriptFileNames ("scripts");
 	paraScriptInstance.loadAndCompile ();
 	paraScriptInstance.cacheFunctions ();
 
@@ -134,7 +134,8 @@ void paraScript::run (const std::string &functionName, const std::string &param)
 				{
 					//
 					// Send in a string
-					context->SetArgAddress (0, (void *) &param);
+//					context->SetArgAddress (0, (void *) &param);
+					context->SetArgAddress (0, static_cast<void *>(new std::string(param)));
 				}
 			}
 #ifdef MY_DEBUG

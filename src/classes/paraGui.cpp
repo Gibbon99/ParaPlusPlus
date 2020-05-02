@@ -352,9 +352,9 @@ std::string paraGui::getFontName (int objectType, int objectIndex)
 			if (guiButtons.size () == 0)
 				return "";
 
-			if ((objectIndex < 0) || (objectIndex > (int) guiButtons.size ()))
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiButtons.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", (int) guiButtons.size ()));
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiButtons.size ())));
 				return "";
 			}
 
@@ -613,9 +613,9 @@ std::string paraGui::getLabelText (int objectType, int objectIndex)
 			if (guiButtons.size () == 0)
 				return "";
 
-			if ((objectIndex < 0) || (objectIndex > (int) guiButtons.size ()))
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiButtons.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", (int) guiButtons.size ()));
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiButtons.size ())));
 				return "";
 			}
 
@@ -646,9 +646,9 @@ int paraGui::getGapSize (int objectType, int objectIndex)
 			if (guiButtons.size () == 0)
 				return GUI_OBJECT_NOT_FOUND;
 
-			if ((objectIndex < 0) || (objectIndex > (int) guiButtons.size ()))
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiButtons.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", (int) guiButtons.size ()));
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiButtons.size ())));
 				return GUI_OBJECT_NOT_FOUND;
 			}
 
@@ -673,9 +673,9 @@ int paraGui::getLabelPos (int objectType, int objectIndex)
 			if (guiButtons.size () == 0)
 				return GUI_OBJECT_NOT_FOUND;
 
-			if ((objectIndex < 0) || (objectIndex > (int) guiButtons.size ()))
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiButtons.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", (int) guiButtons.size ()));
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiButtons.size ())));
 				return GUI_OBJECT_NOT_FOUND;
 			}
 
@@ -706,9 +706,9 @@ int paraGui::getRadius (int objectType, int objectIndex)
 			if (guiButtons.size () == 0)
 				return GUI_OBJECT_NOT_FOUND;
 
-			if ((objectIndex < 0) || (objectIndex > (int) guiButtons.size ()))
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiButtons.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", (int) guiButtons.size ()));
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiButtons.size ())));
 				return GUI_OBJECT_NOT_FOUND;
 			}
 
@@ -746,9 +746,9 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 			if (guiButtons.size () == 0)
 				return badColor;
 
-			if ((objectIndex < 0) || (objectIndex > (int) guiButtons.size ()))
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiButtons.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", (int) guiButtons.size ()));
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiButtons.size ())));
 				return badColor;
 			}
 
@@ -806,9 +806,9 @@ __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 			if (guiButtons.size () == 0)
 				return badBox;
 
-			if ((objectIndex < 0) || (objectIndex > (int) guiButtons.size ()))
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiButtons.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", (int) guiButtons.size ()));
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiButtons.size ())));
 				return badBox;
 			}
 
@@ -861,9 +861,9 @@ bool paraGui::isReady (int objectType, int objectIndex)
 			if (guiButtons.size () == 0)
 				return false;
 
-			if ((objectIndex < 0) || (objectIndex > (int) guiButtons.size ()))
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiButtons.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", (int) guiButtons.size ()));
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiButtons.size ())));
 				return false;
 			}
 
@@ -910,7 +910,7 @@ void paraGui::checkMousePosition ()
 {
 	static int previousElement = 0;
 
-	for (auto index = 0; index != guiScreens[currentScreen].objectType.size (); index++)
+	for (auto index = 0; index < static_cast<int>(guiScreens[currentScreen].objectType.size ()); index++)
 	{
 		if (canBeSelected (guiScreens[currentScreen].objectType[index]))
 		{
@@ -942,7 +942,7 @@ void paraGui::checkMovementActions ()
 
 	if (keyBinding[KEY_DOWN].active)
 	{
-		if (guiScreens[currentScreen].selectedObject != (int) guiScreens[currentScreen].objectIDIndex.size () - 1)    // Don't go past number on screen
+		if (guiScreens[currentScreen].selectedObject != static_cast<int>(guiScreens[currentScreen].objectIDIndex.size ()) - 1)    // Don't go past number on screen
 		{
 			while (!canBeSelected (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject + indexCount]))
 			{
@@ -950,9 +950,9 @@ void paraGui::checkMovementActions ()
 			}
 
 			guiScreens[currentScreen].selectedObject += indexCount;
-			if (indexCount > (int) guiScreens[currentScreen].objectIDIndex.size ())
+			if (indexCount > static_cast<int>(guiScreens[currentScreen].objectIDIndex.size ()))
 			{
-				indexCount = (int) guiScreens[currentScreen].objectIDIndex.size ();
+				indexCount = static_cast<int>(guiScreens[currentScreen].objectIDIndex.size ());
 				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
 			}
 			else
@@ -1071,7 +1071,7 @@ void paraGui::save ()
 	for (auto keyIndex = 0; keyIndex != KEY_NUMBER_ACTIONS; keyIndex++)
 	{
 		returnCode = PHYSFS_writeBytes (fileHandle, &keyBinding[keyIndex].keyValue, sizeof (keyBinding[keyIndex].keyValue));
-		if (returnCode < (PHYSFS_sint64) sizeof (keyBinding[keyIndex].keyValue))
+		if (returnCode < static_cast<PHYSFS_sint64>(sizeof (keyBinding[keyIndex].keyValue)))
 			funcOutput (-1, int_getString ("Unable to write keybinding file [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
 	}
 
@@ -1171,15 +1171,19 @@ void paraGui::setState (int whichKey, bool newState, int newActionSource)
 void paraGui::setKeyDescription ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	keyBinding[KEY_LEFT].text       = funcGetString ("gameLeft");
-	keyBinding[KEY_RIGHT].text      = funcGetString ("gameRight");
-	keyBinding[KEY_DOWN].text       = funcGetString ("gameDown");
-	keyBinding[KEY_UP].text         = funcGetString ("gameUp");
-	keyBinding[KEY_PAUSE].text      = funcGetString ("gamePause");
-	keyBinding[KEY_ACTION].text     = funcGetString ("gameAction");
-	keyBinding[KEY_ESCAPE].text     = funcGetString ("gameEscape");
-	keyBinding[KEY_CONSOLE].text    = funcGetString ("consoleAction");
-	keyBinding[KEY_SCREENSHOT].text = funcGetString ("gameScreenShot");
+	return;
+
+	
+	keyBinding[KEY_LEFT].text       = funcGetString ((string1)("gameLeft"));
+	keyBinding[KEY_RIGHT].text      = funcGetString ((string1)"gameRight");
+	keyBinding[KEY_DOWN].text       = funcGetString ((string1)"gameDown");
+	keyBinding[KEY_UP].text         = funcGetString ((string1)"gameUp");
+	keyBinding[KEY_PAUSE].text      = funcGetString ((string1)"gamePause");
+	keyBinding[KEY_ACTION].text     = funcGetString ((string1)"gameAction");
+	keyBinding[KEY_ESCAPE].text     = funcGetString ((string1)"gameEscape");
+	keyBinding[KEY_CONSOLE].text    = funcGetString ((string1)"consoleAction");
+	keyBinding[KEY_SCREENSHOT].text = funcGetString ((string1)"gameScreenShot");
+	
 }
 
 //----------------------------------------------------------------------------------------------------------------------

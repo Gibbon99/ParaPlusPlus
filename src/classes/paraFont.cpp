@@ -46,7 +46,7 @@ std::string paraFont::int_getString(std::string format, ...)
 void paraFont::use(std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	auto fontItr = fonts.find(keyName);
+	auto &fontItr = fonts.find(keyName);
 	if (fontItr == fonts.end())
 	{
 		funcOutput(-1, int_getString("Unable to find font [ %s ]", keyName.c_str()));
@@ -145,8 +145,8 @@ PARA_Surface *paraFont::write(double X, double Y, std::string fontText)
 		funcOutput(-1, int_getString("Unable to render font to surface [ %s ]", TTF_GetError()));
 		return nullptr;
 	}
-	paraFont::pos.x = (int) X;
-	paraFont::pos.y = (int) Y;
+	paraFont::pos.x = static_cast<int>(X);
+	paraFont::pos.y = static_cast<int>(Y);
 	paraFont::pos.w = paraFont::surface->w;
 	paraFont::pos.h = paraFont::surface->h;
 
