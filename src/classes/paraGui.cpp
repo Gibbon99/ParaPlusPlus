@@ -940,7 +940,7 @@ void paraGui::checkMovementActions ()
 {
 	int indexCount = 1;
 
-	if (keyBinding[KEY_DOWN].currentlyPressed)
+	if (keyBinding[KEY_DOWN].active)
 	{
 		if (guiScreens[currentScreen].selectedObject != (int) guiScreens[currentScreen].objectIDIndex.size () - 1)    // Don't go past number on screen
 		{
@@ -965,7 +965,7 @@ void paraGui::checkMovementActions ()
 		}
 	}
 
-	if (keyBinding[KEY_UP].currentlyPressed)
+	if (keyBinding[KEY_UP].active)
 	{
 		indexCount = 1;
 		if (guiScreens[currentScreen].selectedObject > 0)
@@ -1009,7 +1009,7 @@ void paraGui::processAction ()
 {
 	int currentElement;
 
-	if (keyBinding[KEY_ACTION].currentlyPressed)
+	if (keyBinding[KEY_ACTION].active)
 	{
 		currentElement = guiScreens[currentScreen].selectedObject;
 		// Play good sound
@@ -1145,7 +1145,7 @@ bool paraGui::keyDown (int whichKey)
 		return false;
 	}
 
-	return keyBinding[whichKey].currentlyPressed;
+	return keyBinding[whichKey].active;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -1160,7 +1160,7 @@ void paraGui::setState (int whichKey, bool newState, int newActionSource)
 		return;
 	}
 
-	keyBinding[whichKey].currentlyPressed = newState;
+	keyBinding[whichKey].active = newState;
 	if (whichKey == KEY_ACTION)
 		newActionSource = newActionSource;
 }
@@ -1201,13 +1201,45 @@ void paraGui::setDefaultKeybindings ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Update the state of the keyboard mappings from the system keyboard state
+// Set whether keys repeat when held down or not
+void paraGui::setRepeatOff(bool newState)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	repeatOff = newState;
+}
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Update the state of the keyboard mappings from the system keyboard state. Don't repeat keys if repeatOff is true
 void paraGui::update ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	for (auto keyCounter = 0; keyCounter != KEY_NUMBER_ACTIONS; keyCounter++)
 	{
-		keyboardState[keyBinding[keyCounter].keyValue] ? keyBinding[keyCounter].currentlyPressed = true : keyBinding[keyCounter].currentlyPressed = false;
+		keyboardState[keyBinding[keyCounter].keyValue] ? keyBinding[keyCounter].active = true : keyBinding[keyCounter].active = false;
+	}
+
+	if (repeatOff)
+	{
+		for (auto keyCounter = 0; keyCounter != KEY_NUMBER_ACTIONS; keyCounter++)
+		{
+			if (keyboardState[keyBinding[keyCounter].keyValue])  // Key is down
+			{
+				if (keyBinding[keyCounter].active && (keyBinding[keyCounter].state == PARA_KEY_UP))
+				{
+					keyBinding[keyCounter].active = true;
+					keyBinding[keyCounter].state = PARA_KEY_DOWN;
+				}
+				else if (keyBinding[keyCounter].active && (keyBinding[keyCounter].state == PARA_KEY_DOWN))
+				{
+					keyBinding[keyCounter].active = false;
+				}
+			}
+			else
+			{
+				keyBinding[keyCounter].active = false;
+				keyBinding[keyCounter].state = PARA_KEY_UP;
+			}
+		}
 	}
 }
 

@@ -24,6 +24,7 @@ void sys_setNewMode (int newMode, bool doFade)
 	switch (newMode)
 	{
 		case MODE_CONSOLE_EDIT:
+			gui.setRepeatOff(true);
 			//
 			// Change to new backing texture
 			renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);

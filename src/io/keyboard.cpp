@@ -30,14 +30,6 @@ int filterEvents(void *userData, SDL_Event  *event)
 void io_processKeyboardState()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	static bool funcDone = false;
-
-	if (!funcDone)
-	{
-		funcDone = true;
-//		SDL_SetEventFilter(filterEvents, nullptr);
-	}
-
 	gui.keyboardState = SDL_GetKeyboardState (nullptr);
 	gui.update();
 	io_mapJoyToInput();

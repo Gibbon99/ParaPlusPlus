@@ -61,7 +61,8 @@ struct __KeyBindings
 {
 	std::string text;
 	PARA_Scancode keyValue;
-	bool        currentlyPressed;
+	bool        active;
+	int state;
 };
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -151,6 +152,8 @@ public:
 // Input related functions
 //
 
+	void setRepeatOff(bool newState);
+
 	void setDefaultKeybindings ();
 
 	void setKeyDescription ();
@@ -181,6 +184,7 @@ private:
 	__KeyBindings                keyBinding[KEY_NUMBER_ACTIONS];
 	std::string                  fileName;
 	funcStrIn                    funcGetString;
+	bool repeatOff = true;
 	int                          currentScreen = 0;
 	double                       renderWidth   = 0;
 	double                       renderHeight  = 0;

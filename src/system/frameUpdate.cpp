@@ -12,8 +12,6 @@ SDL_Event evt;
 void sys_processSystemEvents ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-
-
 	while (SDL_PollEvent (&evt) != 0)
 	{
 		switch (evt.type)
