@@ -44,6 +44,11 @@ void sys_setNewMode (int newMode, bool doFade)
 			renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);
 			break;
 
+		case MODE_SIDEWVIEW:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);
+			break;
+
 		default:
 			sys_shutdownWithError ("Attempting to set an unknown mode.");
 			break;

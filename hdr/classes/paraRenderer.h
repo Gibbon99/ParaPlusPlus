@@ -53,6 +53,10 @@ public:
 
 	PARA_Texture *getRenderTarget (std::string textureName);
 
+	int renderWidth();
+
+	int renderHeight();
+
 	// Set things
 	void setShutdownFunction (functionPtrStr outputFunction);
 

@@ -1,6 +1,7 @@
 #include <game/audio.h>
 #include <gui/guiLanguage.h>
 #include "../../hdr/system/scriptConfig.h"
+#include "gui/guiSideview.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -29,6 +30,7 @@ void sys_scriptInitVariables ()
 {
 	paraScriptInstance.addHostVariable ("int quitProgram", &quitLoop);
 	paraScriptInstance.addHostVariable ("int currentLanguage", &currentLanguage);
+	paraScriptInstance.addHostVariable("float sideviewDrawScale", &sideviewDrawScale);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)
@@ -98,4 +100,7 @@ void sys_scriptInitFunctions ()
 
 	paraScriptInstance.addHostFunction ("void gui_addKeyAndText(string &in, string &in)", (functionPtr) &gui_addKeyAndText);
 	paraScriptInstance.addHostFunction ("string gui_getString(string &in)", (functionPtr) &gui_getString);
+
+	paraScriptInstance.addHostFunction ("void as_createSideViewColor  (int index, int red, int green, int blue, int alpha)", (functionPtr) &gui_createSideViewColor);
+
 }

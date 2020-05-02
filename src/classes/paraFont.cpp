@@ -181,3 +181,30 @@ int paraFont::width(std::string fontText)
 
 	return textWidth;
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Render a string of text
+void paraFont::render(SDL_Renderer *whichRenderer, double posX, double posY, int r, int g, int b, int a, std::string text)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	SDL_Surface     *tempSurface;
+	SDL_Texture     *tempTexture;
+	SDL_Rect        tempRect;
+
+	setColor (r, g, b, a);
+	tempSurface = write (posX, posY, text);
+	if (nullptr == tempSurface)
+	{
+		funcOutput (-1, int_getString ("%s", "Unable to create temp surface when rendering text [ %s ].", text.c_str()));
+		return;
+	}
+	tempTexture = SDL_CreateTextureFromSurface (whichRenderer, tempSurface);
+	if (nullptr == tempTexture)
+	{
+		funcOutput (-1, int_getString ("%s", "Unable to create temp texture when rendering console."));
+		return;
+	}
+	SDL_RenderCopy (whichRenderer, tempTexture, nullptr, &pos);
+	SDL_DestroyTexture (tempTexture);
+}

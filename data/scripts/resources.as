@@ -14,4 +14,5 @@ void as_loadTextureResources()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	as_texture.load("splash.bmp");
+	as_texture.load("planet.bmp");
 }

@@ -2,6 +2,7 @@
 #include <io/keyboard.h>
 #include <io/joystick.h>
 #include <io/mouse.h>
+#include <gui/guiSideview.h>
 #include "../../hdr/system/frameUpdate.h"
 
 SDL_Event evt;
@@ -94,6 +95,9 @@ void sys_processSystemEvents ()
 				if (evt.key.keysym.sym == SDLK_F3)
 					sys_setNewMode (MODE_CONSOLE_EDIT, true);
 
+				if (evt.key.keysym.sym == SDLK_F4)
+					sys_setNewMode(MODE_SIDEWVIEW, true);
+
 				break;
 
 			case SDL_TEXTINPUT:
@@ -118,4 +122,11 @@ void sys_gameTickRun ()
 	io_checkFileWatcher ();
 
 	sys_processSystemEvents ();
+
+	switch (currentMode)
+	{
+		case MODE_SIDEWVIEW:
+			gui_animateStarfield();
+			break;
+	}
 }

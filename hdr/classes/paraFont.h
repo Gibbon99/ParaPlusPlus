@@ -37,6 +37,8 @@ public:
 
 	int height ();
 
+	void render(SDL_Renderer *whichRenderer, double posX, double posY, int r, int g, int b, int a, std::string text);
+
 	SDL_Rect pos;
 
 private:

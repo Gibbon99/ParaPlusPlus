@@ -1,6 +1,7 @@
 #include "gui/guiRender.h"
 #include "system/frameRender.h"
 #include "io/console.h"
+#include "gui/guiSideview.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -46,6 +47,10 @@ void sys_renderFrame (double interpolation)
 
 		case MODE_GUI:
 			gui_renderGUI ();
+			break;
+
+		case MODE_SIDEWVIEW:
+			gui_renderSideView ();
 			break;
 	}
 	sys_completeFrame ();

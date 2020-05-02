@@ -1,6 +1,7 @@
 #include <vector>
 #include <cstdarg>
 #include <cstring>
+#include <SDL_rwops.h>
 #include "../../hdr/classes/paraFileSystem.h"
 
 //----------------------------------------------------------------------------------------------------------------------

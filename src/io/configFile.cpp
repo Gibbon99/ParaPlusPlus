@@ -2,6 +2,7 @@
 #include <gui/guiLanguage.h>
 #include "../../hdr/io/configFile.h"
 #include "../../hdr/system/startup.h"
+#include "gui/guiSideview.h"
 
 CSimpleIniA iniFile;
 std::string configFileName = "";
@@ -147,5 +148,12 @@ void io_readConfigValues(const std::string& fileName)
 	currentLanguage = (int)iniFile.GetLongValue("Main", "currentLanguage", -1);
 	if (currentLanguage == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "currentLanguage"));
+
+	sideviewDrawScale = iniFile.GetDoubleValue("Main", "sideviewDrawScale", -1);
+	if (sideviewDrawScale == -1)
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "sideviewDrawScale"));
+
+
+
 }
 

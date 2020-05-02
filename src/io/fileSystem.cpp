@@ -62,3 +62,16 @@ SDL_RWops *io_loadRawFile (std::string fileName)
 
 	return memFilePtr;
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return a file pointer to a block of memory to be used like a file
+SDL_RWops *io_openMemFile(char *memoryPointer, int memorySize)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	SDL_RWops   *filePointer;
+
+	filePointer = SDL_RWFromMem(memoryPointer, memorySize);
+
+	return filePointer;
+}

@@ -11,6 +11,7 @@
 #include "../../hdr/io/configFile.h"
 #include "../../hdr/io/logFile.h"
 #include "../../hdr/io/console.h"
+#include "gui/guiSideview.h"
 
 // Variables needed to start everything
 int         logicalWinWidth;
@@ -138,6 +139,7 @@ void sys_startSystems ()
 	fontClass.use ("guiFont");
 
 	gui.init (con_addEvent, gui_getString, windowWidth, windowHeight, "keybinding.para");
+	gui_loadSideViewData ("sideview.dat");
 	paraScriptInstance.run ("as_createGUI", "");
 //	audio.load("start1", "start1.wav");
 

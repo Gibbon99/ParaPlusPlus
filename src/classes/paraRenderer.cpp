@@ -581,3 +581,29 @@ void paraRenderer::prepareFrame ()
 		}
 	}
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the width of the current backing texture
+int paraRenderer::renderWidth()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	auto backingItr = backingTextures.find(getCurrentBackingTexture());
+	if (backingItr != backingTextures.end())
+	{
+		return backingItr->second.logicalWidth;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the height of the current backing texture
+int paraRenderer::renderHeight()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	auto backingItr = backingTextures.find(getCurrentBackingTexture());
+	if (backingItr != backingTextures.end())
+	{
+		return backingItr->second.logicalHeight;
+	}
+}

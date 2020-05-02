@@ -147,5 +147,4 @@ void gui_renderButton (int whichButton, bool hasFocus)
 	}
 	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
 	SDL_DestroyTexture (tempTexture);
-
 }
