@@ -12,10 +12,14 @@ typedef SDL_RWops *(*textureFunctionPtrLoad) (std::string);
 
 struct __texture
 {
-	bool         loaded           = false;
-	std::string  fileName         = "";
-	std::string  keyName          = "";
-	PARA_Texture *texture           = nullptr;
+	bool              loaded   = false;
+	int               width;
+	int               height;
+	std::string       fileName = "";
+	std::string       keyName  = "";
+	std::vector<char> collisionMap;
+	PARA_Texture *texture      = nullptr;
+	PARA_Surface *surface      = nullptr;
 };
 
 class paraTexture
@@ -23,7 +27,8 @@ class paraTexture
 public:
 
 	void ReleaseRef ();
-	void AddRef();
+
+	void AddRef ();
 
 	int init (textureFunctionPtrStr outputFunction, textureFunctionPtrLoad loadFunction);
 
@@ -31,12 +36,18 @@ public:
 
 	bool load (std::string fileName);
 
-	void render(std::string keyName);
+	void render (std::string keyName);
+
+	bool createMap(std::string textureName);
+
+	void loadMap(std::string textureName);
+
+	char pixelColor (std::string textureName, int posX, int posY);
 
 private:
-	std::map<std::string, __texture>   texture;
-	textureFunctionPtrStr              funcOutput{};
-	textureFunctionPtrLoad             funcLoad{};
+	std::map<std::string, __texture> texture;
+	textureFunctionPtrStr            funcOutput{};
+	textureFunctionPtrLoad           funcLoad{};
 };
 
 

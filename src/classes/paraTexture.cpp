@@ -1,4 +1,3 @@
-
 #include <main.h>
 #include "classes/paraTexture.h"
 
@@ -60,7 +59,6 @@ bool paraTexture::load (std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	__texture tempTexture;
-	PARA_Surface *tempSurface;
 
 	if (fileName.empty ())
 	{
@@ -69,21 +67,27 @@ bool paraTexture::load (std::string fileName)
 	}
 
 	tempTexture.fileName = fileName;
-	tempTexture.keyName  = fileName.erase (fileName.find_last_of ("."), std::string::npos);
-	tempSurface = SDL_LoadBMP_RW (funcLoad (tempTexture.fileName), 0);
-	if (nullptr == tempSurface)
+	tempTexture.surface  = SDL_LoadBMP_RW (funcLoad (tempTexture.fileName), 0);
+	if (nullptr == tempTexture.surface)
 	{
 		funcOutput (-1, int_getString ("Unable to load texture file [ %s ] - [ %s ]", tempTexture.fileName.c_str (), SDL_GetError ()));
 		return false;
 	}
 
-	tempTexture.texture = SDL_CreateTextureFromSurface (renderer.renderer, tempSurface);
+	tempTexture.texture = SDL_CreateTextureFromSurface (renderer.renderer, tempTexture.surface);
 	if (nullptr == tempTexture.texture)
 	{
 		funcOutput (-1, int_getString ("Failed to create texture [ %s ] - [ %s ]", tempTexture.fileName.c_str (), SDL_GetError ()));
 		return false;
 	}
-	tempTexture.loaded = true;
+	tempTexture.loaded  = true;
+	tempTexture.keyName = fileName.erase (fileName.find_last_of ("."), std::string::npos);
+	if (SDL_QueryTexture (tempTexture.texture, NULL, NULL, &tempTexture.width, &tempTexture.height) < 0)
+	{
+		funcOutput (-1, int_getString ("Failed to query next texture [ %s ] - [ %s ]", tempTexture.fileName.c_str (), SDL_GetError ()));
+		return false;
+	}
+
 	texture.insert (std::pair<std::string, __texture> (tempTexture.keyName, tempTexture));
 	funcOutput (-1, int_getString ("Loaded [ %s ] with key [ %s ]", tempTexture.fileName.c_str (), tempTexture.keyName.c_str ()));
 #ifdef MY_DEBUG
@@ -97,12 +101,131 @@ bool paraTexture::load (std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a texture to the current backing target - or screen if backing texture is not used
-void paraTexture::render(std::string keyName)
+void paraTexture::render (std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (SDL_RenderCopy(renderer.renderer, texture[keyName].texture, nullptr, nullptr) < 0)
+	if (SDL_RenderCopy (renderer.renderer, texture[keyName].texture, nullptr, nullptr) < 0)
 	{
-		funcOutput(-1, int_getString("Unable to render texture [ %s ] - [ %s ]", keyName.c_str(), SDL_GetError()));
+		funcOutput (-1, int_getString ("Unable to render texture [ %s ] - [ %s ]", keyName.c_str (), SDL_GetError ()));
 		return;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the boolean value from single bit array of the image pixels
+char paraTexture::pixelColor (std::string textureName, int posX, int posY)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return texture[textureName].collisionMap[posY * texture[textureName].surface->w + posX];
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Load a collision map
+void paraTexture::loadMap (std::string textureName)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	PHYSFS_file   *fileHandle;
+	PHYSFS_sint64 returnCode;
+	std::string collisionMapFileName;
+
+	collisionMapFileName = textureName + ".map";
+
+	auto fileSize = fileSystem.getFileSize (collisionMapFileName);
+	texture[textureName].collisionMap.resize (fileSize);
+
+	fileHandle = PHYSFS_openRead (collisionMapFileName.c_str());
+	if (nullptr == fileHandle)
+	{
+		funcOutput (-1, int_getString("Unable to open file [ %s ] [ %s ]", collisionMapFileName.c_str(), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+		return;
+	}
+
+	returnCode = PHYSFS_readBytes (fileHandle, &texture[textureName].collisionMap[0], fileSize * sizeof (char));
+	if (returnCode < 0)
+	{
+		funcOutput (-1, int_getString("Unable to read file [ %s ] [ %s ]", collisionMapFileName.c_str(), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+		return;
+	}
+
+	PHYSFS_close (fileHandle);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Create a collision map - used for starfield background
+bool paraTexture::createMap (std::string textureName)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int  counter = 0;
+	std::string collisionMapFileName;
+
+	collisionMapFileName = textureName + ".map";
+
+	if (fileSystem.doesFileExist (collisionMapFileName))
+	{
+		loadMap (texture[textureName].keyName);
+		return true;
+	}
+
+	texture[textureName].collisionMap.resize (texture[textureName].surface->h * texture[textureName].surface->w);
+
+	texture[textureName].surface = SDL_ConvertSurfaceFormat (texture[textureName].surface, SDL_PIXELFORMAT_ARGB8888, 0);
+
+	//If the surface must be locked
+	if (SDL_MUSTLOCK(texture[textureName].surface))
+	{
+		//Lock the surface
+		SDL_LockSurface (texture[textureName].surface);
+	}
+
+	Uint32 *pixels    = (Uint32 *) texture[textureName].surface->pixels;
+	Uint32 blackColor = SDL_MapRGBA (texture[textureName].surface->format, 0, 0, 0, 255);
+
+	std::cout << "Start map creation" << std::endl;
+
+	for (int      y = 0; y < texture[textureName].surface->h; y++)
+	{
+		for (int x = 0; x < texture[textureName].surface->w; x++)
+		{
+			if (blackColor != pixels[y * texture[textureName].surface->w + x])
+				texture[texture[textureName].keyName].collisionMap[counter] = 0;
+			else
+				texture[texture[textureName].keyName].collisionMap[counter] = 1;
+
+			if (counter == (texture[textureName].surface->h * texture[textureName].surface->w) / 2)
+				std::cout << "Done 50%" << std::endl;
+
+			counter++;
+		}
+	}
+
+	//
+	// Write out to file to cache for next run
+	PHYSFS_file *fileHandle;
+	PHYSFS_sint64 returnCode;
+
+	fileHandle = PHYSFS_openWrite (collisionMapFileName.c_str());
+	if (fileHandle == nullptr)
+	{
+		funcOutput (-1, int_getString ("Unable to open file for writing [ %s ] - [ %s ]", collisionMapFileName.c_str(), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+		return false;
+	}
+
+	returnCode = PHYSFS_writeBytes (fileHandle, &texture[textureName].collisionMap[0], (texture[textureName].collisionMap.size()) * sizeof (char));
+
+	if (returnCode < 0)
+	{
+		funcOutput (-1, int_getString ("Incomplete file write [ %s ] - [ %s ]", collisionMapFileName.c_str(), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+		return false;
+	}
+	PHYSFS_close (fileHandle);
+
+	//If the surface must be locked
+	if (SDL_MUSTLOCK(texture[textureName].surface))
+	{
+		//Lock the surface
+		SDL_UnlockSurface (texture[textureName].surface);
 	}
 }

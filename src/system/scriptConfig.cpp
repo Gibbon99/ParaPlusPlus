@@ -65,6 +65,7 @@ void sys_scriptInitFunctions ()
 	paraScriptInstance.scriptEngine->RegisterObjectBehaviour ("paraTexture", asBEHAVE_ADDREF, "void f()", asMETHOD(paraTexture, AddRef), asCALL_THISCALL);
 	paraScriptInstance.scriptEngine->RegisterObjectBehaviour ("paraTexture", asBEHAVE_RELEASE, "void f()", asMETHOD(paraTexture, ReleaseRef), asCALL_THISCALL);
 	paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraTexture", "bool load(string fileName)", asMETHOD(paraTexture, load), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraTexture", "void createMap(string fileName)", asMETHOD(paraTexture, createMap), asCALL_THISCALL);
 	paraScriptInstance.scriptEngine->RegisterGlobalProperty ("paraTexture as_texture", &texture);
 	//
 	// Pass in the audio class to the script

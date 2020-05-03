@@ -161,7 +161,7 @@ int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
 	if ((pan < 0) || (pan > 255))
 		pan = 127;
 
-	auto &audioItr = audio.find (keyName);
+	auto audioItr = audio.find (keyName);
 	if (audioItr != audio.end ())
 	{
 		if (!audio[keyName].loaded)

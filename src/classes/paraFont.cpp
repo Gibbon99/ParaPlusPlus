@@ -46,7 +46,7 @@ std::string paraFont::int_getString(std::string format, ...)
 void paraFont::use(std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	auto &fontItr = fonts.find(keyName);
+	auto fontItr = fonts.find(keyName);
 	if (fontItr == fonts.end())
 	{
 		funcOutput(-1, int_getString("Unable to find font [ %s ]", keyName.c_str()));

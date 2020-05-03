@@ -317,3 +317,31 @@ bool paraFileSystem::doesFileExist(const std::string& fileName)
 
 	return static_cast<bool>(PHYSFS_exists(fileName.c_str()));
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Write a file to disk
+bool paraFileSystem::save(std::string fileName, const void *buffer, PHYSFS_uint32 size)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	PHYSFS_file     *fileHandle;
+	PHYSFS_sint64   returnCode;
+
+	fileHandle = PHYSFS_openWrite(fileName.c_str());
+	if (fileHandle == nullptr)
+	{
+		funcOutput(-1, int_getString("Unable to open file for writing [ %s ] - [ %s ]", fileName.c_str(), PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		return false;
+	}
+
+	returnCode = PHYSFS_writeBytes(fileHandle, buffer, size);
+	if (returnCode < size)
+	{
+		funcOutput(-1, int_getString("Incomplete file write [ %s ] - [ %s ]", fileName.c_str(), PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())));
+		return false;
+	}
+
+	PHYSFS_close(fileHandle);
+
+	return true;
+}

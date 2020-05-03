@@ -31,6 +31,8 @@ public:
 
 	void setMallocFunction (functionPtrMalloc mallocFunctionPtr);
 
+	bool save(std::string fileName, const void *buffer, PHYSFS_uint32 size);
+
 private:
 	bool                    fileSystemReady = false;
 	filesystemFuncPtrStr    funcShutdown;

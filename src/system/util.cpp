@@ -119,13 +119,13 @@ char *sys_malloc (int memorySize, std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Free a memory slot by name
-void sys_freeMemory (const std::string keyName)
+void sys_freeMemory (std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (memoryMap.size () == 0)
 		return;
 
-	auto &memoryItr = memoryMap.find (keyName);
+	auto memoryItr = memoryMap.find (keyName);
 
 	if (nullptr != memoryItr->second.pointer)
 	{

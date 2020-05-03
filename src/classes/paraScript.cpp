@@ -141,6 +141,14 @@ void paraScript::run (const std::string &functionName, const std::string &param)
 #ifdef MY_DEBUG
 			std::cout << "Context state : " << getContextState (context->GetState ()) << std::endl;
 #endif
+			if (asEXECUTION_PREPARED != context->GetState())
+			{
+				funcOutput (-1, sys_getString("The context is not ready to execute the function [ %s ].", functionName.c_str()));
+				return;
+			}
+
+//			while (asEXECUTION_ACTIVE == context->GetState());
+
 			returnCode = context->Execute ();
 			if (returnCode != asEXECUTION_FINISHED)
 			{

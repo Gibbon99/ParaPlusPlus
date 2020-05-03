@@ -196,11 +196,10 @@ bool gui_loadSideViewData (std::string sideviewFileName)
 
 	gui_setupTunnels ();
 
-	gui_prepareStarfield (100, depthNumber);
+	gui_prepareStarfield (50, depthNumber);
 
 	return true;
 }
-
 
 // ----------------------------------------------------------------------------
 //
@@ -392,7 +391,8 @@ void gui_renderStarfield()
 {
 	for (auto starItr : stars)
 	{
-		filledCircleRGBA (renderer.renderer, starItr.pos.x, starItr.pos.y, 2, starItr.depth * depthSpread, starItr.depth * depthSpread, starItr.depth * depthSpread, SDL_ALPHA_OPAQUE);
+		if (texture.pixelColor("planet", starItr.pos.x, starItr.pos.y) == 1)
+			filledCircleRGBA (renderer.renderer, starItr.pos.x, starItr.pos.y, 2, starItr.depth * depthSpread, starItr.depth * depthSpread, starItr.depth * depthSpread, SDL_ALPHA_OPAQUE);
 	}
 }
 
@@ -411,7 +411,7 @@ void gui_animateStarfield()
 		speedPercent = (double)starItr.depth / (double)depthNumber;
 		moveSpeed = topSpeed * speedPercent;
 		starItr.pos.x -= moveSpeed;
-		if (starItr.pos.x < 0)
+		if (starItr.pos.x <= 0)
 		{
 			starItr.pos.x = renderer.renderWidth ();
 			starItr.pos.y = randomStar.get (boundaryTopY, boundaryBottomY);
