@@ -16,6 +16,8 @@ void as_setGermanText ()
 	gui_addKeyAndText("consoleAction", "Rufen Sie die Konsole auf");
 	gui_addKeyAndText("gameScreenShot", "Mach ein Bildschirmfoto");
 
+	gui_addKeyAndText ("backButton", "Back");
+
 	gui_addKeyAndText ("mainMenu.startGameButton", "Spiel starten");
 	gui_addKeyAndText ("mainMenu.optionsButton", "Optionen");
 	gui_addKeyAndText ("mainMenu.tutorialButton", "Tutorial");

@@ -16,6 +16,14 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("consoleAction", "Invoke the console");
 	gui_addKeyAndText ("gameScreenShot", "Take a screenshot");
 
+	gui_addKeyAndText ("backButton", "Back");
+
+	gui_addKeyAndText ("optionsMenu.videoButton", "Video");
+	gui_addKeyAndText ("optionsMenu.audioButton", "Audio");
+	gui_addKeyAndText ("optionsMenu.controlsButton", "Controls");
+	gui_addKeyAndText ("optionsMenu.gameButton", "Game");
+	gui_addKeyAndText ("audioMenu.volume", "Volume");
+
 	gui_addKeyAndText ("mainMenu.startGameButton", "Start Game");
 	gui_addKeyAndText ("mainMenu.optionsButton", "Options");
 	gui_addKeyAndText ("mainMenu.tutorialButton", "Tutorial");

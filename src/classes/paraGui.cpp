@@ -16,6 +16,76 @@ void paraGui::ReleaseRef ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Return the index of the current action object from the current screen
+int paraGui::getActiveObjectIndex ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+#ifdef MY_GUI_DEBUG
+	std::cout << "getActiveObjectIndex. CurrentScreen : " << currentScreen << std::endl;
+#endif
+
+	return guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject];
+//	return guiScreens[currentScreen].selectedObject;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the currently active screen
+int paraGui::getCurrentScreen ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return currentScreen;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Set a new active object
+void paraGui::setActiveObject (int whichScreen, int objectType, std::string objectID)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int indexCount = 0;
+
+	for (auto indexItr : guiScreens[whichScreen].objectIDIndex)
+	{
+		switch (guiScreens[whichScreen].objectType[indexCount])
+		{
+			case GUI_OBJECT_BUTTON:
+				if (guiButtons[guiScreens[whichScreen].objectIDIndex[indexCount]].ID == objectID)
+				{
+					guiScreens[whichScreen].selectedObject = indexCount;
+				}
+				break;
+
+			case GUI_OBJECT_SLIDER:
+				if (guiSliders[guiScreens[whichScreen].objectIDIndex[indexCount]].ID == objectID)
+				{
+					guiScreens[whichScreen].selectedObject = indexCount;
+				}
+				break;
+		}
+		indexCount++;
+	}
+
+#ifdef MY_GUI_DEBUG
+	std::cout << "setActiveObject : " << --indexCount << " whichScreen : " << whichScreen << " objectType : " << objectType << " ObjectID : " << objectID << std::endl;
+#endif
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Change to a new GUI screen
+void paraGui::setCurrentScreen (int newScreen)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	currentScreen = newScreen;
+
+#ifdef MY_GUI_DEBUG
+	std::cout << "Setting currentScreen to : " << currentScreen << std::endl;
+#endif
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Return the index of the object index - by the passed in index
 int paraGui::indexByIndex (int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
@@ -110,6 +180,8 @@ void paraGui::restart ()
 {
 	guiScreens.clear ();
 	guiButtons.clear ();
+	guiSliders.clear ();
+	guiLabels.clear ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -157,8 +229,17 @@ int paraGui::getIndex (int objectType, std::string objectID)
 		case GUI_OBJECT_SCREEN:
 			for (const auto &itr : guiScreens)
 			{
+#ifdef MY_GUI_DEBUG
+				std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ]" << std::endl;
+#endif
 				if (itr.ID == objectID)
+				{
+#ifdef MY_GUI_DEBUG
+					std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ] - FOUND" << std::endl;
+#endif
 					return indexCounter;
+				}
+
 
 				indexCounter++;
 			}
@@ -166,7 +247,40 @@ int paraGui::getIndex (int objectType, std::string objectID)
 			break;
 
 		case GUI_OBJECT_BUTTON:
+
 			for (const auto &itr : guiButtons)
+			{
+#ifdef MY_GUI_DEBUG
+				std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ]" << std::endl;
+#endif
+				if (itr.ID == objectID)
+				{
+#ifdef MY_GUI_DEBUG
+					std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ] - FOUND" << std::endl;
+#endif
+					return indexCounter;
+				}
+
+
+				indexCounter++;
+			}
+			return GUI_OBJECT_NOT_FOUND;
+			break;
+
+		case GUI_OBJECT_SLIDER:
+			for (const auto &itr : guiSliders)
+			{
+				if (itr.ID == objectID)
+				{
+					return indexCounter;
+				}
+				indexCounter++;
+			}
+			return GUI_OBJECT_NOT_FOUND;
+			break;
+
+		case GUI_OBJECT_LABEL:
+			for (const auto &itr : guiLabels)
 			{
 				if (itr.ID == objectID)
 					return indexCounter;
@@ -189,6 +303,8 @@ void paraGui::create (int objectType, std::string objectID)
 {
 	__SCREEN_OBJECT newScreen;
 	__GUI_OBJECT    newButton;
+	__GUI_SLIDER    newSlider;
+	__GUI_OBJECT    newLabel;
 
 	if (objectID.empty ())
 	{
@@ -241,6 +357,49 @@ void paraGui::create (int objectType, std::string objectID)
 				}
 			}
 			guiButtons.push_back (newButton);
+			break;
+
+		case GUI_OBJECT_SLIDER:
+			newSlider.ID             = objectID;
+			newSlider.canFocus       = true;
+			newSlider.positionCalled = false;
+			if (guiSliders.empty ())
+			{
+				guiSliders.push_back (newSlider);
+				return;
+			}
+			//
+			// Check it doesnt alredy exists
+			for (auto sliderItr : guiSliders)
+			{
+				if (sliderItr.ID == objectID)
+				{
+					funcOutput (-1, int_getString ("Slider [ %s ] already exists.", objectID.c_str ()));
+					return;
+				}
+			}
+			guiSliders.push_back (newSlider);
+			break;
+
+		case GUI_OBJECT_LABEL:
+			newLabel.ID             = objectID;
+			newLabel.canFocus       = false;
+			newLabel.positionCalled = false;
+
+			if (guiLabels.empty ())
+			{
+				guiLabels.push_back (newLabel);
+				return;
+			}
+			for (auto labelItr : guiLabels)
+			{
+				if (labelItr.ID == objectID)
+				{
+					funcOutput (-1, int_getString ("Label [ %i ] already exists.", objectID.c_str ()));
+					return;
+				}
+			}
+			guiLabels.push_back (newLabel);
 			break;
 
 		default:
@@ -334,6 +493,54 @@ void paraGui::setPosition (int objectType, std::string objectID, int newRadius, 
 			guiButtons[objectIndex].positionCalled = true;
 			break;
 
+		case GUI_OBJECT_SLIDER:
+			guiSliders[objectIndex].cornerRadius   = newRadius;
+
+			if (GUI_COORD_PERCENT == coordType)
+			{
+				tempWidth  = renderWidth * (newWidth / 100.0);
+				tempHeight = renderHeight * (newHeight / 100.0);
+
+				guiSliders[objectIndex].boundingBox.x1 = renderWidth * (newPosX / 100.0);
+				guiSliders[objectIndex].boundingBox.y1 = renderHeight * (newPosY / 100.0);
+
+				guiSliders[objectIndex].boundingBox.x2 = guiSliders[objectIndex].boundingBox.x1 + tempWidth;
+				guiSliders[objectIndex].boundingBox.y2 = guiSliders[objectIndex].boundingBox.y1 + tempHeight;
+			}
+			else
+			{
+				guiSliders[objectIndex].boundingBox.x1 = newPosX;
+				guiSliders[objectIndex].boundingBox.y1 = newPosY;
+				guiSliders[objectIndex].boundingBox.x2 = guiSliders[objectIndex].boundingBox.x1 + newWidth;
+				guiSliders[objectIndex].boundingBox.y2 = guiSliders[objectIndex].boundingBox.y1 + newHeight;
+			}
+			guiSliders[objectIndex].positionCalled = true;
+			break;
+
+		case GUI_OBJECT_LABEL:
+			guiLabels[objectIndex].cornerRadius   = -1;
+
+			if (GUI_COORD_PERCENT == coordType)
+			{
+				tempWidth  = renderWidth * (newWidth / 100.0);
+				tempHeight = renderHeight * (newHeight / 100.0);
+
+				guiLabels[objectIndex].boundingBox.x1 = renderWidth * (newPosX / 100.0);
+				guiLabels[objectIndex].boundingBox.y1 = renderHeight * (newPosY / 100.0);
+
+				guiLabels[objectIndex].boundingBox.x2 = guiLabels[objectIndex].boundingBox.x1 + tempWidth;
+				guiLabels[objectIndex].boundingBox.y2 = guiLabels[objectIndex].boundingBox.y1 + tempHeight;
+			}
+			else
+			{
+				guiLabels[objectIndex].boundingBox.x1 = newPosX;
+				guiLabels[objectIndex].boundingBox.y1 = newPosY;
+				guiLabels[objectIndex].boundingBox.x2 = guiLabels[objectIndex].boundingBox.x1 + newWidth;
+				guiLabels[objectIndex].boundingBox.y2 = guiLabels[objectIndex].boundingBox.y1 + newHeight;
+			}
+			guiLabels[objectIndex].positionCalled = true;
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to set position."));
 			break;
@@ -359,6 +566,30 @@ std::string paraGui::getFontName (int objectType, int objectIndex)
 			}
 
 			return guiButtons[objectIndex].fontName;
+			break;
+
+		case GUI_OBJECT_SLIDER:
+			if (guiSliders.size () == 0)
+				return "";
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiSliders.size ())))
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				return "";
+			}
+			return guiSliders[objectIndex].fontName;
+			break;
+
+		case GUI_OBJECT_LABEL:
+			if (guiLabels.size () == 0)
+				return "";
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
+			{
+				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				return "";
+			}
+			return guiLabels[objectIndex].fontName;
 			break;
 
 		default:
@@ -392,6 +623,14 @@ void paraGui::setFontName (int objectType, std::string objectID, std::string new
 	{
 		case GUI_OBJECT_BUTTON:
 			guiButtons[objectIndex].fontName = std::move (newFontName);
+			break;
+
+		case GUI_OBJECT_SLIDER:
+			guiSliders[objectIndex].fontName = std::move (newFontName);
+			break;
+
+		case GUI_OBJECT_LABEL:
+			guiLabels[objectIndex].fontName = std::move (newFontName);
 			break;
 
 		default:
@@ -435,6 +674,18 @@ void paraGui::setLabel (int objectType, std::string objectID, int gapSize, int n
 			guiButtons[objectIndex].gapSize  = gapSize;
 			break;
 
+		case GUI_OBJECT_SLIDER:
+			guiSliders[objectIndex].label    = newLabel;
+			guiSliders[objectIndex].labelPos = newLabelPos;
+			guiSliders[objectIndex].gapSize  = gapSize;
+			break;
+
+		case GUI_OBJECT_LABEL:
+			guiLabels[objectIndex].label    = newLabel;
+			guiLabels[objectIndex].labelPos = newLabelPos;
+			guiLabels[objectIndex].gapSize  = gapSize;
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to set label."));
 			break;
@@ -466,6 +717,10 @@ void paraGui::setAction (int objectType, std::string objectID, std::string newAc
 	{
 		case GUI_OBJECT_BUTTON:
 			guiButtons[objectIndex].action = newAction;
+			break;
+
+		case GUI_OBJECT_SLIDER:
+			guiSliders[objectIndex].action = newAction;
 			break;
 
 		default:
@@ -519,6 +774,58 @@ void paraGui::setColorByIndex (int objectType, int objectIndex, int whichColor, 
 			}
 			break;
 
+		case GUI_OBJECT_SLIDER:
+			switch (whichColor)
+			{
+				case GUI_COL_ACTIVE:
+					guiSliders[objectIndex].hasFocusColor.r = red;
+					guiSliders[objectIndex].hasFocusColor.g = green;
+					guiSliders[objectIndex].hasFocusColor.b = blue;
+					guiSliders[objectIndex].hasFocusColor.a = alpha;
+					break;
+
+				case GUI_COL_INACTIVE:
+					guiSliders[objectIndex].noFocusColor.r = red;
+					guiSliders[objectIndex].noFocusColor.g = green;
+					guiSliders[objectIndex].noFocusColor.b = blue;
+					guiSliders[objectIndex].noFocusColor.a = alpha;
+					break;
+
+				case GUI_COL_ACTIVE_LABEL:
+					guiSliders[objectIndex].labelFocusColor.r = red;
+					guiSliders[objectIndex].labelFocusColor.g = green;
+					guiSliders[objectIndex].labelFocusColor.b = blue;
+					guiSliders[objectIndex].labelFocusColor.a = alpha;
+					break;
+
+				case GUI_COL_INACTIVE_LABEL:
+					guiSliders[objectIndex].labelNoFocusColor.r = red;
+					guiSliders[objectIndex].labelNoFocusColor.g = green;
+					guiSliders[objectIndex].labelNoFocusColor.b = blue;
+					guiSliders[objectIndex].labelNoFocusColor.a = alpha;
+					break;
+
+				default:
+					funcOutput (-1, int_getString ("Unknown color type."));
+					break;
+			}
+
+		case GUI_OBJECT_LABEL:
+			switch (whichColor)
+			{
+				case GUI_COL_ACTIVE:
+					guiSliders[objectIndex].hasFocusColor.r = red;
+					guiSliders[objectIndex].hasFocusColor.g = green;
+					guiSliders[objectIndex].hasFocusColor.b = blue;
+					guiSliders[objectIndex].hasFocusColor.a = alpha;
+					break;
+
+				default:
+					funcOutput (-1, int_getString ("Unknown color type."));
+					break;
+			}
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to set colors."));
 			break;
@@ -540,6 +847,14 @@ void paraGui::setColor (int objectType, std::string objectID, int whichColor, in
 		{
 			case GUI_OBJECT_BUTTON:
 				numObjects = guiButtons.size ();
+				break;
+
+			case GUI_OBJECT_SLIDER:
+				numObjects = guiSliders.size ();
+				break;
+
+			case GUI_OBJECT_LABEL:
+				numObjects = guiLabels.size();
 				break;
 
 			default:
@@ -594,6 +909,14 @@ void paraGui::setReady (int objectType, std::string objectID, bool newState)
 			guiButtons[objectIndex].ready = newState;
 			break;
 
+		case GUI_OBJECT_SLIDER:
+			guiSliders[objectIndex].ready = newState;
+			break;
+
+		case GUI_OBJECT_LABEL:
+			guiLabels[objectIndex].ready = newState;
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to set state."));
 			break;
@@ -628,6 +951,44 @@ std::string paraGui::getLabelText (int objectType, int objectIndex)
 			return guiButtons[objectIndex].label;
 			break;
 
+		case GUI_OBJECT_SLIDER:
+			if (guiSliders.size () == 0)
+				return "";
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiSliders.size ())))
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				return "";
+			}
+
+			if (guiSliders[objectIndex].label.size () == 0)
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no label set.", objectIndex, guiSliders[objectIndex].label.empty () ? "Unknown" : guiSliders[objectIndex].label.c_str ()));
+				return "";
+			}
+
+			return guiSliders[objectIndex].label;
+			break;
+
+		case GUI_OBJECT_LABEL:
+			if (guiLabels.size () == 0)
+				return "";
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
+				return "";
+			}
+
+			if (guiLabels[objectIndex].label.size () == 0)
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no label set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				return "";
+			}
+
+			return guiLabels[objectIndex].label;
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get label text."));
 			break;
@@ -653,6 +1014,32 @@ int paraGui::getGapSize (int objectType, int objectIndex)
 			}
 
 			return guiButtons[objectIndex].gapSize;
+			break;
+
+		case GUI_OBJECT_SLIDER:
+			if (guiSliders.size () == 0)
+				return GUI_OBJECT_NOT_FOUND;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiSliders.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			return guiSliders[objectIndex].gapSize;
+			break;
+
+		case GUI_OBJECT_LABEL:
+			if (guiLabels.size () == 0)
+				return GUI_OBJECT_NOT_FOUND;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			return guiLabels[objectIndex].gapSize;
 			break;
 
 		default:
@@ -688,6 +1075,44 @@ int paraGui::getLabelPos (int objectType, int objectIndex)
 			return guiButtons[objectIndex].labelPos;
 			break;
 
+		case GUI_OBJECT_SLIDER:
+			if (guiSliders.size () == 0)
+				return GUI_OBJECT_NOT_FOUND;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiSliders.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			if (!guiSliders[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiSliders[objectIndex].label.empty () ? "Unknown" : guiSliders[objectIndex].label.c_str ()));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			return guiSliders[objectIndex].labelPos;
+			break;
+
+		case GUI_OBJECT_LABEL:
+			if (guiLabels.size () == 0)
+				return GUI_OBJECT_NOT_FOUND;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			if (!guiLabels[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			return guiLabels[objectIndex].labelPos;
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get label position."));
 			break;
@@ -719,6 +1144,25 @@ int paraGui::getRadius (int objectType, int objectIndex)
 			}
 
 			return guiButtons[objectIndex].cornerRadius;
+			break;
+
+		case GUI_OBJECT_SLIDER:
+			if (guiSliders.size () == 0)
+				return GUI_OBJECT_NOT_FOUND;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiSliders.size ())))
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			if (!guiSliders[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiSliders[objectIndex].label.empty () ? "Unknown" : guiSliders[objectIndex].label.c_str ()));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			return guiSliders[objectIndex].cornerRadius;
 			break;
 
 		default:
@@ -781,11 +1225,82 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 					return badColor;
 					break;
 			}
+			break;
+
+		case GUI_OBJECT_SLIDER:
+			if (guiSliders.size () == 0)
+				return badColor;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiSliders.size ())))
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				return badColor;
+			}
+
+			if (!guiSliders[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiSliders[objectIndex].label.empty () ? "Unknown" : guiSliders[objectIndex].label.c_str ()));
+				return badColor;
+			}
+
+			switch (whichColor)
+			{
+				case GUI_COL_ACTIVE:
+					return guiSliders[objectIndex].hasFocusColor;
+					break;
+
+				case GUI_COL_INACTIVE:
+					return guiSliders[objectIndex].noFocusColor;
+					break;
+
+				case GUI_COL_ACTIVE_LABEL:
+					return guiSliders[objectIndex].labelFocusColor;
+					break;
+
+				case GUI_COL_INACTIVE_LABEL:
+					return guiSliders[objectIndex].labelNoFocusColor;
+					break;
+
+				default:
+					funcOutput (-1, int_getString ("Invalid color type."));
+					return badColor;
+					break;
+			}
+
+		case GUI_OBJECT_LABEL:
+			if (guiLabels.size () == 0)
+				return badColor;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
+				return badColor;
+			}
+
+			if (!guiLabels[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				return badColor;
+			}
+
+			switch (whichColor)
+			{
+				case GUI_COL_ACTIVE:
+					return guiSliders[objectIndex].hasFocusColor;
+					break;
+
+				default:
+					funcOutput (-1, int_getString ("Invalid color type."));
+					return badColor;
+					break;
+			}
+
 		default:
-			funcOutput (-1, int_getString ("Invalid object type. Unable to get dimensions."));
+			funcOutput (-1, int_getString ("Invalid object type. Unable to get color."));
 			break;
 	}
 }
+
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -821,6 +1336,44 @@ __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 			return guiButtons[objectIndex].boundingBox;
 			break;
 
+		case GUI_OBJECT_SLIDER:
+			if (guiSliders.size () == 0)
+				return badBox;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiSliders.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				return badBox;
+			}
+
+			if (!guiSliders[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiSliders[objectIndex].label.empty () ? "Unknown" : guiSliders[objectIndex].label.c_str ()));
+				return badBox;
+			}
+
+			return guiSliders[objectIndex].boundingBox;
+			break;
+
+		case GUI_OBJECT_LABEL:
+			if (guiLabels.size () == 0)
+				return badBox;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
+				return badBox;
+			}
+
+			if (!guiLabels[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				return badBox;
+			}
+
+			return guiLabels[objectIndex].boundingBox;
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get dimensions."));
 			break;
@@ -845,6 +1398,15 @@ void paraGui::setActive (std::string objectID)
 					guiScreens[currentScreen].selectedObject = (int) indexCount;
 					return;
 				}
+				break;
+
+			case GUI_OBJECT_SLIDER:
+				if (guiSliders[guiScreens[currentScreen].objectIDIndex[indexCount]].ID == objectID)
+				{
+					guiScreens[currentScreen].selectedObject = (int) indexCount;
+					return;
+				}
+				break;
 		}
 	}
 }
@@ -876,6 +1438,44 @@ bool paraGui::isReady (int objectType, int objectIndex)
 			return guiButtons[objectIndex].ready;
 			break;
 
+		case GUI_OBJECT_SLIDER:
+			if (guiSliders.size () == 0)
+				return false;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiSliders.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				return false;
+			}
+
+			if (!guiSliders[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiSliders[objectIndex].label.empty () ? "Unknown" : guiSliders[objectIndex].label.c_str ()));
+				return false;
+			}
+
+			return guiSliders[objectIndex].ready;
+			break;
+
+		case GUI_OBJECT_LABEL:
+			if (guiLabels.size () == 0)
+				return false;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
+				return false;
+			}
+
+			if (!guiLabels[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				return false;
+			}
+
+			return guiLabels[objectIndex].ready;
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to set state."));
 			return false;
@@ -893,7 +1493,7 @@ bool paraGui::canBeSelected (int objectType)
 	{
 		case GUI_OBJECT_BUTTON:
 //		case GUI_OBJECT_CHECKBOX:
-//		case GUI_OBJECT_SLIDER:
+		case GUI_OBJECT_SLIDER:
 //		case GUI_OBJECT_KEYCODE:
 			return true;
 
@@ -927,6 +1527,18 @@ void paraGui::checkMousePosition ()
 						}
 					}
 					break;
+
+				case GUI_OBJECT_SLIDER:
+					if (pointInBox (mouseX, mouseY, guiSliders[guiScreens[currentScreen].objectIDIndex[index]].boundingBox))
+					{
+						guiScreens[currentScreen].selectedObject = index;
+						if (previousElement != index)
+						{
+							gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+							previousElement = index;
+						}
+					}
+					break;
 			}
 		}
 	}
@@ -938,7 +1550,8 @@ void paraGui::checkMousePosition ()
 void paraGui::checkMovementActions ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int indexCount = 1;
+	int indexCount     = 1;
+	int selectedSlider = guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject];
 
 	if (keyBinding[KEY_DOWN].active)
 	{
@@ -999,6 +1612,43 @@ void paraGui::checkMovementActions ()
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
 		}
 	}
+
+	if (keyBinding[KEY_LEFT].active)
+	{
+		switch (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject])
+		{
+			case GUI_OBJECT_SLIDER:
+				if (guiSliders[selectedSlider].currentStep == 0)
+				{
+					gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+					return;
+				}
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+				guiSliders[selectedSlider].currentStep -= 1;
+				if (guiSliders[selectedSlider].currentStep < 0)
+					guiSliders[selectedSlider].currentStep = 0;
+				break;
+		}
+		return;
+	}
+
+	if (keyBinding[KEY_RIGHT].active)
+	{
+		switch (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject])
+		{
+			case GUI_OBJECT_SLIDER:
+				if (guiSliders[selectedSlider].currentStep == static_cast<int>(guiSliders[selectedSlider].element.size () - 1 ))
+				{
+					gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+					return;
+				}
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+				guiSliders[selectedSlider].currentStep += 1;
+				if (guiSliders[selectedSlider].currentStep > static_cast<int>(guiSliders[selectedSlider].element.size () - 1))
+					guiSliders[selectedSlider].currentStep = static_cast<int>(guiSliders[selectedSlider].element.size () - 1);
+				break;
+		}
+	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -1011,23 +1661,37 @@ void paraGui::processAction ()
 
 	if (keyBinding[KEY_ACTION].active)
 	{
-		currentElement = guiScreens[currentScreen].selectedObject;
+		currentElement = guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject];
 		// Play good sound
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
 
-		switch (guiScreens[currentScreen].objectType[currentElement])
+		switch (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject])
 		{
 			case GUI_OBJECT_BUTTON:
 				if (actionSource == KEY_ACTION_MOUSE)
 				{
 					if (pointInBox (mouseX, mouseY, guiButtons[currentElement].boundingBox))
 					{
-						std::cout << "Run function : " << guiButtons[currentElement].action << std::endl;
+						paraScriptInstance.run (guiButtons[guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject]].action, "");
 					}
 				}
 				else
 				{
-					std::cout << "Run function : " << guiButtons[currentElement].action << std::endl;
+					paraScriptInstance.run (guiButtons[guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject]].action, "");
+				}
+				break;
+
+			case GUI_OBJECT_SLIDER:
+				if (actionSource == KEY_ACTION_MOUSE)
+				{
+					if (pointInBox (mouseX, mouseY, guiSliders[currentElement].boundingBox))
+					{
+						paraScriptInstance.run (guiButtons[guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject]].action, "");
+					}
+				}
+				else
+				{
+					paraScriptInstance.run (guiButtons[guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject]].action, "");
 				}
 				break;
 		}
@@ -1171,10 +1835,9 @@ void paraGui::setState (int whichKey, bool newState, int newActionSource)
 void paraGui::setKeyDescription ()
 //----------------------------------------------------------------------------------------------------------------------
 {
+#ifdef WIN_32
 	return;
-
-	
-	keyBinding[KEY_LEFT].text       = funcGetString ((string1)("gameLeft"));
+	keyBinding[KEY_LEFT].text       = funcGetString ((string1)"gameLeft");
 	keyBinding[KEY_RIGHT].text      = funcGetString ((string1)"gameRight");
 	keyBinding[KEY_DOWN].text       = funcGetString ((string1)"gameDown");
 	keyBinding[KEY_UP].text         = funcGetString ((string1)"gameUp");
@@ -1183,7 +1846,17 @@ void paraGui::setKeyDescription ()
 	keyBinding[KEY_ESCAPE].text     = funcGetString ((string1)"gameEscape");
 	keyBinding[KEY_CONSOLE].text    = funcGetString ((string1)"consoleAction");
 	keyBinding[KEY_SCREENSHOT].text = funcGetString ((string1)"gameScreenShot");
-	
+#else
+	keyBinding[KEY_LEFT].text       = funcGetString ("gameLeft");
+	keyBinding[KEY_RIGHT].text      = funcGetString ("gameRight");
+	keyBinding[KEY_DOWN].text       = funcGetString ("gameDown");
+	keyBinding[KEY_UP].text         = funcGetString ("gameUp");
+	keyBinding[KEY_PAUSE].text      = funcGetString ("gamePause");
+	keyBinding[KEY_ACTION].text     = funcGetString ("gameAction");
+	keyBinding[KEY_ESCAPE].text     = funcGetString ("gameEscape");
+	keyBinding[KEY_CONSOLE].text    = funcGetString ("consoleAction");
+	keyBinding[KEY_SCREENSHOT].text = funcGetString ("gameScreenShot");
+#endif
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -1206,11 +1879,12 @@ void paraGui::setDefaultKeybindings ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set whether keys repeat when held down or not
-void paraGui::setRepeatOff(bool newState)
+void paraGui::setRepeatOff (bool newState)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	repeatOff = newState;
 }
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Update the state of the keyboard mappings from the system keyboard state. Don't repeat keys if repeatOff is true
@@ -1231,7 +1905,7 @@ void paraGui::update ()
 				if (keyBinding[keyCounter].active && (keyBinding[keyCounter].state == PARA_KEY_UP))
 				{
 					keyBinding[keyCounter].active = true;
-					keyBinding[keyCounter].state = PARA_KEY_DOWN;
+					keyBinding[keyCounter].state  = PARA_KEY_DOWN;
 				}
 				else if (keyBinding[keyCounter].active && (keyBinding[keyCounter].state == PARA_KEY_DOWN))
 				{
@@ -1241,10 +1915,112 @@ void paraGui::update ()
 			else
 			{
 				keyBinding[keyCounter].active = false;
-				keyBinding[keyCounter].state = PARA_KEY_UP;
+				keyBinding[keyCounter].state  = PARA_KEY_UP;
 			}
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+//
+// Return how many elements are in this slider
+int paraGui::getNumElements (int whichSlider)
+//-----------------------------------------------------------------------------
+{
+	return guiSliders[whichSlider].element.size ();
+}
+
+//-----------------------------------------------------------------------------
+//
+// Get the label for the current step in a slider
+std::string paraGui::sliderElementLabel (int whichSlider)
+//-----------------------------------------------------------------------------
+{
+	return guiSliders[whichSlider].element[guiSliders[whichSlider].currentStep].value;
+}
+
+//-----------------------------------------------------------------------------
+//
+// Return the number of elements in a slider
+int paraGui::sliderSize (int whichSlider)
+//-----------------------------------------------------------------------------
+{
+	return guiSliders[whichSlider].element.size ();
+}
+
+//-----------------------------------------------------------------------------
+//
+// Return the selector step position for a slider
+int paraGui::getSelectPosition (int whichSlider)
+//-----------------------------------------------------------------------------
+{
+	if ((whichSlider < 0) || (whichSlider > guiSliders.size () - 1))
+		return -1;
+
+	return guiSliders[whichSlider].currentStep;
+}
+
+//-----------------------------------------------------------------------------
+//
+// Set the slider to the passed in value
+void paraGui::setSliderValue (std::string objectID, std::string value)
+//-----------------------------------------------------------------------------
+{
+	int indexCount = 0;
+
+	for (auto &sliderItr : guiSliders)
+	{
+		if (sliderItr.ID == objectID)
+		{
+			for (std::vector<_sliderElement>::iterator stepItr = sliderItr.element.begin (); stepItr != sliderItr.element.end (); ++stepItr)
+			{
+				switch (stepItr->type)
+				{
+					case SLIDER_TYPE_INT:
+						if (stepItr->value == value)
+						{
+							sliderItr.currentStep = indexCount;
+							return;
+						}
+						break;
+
+					case SLIDER_TYPE_STRING:
+						if (stepItr->value == value)
+						{
+							sliderItr.currentStep = indexCount;
+							return;
+						}
+						break;
+				}
+				indexCount += 1;
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+//
+// Add an element to a slider
+void paraGui::addNewElement (const std::string objectID, const std::string newLabel, const std::string newValue, int type)
+//-----------------------------------------------------------------------------
+{
+	_sliderElement tmpElement;
+
+	int objectIndex = 0;
+	//
+	// Find the index for this object
+	objectIndex = getIndex (GUI_OBJECT_SLIDER, objectID);
+	if (-1 == objectIndex)
+	{
+		funcOutput (-1, int_getString ("ERROR: Couldn't find GUI object index [ %s ]", objectID.c_str ()));
+		return;
+	}
+
+	tmpElement.label = newLabel;
+	tmpElement.value = newValue;
+	tmpElement.type  = type;
+
+	guiSliders[objectIndex].element.push_back (tmpElement);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -1257,3 +2033,4 @@ void paraGui::process ()
 	checkMovementActions ();
 	processAction ();
 }
+

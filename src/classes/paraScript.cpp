@@ -140,6 +140,7 @@ void paraScript::run (const std::string &functionName, const std::string &param)
 			}
 #ifdef MY_DEBUG
 			std::cout << "Context state : " << getContextState (context->GetState ()) << std::endl;
+			std::cout << "Execute : " << functionName << std::endl;
 #endif
 			if (asEXECUTION_PREPARED != context->GetState())
 			{

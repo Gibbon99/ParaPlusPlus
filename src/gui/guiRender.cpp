@@ -1,3 +1,5 @@
+#include <gui/guiSlider.h>
+#include <gui/guiLabel.h>
 #include "gui/guiRender.h"
 #include "gui/guiButton.h"
 
@@ -11,6 +13,14 @@ void gui_drawObject (int objectType, int whichObject, bool hasFocus)
 	{
 		case GUI_OBJECT_BUTTON:
 			gui_renderButton (whichObject, hasFocus);
+			break;
+
+		case GUI_OBJECT_SLIDER:
+			gui_renderSlider(whichObject, hasFocus);
+			break;
+
+		case GUI_OBJECT_LABEL:
+			gui_renderLabel(whichObject, hasFocus);
 			break;
 	}
 }

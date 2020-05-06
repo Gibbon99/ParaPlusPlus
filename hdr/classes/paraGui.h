@@ -11,7 +11,8 @@
 typedef void (*funcPtrIntStr) (int, std::string);
 
 typedef std::string &string1;
-typedef std::string (*funcStrIn) (string1);     // Function to provide the key descriptions
+
+typedef std::string (*funcStrIn) (std::string);     // Function to provide the key descriptions
 
 struct __BOUNDING_BOX
 {
@@ -63,7 +64,38 @@ struct __KeyBindings
 	std::string text;
 	PARA_Scancode keyValue;
 	bool        active;
-	int state;
+	int         state;
+};
+
+typedef struct
+{
+	std::string label;    // Text to display
+	std::string value;    // Value of this element
+	int         type;    // What type of element - convert on query
+}                   _sliderElement;
+
+struct __GUI_SLIDER
+{
+	bool                        ready        = false;
+	bool                        canFocus;
+	bool                        positionCalled;
+	std::string                 ID;
+	int                         labelPos;
+	int                         gapSize;
+	int                         cornerRadius = 0;
+	int                         coordType;
+	int                         currentStep;  // What is selected
+	int                         numberSteps;  // How many elements
+	int                         barThickness;  // Thickness for drawing the bar
+	std::string                 label;
+	std::string                 fontName;
+	std::string                 action;
+	__PARA_COLOR                hasFocusColor;
+	__PARA_COLOR                noFocusColor;
+	__PARA_COLOR                labelFocusColor;
+	__PARA_COLOR                labelNoFocusColor;
+	__BOUNDING_BOX              boundingBox;
+	std::vector<_sliderElement> element;    // Value for this step
 };
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -108,6 +140,26 @@ public:
 
 	void create (int objectType, std::string objectID);
 
+	int getCurrentScreen ();
+
+	void setCurrentScreen (int newScreen);
+
+	void setActiveObject (int whichScreen, int objectType, std::string objectID);
+
+	int getActiveObjectIndex ();
+
+	void addNewElement (const std::string objectID, const std::string newLabel, const std::string newValue, int type);
+
+	void setSliderValue (std::string objectID, std::string value);
+
+	int getSelectPosition (int whichSlider);
+
+	int sliderSize (int whichSlider);
+
+	std::string sliderElementLabel (int whichSlider);
+
+	int getNumElements (int whichSlider);
+
 	//
 	// Used to get attributes when rendering
 	int numElements ();
@@ -138,22 +190,22 @@ public:
 
 	bool isReady (int objectType, int objectIndex);
 
-	bool pointInBox(int x, int y, __BOUNDING_BOX checkBox);
+	bool pointInBox (int x, int y, __BOUNDING_BOX checkBox);
 
 	bool canBeSelected (int objectType);
 
-	void checkMousePosition();
+	void checkMousePosition ();
 
-	void checkMovementActions();
+	void checkMovementActions ();
 
-	void processAction();
+	void processAction ();
 
-	void process();
+	void process ();
 //
 // Input related functions
 //
 
-	void setRepeatOff(bool newState);
+	void setRepeatOff (bool newState);
 
 	void setDefaultKeybindings ();
 
@@ -185,12 +237,14 @@ private:
 	__KeyBindings                keyBinding[KEY_NUMBER_ACTIONS];
 	std::string                  fileName;
 	funcStrIn                    funcGetString;
-	bool repeatOff = true;
+	bool                         repeatOff     = true;
 	int                          currentScreen = 0;
 	double                       renderWidth   = 0;
 	double                       renderHeight  = 0;
 	std::vector<__SCREEN_OBJECT> guiScreens;    // ** Add new vectors to restart for .clear()
 	std::vector<__GUI_OBJECT>    guiButtons;
+	std::vector<__GUI_SLIDER>    guiSliders;
+	std::vector<__GUI_OBJECT>    guiLabels;
 	funcPtrIntStr                funcOutput;
 };
 

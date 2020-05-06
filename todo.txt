@@ -1,0 +1,37 @@
+GUI
+------
+
+Options
+- video
+- audio
+- controls
+- game
+
+Video
+- Advanced Menu
+- Window - Windowed, Fullscreen, Fullscreen desktop - slider
+- Renderer - slider
+- Use VSync = checkbox
+
+Video Advanced
+- Borderless window - checkbox
+- Allow highDPI - checkbox
+- Render scale quality - slider
+
+Audio
+- Enable sound - checkbox
+- Volume - slider
+- Number channels - slider
+
+Controls
+- Keyboard controls
+- Calibrate joystick
+
+Game
+- Tile color - slider
+- Tile style - slider
+- Language - slider
+
+- image
+- scrollBox
+- label

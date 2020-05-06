@@ -18,6 +18,13 @@ void sys_scriptInitScriptFunctions ()
 	paraScriptInstance.addScriptFunction ("void as_setVolume(int &in newVolume)", "as_setVolume");
 
 	paraScriptInstance.addScriptFunction ("void as_createGUI()", "as_createGUI");
+	paraScriptInstance.addScriptFunction ("void as_handleMainMenu()", "as_handleMainMenu");
+	paraScriptInstance.addScriptFunction ("void as_handleOptionsMenu()", "as_handleOptionsMenu");
+
+	paraScriptInstance.addScriptFunction ("void as_handleVideoMenu()", "as_handleVideoMenu");
+	paraScriptInstance.addScriptFunction ("void as_handleAudioMenu()", "as_handleAudioMenu");
+	paraScriptInstance.addScriptFunction ("void as_handleControlsMenu()", "as_handleControlsMenu");
+	paraScriptInstance.addScriptFunction ("void as_handleGameMenu()", "as_handleGameMenu");
 
 	paraScriptInstance.addScriptFunction ("void as_testFunction()", "as_testFunction");
 }
@@ -91,6 +98,14 @@ void sys_scriptInitFunctions ()
 	paraScriptInstance.scriptEngine->RegisterObjectMethod("paraGui", "void setActive (string objectID)", asMETHOD(paraGui, setActive), asCALL_THISCALL);
 	paraScriptInstance.scriptEngine->RegisterObjectMethod("paraGui", "void setReady (int objectType, string objectID, bool newState)", asMETHOD(paraGui, setReady), asCALL_THISCALL);
 	paraScriptInstance.scriptEngine->RegisterObjectMethod("paraGui", "void create (int objectType, string objectID)", asMETHOD(paraGui, create), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterObjectMethod("paraGui", "int getCurrentScreen()", asMETHOD(paraGui, getCurrentScreen), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterObjectMethod("paraGui", "void setCurrentScreen(int newScreen)", asMETHOD(paraGui, setCurrentScreen), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterObjectMethod("paraGui", "int getIndex(int objectType, string &in objectID)", asMETHOD(paraGui, getIndex), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterObjectMethod("paraGui", "int getActiveObjectIndex()", asMETHOD(paraGui, getActiveObjectIndex), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterObjectMethod("paraGui", "void setActiveObject(int whichScreen, int objectType, string objectID)", asMETHOD(paraGui, setActiveObject), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterObjectMethod("paraGui", "void addNewElement ( string &in, string &in, string &in, int type)", asMETHOD(paraGui, addNewElement), asCALL_THISCALL);
+	paraScriptInstance.scriptEngine->RegisterObjectMethod("paraGui", "void setSliderValue( string &in, string &in)", asMETHOD(paraGui, setSliderValue), asCALL_THISCALL);
+
 	paraScriptInstance.scriptEngine->RegisterGlobalProperty("paraGui as_paraGui", &gui);
 
 
