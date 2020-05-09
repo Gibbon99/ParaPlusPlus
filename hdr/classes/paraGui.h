@@ -98,6 +98,54 @@ struct __GUI_SLIDER
 	std::vector<_sliderElement> element;    // Value for this step
 };
 
+struct __GUI_SCROLLBOX
+{
+	bool                     ready        = false;
+	bool                     canFocus;
+	bool                     positionCalled;
+	std::string              ID;
+	int                      labelPos;
+	int                      gapSize;
+	int                      cornerRadius = 0;
+	int                      coordType;
+	int                      currentChar;
+	int                      numLinesToPrint;
+	double                   lineFade;
+	double                   scrollDelay  = 0.2;
+	double                   scrollY;
+	double                   previousScrollY;
+	double                   scrollSpeed;
+	std::string              label;
+	std::string              fontName;
+	std::string              action;
+	__PARA_COLOR             hasFocusColor;
+	__PARA_COLOR             labelFocusColor;
+	__BOUNDING_BOX           boundingBox;
+	std::vector<std::string> scrollBoxText;
+};
+
+struct __GUI_CHECKBOX
+{
+	bool           ready          = false;
+	bool           canFocus       = false;
+	bool           positionCalled = false;
+	bool           checked        = false;
+	std::string    ID;
+	int            screenID       = -1;  // Which screen does this object belong to
+	int            labelPos;
+	int            cornerRadius   = 0;
+	int            gapSize        = 0;
+	int            group          = -1;
+	std::string    label;
+	std::string    fontName;
+	std::string    action;
+	__PARA_COLOR   hasFocusColor;
+	__PARA_COLOR   noFocusColor;
+	__PARA_COLOR   labelFocusColor;
+	__PARA_COLOR   labelNoFocusColor;
+	__BOUNDING_BOX boundingBox;
+};
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Class definition for GUI
@@ -122,7 +170,7 @@ public:
 
 	//
 	// Functions used in GUI script
-	void setLabel (int objectType, std::string objectID, int gapSize, int newLabelPos, std::string newLabel);
+	void setLabel (int objectType, std::string objectID, int newGapSize, int newLabelPos, std::string newLabel);
 
 	void setAction (int objectType, std::string objectID, std::string newAction);
 
@@ -144,9 +192,41 @@ public:
 
 	void setCurrentScreen (int newScreen);
 
+	void setScrollSpeed (std::string objectID, double newScrollSpeed);
+
+	void getNextLineOfText (int objectIndex);
+
+	double getScrollDelay (int objectIndex);
+
+	void setScrollDelay (int objectIndex, double newScrollDelay);
+
+	double getScrollY (int objectIndex);
+
+	void setScrollY (int objectIndex, double newScrollY);
+
+	double getPreviousScrollY (int objectIndex);
+
+	int getNumberPrintLines (int objectIndex);
+
+	void setNumberPrintLines (int objectIndex, int newNumberLines);
+
+	void setPreviousScrollY (int objectIndex, double newScrollY);
+
+	bool getTickedStatus(int objectIndex);
+
+	void setTickedStatus (std::string objectID, int whichGroup, bool newValue);
+
 	void setActiveObject (int whichScreen, int objectType, std::string objectID);
 
 	int getActiveObjectIndex ();
+
+	std::vector<std::string>::reverse_iterator getRBegin (int objectIndex);
+
+	std::vector<std::string>::reverse_iterator getREnd (int objectIndex);
+
+	double getLineFade (int objectIndex);
+
+	void setLineFade (int objectIndex, double newLineFade);
 
 	void addNewElement (const std::string objectID, const std::string newLabel, const std::string newValue, int type);
 
@@ -157,6 +237,8 @@ public:
 	int sliderSize (int whichSlider);
 
 	std::string sliderElementLabel (int whichSlider);
+
+	std::string getSliderValue(std::string objectID);
 
 	int getNumElements (int whichSlider);
 
@@ -192,7 +274,7 @@ public:
 
 	bool pointInBox (int x, int y, __BOUNDING_BOX checkBox);
 
-	bool canBeSelected (int objectType);
+	bool canBeSelected (int objectType, int whichObject);
 
 	void checkMousePosition ();
 
@@ -204,7 +286,6 @@ public:
 //
 // Input related functions
 //
-
 	void setRepeatOff (bool newState);
 
 	void setDefaultKeybindings ();
@@ -241,10 +322,12 @@ private:
 	int                          currentScreen = 0;
 	double                       renderWidth   = 0;
 	double                       renderHeight  = 0;
-	std::vector<__SCREEN_OBJECT> guiScreens;    // ** Add new vectors to restart for .clear()
+	std::vector<__SCREEN_OBJECT> guiScreens;    // ** Add new vectors to restart for .clear() when adding a new element
 	std::vector<__GUI_OBJECT>    guiButtons;
 	std::vector<__GUI_SLIDER>    guiSliders;
 	std::vector<__GUI_OBJECT>    guiLabels;
+	std::vector<__GUI_SCROLLBOX> guiScrollBoxes;
+	std::vector<__GUI_CHECKBOX>  guiCheckBoxes;
 	funcPtrIntStr                funcOutput;
 };
 

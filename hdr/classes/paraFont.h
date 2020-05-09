@@ -12,6 +12,7 @@ struct __PARA_FONT
 {
 	bool     available;
 	int      lineHeight;
+	int      descent;
 	TTF_Font *handle;
 };
 
@@ -37,7 +38,9 @@ public:
 
 	int height ();
 
-	void render(SDL_Renderer *whichRenderer, double posX, double posY, int r, int g, int b, int a, std::string text);
+	int descent ();
+
+	void render (SDL_Renderer *whichRenderer, double posX, double posY, int r, int g, int b, int a, std::string text);
 
 	SDL_Rect pos;
 

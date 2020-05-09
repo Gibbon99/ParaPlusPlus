@@ -53,9 +53,16 @@ public:
 
 	PARA_Texture *getRenderTarget (std::string textureName);
 
-	int renderWidth();
+	int renderWidth ();
 
-	int renderHeight();
+	int renderHeight ();
+
+	int getNumRenderers();
+
+	std::string getRendererByIndex(int whichRenderer);
+
+	int getCurrentRendererIndex();
+
 
 	// Set things
 	void setShutdownFunction (functionPtrStr outputFunction);
@@ -94,7 +101,7 @@ public:
 
 	void ReleaseRef ();
 
-	PARA_Texture *getFadeOffTexture();
+	PARA_Texture *getFadeOffTexture ();
 
 	std::string int_getString (std::string format, ...);
 
@@ -103,20 +110,21 @@ public:
 	// Renderer associated with the window
 	PARA_Renderer *renderer                                        = nullptr;
 	bool          changingRenderer                                 = false;
-	int                                     currentFadeState       = FADE_STATE_NONE;
+	int           currentFadeState                                 = FADE_STATE_NONE;
+
 private:
+
 	int                                     windowWidth;
 	int                                     windowHeight;
 	int                                     cacheWinFlags;
 	int                                     whichRenderer;
-
 	double                                  currentFadeAlpha;
-	bool                                    int_useVSync;
+	bool                                    int_useVSync = true;
 	bool                                    targetTextureAvailable = false;
 	double                                  fadeAmount;
 	functionPtrStr                          shutdownFunc;
 	functionPtrOut                          consoleOutFunc;
-	PARA_Texture  *fadeTextureCopy;   // Destination to copy the current backing texture to
+	PARA_Texture                            *fadeTextureCopy;   // Destination to copy the current backing texture to
 	std::vector<__rendererInfo>             rendererInfo;
 	std::map<std::string, __backingTexture> backingTextures;
 	std::string                             activeBackingTexture;

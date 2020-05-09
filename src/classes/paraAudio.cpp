@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <system/startup.h>
 #include "classes/paraAudio.h"
 
 #define MAX_NUM_CHANNELS    64
@@ -143,6 +144,7 @@ void paraAudio::setMasterVolume (int volume)
 
 	currentVolumeLevel = volume * (MIX_MAX_VOLUME / PARA_MAX_VOLUME);
 	Mix_Volume (-1, currentVolumeLevel);
+	g_volumeLevel = volume;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------

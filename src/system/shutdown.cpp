@@ -7,6 +7,8 @@
 void sys_closeSystems()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	io_saveConfigValues();
+
 	io_closeJoystick();
 	paraScriptInstance.stop();
 	sys_freeMemory ();
@@ -15,8 +17,6 @@ void sys_closeSystems()
 	evt_stopThreads();
 
 	evt_destroyMutexes();
-
-	io_saveConfigValues();
 }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -130,7 +130,7 @@ void con_renderConsole ()
 
 	console.isDrawing = true;
 
-	console.prepare (console.getDefaultPosX (), (float) consoleVirtualHeight - (fontClass.height () * 2));
+	console.prepare (console.getDefaultPosX (), (float) hiresVirtualHeight - (fontClass.height () * 2));
 	for (; console.consoleItr < console.consoleText.rend (); ++console.consoleItr)
 	{
 		fontClass.setColor (console.consoleItr->red, console.consoleItr->green, console.consoleItr->blue, console.consoleItr->alpha);
@@ -160,7 +160,7 @@ void con_renderConsole ()
 
 	//
 	// Render the current input entry line
-	console.prepare (1, (float) consoleVirtualHeight - fontClass.height ());
+	console.prepare (1, (float) hiresVirtualHeight - fontClass.height ());
 	fontClass.setColor (console.getDefaultRed (), console.getDefaultGreen (), console.getDefaultBlue (), console.getDefaultAlpha ());
 	tempSurface = fontClass.write (console.posX, console.posY, console.entryLine ());
 	if (nullptr == tempSurface)
@@ -206,7 +206,7 @@ void con_renderConsole ()
 void con_initConsole ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	console.setScreenSize (consoleVirtualWidth, consoleVirtualHeight);
+	console.setScreenSize (hiresVirtualWidth, hiresVirtualHeight);
 	console.setNumVarColumns (consoleNumColumns);
 	//
 	// Start the console and processing thread

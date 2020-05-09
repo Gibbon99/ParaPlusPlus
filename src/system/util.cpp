@@ -27,26 +27,31 @@ void sys_setNewMode (int newMode, bool doFade)
 			gui.setRepeatOff(true);
 			//
 			// Change to new backing texture
-			renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			//
 			// Adjust virtual scaling
-			SDL_RenderSetLogicalSize (renderer.renderer, consoleVirtualWidth, consoleVirtualHeight);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			currentMode = newMode;
 			break;
 
 		case MODE_SHOW_SPLASH:
 			currentMode = newMode;
-			renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			break;
 
 		case MODE_GUI:
 			currentMode = newMode;
-			renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			break;
 
 		case MODE_SIDEWVIEW:
 			currentMode = newMode;
-			renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			break;
+
+		case MODE_BRIEFING:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			break;
 
 		default:

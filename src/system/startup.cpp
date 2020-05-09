@@ -18,24 +18,27 @@ int         logicalWinWidth;
 int         logicalWinHeight;
 int         windowWidth;
 int         windowHeight;
-int         consoleVirtualWidth;
-int         consoleVirtualHeight;
+int         hiresVirtualWidth;
+int         hiresVirtualHeight;
 int         consoleNumColumns;
 int         consoleFontSize;
 int         windowFullscreen        = false;
 int         windowFullscreenDesktop = false;
-int         windowBorderless        = false;
+bool         windowBorderless        = false;
 int         windowInputGrabbed      = true;
 int         windowInputFocus        = true;
-int         windowAllowHighDPI      = false;
+bool         windowAllowHighDPI      = false;
 int         whichRenderer           = 0;
-int         presentVSync            = true;
+bool         presentVSync            = true;
 int         renderScaleQuality      = 0;
-int         volumeLevel             = 0;
+int         g_volumeLevel           = 0;
 int         maxNumChannels          = 0;
 int         guiFontSize             = 0;
 std::string guiFontFileName;
 std::string consoleFontFilename;
+int         introFontSize;
+std::string introFontFileName;
+bool        enableSound;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -94,8 +97,8 @@ void sys_startSystems ()
 	renderer.create (windowWidth, windowHeight, sys_createWindowFlags (), whichRenderer, presentVSync, APP_NAME);
 	//
 	// Create target texture for rendering the console onto
-	renderer.createRenderTargetTexture (CONSOLE_BACKING_TEXTURE, consoleVirtualWidth, consoleVirtualHeight, renderScaleQuality);
-	renderer.setCurrentBackingTexture (CONSOLE_BACKING_TEXTURE);
+	renderer.createRenderTargetTexture (HIRES_BACKING_TEXTURE, hiresVirtualWidth, hiresVirtualHeight, renderScaleQuality);
+	renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 	//
 	// Start the filesystem
 	fileSystem.setOutputFunction (con_addEvent);
@@ -138,7 +141,13 @@ void sys_startSystems ()
 	fontClass.load (guiFontSize, "guiFont", guiFontFileName);
 	fontClass.use ("guiFont");
 
-	gui.init (con_addEvent, gui_getString, windowWidth, windowHeight, "keybinding.para");
+	fontClass.load (28, "guiFont28", guiFontFileName);
+	fontClass.use ("guiFont28");
+
+	fontClass.load (guiFontSize, "introFont", introFontFileName);
+	fontClass.use ("introFont");
+
+	gui.init (con_addEvent, reinterpret_cast<funcStrIn>(gui_getString), windowWidth, windowHeight, "keybinding.para");
 	gui_loadSideViewData ("sideview.dat");
 	paraScriptInstance.run ("as_createGUI", "");
 //	audio.load("start1", "start1.wav");
@@ -146,5 +155,5 @@ void sys_startSystems ()
 	io_initJoystick ();
 	//
 	// Start in interactive console mode
-	sys_setNewMode (MODE_CONSOLE_EDIT, false);
+	sys_setNewMode (MODE_GUI, false);
 }

@@ -9,19 +9,19 @@ Options
 
 Video
 - Advanced Menu
-- Window - Windowed, Fullscreen, Fullscreen desktop - slider
-- Renderer - slider
-- Use VSync = checkbox
+DONE - Window - Windowed, Fullscreen, Fullscreen desktop - slider
+DONE - Renderer - slider
+DONE - Use VSync = checkbox
 
 Video Advanced
 - Borderless window - checkbox
 - Allow highDPI - checkbox
-- Render scale quality - slider
+DONE - Render scale quality - slider
 
-Audio
-- Enable sound - checkbox
-- Volume - slider
-- Number channels - slider
+DONE - Audio
+DONE - - Enable sound - checkbox
+DONE - - Volume - slider
+DONE - - Number speakers - slider
 
 Controls
 - Keyboard controls

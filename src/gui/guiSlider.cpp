@@ -5,18 +5,19 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a slider element
-void gui_renderSlider(int whichSlider, bool hasFocus)
+void gui_renderSlider (int whichSlider, bool hasFocus)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	std::string fontName;
+	std::string    fontName;
 	__BOUNDING_BOX bb{};
 	__PARA_COLOR   color{};
+	__PARA_COLOR   fontColor{};
 	int            cornerRadius;
-	double selectorX;
-	double sliderLabelPosX, sliderLabelPosY;
-	double sliderValuePosX, sliderValuePosY;
-	double gapSize;
-	
+	double         selectorX;
+	double         sliderLabelPosX, sliderLabelPosY;
+	double         sliderValuePosX, sliderValuePosY;
+	double         gapSize;
+
 	//
 	// Check to see if it's ready to use or not
 	if (!gui.isReady (GUI_OBJECT_SLIDER, whichSlider))
@@ -34,8 +35,8 @@ void gui_renderSlider(int whichSlider, bool hasFocus)
 
 	//
 	// Get the gap size
-	gapSize = gui.getGapSize(GUI_OBJECT_SLIDER, whichSlider);
-	if (gapSize == GUI_OBJECT_NOT_FOUND )
+	gapSize = gui.getGapSize (GUI_OBJECT_SLIDER, whichSlider);
+	if (gapSize == GUI_OBJECT_NOT_FOUND)
 	{
 		con_addEvent (EVENT_ACTION_CONSOLE_ADD_CHAR_LINE, sys_getString ("Unable to get gapSize for slider [ %i ]", whichSlider));
 		return;
@@ -80,29 +81,49 @@ void gui_renderSlider(int whichSlider, bool hasFocus)
 		}
 	}
 
-	if ( gui.getSelectPosition(whichSlider) == 0 )
-		selectorX = bb.x1 + (bb.y2 - bb.y1);
-	else if ( gui.getSelectPosition(whichSlider) == gui.sliderSize (0))
-		selectorX = bb.x2;	// position at the end
+	//
+	// Get the color for active or inactive focus label color
+	if (hasFocus)
+	{
+		fontColor = gui.getColor (GUI_OBJECT_SLIDER, whichSlider, GUI_COL_ACTIVE_LABEL);
+		if ((color.r == -1) || (color.g == -1) || (color.b == -1) || (color.a == -1))
+		{
+			con_addEvent (EVENT_ACTION_CONSOLE_ADD_CHAR_LINE, sys_getString ("Unable to get colors for slider label [ %i ]", whichSlider));
+			return;
+		}
+	}
 	else
 	{
-		selectorX = ( ( bb.x2 - bb.x1) / gui.getNumElements(whichSlider)) * gui.getSelectPosition(whichSlider)  + bb.x1;
-		selectorX += bb.y2 - bb.y1;
+		fontColor = gui.getColor (GUI_OBJECT_SLIDER, whichSlider, GUI_COL_INACTIVE_LABEL);
+		if ((color.r == -1) || (color.g == -1) || (color.b == -1) || (color.a == -1))
+		{
+			con_addEvent (EVENT_ACTION_CONSOLE_ADD_CHAR_LINE, sys_getString ("Unable to get colors for slider label [ %i ]", whichSlider));
+			return;
+		}
 	}
 
-	sliderLabelPosX = bb.x1 + ((( bb.x2 - bb.x1) - fontClass.width(gui.getLabelText(GUI_OBJECT_SLIDER, whichSlider))) / 2);
-	sliderValuePosX = bb.x1 + ((( bb.x2 - bb.x1) - fontClass.width(gui.sliderElementLabel(whichSlider))) / 2);
+	if (gui.getSelectPosition (whichSlider) == 0)
+		selectorX = bb.x1;      // position at the start
+	else if (gui.getSelectPosition (whichSlider) == gui.sliderSize (whichSlider))
+		selectorX = bb.x2;    // position at the end
+	else
+	{
+		selectorX = ( ((bb.x2 - bb.x1) / (gui.getNumElements (whichSlider) - 1 )) * gui.getSelectPosition (whichSlider) ) + bb.x1;
+	}
+
+	sliderLabelPosX = bb.x1 + (((bb.x2 - bb.x1) - fontClass.width (gui.getLabelText (GUI_OBJECT_SLIDER, whichSlider))) / 2);
+	sliderValuePosX = bb.x1 + (((bb.x2 - bb.x1) - fontClass.width (gui.sliderElementLabel (whichSlider))) / 2);
 
 	sliderLabelPosY = bb.y2 + gapSize;
-	sliderValuePosY = bb.y1 - (fontClass.height() + gapSize);
+	sliderValuePosY = bb.y1 - (fontClass.height () + gapSize);
 
-	fontClass.render(renderer.renderer, sliderLabelPosX, sliderLabelPosY, color.r, color.g, color.b, color.a, gui.getLabelText(GUI_OBJECT_SLIDER, whichSlider));
-	fontClass.render(renderer.renderer, sliderValuePosX, sliderValuePosY, color.r, color.g, color.b, color.a, gui.sliderElementLabel(whichSlider));
+	fontClass.render (renderer.renderer, sliderLabelPosX, sliderLabelPosY, fontColor.r, fontColor.g, fontColor.b, fontColor.a, gui.getLabelText (GUI_OBJECT_SLIDER, whichSlider));
+	fontClass.render (renderer.renderer, sliderValuePosX, sliderValuePosY, fontColor.r, fontColor.g, fontColor.b, fontColor.a, gui.sliderElementLabel (whichSlider));
 	//
 	// Render the selector
 	filledCircleRGBA (renderer.renderer, selectorX, bb.y1 + ((bb.y2 - bb.y1) / 2), 20, color.r, color.g, color.b, color.a);
-	circleRGBA (renderer.renderer, selectorX, bb.y1 + ((bb.y2 - bb.y1) / 2), 18, 0,0,0, color.a);
-	circleRGBA (renderer.renderer, selectorX, bb.y1 + ((bb.y2 - bb.y1) / 2), 17, 0,0,0, color.a);
+	circleRGBA (renderer.renderer, selectorX, bb.y1 + ((bb.y2 - bb.y1) / 2), 18, 0, 0, 0, color.a);
+	circleRGBA (renderer.renderer, selectorX, bb.y1 + ((bb.y2 - bb.y1) / 2), 17, 0, 0, 0, color.a);
 	//
 	// Render the line
 	roundedBoxRGBA (renderer.renderer, bb.x1, bb.y1, bb.x2, bb.y2, cornerRadius, color.r, color.g, color.b, color.a);

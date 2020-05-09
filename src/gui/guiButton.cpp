@@ -95,7 +95,12 @@ void gui_renderButton (int whichButton, bool hasFocus)
 
 	const auto buttonHeight = (bb.y2 - bb.y1);
 	const auto fontHeight = fontClass.height();
-	textPosY = bb.y1 + ( (buttonHeight - fontHeight) / 2);
+
+	std::string searchIn = gui.getLabelText (GUI_OBJECT_BUTTON, whichButton);
+	if ((searchIn.find("q")) && (searchIn.find("j")) && (searchIn.find("p")) && (searchIn.find("y")) && (searchIn.find("g")) == std::string::npos)  // not in string
+		textPosY = bb.y1 + ( (buttonHeight - (fontHeight + fontClass.descent())) / 2);
+	else
+		textPosY = bb.y1 + ( (buttonHeight - fontHeight) / 2);
 
 	switch (labelPos)
 	{

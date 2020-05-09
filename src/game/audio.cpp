@@ -66,7 +66,7 @@ void gam_processAudioEventQueue ()
 				{
 					case EVENT_ACTION_AUDIO_INIT:
 						audio.init (maxNumChannels, con_addEvent, io_loadRawFile);
-						audio.setMasterVolume(volumeLevel); // Loaded from config file
+						audio.setMasterVolume(g_volumeLevel); // Loaded from config file
 						paraScriptInstance.run("as_loadAudioResources", "");
 						break;
 
@@ -83,7 +83,7 @@ void gam_processAudioEventQueue ()
 						break;
 
 					case EVENT_ACTION_AUDIO_SET_MASTER_VOLUME:
-						audio.setMasterVolume(volumeLevel); // Loaded from config file
+						audio.setMasterVolume(g_volumeLevel); // Loaded from config file
 						break;
 
 					default:

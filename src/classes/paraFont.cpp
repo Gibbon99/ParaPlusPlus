@@ -95,7 +95,8 @@ bool paraFont::load (int fontSize, std::string keyName, std::string fileName)
 		return false;
 	}
 	tempFont.available  = true;
-	tempFont.lineHeight = TTF_FontLineSkip(tempFont.handle);
+	tempFont.lineHeight = TTF_FontHeight(tempFont.handle); //TTF_FontLineSkip(tempFont.handle);
+	tempFont.descent = TTF_FontDescent(tempFont.handle);
 
 	fonts.insert(std::pair<std::string, __PARA_FONT>(keyName, tempFont));
 
@@ -150,6 +151,8 @@ PARA_Surface *paraFont::write(double X, double Y, std::string fontText)
 	paraFont::pos.w = paraFont::surface->w;
 	paraFont::pos.h = paraFont::surface->h;
 
+//	SDL_SaveBMP(paraFont::surface, fontText.c_str());
+
 	return paraFont::surface;
 }
 
@@ -160,6 +163,15 @@ int paraFont::height()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return fonts[currentFont].lineHeight;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the descent of the font below baseline
+int paraFont::descent ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return fonts[currentFont].descent;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -192,17 +204,20 @@ void paraFont::render(SDL_Renderer *whichRenderer, double posX, double posY, int
 	SDL_Texture     *tempTexture;
 	SDL_Rect        tempRect;
 
+	if (text.size() == 0)
+		return;
+
 	setColor (r, g, b, a);
 	tempSurface = write (posX, posY, text);
 	if (nullptr == tempSurface)
 	{
-		funcOutput (-1, int_getString ("%s", "Unable to create temp surface when rendering text [ %s ].", text.c_str()));
+		funcOutput (-1, int_getString ("Unable to create temp surface when rendering text [ %s ].", text.c_str()));
 		return;
 	}
 	tempTexture = SDL_CreateTextureFromSurface (whichRenderer, tempSurface);
 	if (nullptr == tempTexture)
 	{
-		funcOutput (-1, int_getString ("%s", "Unable to create temp texture when rendering console."));
+		funcOutput (-1, int_getString ("Unable to create temp texture when rendering console."));
 		return;
 	}
 	SDL_RenderCopy (whichRenderer, tempTexture, nullptr, &pos);

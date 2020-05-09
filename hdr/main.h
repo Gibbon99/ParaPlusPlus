@@ -33,7 +33,7 @@
 
 #define ERROR_COUNT_LIMIT   10
 
-#define CONSOLE_BACKING_TEXTURE "consoleBackingTexture"
+#define HIRES_BACKING_TEXTURE "consoleBackingTexture"
 
 using namespace std;
 

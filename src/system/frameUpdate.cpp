@@ -3,6 +3,7 @@
 #include <io/joystick.h>
 #include <io/mouse.h>
 #include <gui/guiSideview.h>
+#include <gui/guiScrollbox.h>
 #include "../../hdr/system/frameUpdate.h"
 
 SDL_Event evt;
@@ -98,6 +99,9 @@ void sys_processSystemEvents ()
 				if (evt.key.keysym.sym == SDLK_F4)
 					sys_setNewMode(MODE_SIDEWVIEW, true);
 
+				if (evt.key.keysym.sym == SDLK_F5)
+					sys_setNewMode(MODE_BRIEFING, true);
+
 				break;
 
 			case SDL_TEXTINPUT:
@@ -127,6 +131,10 @@ void sys_gameTickRun ()
 	{
 		case MODE_SIDEWVIEW:
 			gui_animateStarfield();
+			break;
+
+		case MODE_BRIEFING:
+			gui_scrollScrollBox ("introScreen.scrollbox");
 			break;
 	}
 }

@@ -30,7 +30,7 @@ void gui_renderLabel(int whichLabel, bool hasFocus)
 	fontClass.use (fontName);
 	//
 	// Get the position to render the label
-	bb = gui.getBB (GUI_OBJECT_BUTTON, whichLabel);
+	bb = gui.getBB (GUI_OBJECT_LABEL, whichLabel);
 	if ((bb.x1 == -1) || (bb.y1 == -1) || (bb.x2 == -1) || (bb.y2 == -1))
 	{
 		con_addEvent (EVENT_ACTION_CONSOLE_ADD_CHAR_LINE, sys_getString ("Unable to get position for label [ %i ]", whichLabel));

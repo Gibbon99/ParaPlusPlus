@@ -292,6 +292,36 @@ void paraRenderer::d_getCurrentRenderer ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Get the index of the current renderer
+int paraRenderer::getCurrentRendererIndex()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return whichRenderer;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Get the number of renderers available
+int paraRenderer::getNumRenderers()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return rendererInfo.size();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Get the name of a renderer by index
+std::string paraRenderer::getRendererByIndex(int whichRenderer)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if ((whichRenderer < 0) || (whichRenderer > rendererInfo.size()))
+		return "Invalid renderer index";
+
+	return rendererInfo[whichRenderer].rendererName;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Display all the available renderers
 void paraRenderer::d_getAllRenderers ()
 //----------------------------------------------------------------------------------------------------------------------

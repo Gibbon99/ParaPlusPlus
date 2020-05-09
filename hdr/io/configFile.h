@@ -10,7 +10,7 @@ void io_readConfigValues(const std::string& fileName);
 void io_updateConfigValue(std::string keyName, std::string newValue);
 
 // Update a value to be saved into the config file - INT version
-void io_updateConfigValue(std::string keyName, int newValue);
+void io_updateConfigValueInt(std::string keyName, int newValue);
 
 // Save the in memory config file to disk
 void io_saveConfigValues();

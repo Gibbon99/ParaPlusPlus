@@ -1,5 +1,6 @@
 #include <gui/guiSlider.h>
 #include <gui/guiLabel.h>
+#include <gui/guiCheckbox.h>
 #include "gui/guiRender.h"
 #include "gui/guiButton.h"
 
@@ -21,6 +22,10 @@ void gui_drawObject (int objectType, int whichObject, bool hasFocus)
 
 		case GUI_OBJECT_LABEL:
 			gui_renderLabel(whichObject, hasFocus);
+			break;
+
+		case GUI_OBJECT_CHECKBOX:
+			gui_renderCheckbox(whichObject, hasFocus);
 			break;
 	}
 }

@@ -1,3 +1,4 @@
+#include <gui/guiScrollbox.h>
 #include "gui/guiRender.h"
 #include "system/frameRender.h"
 #include "io/console.h"
@@ -51,6 +52,10 @@ void sys_renderFrame (double interpolation)
 
 		case MODE_SIDEWVIEW:
 			gui_renderSideView ();
+			break;
+
+		case MODE_BRIEFING:
+			gui_renderScrollbox ("introScreen.scrollbox", interpolation);
 			break;
 	}
 	sys_completeFrame ();
