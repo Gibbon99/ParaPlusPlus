@@ -12,7 +12,7 @@ void as_getAudioSpecs()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the master volume to a new level
-void as_setVolume(int &in newVolume)
+void as_setVolume(int newVolume)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int currentVolume;

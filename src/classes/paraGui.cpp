@@ -226,7 +226,7 @@ std::string paraGui::int_getString (std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index of a object type from its array
-int paraGui::getIndex (int objectType, std::string objectID)
+int paraGui::getIndex (int objectType, const std::string& objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int indexCounter = 0;
@@ -395,6 +395,9 @@ void paraGui::create (int objectType, std::string objectID)
 			newSlider.ID             = objectID;
 			newSlider.canFocus       = true;
 			newSlider.positionCalled = false;
+			newSlider.currentStep = 0;
+			newSlider.numberSteps = 0;
+		
 			if (guiSliders.empty ())
 			{
 				guiSliders.push_back (newSlider);
@@ -683,7 +686,7 @@ void paraGui::setScrollDelay(int objectIndex, double newScrollDelay)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the scrolling speed for a scrollbox
-void paraGui::setScrollSpeed(std::string objectID, double newScrollSpeed)
+void paraGui::setScrollSpeed(int objectType, const std::string& objectID, double newScrollSpeed)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex = 0;
@@ -1285,7 +1288,7 @@ void paraGui::setColor (int objectType, std::string objectID, int whichColor, in
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex;
-	int numObjects;
+	int numObjects = 0;
 
 	if ("ALL" == objectID)
 	{
@@ -2200,6 +2203,9 @@ void paraGui::checkMousePosition ()
 {
 	static int previousElement = 0;
 
+	if (guiScreens.size() == 0)
+		return;
+	
 	for (auto index = 0; index < static_cast<int>(guiScreens[currentScreen].objectType.size ()); index++)
 	{
 		if (canBeSelected (guiScreens[currentScreen].objectType[index], 0))
@@ -2580,6 +2586,9 @@ void paraGui::setState (int whichKey, bool newState, int newActionSource)
 void paraGui::setKeyDescription ()
 //----------------------------------------------------------------------------------------------------------------------
 {
+
+	return;
+	
 #ifdef WIN_32
 	return;
 	keyBinding[KEY_LEFT].text       = funcGetString ((string1)"gameLeft");
@@ -2681,6 +2690,9 @@ int paraGui::getNumElements (int whichSlider)
 std::string paraGui::sliderElementLabel (int whichSlider)
 //-----------------------------------------------------------------------------
 {
+	if (whichSlider > static_cast<int>(guiSliders.size() - 1))
+		sys_shutdownWithError("Invalid index passed to sliderElementLabel");
+	
 	return guiSliders[whichSlider].element[guiSliders[whichSlider].currentStep].value;
 }
 
@@ -2708,7 +2720,7 @@ int paraGui::getSelectPosition (int whichSlider)
 //-----------------------------------------------------------------------------
 //
 // Get the value from the current step of a slider
-std::string paraGui::getSliderValue(std::string objectID)
+std::string paraGui::getSliderValue(const std::string& objectID)
 //-----------------------------------------------------------------------------
 {
 	int objectIndex = 0;
@@ -2727,7 +2739,7 @@ std::string paraGui::getSliderValue(std::string objectID)
 //-----------------------------------------------------------------------------
 //
 // Set the slider to the passed in value
-void paraGui::setSliderValue (std::string objectID, std::string value)
+void paraGui::setSliderValue (const std::string& objectID, const std::string& value)
 //-----------------------------------------------------------------------------
 {
 	int indexCount = 0;
@@ -2765,7 +2777,7 @@ void paraGui::setSliderValue (std::string objectID, std::string value)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add an element to a slider
-void paraGui::addNewElement (const std::string objectID, const std::string newLabel, const std::string newValue, int type)
+void paraGui::addNewElement (const std::string& objectID, const std::string& newLabel, const std::string& newValue, int type)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_sliderElement tmpElement;
@@ -2799,7 +2811,7 @@ bool paraGui::getTickedStatus(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the ticked status of a checkbox - unset all others in the same group
-void paraGui::setTickedStatus (string objectID, int whichGroup, bool newValue)
+void paraGui::setTickedStatus (const std::string& objectID, int whichGroup, bool newValue)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex = 0;

@@ -535,7 +535,7 @@ void as_setupIntroScrollBox ()
 	as_paraGui.setPosition      (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 8, GUI_COORD_ABSOLUTE, introScrollBoxBorderWidth, 100, hiresVirtualWidth - introScrollBoxBorderWidth, hiresVirtualHeight - introScrollBoxBorderWidth - 100);
 	as_paraGui.setColor         (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", GUI_COL_ACTIVE, 100, 100, 15, 100);
 	as_paraGui.setColor         (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", GUI_COL_ACTIVE_LABEL, 20, 150, 100, 240);
-	as_paraGui.setScrollSpeed   ("introScreen.scrollbox", 60.0);
+	as_paraGui.setScrollSpeed   (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 60.0);
 	as_paraGui.setReady         (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", true);
 
 //	as_guiSetupScrollBox (SCROLLBOX_INTRO, gui_getString ("scrollBoxIntroText"));

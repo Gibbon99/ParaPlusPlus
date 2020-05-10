@@ -1,5 +1,5 @@
-#include <gui/guiRender.h>
-#include <gui/guiLanguage.h>
+//#include <gui/guiRender.h>
+#include "gui/guiLanguage.h"
 #include "../../hdr/io/configFile.h"
 #include "../../hdr/system/startup.h"
 #include "gui/guiSideview.h"
@@ -21,7 +21,7 @@ void io_saveConfigValues()
 //--------------------------------------------------------------------------------------------------------------------
 //
 // Update a value to be saved into the config file - INT version
-void io_updateConfigValueInt(std::string keyName, int newValue)
+void io_updateConfigValueInt(const std::string& keyName, int newValue)
 //--------------------------------------------------------------------------------------------------------------------
 {
 	auto returnCode = iniFile.SetValue("Main", keyName.c_str(), sys_getString("%i", newValue).c_str());
@@ -32,14 +32,13 @@ void io_updateConfigValueInt(std::string keyName, int newValue)
 //--------------------------------------------------------------------------------------------------------------------
 //
 // Update a value to be saved into the config file - STRING version
-void io_updateConfigValue(std::string keyName, std::string newValue)
+void io_updateConfigValue(const std::string& keyName, const std::string& newValue)
 //--------------------------------------------------------------------------------------------------------------------
 {
 	auto returnCode = iniFile.SetValue("Main", keyName.c_str(), newValue.c_str());
 	if (returnCode < 0)
 		sys_shutdownWithError(sys_getString("Unable to update config file value [ %s ]", keyName.c_str()));
 }
-
 
 //--------------------------------------------------------------------------------------------------------------------
 //
@@ -118,7 +117,7 @@ void io_readConfigValues(const std::string& fileName)
 	if (windowFullscreenDesktop == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowFullscreenDesktop"));
 
-	windowBorderless = (int)iniFile.GetLongValue("Main", "windowBorderless", -1);
+	windowBorderless = static_cast<int>(iniFile.GetLongValue("Main", "windowBorderless", -1));
 	if (windowBorderless == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowBorderless"));
 
@@ -130,7 +129,7 @@ void io_readConfigValues(const std::string& fileName)
 	if (windowInputFocus == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowInputFocus"));
 
-	windowAllowHighDPI = (int)iniFile.GetLongValue("Main", "windowAllowHighDPI", -1);
+	windowAllowHighDPI = static_cast<int>(iniFile.GetLongValue("Main", "windowAllowHighDPI", -1));
 	if (windowAllowHighDPI == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "windowAllowHighDPI"));
 
@@ -138,7 +137,7 @@ void io_readConfigValues(const std::string& fileName)
 	if (whichRenderer == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "whichRenderer"));
 
-	presentVSync = (int)iniFile.GetLongValue("Main", "presentVSync", -1);
+	presentVSync = static_cast<int>(iniFile.GetLongValue("Main", "presentVSync", -1));
 	if (presentVSync == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "presentVSync"));
 
@@ -162,7 +161,7 @@ void io_readConfigValues(const std::string& fileName)
 	if (sideviewDrawScale == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "sideviewDrawScale"));
 
-	enableSound = (int)iniFile.GetLongValue("Main", "enableSound", -1);
+	enableSound = static_cast<int>(iniFile.GetLongValue("Main", "enableSound", -1));
 	if (enableSound == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "enableSound"));
 }

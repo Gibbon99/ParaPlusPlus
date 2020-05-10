@@ -192,7 +192,7 @@ public:
 
 	void setCurrentScreen (int newScreen);
 
-	void setScrollSpeed (std::string objectID, double newScrollSpeed);
+	void setScrollSpeed (int objectType, const std::string& objectID, double newScrollSpeed);
 
 	void getNextLineOfText (int objectIndex);
 
@@ -214,7 +214,7 @@ public:
 
 	bool getTickedStatus(int objectIndex);
 
-	void setTickedStatus (std::string objectID, int whichGroup, bool newValue);
+	void setTickedStatus (const std::string& objectID, int whichGroup, bool newValue);
 
 	void setActiveObject (int whichScreen, int objectType, std::string objectID);
 
@@ -228,9 +228,9 @@ public:
 
 	void setLineFade (int objectIndex, double newLineFade);
 
-	void addNewElement (const std::string objectID, const std::string newLabel, const std::string newValue, int type);
+	void addNewElement (const std::string& objectID, const std::string& newLabel, const std::string& newValue, int type);
 
-	void setSliderValue (std::string objectID, std::string value);
+	void setSliderValue (const std::string& objectID, const std::string& value);
 
 	int getSelectPosition (int whichSlider);
 
@@ -238,7 +238,7 @@ public:
 
 	std::string sliderElementLabel (int whichSlider);
 
-	std::string getSliderValue(std::string objectID);
+	std::string getSliderValue(const std::string& objectID);
 
 	int getNumElements (int whichSlider);
 
@@ -252,7 +252,7 @@ public:
 
 	int indexByIndex (int whichObject);
 
-	int getIndex (int objectType, std::string objectID);
+	int getIndex (int objectType, const std::string& objectID);
 
 	int getRadius (int objectType, int objectIndex);
 

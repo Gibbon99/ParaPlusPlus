@@ -202,7 +202,7 @@ void paraFont::render(SDL_Renderer *whichRenderer, double posX, double posY, int
 {
 	SDL_Surface     *tempSurface;
 	SDL_Texture     *tempTexture;
-	SDL_Rect        tempRect;
+//	SDL_Rect        tempRect;
 
 	if (text.size() == 0)
 		return;
