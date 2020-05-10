@@ -38,7 +38,11 @@ void io_processKeyboardState()
 
 	switch (currentMode)
 	{
-		case MODE_GUI:
+		case MODE_GUI_MAINMENU:
+		case MODE_GUI_TERMINAL:
+		case MODE_GUI_DATABASE:
+		case MODE_GUI_DECKVIEW:
+		case MODE_GUI_SHIPVIEW:
 			gui.process();
 			gui_processKeyboard();
 			break;

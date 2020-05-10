@@ -38,6 +38,12 @@ public:
 
 	void render (std::string keyName);
 
+	void render (std::string keyName, SDL_Rect *destination);
+
+	int width(const std::string &keyName);
+
+	int height(const std::string &keyName);
+
 	bool createMap(std::string textureName);
 
 	void loadMap(std::string textureName);

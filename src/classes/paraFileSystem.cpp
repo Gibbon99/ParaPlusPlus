@@ -345,3 +345,14 @@ bool paraFileSystem::save(std::string fileName, const void *buffer, PHYSFS_uint3
 
 	return true;
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Display the current search path
+void paraFileSystem::getSearchPath()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	char **i;
+	for (i = PHYSFS_getSearchPath (); *i != NULL; i++)
+		funcOutput (-1, int_getString("[%s] is in the search path.", *i));
+}

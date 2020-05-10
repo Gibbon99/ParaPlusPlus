@@ -33,6 +33,8 @@ public:
 
 	bool save(std::string fileName, const void *buffer, PHYSFS_uint32 size);
 
+	void getSearchPath();
+
 private:
 	bool                    fileSystemReady = false;
 	filesystemFuncPtrStr    funcShutdown;

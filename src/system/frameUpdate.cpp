@@ -4,6 +4,8 @@
 #include <io/mouse.h>
 #include <gui/guiSideview.h>
 #include <gui/guiScrollbox.h>
+#include <game/hud.h>
+#include <gui/guiLanguage.h>
 #include "../../hdr/system/frameUpdate.h"
 
 SDL_Event evt;
@@ -91,16 +93,28 @@ void sys_processSystemEvents ()
 					sys_setNewMode (MODE_SHOW_SPLASH, true);
 
 				if (evt.key.keysym.sym == SDLK_F2)
-					sys_setNewMode (MODE_GUI, true);
+				{
+					sys_setNewMode (MODE_GUI_MAINMENU, true);
+					gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
+					gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+				}
 
 				if (evt.key.keysym.sym == SDLK_F3)
 					sys_setNewMode (MODE_CONSOLE_EDIT, true);
 
 				if (evt.key.keysym.sym == SDLK_F4)
-					sys_setNewMode(MODE_SIDEWVIEW, true);
+					sys_setNewMode(MODE_GUI_SHIPVIEW, true);
 
 				if (evt.key.keysym.sym == SDLK_F5)
-					sys_setNewMode(MODE_BRIEFING, true);
+					sys_setNewMode(MODE_GUI_INTROSCROLL, true);
+
+				if (evt.key.keysym.sym == SDLK_F6)
+				{
+					gam_setHudText(gui_getString (std::string("terminalMenu.terminalText")));
+					sys_setNewMode (MODE_GUI_TERMINAL, true);
+					gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
+					gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.backButton");
+				}
 
 				break;
 
@@ -129,12 +143,19 @@ void sys_gameTickRun ()
 
 	switch (currentMode)
 	{
-		case MODE_SIDEWVIEW:
+		case MODE_GUI_SHIPVIEW:
 			gui_animateStarfield();
 			break;
 
-		case MODE_BRIEFING:
+		case MODE_GUI_INTROSCROLL:
 			gui_scrollScrollBox ("introScreen.scrollbox");
+			break;
+
+		case MODE_GUI_TERMINAL:
+			break;
+
+		case MODE_GUI_DATABASE:
+			gui_scrollScrollBox("databaseScreen.scrollbox");
 			break;
 	}
 }

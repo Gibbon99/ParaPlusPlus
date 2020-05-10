@@ -204,6 +204,8 @@ public:
 
 	void setScrollY (int objectIndex, double newScrollY);
 
+	void restartScrollBox(const std::string &objectID);
+
 	double getPreviousScrollY (int objectIndex);
 
 	int getNumberPrintLines (int objectIndex);

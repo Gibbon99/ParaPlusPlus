@@ -100,11 +100,58 @@ bool paraTexture::load (std::string fileName)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Return the height of a texture
+int paraTexture::height(const std::string &keyName)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	auto textureItr = texture.find(keyName);
+	if (textureItr == texture.end())
+	{
+		sys_shutdownWithError(sys_getString("Unable to locate texture [ %s ] to get height.", keyName.c_str()));
+		return -1;
+	}
+
+	return texture[keyName].height;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the width of a texture
+int paraTexture::width(const std::string &keyName)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	auto textureItr = texture.find(keyName);
+	if (textureItr == texture.end())
+	{
+		sys_shutdownWithError(sys_getString("Unable to locate texture [ %s ] to get width.", keyName.c_str()));
+		return -1;
+	}
+
+	return texture[keyName].width;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Render a texture to the current backing target - or screen if backing texture is not used
 void paraTexture::render (std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (SDL_RenderCopy (renderer.renderer, texture[keyName].texture, nullptr, nullptr) < 0)
+	{
+		funcOutput (-1, int_getString ("Unable to render texture [ %s ] - [ %s ]", keyName.c_str (), SDL_GetError ()));
+		return;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Render a texture to the current backing target - or screen if backing texture is not used
+//
+// Pass in destination coords
+void paraTexture::render (std::string keyName, SDL_Rect *destination)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if (SDL_RenderCopy (renderer.renderer, texture[keyName].texture, nullptr, destination) < 0)
 	{
 		funcOutput (-1, int_getString ("Unable to render texture [ %s ] - [ %s ]", keyName.c_str (), SDL_GetError ()));
 		return;

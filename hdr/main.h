@@ -55,5 +55,10 @@ extern Uint32 thinkFPSPrint;
 extern double percentIntoNextFrame;
 extern int    currentMode;
 
+//
+// Game levers
+//
+extern double baseGameSpeed;
+
 extern std::string testVarString;
 extern float       testVarFloat;

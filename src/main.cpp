@@ -25,6 +25,11 @@ Uint32 thinkFPSPrint        = 0;
 double percentIntoNextFrame = 0.0f;
 int    currentMode;
 
+//
+// Game levers
+//
+double baseGameSpeed;
+
 // TODO Remove these
 std::string testVarString = "First string text";
 float       testVarFloat  = 3.145;

@@ -4,6 +4,7 @@
 #include <io/keyboard.h>
 #include <gui/guiLanguage.h>
 #include <io/joystick.h>
+#include <game/database.h>
 #include "../../hdr/system/startup.h"
 #include "../../hdr/system/scriptEngine.h"
 #include "../../hdr/system/scriptConfig.h"
@@ -153,7 +154,11 @@ void sys_startSystems ()
 //	audio.load("start1", "start1.wav");
 
 	io_initJoystick ();
+
+	fileSystem.getSearchPath();
+
+	gam_getDBInformation ();
 	//
 	// Start in interactive console mode
-	sys_setNewMode (MODE_GUI, false);
+	sys_setNewMode (MODE_GUI_MAINMENU, false);
 }

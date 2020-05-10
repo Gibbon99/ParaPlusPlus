@@ -526,6 +526,29 @@ std::vector<std::string>::reverse_iterator paraGui::getRBegin(int objectIndex)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Reset a scrollbox to start
+void paraGui::restartScrollBox(const string &objectID)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int objectIndex;
+
+	//
+	// Find the index for this object
+	objectIndex = getIndex (GUI_OBJECT_SCROLLBOX, objectID);
+	if (GUI_OBJECT_NOT_FOUND == objectIndex)
+	{
+		funcOutput (-1, int_getString ("Unable to locate object to set scroll speed [ %s ]. Has it been created ?.", objectID.c_str ()));
+		return;
+	}
+	guiScrollBoxes[objectIndex].scrollBoxText.clear();
+	guiScrollBoxes[objectIndex].scrollY = 0.0;
+	guiScrollBoxes[objectIndex].previousScrollY = -1.0;
+	guiScrollBoxes[objectIndex].currentChar = 0;
+	guiScrollBoxes[objectIndex].numLinesToPrint = 0;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Get the next line of text to show in the scrollbox
 void paraGui::getNextLineOfText(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------

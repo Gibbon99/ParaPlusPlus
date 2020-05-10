@@ -18,13 +18,13 @@ void sys_setNewMode (int newMode, bool doFade)
 {
 	if (doFade)
 	{
-		renderer.prepareFade();
+		renderer.prepareFade ();
 	}
 
 	switch (newMode)
 	{
 		case MODE_CONSOLE_EDIT:
-			gui.setRepeatOff(true);
+			gui.setRepeatOff (true);
 			//
 			// Change to new backing texture
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
@@ -39,17 +39,37 @@ void sys_setNewMode (int newMode, bool doFade)
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			break;
 
-		case MODE_GUI:
+		case MODE_GUI_MAINMENU:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			break;
 
-		case MODE_SIDEWVIEW:
+		case MODE_GUI_INTROSCROLL:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			break;
 
-		case MODE_BRIEFING:
+		case MODE_GUI_TERMINAL:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			break;
+
+		case MODE_GUI_DATABASE:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			break;
+
+		case MODE_GUI_SHIPVIEW:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			break;
+
+		case MODE_GUI_DECKVIEW:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			break;
+
+		case MODE_GUI_LIFTVIEW:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			break;
@@ -149,18 +169,14 @@ void sys_freeMemory ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (memoryMap.size () == 0)
-	{
 		return;
-	}
 
 	for (auto &memoryItr : memoryMap)
 	{
 		logFile.write (sys_getString ("Free memory [ %i bytes ] - [ %s ]", memoryItr.second.size, memoryItr.first.c_str ()));
 
 		if (memoryItr.second.pointer != nullptr)
-		{
 			free (memoryItr.second.pointer);
-		}
 	}
 }
 

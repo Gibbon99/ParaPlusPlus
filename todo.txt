@@ -8,14 +8,11 @@ Options
 - game
 
 Video
-- Advanced Menu
 DONE - Window - Windowed, Fullscreen, Fullscreen desktop - slider
 DONE - Renderer - slider
 DONE - Use VSync = checkbox
-
-Video Advanced
-- Borderless window - checkbox
-- Allow highDPI - checkbox
+DONE - Borderless window - checkbox
+DONE - Allow highDPI - checkbox
 DONE - Render scale quality - slider
 
 DONE - Audio
@@ -33,5 +30,5 @@ Game
 - Language - slider
 
 - image
-- scrollBox
-- label
+DONE - scrollBox
+DONE - label

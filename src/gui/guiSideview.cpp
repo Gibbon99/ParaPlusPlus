@@ -226,7 +226,7 @@ void gui_renderSideView ()
 
 	auto stringWidth = fontClass.width ("Change me to level name");
 
-	sideViewTextPosX = (renderer.renderWidth () - stringWidth) / 2;
+	sideViewTextPosX = 5;
 	sideViewTextPosY = renderer.renderHeight () - (fontClass.height ());
 
 	//
@@ -259,7 +259,7 @@ void gui_renderSideView ()
 
 	//
 	// Highlite the current deck in use for lift mode
-	if (currentMode == MODE_LIFT_VIEW)
+	if (currentMode == MODE_GUI_LIFTVIEW)
 	{
 		//
 		// highlite current level
@@ -341,7 +341,7 @@ void gui_renderSideView ()
 	// draw the lifts
 	for (count = 0; count != lifts; count++)
 	{
-		if (currentMode == MODE_LIFT_VIEW)      // Only draw highlighted tunnel in lift view
+		if (currentMode == MODE_GUI_LIFTVIEW)      // Only draw highlighted tunnel in lift view
 		{
 			if (currentTunnel == count) // Draw currentTunnel in use
 				gui_sideviewDrawRect (sideviewLevels[count + toLifts].x1, sideviewLevels[count + toLifts].y1, sideviewLevels[count + toLifts].x2, sideviewLevels[count + toLifts].y2, sideviewColors[SIDEVIEW_ACTIVE_LIFT_COLOR].color);

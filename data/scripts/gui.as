@@ -1,6 +1,6 @@
 int buttonWidth   = 40;
 int buttonHeight  = 10;
-int buttonSpacing = 13;
+int buttonSpacing = 16;
 int buttonStartX  = 10;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -17,6 +17,7 @@ void as_handleMainMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.optionsButton"))
 	{
+		gam_setHudText("Options");
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "optionsMenu"));
 		// Set active object
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "optionsMenu.backButton");
@@ -82,21 +83,21 @@ void as_handleAudioMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "audioOptions.backButton"))
 	{
-		g_volumeLevel = parseInt(as_paraGui.getSliderValue("audioOptions.volume"));
-		as_audio.setMasterVolume(g_volumeLevel);
-		io_updateConfigValueInt("g_volumeLevel", g_volumeLevel);
+		g_volumeLevel = parseInt (as_paraGui.getSliderValue ("audioOptions.volume"));
+		as_audio.setMasterVolume (g_volumeLevel);
+		io_updateConfigValueInt ("g_volumeLevel", g_volumeLevel);
 
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "optionsMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "optionsMenu.audioButton");
 		return;
 	}
 
-	if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex (GUI_OBJECT_CHECKBOX, "audioOptions.enableSound"))
+	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_CHECKBOX, "audioOptions.enableSound"))
 	{
 		enableSound = !enableSound;
 		as_paraGui.setTickedStatus ("audioOptions.enableSound", -1, enableSound);
-		enableSoundInt = enableSound ? 1: 0;
-		io_updateConfigValueInt("enableSound", enableSoundInt);
+		enableSoundInt = enableSound ? 1 : 0;
+		io_updateConfigValueInt ("enableSound", enableSoundInt);
 		if (enableSound == true)
 		{
 			as_paraGui.setReady (GUI_OBJECT_SLIDER, "audioOptions.volume", true);
@@ -110,7 +111,7 @@ void as_handleAudioMenu ()
 		return;
 	}
 
-	if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex (GUI_OBJECT_SLIDER, "audioOptions.volume"))
+	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_SLIDER, "audioOptions.volume"))
 	{
 		return;
 	}
@@ -164,35 +165,36 @@ void as_handleVideoMenu ()
 void createVideoMenu ()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
-	int numRenderers;
+	int    numRenderers;
 	string tempNum;
 	string currentRendererStr;
 
 	as_paraGui.create (GUI_OBJECT_SCREEN, "videoMenu");
-
+/*
 	as_paraGui.create (GUI_OBJECT_LABEL, "videoOptions.heading");
 	as_paraGui.addToScreen (GUI_OBJECT_LABEL, "videoOptions.heading", "videoMenu");
 	as_paraGui.setPosition (GUI_OBJECT_LABEL, "videoOptions.heading", 0, GUI_COORD_ABSOLUTE, 3, 3, 2, 2);
-	as_paraGui.setLabel (GUI_OBJECT_LABEL, "videoOptions.heading", 0, GUI_LABEL_LEFT, gui_getString("videoOptions.heading"));
+	as_paraGui.setLabel (GUI_OBJECT_LABEL, "videoOptions.heading", 0, GUI_LABEL_LEFT, gui_getString ("videoOptions.heading"));
 	as_paraGui.setFontName (GUI_OBJECT_LABEL, "videoOptions.heading", "guiFont");
 	as_paraGui.setReady (GUI_OBJECT_LABEL, "videoOptions.heading", true);
+	*/
 	//
 	// Renderers
 	//
-	numRenderers = as_renderer.getNumRenderers();
+	numRenderers = as_renderer.getNumRenderers ();
 	as_paraGui.create (GUI_OBJECT_SLIDER, "videoOptions.renderers");
 	as_paraGui.addToScreen (GUI_OBJECT_SLIDER, "videoOptions.renderers", "videoMenu");
-	as_paraGui.setPosition (GUI_OBJECT_SLIDER, "videoOptions.renderers", 8, GUI_COORD_PERCENT, 5, 20, 30, 2);
+	as_paraGui.setPosition (GUI_OBJECT_SLIDER, "videoOptions.renderers", 8, GUI_COORD_PERCENT, 5, 25, 30, 2);
 	as_paraGui.setLabel (GUI_OBJECT_SLIDER, "videoOptions.renderers", 12, GUI_LABEL_CENTER, gui_getString ("videoOptions.renderers"));
 	as_paraGui.setAction (GUI_OBJECT_SLIDER, "videoOptions.renderers", "as_handleVideoMenu");
 
 	for (int i = 0; i != numRenderers; i++)
 	{
 		tempNum = formatInt (i, "l");
-		as_paraGui.addNewElement ("videoOptions.renderers", tempNum, as_renderer.getRendererByIndex(i), SLIDER_TYPE_INT);
+		as_paraGui.addNewElement ("videoOptions.renderers", tempNum, as_renderer.getRendererByIndex (i), SLIDER_TYPE_INT);
 	}
 
-	currentRendererStr = formatInt(as_renderer.getCurrentRendererIndex(), "l");
+	currentRendererStr = formatInt (as_renderer.getCurrentRendererIndex (), "l");
 	as_paraGui.setSliderValue ("videoOptions.renderers", currentRendererStr);
 	as_paraGui.setFontName (GUI_OBJECT_SLIDER, "videoOptions.renderers", "guiFont28");
 	as_paraGui.setReady (GUI_OBJECT_SLIDER, "videoOptions.renderers", true);
@@ -205,9 +207,9 @@ void createVideoMenu ()
 	as_paraGui.setLabel (GUI_OBJECT_SLIDER, "videoOptions.display", 12, GUI_LABEL_CENTER, gui_getString ("videoOptions.display"));
 	as_paraGui.setAction (GUI_OBJECT_SLIDER, "videoOptions.display", "as_handleVideoMenu");
 
-	as_paraGui.addNewElement ("videoOptions.display", "0", gui_getString("videoOptions.windowed"), SLIDER_TYPE_INT);
-	as_paraGui.addNewElement ("videoOptions.display", "1", gui_getString("videoOptions.fullscreen"), SLIDER_TYPE_INT);
-	as_paraGui.addNewElement ("videoOptions.display", "2", gui_getString("videoOptions.desktop"), SLIDER_TYPE_INT);
+	as_paraGui.addNewElement ("videoOptions.display", "0", gui_getString ("videoOptions.windowed"), SLIDER_TYPE_INT);
+	as_paraGui.addNewElement ("videoOptions.display", "1", gui_getString ("videoOptions.fullscreen"), SLIDER_TYPE_INT);
+	as_paraGui.addNewElement ("videoOptions.display", "2", gui_getString ("videoOptions.desktop"), SLIDER_TYPE_INT);
 
 //	currentRendererStr = formatInt(as_renderer.getCurrentRendererIndex(), "l");
 //	as_paraGui.setSliderValue ("videoOptions.display", currentRendererStr);
@@ -222,9 +224,9 @@ void createVideoMenu ()
 	as_paraGui.setLabel (GUI_OBJECT_SLIDER, "videoOptions.scalequality", 12, GUI_LABEL_CENTER, gui_getString ("videoOptions.scalequality"));
 	as_paraGui.setAction (GUI_OBJECT_SLIDER, "videoOptions.scalequality", "as_handleVideoMenu");
 
-	as_paraGui.addNewElement ("videoOptions.scalequality", "0", gui_getString("videoOptions.nearest"), SLIDER_TYPE_INT);
-	as_paraGui.addNewElement ("videoOptions.scalequality", "1", gui_getString("videoOptions.linear"), SLIDER_TYPE_INT);
-	as_paraGui.addNewElement ("videoOptions.scalequality", "2", gui_getString("videoOptions.best"), SLIDER_TYPE_INT);
+	as_paraGui.addNewElement ("videoOptions.scalequality", "0", gui_getString ("videoOptions.nearest"), SLIDER_TYPE_INT);
+	as_paraGui.addNewElement ("videoOptions.scalequality", "1", gui_getString ("videoOptions.linear"), SLIDER_TYPE_INT);
+	as_paraGui.addNewElement ("videoOptions.scalequality", "2", gui_getString ("videoOptions.best"), SLIDER_TYPE_INT);
 
 //	currentRendererStr = formatInt(as_renderer.getCurrentRendererIndex(), "l");
 //	as_paraGui.setSliderValue ("videoOptions.display", currentRendererStr);
@@ -236,7 +238,7 @@ void createVideoMenu ()
 	as_paraGui.create (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync");
 	as_paraGui.addToScreen (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", "videoMenu");
 	as_paraGui.setPosition (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", 3, GUI_COORD_PERCENT, 60, 15, 5, 7);
-	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", 6, GUI_LABEL_LEFT, gui_getString("videoOptions.usevsync"));
+	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", 6, GUI_LABEL_LEFT, gui_getString ("videoOptions.usevsync"));
 	as_paraGui.setFontName (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", "guiFont28");
 	as_paraGui.setAction (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", "as_handleVideoMenu");
 	as_paraGui.setReady (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", true);
@@ -247,7 +249,7 @@ void createVideoMenu ()
 	as_paraGui.create (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow");
 	as_paraGui.addToScreen (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", "videoMenu");
 	as_paraGui.setPosition (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", 3, GUI_COORD_PERCENT, 60, 30, 5, 7);
-	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", 6, GUI_LABEL_LEFT, gui_getString("videoOptions.borderlesswindow"));
+	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", 6, GUI_LABEL_LEFT, gui_getString ("videoOptions.borderlesswindow"));
 	as_paraGui.setFontName (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", "guiFont28");
 	as_paraGui.setAction (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", "as_handleVideoMenu");
 	as_paraGui.setReady (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", true);
@@ -258,7 +260,7 @@ void createVideoMenu ()
 	as_paraGui.create (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi");
 	as_paraGui.addToScreen (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", "videoMenu");
 	as_paraGui.setPosition (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", 3, GUI_COORD_PERCENT, 60, 45, 5, 7);
-	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", 6, GUI_LABEL_LEFT, gui_getString("videoOptions.highdpi"));
+	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", 6, GUI_LABEL_LEFT, gui_getString ("videoOptions.highdpi"));
 	as_paraGui.setFontName (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", "guiFont28");
 	as_paraGui.setAction (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", "as_handleVideoMenu");
 	as_paraGui.setReady (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", true);
@@ -295,17 +297,19 @@ void createAudioMenu ()
 
 	as_paraGui.create (GUI_OBJECT_SCREEN, "audioOptions");
 
+	/*
 	as_paraGui.create (GUI_OBJECT_LABEL, "audioOptions.heading");
 	as_paraGui.addToScreen (GUI_OBJECT_LABEL, "audioOptions.heading", "audioOptions");
 	as_paraGui.setPosition (GUI_OBJECT_LABEL, "audioOptions.heading", 0, GUI_COORD_ABSOLUTE, 3, 3, 2, 2);
-	as_paraGui.setLabel (GUI_OBJECT_LABEL, "audioOptions.heading", 0, GUI_LABEL_LEFT, gui_getString("audioOptions.heading"));
+	as_paraGui.setLabel (GUI_OBJECT_LABEL, "audioOptions.heading", 0, GUI_LABEL_LEFT, gui_getString ("audioOptions.heading"));
 	as_paraGui.setFontName (GUI_OBJECT_LABEL, "audioOptions.heading", "guiFont");
 	as_paraGui.setReady (GUI_OBJECT_LABEL, "audioOptions.heading", true);
+*/
 
 	as_paraGui.create (GUI_OBJECT_CHECKBOX, "audioOptions.enableSound");
 	as_paraGui.addToScreen (GUI_OBJECT_CHECKBOX, "audioOptions.enableSound", "audioOptions");
 	as_paraGui.setPosition (GUI_OBJECT_CHECKBOX, "audioOptions.enableSound", 3, GUI_COORD_PERCENT, 2, 20, 5, 7);
-	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "audioOptions.enableSound", 6, GUI_LABEL_LEFT, gui_getString("audioOptions.enableSound"));
+	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "audioOptions.enableSound", 6, GUI_LABEL_LEFT, gui_getString ("audioOptions.enableSound"));
 	as_paraGui.setFontName (GUI_OBJECT_CHECKBOX, "audioOptions.enableSound", "guiFont28");
 	as_paraGui.setAction (GUI_OBJECT_CHECKBOX, "audioOptions.enableSound", "as_handleAudioMenu");
 	as_paraGui.setReady (GUI_OBJECT_CHECKBOX, "audioOptions.enableSound", true);
@@ -367,7 +371,7 @@ void createControlsMenu ()
 	as_paraGui.create (GUI_OBJECT_LABEL, "controlsOptions.heading");
 	as_paraGui.addToScreen (GUI_OBJECT_LABEL, "controlsOptions.heading", "controlsMenu");
 	as_paraGui.setPosition (GUI_OBJECT_LABEL, "controlsOptions.heading", 0, GUI_COORD_ABSOLUTE, 3, 3, 2, 2);
-	as_paraGui.setLabel (GUI_OBJECT_LABEL, "controlsOptions.heading", 0, GUI_LABEL_LEFT, gui_getString("controlsOptions.heading"));
+	as_paraGui.setLabel (GUI_OBJECT_LABEL, "controlsOptions.heading", 0, GUI_LABEL_LEFT, gui_getString ("controlsOptions.heading"));
 	as_paraGui.setFontName (GUI_OBJECT_LABEL, "controlsOptions.heading", "guiFont");
 	as_paraGui.setReady (GUI_OBJECT_LABEL, "controlsOptions.heading", true);
 
@@ -391,7 +395,7 @@ void createGameMenu ()
 	as_paraGui.create (GUI_OBJECT_LABEL, "gameOptions.heading");
 	as_paraGui.addToScreen (GUI_OBJECT_LABEL, "gameOptions.heading", "gameMenu");
 	as_paraGui.setPosition (GUI_OBJECT_LABEL, "gameOptions.heading", 0, GUI_COORD_ABSOLUTE, 3, 3, 2, 2);
-	as_paraGui.setLabel (GUI_OBJECT_LABEL, "gameOptions.heading", 0, GUI_LABEL_LEFT, gui_getString("gameOptions.heading"));
+	as_paraGui.setLabel (GUI_OBJECT_LABEL, "gameOptions.heading", 0, GUI_LABEL_LEFT, gui_getString ("gameOptions.heading"));
 	as_paraGui.setFontName (GUI_OBJECT_LABEL, "gameOptions.heading", "guiFont");
 	as_paraGui.setReady (GUI_OBJECT_LABEL, "gameOptions.heading", true);
 
@@ -528,17 +532,15 @@ void as_setupIntroScrollBox ()
 
 	as_paraGui.create (GUI_OBJECT_SCREEN, "introScreen");
 
-	as_paraGui.create           (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox");
-	as_paraGui.addToScreen      (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", "introScreen");
-	as_paraGui.setLabel         (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 4, GUI_LABEL_CENTER, gui_getString ("scrollBoxIntroText"));
-	as_paraGui.setFontName      (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", "introFont");
-	as_paraGui.setPosition      (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 8, GUI_COORD_ABSOLUTE, introScrollBoxBorderWidth, 100, hiresVirtualWidth - introScrollBoxBorderWidth, hiresVirtualHeight - introScrollBoxBorderWidth - 100);
-	as_paraGui.setColor         (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", GUI_COL_ACTIVE, 100, 100, 15, 100);
-	as_paraGui.setColor         (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", GUI_COL_ACTIVE_LABEL, 20, 150, 100, 240);
-	as_paraGui.setScrollSpeed   (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 60.0);
-	as_paraGui.setReady         (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", true);
-
-//	as_guiSetupScrollBox (SCROLLBOX_INTRO, gui_getString ("scrollBoxIntroText"));
+	as_paraGui.create (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox");
+	as_paraGui.addToScreen (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", "introScreen");
+	as_paraGui.setLabel (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 4, GUI_LABEL_CENTER, gui_getString ("scrollBoxIntroText"));
+	as_paraGui.setFontName (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", "introFont");
+	as_paraGui.setPosition (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 8, GUI_COORD_ABSOLUTE, introScrollBoxBorderWidth, 100, hiresVirtualWidth - introScrollBoxBorderWidth, hiresVirtualHeight - introScrollBoxBorderWidth - 100);
+	as_paraGui.setColor (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", GUI_COL_ACTIVE, 100, 100, 15, 100);
+	as_paraGui.setColor (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", GUI_COL_ACTIVE_LABEL, 20, 150, 100, 240);
+	as_paraGui.setScrollSpeed (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 60.0);
+	as_paraGui.setReady (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", true);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -549,16 +551,27 @@ void as_createGUI ()
 {
 	as_setLanguageStrings ();
 
-	sideviewDrawScale = 1.2f;
+	baseGameSpeed     = 1.0;
+	sideviewDrawScale = 1.2;
+
+	hudTextPosX = 15;
+	hudTextPosY = 27;
+
 	as_setSideviewColors ();
 
 	as_setupIntroScrollBox ();
+
 	createMainMenu ();
 	createOptionsMenu ();
 	createVideoMenu ();
 	createAudioMenu ();
 	createControlsMenu ();
 	createGameMenu ();
+
+	createDatabaseScreen ();
+	createTerminalMenu ();
+	createDeckViewScreen ();
+	createShipViewScreen ();
 
 	as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
 	as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGame");

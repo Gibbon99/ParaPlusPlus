@@ -13,7 +13,7 @@ std::vector<_textStrings>		textStrings;
 //--------------------------------------------------------
 //
 // Return a string based on the key
-std::string gui_getString(string& key)
+std::string gui_getString(const std::string& key)
 //--------------------------------------------------------
 {
 	for (auto & textString : textStrings)

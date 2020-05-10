@@ -3,6 +3,7 @@
 #include "system/frameRender.h"
 #include "io/console.h"
 #include "gui/guiSideview.h"
+#include "game/hud.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -46,17 +47,43 @@ void sys_renderFrame (double interpolation)
 			texture.render ("splash");
 			break;
 
-		case MODE_GUI:
+		case MODE_GUI_MAINMENU:
+			gam_renderHud ();
 			gui_renderGUI ();
 			break;
 
-		case MODE_SIDEWVIEW:
-			gui_renderSideView ();
+		case MODE_GUI_TERMINAL:
+			gam_renderHud ();
+			gui_renderGUI ();
 			break;
 
-		case MODE_BRIEFING:
+		case MODE_GUI_DATABASE:
+			gam_renderHud ();
+			gui_renderScrollbox ("databaseScreen.scrollbox", interpolation);
+			gui_renderGUI ();
+			break;
+
+		case MODE_GUI_DECKVIEW:
+			gam_renderHud ();
+			gui_renderGUI ();
+			break;
+
+		case MODE_GUI_SHIPVIEW:
+			gui_renderSideView ();
+			gam_renderHud ();
+			gui_renderGUI ();
+			break;
+
+		case MODE_GUI_LIFTVIEW:
+			gui_renderSideView ();
+			gam_renderHud ();
+			break;
+
+		case MODE_GUI_INTROSCROLL:
+			gam_renderHud ();
 			gui_renderScrollbox ("introScreen.scrollbox", interpolation);
 			break;
 	}
 	sys_completeFrame ();
 }
+
