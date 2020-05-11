@@ -5,6 +5,7 @@
 #include <gui/guiLanguage.h>
 #include <io/joystick.h>
 #include <game/database.h>
+#include <game/tiles.h>
 #include "../../hdr/system/startup.h"
 #include "../../hdr/system/scriptEngine.h"
 #include "../../hdr/system/scriptConfig.h"
@@ -15,8 +16,8 @@
 #include "gui/guiSideview.h"
 
 // Variables needed to start everything
-int         logicalWinWidth;
-int         logicalWinHeight;
+int         gameWinWidth;
+int         gameWinHeight;
 int         windowWidth;
 int         windowHeight;
 int         hiresVirtualWidth;
@@ -98,8 +99,11 @@ void sys_startSystems ()
 	renderer.setConOutFunction (con_addEvent);
 	renderer.create (windowWidth, windowHeight, sys_createWindowFlags (), whichRenderer, presentVSync, APP_NAME);
 	//
-	// Create target texture for rendering the console onto
+	// Create target texture for rendering the non game screens onto
 	renderer.createRenderTargetTexture (HIRES_BACKING_TEXTURE, hiresVirtualWidth, hiresVirtualHeight, renderScaleQuality);
+
+	renderer.createRenderTargetTexture (GAME_BACKING_TEXTURE, gameWinWidth, gameWinHeight, renderScaleQuality);
+
 	renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 	//
 	// Start the filesystem
@@ -160,6 +164,7 @@ void sys_startSystems ()
 	gam_getDBInformation ();
 
 	databaseSprite.create ("db_droid", 32, 0.6);
+	gam_loadTileSet();
 
 	SDL_SetTextureBlendMode (textures.at ("screen").getTexture (), SDL_BLENDMODE_MOD);
 

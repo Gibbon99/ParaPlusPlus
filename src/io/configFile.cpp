@@ -1,4 +1,5 @@
 //#include <gui/guiRender.h>
+#include <game/tiles.h>
 #include "gui/guiLanguage.h"
 #include "../../hdr/io/configFile.h"
 #include "../../hdr/system/startup.h"
@@ -93,13 +94,13 @@ void io_readConfigValues(const std::string& fileName)
 	if (consoleFontSize == 0)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "consoleFontSize"));
 
-	logicalWinWidth = (int)iniFile.GetLongValue("Main", "logicalWinWidth", 0);
-	if (logicalWinWidth == 0)
-		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "logicalWinWidth"));
+	gameWinWidth = (int)iniFile.GetLongValue("Main", "gameWinWidth", 0);
+	if (gameWinWidth == 0)
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "gameWinWidth"));
 
-	logicalWinHeight = (int)iniFile.GetLongValue("Main", "logicalWinHeight", 0);
-	if (logicalWinHeight == 0)
-		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "logicalWinHeight"));
+	gameWinHeight = (int)iniFile.GetLongValue("Main", "gameWinHeight", 0);
+	if (gameWinHeight == 0)
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "gameWinHeight"));
 
 	windowWidth = (int)iniFile.GetLongValue("Main", "windowWidth", 0);
 	if (windowWidth == 0)
@@ -168,5 +169,16 @@ void io_readConfigValues(const std::string& fileName)
 	doScreenEffect = static_cast<int>(iniFile.GetLongValue("Main", "doScreenEffect", -1));
 	if (doScreenEffect == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "doScreenEffect"));
+
+	returnValue = iniFile.GetValue ("Main", "tileStyle", "default");
+	if (strcmp(returnValue, "default") == 0)
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "tileStyle"));
+	tileStyle = returnValue;
+
+	returnValue = iniFile.GetValue ("Main", "tileColor", "default");
+	if (strcmp(returnValue, "default") == 0)
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "tileColor"));
+	tileColor = returnValue;
+
 }
 

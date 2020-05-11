@@ -88,6 +88,9 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("terminalMenu.deckviewButton", "Deck view");
 	gui_addKeyAndText ("terminalMenu.shipviewButton", "Ship view");
 
+	gui_addKeyAndText ("gameMenu.tileStyle", "Tile style");
+	gui_addKeyAndText ("gameMenu.tileColor", "Tile color");
+
 	gui_addKeyAndText ("databaseScreen.previousButton", "Previous");
 	gui_addKeyAndText ("databaseScreen.nextButton", "Next");
 

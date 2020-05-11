@@ -1,4 +1,5 @@
 #include <cassert>
+#include <game/tiles.h>
 #include "game/audio.h"
 #include "gui/guiLanguage.h"
 #include "system/startup.h"
@@ -36,6 +37,7 @@ void sys_scriptInitScriptFunctions ()
 	paraScriptInstance.addScriptFunction ("void as_handleTerminalMenu()", "as_handleTerminalMenu");
 	paraScriptInstance.addScriptFunction ("void as_handleDatabaseMenu()", "as_handleDatabaseMenu");
 
+
 	paraScriptInstance.addScriptFunction ("void as_testFunction()", "as_testFunction");
 }
 
@@ -59,6 +61,9 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("double hudTextPosX", &hudTextPosX);
 	paraScriptInstance.addHostVariable ("double hudTextPosY", &hudTextPosY);
 	paraScriptInstance.addHostVariable ("bool doScreenEffect", &doScreenEffect);
+	paraScriptInstance.addHostVariable ("string tileFilename", &tileFilename);
+	paraScriptInstance.addHostVariable ("string tileStyle", &tileStyle);
+	paraScriptInstance.addHostVariable ("string tileColor", &tileColor);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)
@@ -195,6 +200,7 @@ void sys_scriptInitFunctions ()
 
 	paraScriptInstance.addHostFunction ("void as_createSideViewColor  (int index, int red, int green, int blue, int alpha)", (functionPtr) &gui_createSideViewColor);
 	paraScriptInstance.addHostFunction ("void io_updateConfigValueInt(string &in, int newValue)", (functionPtr) &io_updateConfigValueInt);
+	paraScriptInstance.addHostFunction ("void io_updateConfigValue(string &in, string &in)", (functionPtr) &io_updateConfigValue);
 
 	paraScriptInstance.addHostFunction ("void gam_previousDatabase()", (functionPtr) &gam_previousDatabase);
 	paraScriptInstance.addHostFunction ("void gam_nextDatabase()", (functionPtr) &gam_nextDatabase);
@@ -203,5 +209,6 @@ void sys_scriptInitFunctions ()
 	paraScriptInstance.addHostFunction("void gam_loadTexture(string &in, string &in)", (functionPtr) &gam_loadTexture);
 	paraScriptInstance.addHostFunction("void gam_createCollisionMap(string &in)", (functionPtr) &gam_createCollisionMap);
 
-
+	paraScriptInstance.addHostFunction("void gam_setTileType()", (functionPtr) &gam_setTileType);
+	;
 }

@@ -34,7 +34,8 @@
 
 #define ERROR_COUNT_LIMIT   10
 
-#define HIRES_BACKING_TEXTURE "consoleBackingTexture"
+#define HIRES_BACKING_TEXTURE "hiresBackingTexture"
+#define GAME_BACKING_TEXTURE "gameBackingTexture"
 
 using namespace std;
 

@@ -3,9 +3,9 @@
 #include "../main.h"
 
 // Variables to start everything
-extern int         logicalWinWidth;
-extern int         logicalWinHeight;
-extern int         windowWidth;
+extern int gameWinWidth;
+extern int gameWinHeight;
+extern int windowWidth;
 extern int         windowHeight;
 extern int         hiresVirtualWidth;
 extern int         hiresVirtualHeight;

@@ -11,7 +11,8 @@ void as_handleMainMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.startGameButton"))
 	{
-
+		gam_setHudText("Game on");
+		sys_setNewMode (MODE_GAME, true);
 		return;
 	}
 
@@ -143,6 +144,14 @@ void as_handleGameMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "gameMenu.backButton"))
 	{
+		tileStyle = as_paraGui.getSliderValue ("gameMenu.tileStyle");
+		tileColor = as_paraGui.getSliderValue ("gameMenu.tileColor");
+
+		gam_setTileType();
+
+		io_updateConfigValue("tileStyle", tileStyle);
+		io_updateConfigValue("tileColor", tileColor);
+
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "optionsMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "optionsMenu.gameButton");
 		return;
@@ -446,12 +455,33 @@ void createGameMenu ()
 {
 	as_paraGui.create (GUI_OBJECT_SCREEN, "gameMenu");
 
-	as_paraGui.create (GUI_OBJECT_LABEL, "gameOptions.heading");
-	as_paraGui.addToScreen (GUI_OBJECT_LABEL, "gameOptions.heading", "gameMenu");
-	as_paraGui.setPosition (GUI_OBJECT_LABEL, "gameOptions.heading", 0, GUI_COORD_ABSOLUTE, 3, 3, 2, 2);
-	as_paraGui.setLabel (GUI_OBJECT_LABEL, "gameOptions.heading", 0, GUI_LABEL_LEFT, gui_getString ("gameOptions.heading"));
-	as_paraGui.setFontName (GUI_OBJECT_LABEL, "gameOptions.heading", "guiFont");
-	as_paraGui.setReady (GUI_OBJECT_LABEL, "gameOptions.heading", true);
+	as_paraGui.create (GUI_OBJECT_SLIDER, "gameMenu.tileStyle");
+	as_paraGui.addToScreen (GUI_OBJECT_SLIDER, "gameMenu.tileStyle", "gameMenu");
+	as_paraGui.setPosition (GUI_OBJECT_SLIDER, "gameMenu.tileStyle", 8, GUI_COORD_PERCENT, 55, 50, 40, 2);
+	as_paraGui.setLabel (GUI_OBJECT_SLIDER, "gameMenu.tileStyle", 12, GUI_LABEL_LEFT, gui_getString ("gameMenu.tileStyle"));
+	as_paraGui.setAction (GUI_OBJECT_SLIDER, "gameMenu.tileStyle", "as_handleGameMenu");
+	as_paraGui.addNewElement ("gameMenu.tileStyle", "retro", "retro", SLIDER_TYPE_STRING);
+	as_paraGui.addNewElement ("gameMenu.tileStyle", "future", "future", SLIDER_TYPE_STRING);
+	as_paraGui.setFontName (GUI_OBJECT_SLIDER, "gameMenu.tileStyle", "guiFont28");
+
+	as_paraGui.setSliderValue ("gameMenu.tileStyle", tileStyle);
+	as_paraGui.setReady (GUI_OBJECT_SLIDER, "gameMenu.tileStyle", true);
+
+	as_paraGui.create (GUI_OBJECT_SLIDER, "gameMenu.tileColor");
+	as_paraGui.addToScreen (GUI_OBJECT_SLIDER, "gameMenu.tileColor", "gameMenu");
+	as_paraGui.setPosition (GUI_OBJECT_SLIDER, "gameMenu.tileColor", 8, GUI_COORD_PERCENT, 5, 50, 40, 2);
+	as_paraGui.setLabel (GUI_OBJECT_SLIDER, "gameMenu.tileColor", 12, GUI_LABEL_LEFT, gui_getString ("gameMenu.tileColor"));
+	as_paraGui.setAction (GUI_OBJECT_SLIDER, "gameMenu.tileColor", "as_handleGameMenu");
+	as_paraGui.addNewElement ("gameMenu.tileColor", "blue", "blue", SLIDER_TYPE_STRING);
+	as_paraGui.addNewElement ("gameMenu.tileColor", "gray", "gray", SLIDER_TYPE_STRING);
+	as_paraGui.addNewElement ("gameMenu.tileColor", "green", "green", SLIDER_TYPE_STRING);
+	as_paraGui.addNewElement ("gameMenu.tileColor", "red", "red", SLIDER_TYPE_STRING);
+	as_paraGui.addNewElement ("gameMenu.tileColor", "turquoise", "turquoise", SLIDER_TYPE_STRING);
+	as_paraGui.addNewElement ("gameMenu.tileColor", "yellow", "yellow", SLIDER_TYPE_STRING);
+	as_paraGui.setFontName (GUI_OBJECT_SLIDER, "gameMenu.tileColor", "guiFont28");
+
+	as_paraGui.setSliderValue ("gameMenu.tileColor", tileColor);
+	as_paraGui.setReady (GUI_OBJECT_SLIDER, "gameMenu.tileColor", true);
 
 	as_paraGui.create (GUI_OBJECT_BUTTON, "gameMenu.backButton");
 	as_paraGui.addToScreen (GUI_OBJECT_BUTTON, "gameMenu.backButton", "gameMenu");

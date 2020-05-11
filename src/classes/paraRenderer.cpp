@@ -378,6 +378,9 @@ void paraRenderer::setCurrentBackingTexture (std::string newActiveTexture)
 			activeBackingTexture = newActiveTexture;
 			SDL_SetRenderTarget (renderer, getRenderTarget (newActiveTexture));
 			targetTextureAvailable = true;
+
+			std::cout << "Set backing texture to " << newActiveTexture << std::endl;
+
 			return;
 		}
 	}
@@ -449,7 +452,7 @@ void paraRenderer::createRenderTargetTexture (std::string textureName, int logic
 
 	//
 	// Adjust virtual scaling
-	SDL_RenderSetLogicalSize (renderer, logicalWidth, logicalHeight);
+//	SDL_RenderSetLogicalSize (renderer, logicalWidth, logicalHeight);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-
+#include <system/startup.h>
 #include "game/hud.h"
 
 std::string hudText;
@@ -25,8 +25,16 @@ void gam_renderHud()
 
 	destination.x = 0;
 	destination.y = 0;
-	destination.h = textures.at("hudNew").getHeight();
-	destination.w = textures.at("hudNew").getWidth();
+	if (currentMode != MODE_GAME)
+	{
+		destination.h = textures.at ("hudNew").getHeight ();
+		destination.w = textures.at ("hudNew").getWidth ();
+	}
+	else
+	{
+		destination.h = textures.at ("hudNew").getHeight() * (static_cast<double>(gameWinHeight) / hiresVirtualHeight);
+		destination.w = gameWinWidth;
+	}
 
 	textures.at("hudNew").render(&destination);
 

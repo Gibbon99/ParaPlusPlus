@@ -23,6 +23,12 @@ void sys_setNewMode (int newMode, bool doFade)
 
 	switch (newMode)
 	{
+		case MODE_GAME:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (GAME_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, gameWinWidth, gameWinHeight);
+			break;
+
 		case MODE_CONSOLE_EDIT:
 			gui.setRepeatOff (true);
 			//
@@ -37,41 +43,49 @@ void sys_setNewMode (int newMode, bool doFade)
 		case MODE_SHOW_SPLASH:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		case MODE_GUI_MAINMENU:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		case MODE_GUI_INTROSCROLL:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		case MODE_GUI_TERMINAL:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		case MODE_GUI_DATABASE:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		case MODE_GUI_SHIPVIEW:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		case MODE_GUI_DECKVIEW:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		case MODE_GUI_LIFTVIEW:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		default:
