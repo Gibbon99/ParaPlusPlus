@@ -1,12 +1,11 @@
-#include <game/audio.h>
-#include <gui/guiLanguage.h>
-#include <gui/guiScrollbox.h>
-#include <system/startup.h>
 #include <cassert>
-#include <game/database.h>
-#include <game/hud.h>
-#include <game/texture.h>
-#include "../../hdr/system/scriptConfig.h"
+#include "game/audio.h"
+#include "gui/guiLanguage.h"
+#include "system/startup.h"
+#include "game/database.h"
+#include "game/hud.h"
+#include "game/texture.h"
+#include "system/scriptConfig.h"
 #include "gui/guiSideview.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -27,7 +26,7 @@ void sys_scriptInitScriptFunctions ()
 	paraScriptInstance.addScriptFunction ("void as_handleMainMenu()", "as_handleMainMenu");
 	paraScriptInstance.addScriptFunction ("void as_handleOptionsMenu()", "as_handleOptionsMenu");
 
-	paraScriptInstance.addScriptFunction ("void as_handleVideoMenu()", "as_handleVideoMenu");
+	paraScriptInstance.addScriptFunction ("void as_handleVideoOptions()", "as_handleVideoOptions");
 	paraScriptInstance.addScriptFunction ("void as_handleAudioMenu()", "as_handleAudioMenu");
 	paraScriptInstance.addScriptFunction ("void as_handleControlsMenu()", "as_handleControlsMenu");
 	paraScriptInstance.addScriptFunction ("void as_handleGameMenu()", "as_handleGameMenu");
@@ -59,6 +58,7 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("double baseGameSpeed", &baseGameSpeed);
 	paraScriptInstance.addHostVariable ("double hudTextPosX", &hudTextPosX);
 	paraScriptInstance.addHostVariable ("double hudTextPosY", &hudTextPosY);
+	paraScriptInstance.addHostVariable ("bool doScreenEffect", &doScreenEffect);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)

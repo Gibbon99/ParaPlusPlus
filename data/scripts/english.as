@@ -69,7 +69,8 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("videoOptions.usevsync", "Use vsync");
 	gui_addKeyAndText ("videoOptions.borderlesswindow", "No window frame");
 	gui_addKeyAndText ("videoOptions.highdpi", "Allow High DPI");
-	gui_addKeyAndText ("videoMenu.applyButton", "Apply");
+	gui_addKeyAndText ("videoOptions.screeneffect", "CRT Effect");
+	gui_addKeyAndText ("videoOptions.applyButton", "Apply");
 
 	gui_addKeyAndText ("gameOptions.heading", "GAME OPTIONS");
 

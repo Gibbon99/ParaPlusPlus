@@ -39,13 +39,15 @@ void as_handleOptionsMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.videoButton"))
 	{
-		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "videoMenu"));
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "videoMenu.backButton");
+		gam_setHudText(gui_getString ("optionsMenu.videoButton"));
+		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "videoOptions"));
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "videoOptions.backButton");
 		return;
 	}
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.audioButton"))
 	{
+		gam_setHudText(gui_getString ("optionsMenu.audioButton"));
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "audioOptions"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "audioOptions.backButton");
 		return;
@@ -53,6 +55,7 @@ void as_handleOptionsMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.controlsButton"))
 	{
+		gam_setHudText(gui_getString ("optionsMenu.controlsButton"));
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "controlsMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "controlsMenu.backButton");
 		return;
@@ -60,6 +63,7 @@ void as_handleOptionsMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.gameButton"))
 	{
+		gam_setHudText(gui_getString ("optionsMenu.gameButton"));
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "gameMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "gameMenu.backButton");
 		return;
@@ -148,10 +152,49 @@ void as_handleGameMenu ()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 //
 // Process the elements on the Control menu
-void as_handleVideoMenu ()
+void as_handleVideoOptions ()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
-	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "videoMenu.backButton"))
+	int boolToInt;
+
+	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi"))
+	{
+		windowAllowHighDPI = !windowAllowHighDPI;
+		as_paraGui.setTickedStatus ("videoOptions.highdpi", -1, windowAllowHighDPI);
+		boolToInt = windowAllowHighDPI ? 1 : 0;
+		io_updateConfigValueInt ("windowAllowHighDPI", boolToInt);
+		return;
+	}
+
+
+	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow"))
+	{
+		windowBorderless = !windowBorderless;
+		as_paraGui.setTickedStatus ("videoOptions.borderlesswindow", -1, windowBorderless);
+		boolToInt = windowBorderless ? 1 : 0;
+		io_updateConfigValueInt ("windowBorderless", boolToInt);
+		return;
+	}
+
+	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync"))
+	{
+		presentVSync = !presentVSync;
+		as_paraGui.setTickedStatus ("videoOptions.usevsync", -1, presentVSync);
+		boolToInt = presentVSync ? 1 : 0;
+		io_updateConfigValueInt ("presentVSync", boolToInt);
+		return;
+	}
+
+	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_CHECKBOX, "videoOptions.screeneffect"))
+	{
+		doScreenEffect = !doScreenEffect;
+		as_paraGui.setTickedStatus ("videoOptions.screeneffect", -1, doScreenEffect);
+		boolToInt = doScreenEffect ? 1 : 0;
+		io_updateConfigValueInt ("doScreenEffect", boolToInt);
+		return;
+	}
+
+	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "videoOptions.backButton"))
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "optionsMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "optionsMenu.videoButton");
@@ -162,14 +205,14 @@ void as_handleVideoMenu ()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 //
 // Create the Video options menu. Window Setting; Which Renderer; Use VSync Checkbox
-void createVideoMenu ()
+void createVideoOptions ()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
 	int    numRenderers;
 	string tempNum;
 	string currentRendererStr;
 
-	as_paraGui.create (GUI_OBJECT_SCREEN, "videoMenu");
+	as_paraGui.create (GUI_OBJECT_SCREEN, "videoOptions");
 /*
 	as_paraGui.create (GUI_OBJECT_LABEL, "videoOptions.heading");
 	as_paraGui.addToScreen (GUI_OBJECT_LABEL, "videoOptions.heading", "videoMenu");
@@ -183,10 +226,10 @@ void createVideoMenu ()
 	//
 	numRenderers = as_renderer.getNumRenderers ();
 	as_paraGui.create (GUI_OBJECT_SLIDER, "videoOptions.renderers");
-	as_paraGui.addToScreen (GUI_OBJECT_SLIDER, "videoOptions.renderers", "videoMenu");
+	as_paraGui.addToScreen (GUI_OBJECT_SLIDER, "videoOptions.renderers", "videoOptions");
 	as_paraGui.setPosition (GUI_OBJECT_SLIDER, "videoOptions.renderers", 8, GUI_COORD_PERCENT, 5, 25, 30, 2);
 	as_paraGui.setLabel (GUI_OBJECT_SLIDER, "videoOptions.renderers", 12, GUI_LABEL_CENTER, gui_getString ("videoOptions.renderers"));
-	as_paraGui.setAction (GUI_OBJECT_SLIDER, "videoOptions.renderers", "as_handleVideoMenu");
+	as_paraGui.setAction (GUI_OBJECT_SLIDER, "videoOptions.renderers", "as_handleVideoOptions");
 
 	for (int i = 0; i != numRenderers; i++)
 	{
@@ -202,10 +245,10 @@ void createVideoMenu ()
 	// Display
 	//
 	as_paraGui.create (GUI_OBJECT_SLIDER, "videoOptions.display");
-	as_paraGui.addToScreen (GUI_OBJECT_SLIDER, "videoOptions.display", "videoMenu");
+	as_paraGui.addToScreen (GUI_OBJECT_SLIDER, "videoOptions.display", "videoOptions");
 	as_paraGui.setPosition (GUI_OBJECT_SLIDER, "videoOptions.display", 8, GUI_COORD_PERCENT, 5, 52, 30, 2);
 	as_paraGui.setLabel (GUI_OBJECT_SLIDER, "videoOptions.display", 12, GUI_LABEL_CENTER, gui_getString ("videoOptions.display"));
-	as_paraGui.setAction (GUI_OBJECT_SLIDER, "videoOptions.display", "as_handleVideoMenu");
+	as_paraGui.setAction (GUI_OBJECT_SLIDER, "videoOptions.display", "as_handleVideoOptions");
 
 	as_paraGui.addNewElement ("videoOptions.display", "0", gui_getString ("videoOptions.windowed"), SLIDER_TYPE_INT);
 	as_paraGui.addNewElement ("videoOptions.display", "1", gui_getString ("videoOptions.fullscreen"), SLIDER_TYPE_INT);
@@ -219,10 +262,10 @@ void createVideoMenu ()
 	// Scale quality
 	//
 	as_paraGui.create (GUI_OBJECT_SLIDER, "videoOptions.scalequality");
-	as_paraGui.addToScreen (GUI_OBJECT_SLIDER, "videoOptions.scalequality", "videoMenu");
+	as_paraGui.addToScreen (GUI_OBJECT_SLIDER, "videoOptions.scalequality", "videoOptions");
 	as_paraGui.setPosition (GUI_OBJECT_SLIDER, "videoOptions.scalequality", 8, GUI_COORD_PERCENT, 5, 84, 30, 2);
 	as_paraGui.setLabel (GUI_OBJECT_SLIDER, "videoOptions.scalequality", 12, GUI_LABEL_CENTER, gui_getString ("videoOptions.scalequality"));
-	as_paraGui.setAction (GUI_OBJECT_SLIDER, "videoOptions.scalequality", "as_handleVideoMenu");
+	as_paraGui.setAction (GUI_OBJECT_SLIDER, "videoOptions.scalequality", "as_handleVideoOptions");
 
 	as_paraGui.addNewElement ("videoOptions.scalequality", "0", gui_getString ("videoOptions.nearest"), SLIDER_TYPE_INT);
 	as_paraGui.addNewElement ("videoOptions.scalequality", "1", gui_getString ("videoOptions.linear"), SLIDER_TYPE_INT);
@@ -236,55 +279,66 @@ void createVideoMenu ()
 	// Use VSync
 	//
 	as_paraGui.create (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync");
-	as_paraGui.addToScreen (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", "videoMenu");
+	as_paraGui.addToScreen (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", "videoOptions");
 	as_paraGui.setPosition (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", 3, GUI_COORD_PERCENT, 60, 15, 5, 7);
 	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", 6, GUI_LABEL_LEFT, gui_getString ("videoOptions.usevsync"));
 	as_paraGui.setFontName (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", "guiFont28");
-	as_paraGui.setAction (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", "as_handleVideoMenu");
+	as_paraGui.setAction (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", "as_handleVideoOptions");
 	as_paraGui.setReady (GUI_OBJECT_CHECKBOX, "videoOptions.usevsync", true);
 	as_paraGui.setTickedStatus ("videoOptions.usevsync", -1, presentVSync);
 	//
 	// Borderless window
 	//
 	as_paraGui.create (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow");
-	as_paraGui.addToScreen (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", "videoMenu");
+	as_paraGui.addToScreen (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", "videoOptions");
 	as_paraGui.setPosition (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", 3, GUI_COORD_PERCENT, 60, 30, 5, 7);
 	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", 6, GUI_LABEL_LEFT, gui_getString ("videoOptions.borderlesswindow"));
 	as_paraGui.setFontName (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", "guiFont28");
-	as_paraGui.setAction (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", "as_handleVideoMenu");
+	as_paraGui.setAction (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", "as_handleVideoOptions");
 	as_paraGui.setReady (GUI_OBJECT_CHECKBOX, "videoOptions.borderlesswindow", true);
 	as_paraGui.setTickedStatus ("videoOptions.borderlesswindow", -1, windowBorderless);
 	//
 	// Allow high DPI
 	//
 	as_paraGui.create (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi");
-	as_paraGui.addToScreen (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", "videoMenu");
+	as_paraGui.addToScreen (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", "videoOptions");
 	as_paraGui.setPosition (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", 3, GUI_COORD_PERCENT, 60, 45, 5, 7);
 	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", 6, GUI_LABEL_LEFT, gui_getString ("videoOptions.highdpi"));
 	as_paraGui.setFontName (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", "guiFont28");
-	as_paraGui.setAction (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", "as_handleVideoMenu");
+	as_paraGui.setAction (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", "as_handleVideoOptions");
 	as_paraGui.setReady (GUI_OBJECT_CHECKBOX, "videoOptions.highdpi", true);
 	as_paraGui.setTickedStatus ("videoOptions.highdpi", -1, windowAllowHighDPI);
 	//
+	// Use screen effect
+	//
+	as_paraGui.create (GUI_OBJECT_CHECKBOX, "videoOptions.screeneffect");
+	as_paraGui.addToScreen (GUI_OBJECT_CHECKBOX, "videoOptions.screeneffect", "videoOptions");
+	as_paraGui.setPosition (GUI_OBJECT_CHECKBOX, "videoOptions.screeneffect", 3, GUI_COORD_PERCENT, 60, 60, 5, 7);
+	as_paraGui.setLabel (GUI_OBJECT_CHECKBOX, "videoOptions.screeneffect", 6, GUI_LABEL_LEFT, gui_getString ("videoOptions.screeneffect"));
+	as_paraGui.setFontName (GUI_OBJECT_CHECKBOX, "videoOptions.screeneffect", "guiFont28");
+	as_paraGui.setAction (GUI_OBJECT_CHECKBOX, "videoOptions.screeneffect", "as_handleVideoOptions");
+	as_paraGui.setReady (GUI_OBJECT_CHECKBOX, "videoOptions.screeneffect", true);
+	as_paraGui.setTickedStatus ("videoOptions.screeneffect", -1, doScreenEffect);
+	//
 	// Apply Button
 	//
-	as_paraGui.create (GUI_OBJECT_BUTTON, "videoMenu.applyButton");
-	as_paraGui.addToScreen (GUI_OBJECT_BUTTON, "videoMenu.applyButton", "videoMenu");
-	as_paraGui.setLabel (GUI_OBJECT_BUTTON, "videoMenu.applyButton", 3, GUI_LABEL_CENTER, gui_getString ("videoMenu.applyButton"));
-	as_paraGui.setFontName (GUI_OBJECT_BUTTON, "videoMenu.applyButton", "guiFont");
-	as_paraGui.setPosition (GUI_OBJECT_BUTTON, "videoMenu.applyButton", 8, GUI_COORD_PERCENT, 59, 70, buttonWidth, buttonHeight);
-	as_paraGui.setAction (GUI_OBJECT_BUTTON, "videoMenu.applyButton", "as_handleVideoMenu");
-	as_paraGui.setReady (GUI_OBJECT_BUTTON, "videoMenu.applyButton", true);
+	as_paraGui.create (GUI_OBJECT_BUTTON, "videoOptions.applyButton");
+	as_paraGui.addToScreen (GUI_OBJECT_BUTTON, "videoOptions.applyButton", "videoOptions");
+	as_paraGui.setLabel (GUI_OBJECT_BUTTON, "videoOptions.applyButton", 3, GUI_LABEL_CENTER, gui_getString ("videoOptions.applyButton"));
+	as_paraGui.setFontName (GUI_OBJECT_BUTTON, "videoOptions.applyButton", "guiFont");
+	as_paraGui.setPosition (GUI_OBJECT_BUTTON, "videoOptions.applyButton", 8, GUI_COORD_PERCENT, 59, 70, buttonWidth, buttonHeight);
+	as_paraGui.setAction (GUI_OBJECT_BUTTON, "videoOptions.applyButton", "as_handleVideoOptions");
+	as_paraGui.setReady (GUI_OBJECT_BUTTON, "videoOptions.applyButton", true);
 	//
 	// Back button
 	//
-	as_paraGui.create (GUI_OBJECT_BUTTON, "videoMenu.backButton");
-	as_paraGui.addToScreen (GUI_OBJECT_BUTTON, "videoMenu.backButton", "videoMenu");
-	as_paraGui.setLabel (GUI_OBJECT_BUTTON, "videoMenu.backButton", 3, GUI_LABEL_CENTER, gui_getString ("backButton"));
-	as_paraGui.setFontName (GUI_OBJECT_BUTTON, "videoMenu.backButton", "guiFont");
-	as_paraGui.setPosition (GUI_OBJECT_BUTTON, "videoMenu.backButton", 8, GUI_COORD_PERCENT, 59, 85, buttonWidth, buttonHeight);
-	as_paraGui.setAction (GUI_OBJECT_BUTTON, "videoMenu.backButton", "as_handleVideoMenu");
-	as_paraGui.setReady (GUI_OBJECT_BUTTON, "videoMenu.backButton", true);
+	as_paraGui.create (GUI_OBJECT_BUTTON, "videoOptions.backButton");
+	as_paraGui.addToScreen (GUI_OBJECT_BUTTON, "videoOptions.backButton", "videoOptions");
+	as_paraGui.setLabel (GUI_OBJECT_BUTTON, "videoOptions.backButton", 3, GUI_LABEL_CENTER, gui_getString ("backButton"));
+	as_paraGui.setFontName (GUI_OBJECT_BUTTON, "videoOptions.backButton", "guiFont");
+	as_paraGui.setPosition (GUI_OBJECT_BUTTON, "videoOptions.backButton", 8, GUI_COORD_PERCENT, 59, 85, buttonWidth, buttonHeight);
+	as_paraGui.setAction (GUI_OBJECT_BUTTON, "videoOptions.backButton", "as_handleVideoOptions");
+	as_paraGui.setReady (GUI_OBJECT_BUTTON, "videoOptions.backButton", true);
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------
@@ -563,7 +617,7 @@ void as_createGUI ()
 
 	createMainMenu ();
 	createOptionsMenu ();
-	createVideoMenu ();
+	createVideoOptions ();
 	createAudioMenu ();
 	createControlsMenu ();
 	createGameMenu ();
