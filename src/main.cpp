@@ -10,8 +10,11 @@ paraFont       fontClass;
 paraConsole    console (1, 255, 255, 255, 255);
 paraRenderer   renderer;
 paraAudio      audio;
-paraTexture    texture;
 paraGui        gui;
+
+paraSprite   databaseSprite;
+
+std::map<std::string, paraTexture> textures;
 
 #define TICKS_PER_SECOND 30.0f
 #define MAX_FRAMESKIP 5

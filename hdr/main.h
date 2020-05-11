@@ -7,6 +7,7 @@
 #include <classes/paraAudio.h>
 #include <classes/paraTexture.h>
 #include <classes/paraGui.h>
+#include <classes/paraSprite.h>
 
 #ifdef WIN32
 #include "SDL.h"
@@ -46,8 +47,11 @@ extern paraFont       fontClass;
 extern paraConsole    console;
 extern paraRenderer   renderer;
 extern paraAudio      audio;
-extern paraTexture    texture;
 extern paraGui        gui;
+
+extern paraSprite   databaseSprite;
+
+extern std::map<std::string, paraTexture> textures;
 
 extern bool   quitLoop;
 extern Uint32 fpsPrint;

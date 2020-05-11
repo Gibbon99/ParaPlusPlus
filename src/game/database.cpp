@@ -1,4 +1,5 @@
-#include <gui/guiLanguage.h>
+#include "gui/guiLanguage.h"
+#include "game/texture.h"
 #include "game/database.h"
 
 std::vector<_dataBaseEntry> dataBaseEntry;
@@ -243,8 +244,16 @@ void gam_getDBInformation ()
 void gam_previousDatabase()
 //------------------------------------------------------------------------------------------------------------------------------------
 {
+	std::string newFileName;
+	std::string newKeyName;
+
+	newKeyName = "db_droid";
+
 	if (currentDatabaseRecord > 0)
 		currentDatabaseRecord--;
+
+	newFileName = dataBaseEntry[currentDatabaseRecord].dbImageFileName + ".bmp";
+	gam_loadTexture(newFileName, newKeyName);
 
 	gui.restartScrollBox("databaseScreen.scrollbox");
 	gui.setLabel(GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", 10, GUI_LABEL_LEFT, dataBaseEntry[currentDatabaseRecord].notes);
@@ -256,8 +265,16 @@ void gam_previousDatabase()
 void gam_nextDatabase()
 //------------------------------------------------------------------------------------------------------------------------------------
 {
-	if (currentDatabaseRecord < dataBaseEntry.size() - 1)
+	std::string newFileName;
+	std::string newKeyName;
+
+	newKeyName = "db_droid";
+
+	if (currentDatabaseRecord < static_cast<int>(dataBaseEntry.size() - 1))
 		currentDatabaseRecord++;
+
+	newFileName = dataBaseEntry[currentDatabaseRecord].dbImageFileName + ".bmp";
+	gam_loadTexture(newFileName, newKeyName);
 
 	gui.restartScrollBox("databaseScreen.scrollbox");
 	gui.setLabel(GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", 10, GUI_LABEL_LEFT, dataBaseEntry[currentDatabaseRecord].notes);
@@ -269,6 +286,16 @@ void gam_nextDatabase()
 void gam_prepareDatabaseScreen(int whichDroidIndex)
 //------------------------------------------------------------------------------------------------------------------------------------
 {
+	std::string newFileName;
+	std::string newKeyName;
+
+	newKeyName = "db_droid";
+
 	currentDatabaseRecord = whichDroidIndex;
+
+	newFileName = dataBaseEntry[currentDatabaseRecord].dbImageFileName + ".bmp";
+	gam_loadTexture(newFileName, newKeyName);
+
 	gui.setLabel(GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", 10, GUI_LABEL_LEFT, dataBaseEntry[currentDatabaseRecord].notes);
+
 }

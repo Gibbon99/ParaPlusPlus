@@ -1,4 +1,5 @@
 #include <gui/guiScrollbox.h>
+#include <system/startup.h>
 #include "gui/guiRender.h"
 #include "system/frameRender.h"
 #include "io/console.h"
@@ -37,6 +38,12 @@ void sys_renderFrame (double interpolation)
 		return;
 	}
 
+	int halfScreen = hiresVirtualWidth / 2;
+	int frameWidth = databaseSprite.getFrameWidth();
+	int halfPoint = (halfScreen - frameWidth) / 2;
+	int finalPoint = halfPoint + halfScreen;
+	finalPoint -= frameWidth / 2;
+
 	switch (currentMode)
 	{
 		case MODE_CONSOLE_EDIT:
@@ -44,46 +51,47 @@ void sys_renderFrame (double interpolation)
 			break;
 
 		case MODE_SHOW_SPLASH:
-			texture.render ("splash");
+			textures.at("splash").render();
 			break;
 
 		case MODE_GUI_MAINMENU:
-			gam_renderHud ();
 			gui_renderGUI ();
 			break;
 
 		case MODE_GUI_TERMINAL:
-			gam_renderHud ();
 			gui_renderGUI ();
 			break;
 
 		case MODE_GUI_DATABASE:
-			gam_renderHud ();
 			gui_renderScrollbox ("databaseScreen.scrollbox", interpolation);
+			databaseSprite.render (finalPoint,
+					((((hiresVirtualHeight - (hiresVirtualHeight / 2) - databaseSprite.getFrameHeight())) / 2) + (textures.at("hudNew").getHeight()) / 2), 2.0);
+
 			gui_renderGUI ();
 			break;
 
 		case MODE_GUI_DECKVIEW:
-			gam_renderHud ();
 			gui_renderGUI ();
 			break;
 
 		case MODE_GUI_SHIPVIEW:
 			gui_renderSideView ();
-			gam_renderHud ();
 			gui_renderGUI ();
 			break;
 
 		case MODE_GUI_LIFTVIEW:
 			gui_renderSideView ();
-			gam_renderHud ();
 			break;
 
 		case MODE_GUI_INTROSCROLL:
-			gam_renderHud ();
 			gui_renderScrollbox ("introScreen.scrollbox", interpolation);
 			break;
 	}
+
+	if (doScreenEffect)
+		textures.at("screen").render();
+
+	gam_renderHud ();
 	sys_completeFrame ();
 }
 

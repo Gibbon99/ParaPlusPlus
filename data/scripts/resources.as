@@ -13,8 +13,12 @@ void as_loadAudioResources()
 void as_loadTextureResources()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	as_texture.load("splash.bmp");
-	as_texture.load("planet.bmp");
-	as_texture.createMap("planet");
-	as_texture.load("hudNew.bmp");
+	gam_loadTexture("splash.bmp", "splash");
+	gam_loadTexture("planet.bmp", "planet");
+	gam_loadTexture("hudNew.bmp", "hudNew");
+	gam_loadTexture("screen.bmp", "screen");
+
+	gam_loadTexture("db_999.bmp", "db_droid");
+
+	gam_createCollisionMap("planet");
 }

@@ -25,10 +25,10 @@ void gam_renderHud()
 
 	destination.x = 0;
 	destination.y = 0;
-	destination.h = texture.height("hudNew");
-	destination.w = texture.width("hudNew");
+	destination.h = textures.at("hudNew").getHeight();
+	destination.w = textures.at("hudNew").getWidth();
 
-	texture.render ("hudNew", &destination);
+	textures.at("hudNew").render(&destination);
 
 	fontClass.use("guiFont");
 	fontClass.render(renderer.renderer, hudTextPosX, hudTextPosY, 0, 0, 0, 255, hudText);

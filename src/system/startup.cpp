@@ -25,12 +25,12 @@ int         consoleNumColumns;
 int         consoleFontSize;
 int         windowFullscreen        = false;
 int         windowFullscreenDesktop = false;
-bool         windowBorderless        = false;
+bool        windowBorderless        = false;
 int         windowInputGrabbed      = true;
 int         windowInputFocus        = true;
-bool         windowAllowHighDPI      = false;
+bool        windowAllowHighDPI      = false;
 int         whichRenderer           = 0;
-bool         presentVSync            = true;
+bool        presentVSync            = true;
 int         renderScaleQuality      = 0;
 int         g_volumeLevel           = 0;
 int         maxNumChannels          = 0;
@@ -40,6 +40,7 @@ std::string consoleFontFilename;
 int         introFontSize;
 std::string introFontFileName;
 bool        enableSound;
+bool        doScreenEffect;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -136,7 +137,6 @@ void sys_startSystems ()
 	gam_initAudio ();
 	//
 	// Textures are done from the same thread as window creation
-	texture.init (con_addEvent, io_loadRawFile);
 	paraScriptInstance.run ("as_loadTextureResources", "");
 
 	fontClass.load (guiFontSize, "guiFont", guiFontFileName);
@@ -155,9 +155,14 @@ void sys_startSystems ()
 
 	io_initJoystick ();
 
-	fileSystem.getSearchPath();
+	fileSystem.getSearchPath ();
 
 	gam_getDBInformation ();
+
+	databaseSprite.create ("db_droid", 32, 0.6);
+
+	SDL_SetTextureBlendMode (textures.at ("screen").getTexture (), SDL_BLENDMODE_MOD);
+
 	//
 	// Start in interactive console mode
 	sys_setNewMode (MODE_GUI_MAINMENU, false);

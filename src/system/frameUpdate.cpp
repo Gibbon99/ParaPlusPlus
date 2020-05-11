@@ -156,6 +156,7 @@ void sys_gameTickRun ()
 
 		case MODE_GUI_DATABASE:
 			gui_scrollScrollBox("databaseScreen.scrollbox");
+			databaseSprite.animate();
 			break;
 	}
 }

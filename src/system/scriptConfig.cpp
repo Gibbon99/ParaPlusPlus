@@ -5,6 +5,7 @@
 #include <cassert>
 #include <game/database.h>
 #include <game/hud.h>
+#include <game/texture.h>
 #include "../../hdr/system/scriptConfig.h"
 #include "gui/guiSideview.h"
 
@@ -108,11 +109,7 @@ void sys_scriptInitFunctions ()
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectBehaviour ("paraTexture", asBEHAVE_RELEASE, "void f()", asMETHOD(paraTexture, ReleaseRef), asCALL_THISCALL);
 	assert(r >= 0);
-	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraTexture", "bool load(string fileName)", asMETHOD(paraTexture, load), asCALL_THISCALL);
-	assert(r >= 0);
-	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraTexture", "void createMap(string fileName)", asMETHOD(paraTexture, createMap), asCALL_THISCALL);
-	assert(r >= 0);
-	r = paraScriptInstance.scriptEngine->RegisterGlobalProperty ("paraTexture as_texture", &texture);
+	r = paraScriptInstance.scriptEngine->RegisterGlobalProperty ("paraTexture as_texture", &textures);
 	assert(r >= 0);
 	//
 	// Pass in the audio class to the script
@@ -203,4 +200,8 @@ void sys_scriptInitFunctions ()
 	paraScriptInstance.addHostFunction ("void gam_nextDatabase()", (functionPtr) &gam_nextDatabase);
 	paraScriptInstance.addHostFunction ("void gam_prepareDatabaseScreen(int whichDroidIndex)", (functionPtr) &gam_prepareDatabaseScreen);
 	paraScriptInstance.addHostFunction ("void gam_setHudText(string &in)", (functionPtr)gam_setHudText);
+	paraScriptInstance.addHostFunction("void gam_loadTexture(string &in, string &in)", (functionPtr) &gam_loadTexture);
+	paraScriptInstance.addHostFunction("void gam_createCollisionMap(string &in)", (functionPtr) &gam_createCollisionMap);
+
+
 }

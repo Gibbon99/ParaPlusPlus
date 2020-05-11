@@ -164,5 +164,9 @@ void io_readConfigValues(const std::string& fileName)
 	enableSound = static_cast<int>(iniFile.GetLongValue("Main", "enableSound", -1));
 	if (enableSound == -1)
 		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "enableSound"));
+
+	doScreenEffect = static_cast<int>(iniFile.GetLongValue("Main", "doScreenEffect", -1));
+	if (doScreenEffect == -1)
+		sys_shutdownWithError(sys_getString("Unable to locate value [ %s ] in config file.", "doScreenEffect"));
 }
 

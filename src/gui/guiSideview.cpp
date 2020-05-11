@@ -14,8 +14,8 @@ std::vector<_star>        stars;
 std::vector<__PARA_COLOR> depthColor;
 int                       boundaryTopY;
 int                       boundaryBottomY;
-int depthSpread;
-int depthNumber = 7;
+int                       depthSpread;
+int                       depthNumber = 7;
 
 float sideviewDrawScale;        // From config file
 
@@ -235,11 +235,11 @@ void gui_renderSideView ()
 	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
 	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
 
-	texture.render ("planet");
+	textures.at ("planet").render ();
 
-	roundedBoxRGBA (renderer.renderer, 0, boundaryBottomY, renderer.renderWidth(), renderer.renderWidth(), 0, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	roundedBoxRGBA (renderer.renderer, 0, boundaryBottomY, renderer.renderWidth (), renderer.renderWidth (), 0, 0, 0, 0, SDL_ALPHA_OPAQUE);
 
-	gui_renderStarfield();
+	gui_renderStarfield ();
 
 	//
 	// Draw hold level
@@ -366,40 +366,47 @@ void gui_renderSideView ()
 void gui_prepareStarfield (int numStars, int numDepth)
 // ----------------------------------------------------------------------------
 {
-	_star   tempStar;
+	_star tempStar;
 
-	boundaryBottomY = renderer.renderHeight() - (fontClass.height () + 10);
+	boundaryBottomY = renderer.renderHeight () - (fontClass.height () + 10);
 	boundaryTopY    = 50; // Get height of HUD here
 	//
 	// Setup the depth values
-	depthSpread = 255 / numDepth;
+	depthSpread     = 255 / numDepth;
 
 	for (auto counter = 0; counter != numStars; counter++)
 	{
 		tempStar.pos.x = randomStar.get (0, renderer.renderWidth ());
 		tempStar.pos.y = randomStar.get (boundaryTopY, boundaryBottomY);
 		tempStar.depth = randomStar.get (1, numDepth);
-		stars.push_back(tempStar);
+		stars.push_back (tempStar);
 	}
 }
 
 // ----------------------------------------------------------------------------
 //
 // Render the starfield
-void gui_renderStarfield()
+void gui_renderStarfield ()
 // ----------------------------------------------------------------------------
 {
-	for (auto starItr : stars)
+	try
 	{
-		if (texture.pixelColor("planet", starItr.pos.x, starItr.pos.y) == 1)
-			filledCircleRGBA (renderer.renderer, starItr.pos.x, starItr.pos.y, 2, starItr.depth * depthSpread, starItr.depth * depthSpread, starItr.depth * depthSpread, SDL_ALPHA_OPAQUE);
+		for (auto starItr : stars)
+		{
+			if (textures.at ("planet").pixelColor (starItr.pos.x, starItr.pos.y) == 1)
+				filledCircleRGBA (renderer.renderer, starItr.pos.x, starItr.pos.y, 2, starItr.depth * depthSpread, starItr.depth * depthSpread, starItr.depth * depthSpread, SDL_ALPHA_OPAQUE);
+		}
+	}
+	catch (std::out_of_range outOfRange)
+	{
+		sys_shutdownWithError(sys_getString("Out of range error"));
 	}
 }
 
 // ----------------------------------------------------------------------------
 //
 // Animate the starfield
-void gui_animateStarfield()
+void gui_animateStarfield ()
 // ----------------------------------------------------------------------------
 {
 	double speedPercent;
@@ -408,8 +415,8 @@ void gui_animateStarfield()
 
 	for (auto &starItr : stars)
 	{
-		speedPercent = (double)starItr.depth / (double)depthNumber;
-		moveSpeed = topSpeed * speedPercent;
+		speedPercent = (double) starItr.depth / (double) depthNumber;
+		moveSpeed    = topSpeed * speedPercent;
 		starItr.pos.x -= moveSpeed;
 		if (starItr.pos.x <= 0)
 		{

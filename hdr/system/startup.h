@@ -28,6 +28,7 @@ extern std::string consoleFontFilename;
 extern int         introFontSize;
 extern std::string introFontFileName;
 extern bool        enableSound;
+extern bool        doScreenEffect;
 
 extern std::string activeBackingTexture;
 
