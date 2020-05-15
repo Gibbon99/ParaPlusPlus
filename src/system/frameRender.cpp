@@ -3,6 +3,7 @@
 #include <game/shipDecks.h>
 #include <game/healing.h>
 #include <game/player.h>
+#include <gui/guiDeckView.h>
 #include "gui/guiRender.h"
 #include "system/frameRender.h"
 #include "io/console.h"
@@ -75,6 +76,7 @@ void sys_renderFrame (double interpolation)
 			break;
 
 		case MODE_GUI_DECKVIEW:
+			gui_renderTerminalDeck ();
 			gui_renderGUI ();
 			break;
 
