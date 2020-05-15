@@ -2,6 +2,7 @@
 #include <utility>
 #include <system/scriptConfig.h>
 #include <io/fileSystem.h>
+#include <system/util.h>
 #include "../main.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -357,7 +358,7 @@ void paraScript::addHostFunction (const std::string &funcName, functionPtr funcP
 	}
 */
 	tempFunc.scriptFunctionName = funcName;
-	tempFunc.hostFunctionPtr    = funcPtr;
+	tempFunc.hostFunctionPtr    = reinterpret_cast<int *>(funcPtr);
 
 	returnCode = scriptEngine->RegisterGlobalFunction (funcName.c_str (), (asSFuncPtr &&) funcPtr, callType); //asCALL_CDECL);
 	if (returnCode < 0)

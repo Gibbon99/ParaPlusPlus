@@ -1,10 +1,11 @@
 #include <io/console.h>
+#include <system/util.h>
 #include "io/joystick.h"
 
 #define AXIS_X 0
 #define AXIS_Y 1
 
-int joystickDeadzone = 100;
+int joystickDeadzone = 200;
 
 struct __JOYSTICK_STATE
 {

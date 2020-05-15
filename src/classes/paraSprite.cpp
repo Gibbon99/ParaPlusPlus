@@ -32,9 +32,6 @@ void paraSprite::create(std::string setTextureKeyname, int setNumFrames, double 
 	currentFrame = 0;
 	animateCounter = 0;
 	textureKeyName = std::move(setTextureKeyname);
-
-	frameWidth = textures.at(textureKeyName).getWidth() / numFrames;
-	frameHeight = textures.at(textureKeyName).getHeight();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -46,8 +43,11 @@ void paraSprite::render (double posX, double posY, double scale)
 	SDL_Rect    srcRect;
 	SDL_Rect    destRect;
 
-	destRect.x = static_cast<int>(posX);
-	destRect.y = static_cast<int>(posY);
+	frameWidth = textures.at(textureKeyName).getWidth() / numFrames;
+	frameHeight = textures.at(textureKeyName).getHeight();
+
+	destRect.x = static_cast<int>(posX) - (frameWidth / 2);
+	destRect.y = static_cast<int>(posY) - (frameHeight / 2);
 	destRect.w = static_cast<int>(frameWidth * scale);
 	destRect.h = static_cast<int>(textures.at(textureKeyName).getHeight() * scale);
 

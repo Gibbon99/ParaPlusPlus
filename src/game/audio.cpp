@@ -4,6 +4,7 @@
 #include <system/startup.h>
 #include <io/console.h>
 #include <io/fileSystem.h>
+#include <system/util.h>
 #include "game/audio.h"
 
 std::queue<paraEventAudio *> audioEventQueue;

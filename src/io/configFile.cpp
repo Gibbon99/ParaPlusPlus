@@ -1,5 +1,6 @@
 //#include <gui/guiRender.h>
 #include <game/tiles.h>
+#include <system/util.h>
 #include "gui/guiLanguage.h"
 #include "../../hdr/io/configFile.h"
 #include "../../hdr/system/startup.h"

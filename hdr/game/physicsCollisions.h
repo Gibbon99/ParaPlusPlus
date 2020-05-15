@@ -11,7 +11,6 @@ class contactListener : public b2ContactListener
 	void EndContact (b2Contact *contact) override;
 
 	void PreSolve (b2Contact *contact, const b2Manifold *manifold) override;
-
 };
 
 class paraDebugDraw : public b2Draw
@@ -39,3 +38,5 @@ public:
 extern paraDebugDraw g_paraDebugDraw;
 
 extern contactListener myContactListenerInstance;
+
+extern bool doWallCollisions;

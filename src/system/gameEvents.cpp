@@ -1,8 +1,8 @@
-//
-// Created by dberry on 26/4/20.
-//
-
 #include <queue>
+#include <string>
+#include <game/texture.h>
+#include <game/shipDecks.h>
+#include <system/util.h>
 #include "../../hdr/system/gameEvents.h"
 #include "../../hdr/classes/paraEvent.h"
 
@@ -11,13 +11,32 @@ std::queue<paraEventGame *> gameEvents;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new event to the game queue - only added when mutex is free. ie: Thread is not accessing the queue
-void gam_addEvent (int newAction, int newCounter, const std::string &newLine)
+void gam_addEvent (int newAction, int newCounter, const string &newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Mutex    *tempMutex;
 	paraEventGame *tempEventGame;
+	std::string   newLineCopy;
+	std::string   stringText1;
+	std::string   stringText2;
+	std::string   stringText3;
+	std::string   delimiter = "|";
+	size_t        position;
 
-	tempEventGame = new paraEventGame (newAction, newCounter, newLine);
+	newLineCopy = newLine;
+	//
+	// Split the passed in string into the parts needed for a Game Event
+	position    = newLineCopy.find (delimiter);
+	stringText1 = newLineCopy.substr (0, position);
+	newLineCopy.erase (0, position + delimiter.length ());
+
+	position    = newLineCopy.find (delimiter);
+	stringText2 = newLineCopy.substr (0, position);
+	newLineCopy.erase (0, position + delimiter.length ());
+
+	stringText3 = newLineCopy; //.substr (position + delimiter.length (), newLine.length ());
+
+	tempEventGame = new paraEventGame (newAction, newCounter, stringText1, stringText2, stringText3);
 
 	tempMutex = evt_getMutex (GAME_MUTEX_NAME);
 	if (nullptr == tempMutex)
@@ -41,53 +60,74 @@ void gam_processGameEventQueue ()
 	paraEventGame     *tempEvent;
 	static PARA_Mutex *gameMutex = nullptr;
 
+	if (!gameEvents.empty ())     // events in the queue to process
 	{
-		if (!gameEvents.empty ())     // events in the queue to process
+
+#ifdef MY_DEBUG
+		if (gameEvents.size() > 35)
+			sys_shutdownWithError(sys_getString("Too many events on the game event queue [ %i ].", gameEvents.size()));
+#endif
+		if (nullptr == gameMutex)
 		{
+			gameMutex = evt_getMutex (GAME_MUTEX_NAME);    // cache the mutex value
 			if (nullptr == gameMutex)
-			{
-				gameMutex = evt_getMutex (GAME_MUTEX_NAME);    // cache the mutex value
-				if (nullptr == gameMutex)
-					sys_shutdownWithError (sys_getString ("Unable to get Mutex value [ %s ] - [ %s ]", GAME_MUTEX_NAME, SDL_GetError ()));
-			}
-			PARA_LockMutex (gameMutex);
-			tempEvent = gameEvents.front ();
+				sys_shutdownWithError (sys_getString ("Unable to get Mutex value [ %s ] - [ %s ]", GAME_MUTEX_NAME, SDL_GetError ()));
+		}
+		PARA_LockMutex (gameMutex);
+		tempEvent = gameEvents.front ();
+		PARA_UnlockMutex (gameMutex);
+
+		if (tempEvent->counter > 0)  // If not 0 - re-add to the queue with the reduced count
+		{
+			tempEvent->counter--;
+			gam_addEvent (tempEvent->action, tempEvent->counter, tempEvent->gameText1+"|"+tempEvent->gameText2+"|"+tempEvent->gameText3);
+
+			PARA_LockMutex (gameMutex);           // Blocks if the mutex is locked by another thread
+			delete (gameEvents.front ());         // Free memory
+			gameEvents.pop ();
 			PARA_UnlockMutex (gameMutex);
 
-			if (tempEvent->counter > 0)  // If not 0 - re-add to the queue with the reduced count
+			return;
+		}
+		else
+		{
+			switch (tempEvent->action)
 			{
-				tempEvent->counter--;
-				gam_addEvent (tempEvent->action, tempEvent->counter, tempEvent->gameText);
+				case EVENT_ACTION_GAME_USE_NEW_RENDERER:
+					renderer.useNewRenderer (std::stoi (tempEvent->gameText1));
+					break;
 
-				PARA_LockMutex (gameMutex);           // Blocks if the mutex is locked by another thread
-				delete (gameEvents.front ());         // Free memory
-				gameEvents.pop ();
-				PARA_UnlockMutex (gameMutex);
+				case EVENT_ACTION_GAME_SCRIPT_RESTART:
+					paraScriptInstance.restart ();
+					gui.restart ();
+					paraScriptInstance.run ("as_createGUI", "");
+					break;
 
-				return;
+				case EVENT_ACTION_GAME_LOAD_TEXTURE:
+					gam_loadTexture (tempEvent->gameText1, tempEvent->gameText2);
+					break;
+
+				case EVENT_ACTION_GAME_LOAD_DECK:
+					gam_loadShipDeck (tempEvent->gameText1);
+					break;
+
+				case EVENT_ACTION_GAME_LOAD_MAP:
+					gam_createCollisionMap (tempEvent->gameText1);
+					break;
+
+				case EVENT_ACTION_GAME_LOAD_FONT:
+					fontClass.load (strtol (tempEvent->gameText3.c_str (), nullptr, 10), tempEvent->gameText2, tempEvent->gameText1);
+					break;
+
+				case EVENT_ACTION_GAME_CHANGE_MODE:
+					sys_setNewMode (strtol (tempEvent->gameText1.c_str (), nullptr, 10), static_cast<bool>(strtol (tempEvent->gameText2.c_str (), nullptr, 10)));
+					break;
 			}
-			else
-			{
-				switch (tempEvent->action)
-				{
-					case EVENT_ACTION_GAME_USE_NEW_RENDERER:
-						renderer.useNewRenderer (std::stoi (tempEvent->gameText));
-						break;
 
-					case EVENT_ACTION_GAME_SCRIPT_RESTART:
-						paraScriptInstance.restart();
-						gui.restart();
-						paraScriptInstance.run ("as_createGUI", "");
-						break;
-				}
-
-				PARA_LockMutex (gameMutex);           // Blocks if the mutex is locked by another thread
-				delete (gameEvents.front ());         // Free memory
-				gameEvents.pop ();
-				PARA_UnlockMutex (gameMutex);
-			}
+			PARA_LockMutex (gameMutex);           // Blocks if the mutex is locked by another thread
+			delete (gameEvents.front ());         // Free memory
+			gameEvents.pop ();
+			PARA_UnlockMutex (gameMutex);
 		}
 	}
 }
-
-

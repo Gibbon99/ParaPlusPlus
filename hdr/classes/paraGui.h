@@ -6,7 +6,7 @@
 #include <wrapper.h>
 #include "../../data/scripts/enum.h"
 
-#define DEBUG_GUI_SETUP 1
+// #define DEBUG_GUI_SETUP 1
 
 typedef void (*funcPtrIntStr) (int, std::string);
 
@@ -67,12 +67,12 @@ struct __KeyBindings
 	int         state;
 };
 
-typedef struct
+struct _sliderElement
 {
 	std::string label;    // Text to display
 	std::string value;    // Value of this element
 	int         type;    // What type of element - convert on query
-}                   _sliderElement;
+};
 
 struct __GUI_SLIDER
 {
@@ -278,17 +278,19 @@ public:
 
 	bool canBeSelected (int objectType, int whichObject);
 
-	void checkMousePosition ();
+	void processMousePosition ();
 
-	void checkMovementActions ();
+	void processMovementKeys ();
 
 	void processAction ();
 
-	void process ();
+	void processGuiInput ();
 //
 // Input related functions
 //
 	void setRepeatOff (bool newState);
+
+	int getRepeatOff();
 
 	void setDefaultKeybindings ();
 
@@ -307,6 +309,8 @@ public:
 	void setState (int whichKey, bool newState, int newActionSource);
 
 	void setMouse (int newPosX, int newPosY);
+
+	int getScancode(int whichKey);
 
 	const Uint8 *keyboardState;
 

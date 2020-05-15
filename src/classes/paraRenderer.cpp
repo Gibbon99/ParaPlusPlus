@@ -155,7 +155,7 @@ void paraRenderer::useNewRenderer (int newRendererIndex)
 	std::string                             tempCurrentBackingTexture;
 	std::map<std::string, __backingTexture> tempBackingTextures;
 
-	if ((newRendererIndex < 0) || (newRendererIndex > rendererInfo.size () - 1))
+	if ((newRendererIndex < 0) || (newRendererIndex > static_cast<int>(rendererInfo.size () - 1)))
 	{
 		consoleOutFunc (-1, int_getString ("Invalid renderer index [ %i ]", newRendererIndex));
 		return;
@@ -314,7 +314,7 @@ int paraRenderer::getNumRenderers()
 std::string paraRenderer::getRendererByIndex(int whichRenderer)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if ((whichRenderer < 0) || (whichRenderer > rendererInfo.size()))
+	if ((whichRenderer < 0) || (whichRenderer > static_cast<int>(rendererInfo.size())))
 		return "Invalid renderer index";
 
 	return rendererInfo[whichRenderer].rendererName;
@@ -379,7 +379,7 @@ void paraRenderer::setCurrentBackingTexture (std::string newActiveTexture)
 			SDL_SetRenderTarget (renderer, getRenderTarget (newActiveTexture));
 			targetTextureAvailable = true;
 
-			std::cout << "Set backing texture to " << newActiveTexture << std::endl;
+//			std::cout << "Set backing texture to " << newActiveTexture << std::endl;
 
 			return;
 		}

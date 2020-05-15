@@ -6,6 +6,9 @@
 #include <io/joystick.h>
 #include <game/database.h>
 #include <game/tiles.h>
+#include <system/util.h>
+#include <game/player.h>
+#include <game/lifts.h>
 #include "../../hdr/system/startup.h"
 #include "../../hdr/system/scriptEngine.h"
 #include "../../hdr/system/scriptConfig.h"
@@ -121,8 +124,28 @@ void sys_startSystems ()
 	fontClass.load (consoleFontSize, "consoleFont", consoleFontFilename);
 	fontClass.use ("consoleFont");
 	fontClass.setColor (255, 255, 255, 255);
-	//
-	// Start the scripting engine
+
+	evt_registerMutex (GAME_MUTEX_NAME);
+
+	sys_setNewMode (MODE_CONSOLE_INIT, false);
+
+	SDL_Thread *initThread;
+
+	initThread = SDL_CreateThread(sys_startInit, "InitThread", (void *)nullptr);
+	if (nullptr == initThread)
+		sys_shutdownWithError(sys_getString("Unable to start init thread - [ %s ]", SDL_GetError()));
+
+	SDL_DetachThread(initThread);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Start to load and prepare everything else
+static int sys_startInit(void *ptr)
+//----------------------------------------------------------------------------------------------------------------------
+{
+//
+// Start the scripting engine
 	if (!paraScriptInstance.init (con_addEvent, reinterpret_cast<asFUNCTION_t>(scr_Output)))
 		sys_shutdownWithError ("Error: Could not start Scripting engine.");
 
@@ -134,23 +157,21 @@ void sys_startSystems ()
 	paraScriptInstance.loadAndCompile ();
 	paraScriptInstance.cacheFunctions ();
 
-	evt_registerMutex (GAME_MUTEX_NAME);
-
 	sys_setupPhysicsEngine ();
 
 	gam_initAudio ();
-	//
-	// Textures are done from the same thread as window creation
+
+	gam_setTileType ();
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, tileFilename+"|tiles| ");
+//
+// Textures are done from the same thread as window creation - put on the Game Event queue
 	paraScriptInstance.run ("as_loadTextureResources", "");
-
-	fontClass.load (guiFontSize, "guiFont", guiFontFileName);
-	fontClass.use ("guiFont");
-
-	fontClass.load (28, "guiFont28", guiFontFileName);
-	fontClass.use ("guiFont28");
-
-	fontClass.load (guiFontSize, "introFont", introFontFileName);
-	fontClass.use ("introFont");
+	paraScriptInstance.run ("as_loadAllDecks", "");
+//
+// Load fonts via Game Event thread
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName+"|guiFont|"+to_string(guiFontSize));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName+"|guiFont28|"+to_string(28));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, introFontFileName+"|introFont|"+to_string(introFontSize));
 
 	gui.init (con_addEvent, reinterpret_cast<funcStrIn>(gui_getString), windowWidth, windowHeight, "keybinding.para");
 	gui_loadSideViewData ("sideview.dat");
@@ -159,16 +180,17 @@ void sys_startSystems ()
 
 	io_initJoystick ();
 
+#ifdef MY_DEBUG
 	fileSystem.getSearchPath ();
+#endif
 
 	gam_getDBInformation ();
 
 	databaseSprite.create ("db_droid", 32, 0.6);
-	gam_loadTileSet();
+// TODO do as an event with delay
+// SDL_SetTextureBlendMode (textures.at ("screen").getTexture (), SDL_BLENDMODE_MOD);
 
-	SDL_SetTextureBlendMode (textures.at ("screen").getTexture (), SDL_BLENDMODE_MOD);
+	gam_setupPlayerDroid ();
 
-	//
-	// Start in interactive console mode
-	sys_setNewMode (MODE_GUI_MAINMENU, false);
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
 }

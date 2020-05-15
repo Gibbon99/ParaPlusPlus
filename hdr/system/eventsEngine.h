@@ -22,7 +22,7 @@ void evt_registerThread (SDL_ThreadFunction threadFunction, const std::string &t
 void evt_registerMutex (const std::string &mutexName);
 
 // Add a new event to its queue
-void sys_addEvent(int eventType, int eventAction, int eventDelay, const std::string& eventText);
+void sys_addEvent(int eventType, int eventAction, int eventDelay, const std::string &eventText);
 
 // Find a mutex based on its name
 PARA_Mutex *evt_getMutex(const std::string& mutexName);

@@ -2,6 +2,8 @@
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
 #include <io/logFile.h>
 #include <classes/paraRandom.h>
+#include <system/util.h>
+#include <game/lifts.h>
 #include "gui/guiSideview.h"
 
 paraRandom randomStar;
@@ -218,13 +220,9 @@ void gui_renderSideView ()
 	Uint8         r, g, b, a;
 	SDL_BlendMode tempMode;
 
-	auto currentDeckNumber = 4;
 	auto currentAlertLevel = ALERT_GREEN_TILE;
-	auto currentTunnel     = 1;
 
 	fontClass.use ("guiFont");
-
-	auto stringWidth = fontClass.width ("Change me to level name");
 
 	sideViewTextPosX = 5;
 	sideViewTextPosY = renderer.renderHeight () - (fontClass.height ());
@@ -237,7 +235,7 @@ void gui_renderSideView ()
 
 	textures.at ("planet").render ();
 
-	roundedBoxRGBA (renderer.renderer, 0, boundaryBottomY, renderer.renderWidth (), renderer.renderWidth (), 0, 0, 0, 0, SDL_ALPHA_OPAQUE);
+//	roundedBoxRGBA (renderer.renderer, 0, boundaryBottomY, renderer.renderWidth (), renderer.renderWidth (), 0, 0, 0, 0, SDL_ALPHA_OPAQUE);
 
 	gui_renderStarfield ();
 
@@ -274,8 +272,6 @@ void gui_renderSideView ()
 	}
 	else    // Static view of ship from terminal
 	{
-//		currentDeckNumber = lvl_getDeckNumber (lvl_getCurrentLevelName ());
-
 		switch (currentAlertLevel)
 		{
 			case ALERT_GREEN_TILE:
@@ -317,9 +313,10 @@ void gui_renderSideView ()
 		}
 	}
 
+	/*
 	//
 	// Redraw the level and tunnel that overlap
-	if ((currentTunnel != 3) && (currentTunnel != 6))
+	if ((currentTunnel != 3) || (currentTunnel != 6))
 	{
 		count = 13;
 		gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
@@ -333,7 +330,7 @@ void gui_renderSideView ()
 			gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
 		}
 	}
-
+*/
 	//
 	// fill in engine part
 	gui_sideviewDrawRect (sideviewLevels[7].x1, sideviewLevels[7].y1, sideviewLevels[7].x2, sideviewLevels[7].y2, sideviewColors[SIDEVIEW_ENGINE_COLOR].color);
@@ -343,7 +340,7 @@ void gui_renderSideView ()
 	{
 		if (currentMode == MODE_GUI_LIFTVIEW)      // Only draw highlighted tunnel in lift view
 		{
-			if (currentTunnel == count) // Draw currentTunnel in use
+			if (gam_getCurrentTunnel() == count) // Draw currentTunnel in use
 				gui_sideviewDrawRect (sideviewLevels[count + toLifts].x1, sideviewLevels[count + toLifts].y1, sideviewLevels[count + toLifts].x2, sideviewLevels[count + toLifts].y2, sideviewColors[SIDEVIEW_ACTIVE_LIFT_COLOR].color);
 			else
 				gui_sideviewDrawRect (sideviewLevels[count + toLifts].x1, sideviewLevels[count + toLifts].y1, sideviewLevels[count + toLifts].x2, sideviewLevels[count + toLifts].y2, sideviewColors[SIDEVIEW_LIFT_COLOR].color);
@@ -352,9 +349,7 @@ void gui_renderSideView ()
 			gui_sideviewDrawRect (sideviewLevels[count + toLifts].x1, sideviewLevels[count + toLifts].y1, sideviewLevels[count + toLifts].x2, sideviewLevels[count + toLifts].y2, sideviewColors[SIDEVIEW_LIFT_COLOR].color);
 	}
 
-//	fnt_render (b2Vec2{sideViewTextPosX, sideViewTextPosY}, sys_getString ("Deck [ %s ]", lvl_returnLevelNameFromDeck (currentDeckNumber).c_str()));
-
-	fontClass.render (renderer.renderer, sideViewTextPosX, sideViewTextPosY, 255, 255, 255, 255, "Change me to level name");
+	fontClass.render (renderer.renderer, sideViewTextPosX, sideViewTextPosY, 255, 255, 255, 255, sys_getString ("Deck [ %s ]", gam_returnLevelNameFromDeck (currentDeckNumber).c_str()));
 
 	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
 	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);

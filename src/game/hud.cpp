@@ -27,8 +27,15 @@ void gam_renderHud()
 	destination.y = 0;
 	if (currentMode != MODE_GAME)
 	{
-		destination.h = textures.at ("hudNew").getHeight ();
-		destination.w = textures.at ("hudNew").getWidth ();
+		try
+		{
+			destination.h = textures.at ("hudNew").getHeight ();
+			destination.w = textures.at ("hudNew").getWidth ();
+		}
+		catch ( std::out_of_range outOfRange)
+			{
+			return;
+			}
 	}
 	else
 	{

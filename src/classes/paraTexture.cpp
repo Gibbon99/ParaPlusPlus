@@ -1,6 +1,7 @@
 #include <main.h>
 
 #include <utility>
+#include <system/util.h>
 #include "classes/paraTexture.h"
 
 void paraTexture::AddRef ()

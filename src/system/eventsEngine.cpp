@@ -1,3 +1,4 @@
+#include <system/util.h>
 #include "../main.h"
 #include "../../hdr/io/console.h"
 #include "../../hdr/io/logFile.h"
@@ -205,7 +206,7 @@ void evt_destroyMutexes()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new event to its queue
-void sys_addEvent(int eventType, int eventAction, int eventDelay, const std::string& eventText)
+void sys_addEvent(int eventType, int eventAction, int eventDelay, const string &eventText)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Mutex *tempMutex;

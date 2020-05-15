@@ -34,3 +34,6 @@ extern std::string activeBackingTexture;
 
 // Start systems - Logfile, Script, Filesystem ( Physfs ), Event queues
 void sys_startSystems ();
+
+// Start to load and prepare everything else
+static int sys_startInit(void *ptr);

@@ -11,14 +11,15 @@ void as_handleMainMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.startGameButton"))
 	{
-		gam_setHudText("Game on");
-		sys_setNewMode (MODE_GAME, true);
+		gam_setHudText ("Game on");
+		sys_setNewMode (MODE_PRE_GAME, false);
+		gam_changeToDeck ("Engineering", 0);
 		return;
 	}
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.optionsButton"))
 	{
-		gam_setHudText("Options");
+		gam_setHudText ("Options");
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "optionsMenu"));
 		// Set active object
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "optionsMenu.backButton");
@@ -40,7 +41,7 @@ void as_handleOptionsMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.videoButton"))
 	{
-		gam_setHudText(gui_getString ("optionsMenu.videoButton"));
+		gam_setHudText (gui_getString ("optionsMenu.videoButton"));
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "videoOptions"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "videoOptions.backButton");
 		return;
@@ -48,7 +49,7 @@ void as_handleOptionsMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.audioButton"))
 	{
-		gam_setHudText(gui_getString ("optionsMenu.audioButton"));
+		gam_setHudText (gui_getString ("optionsMenu.audioButton"));
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "audioOptions"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "audioOptions.backButton");
 		return;
@@ -56,7 +57,7 @@ void as_handleOptionsMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.controlsButton"))
 	{
-		gam_setHudText(gui_getString ("optionsMenu.controlsButton"));
+		gam_setHudText (gui_getString ("optionsMenu.controlsButton"));
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "controlsMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "controlsMenu.backButton");
 		return;
@@ -64,7 +65,7 @@ void as_handleOptionsMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.gameButton"))
 	{
-		gam_setHudText(gui_getString ("optionsMenu.gameButton"));
+		gam_setHudText (gui_getString ("optionsMenu.gameButton"));
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "gameMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "gameMenu.backButton");
 		return;
@@ -147,10 +148,10 @@ void as_handleGameMenu ()
 		tileStyle = as_paraGui.getSliderValue ("gameMenu.tileStyle");
 		tileColor = as_paraGui.getSliderValue ("gameMenu.tileColor");
 
-		gam_setTileType();
+		gam_setTileType ();
 
-		io_updateConfigValue("tileStyle", tileStyle);
-		io_updateConfigValue("tileColor", tileColor);
+		io_updateConfigValue ("tileStyle", tileStyle);
+		io_updateConfigValue ("tileColor", tileColor);
 
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "optionsMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "optionsMenu.gameButton");
@@ -637,6 +638,11 @@ void as_createGUI ()
 
 	baseGameSpeed     = 1.0;
 	sideviewDrawScale = 1.2;
+	healingAnimSpeed  = 0.3;
+	pixelsPerMeter    = 12.0;        // 12 pixels is 1 meter
+	playerFriction    = 0.7;
+	gravity           = 100.0;
+	doorAnimSpeed     = 1.0f;
 
 	hudTextPosX = 15;
 	hudTextPosY = 27;

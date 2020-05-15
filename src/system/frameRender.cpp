@@ -1,10 +1,14 @@
 #include <gui/guiScrollbox.h>
 #include <system/startup.h>
+#include <game/shipDecks.h>
+#include <game/healing.h>
+#include <game/player.h>
 #include "gui/guiRender.h"
 #include "system/frameRender.h"
 #include "io/console.h"
 #include "gui/guiSideview.h"
 #include "game/hud.h"
+#include "game/doors.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -42,11 +46,11 @@ void sys_renderFrame (double interpolation)
 	int frameWidth = databaseSprite.getFrameWidth();
 	int halfPoint = (halfScreen - frameWidth) / 2;
 	int finalPoint = halfPoint + halfScreen;
-	finalPoint -= frameWidth / 2;
 
 	switch (currentMode)
 	{
 		case MODE_CONSOLE_EDIT:
+		case MODE_CONSOLE_INIT:
 			con_renderConsole ();
 			break;
 
@@ -65,7 +69,7 @@ void sys_renderFrame (double interpolation)
 		case MODE_GUI_DATABASE:
 			gui_renderScrollbox ("databaseScreen.scrollbox", interpolation);
 			databaseSprite.render (finalPoint,
-					((((hiresVirtualHeight - (hiresVirtualHeight / 2) - databaseSprite.getFrameHeight())) / 2) + (textures.at("hudNew").getHeight()) / 2), 2.0);
+					((((hiresVirtualHeight - (hiresVirtualHeight / 2) - databaseSprite.getFrameHeight())) / 2) + (textures.at("hudNew").getHeight())), 2.0);
 
 			gui_renderGUI ();
 			break;
@@ -86,12 +90,26 @@ void sys_renderFrame (double interpolation)
 		case MODE_GUI_INTROSCROLL:
 			gui_renderScrollbox ("introScreen.scrollbox", interpolation);
 			break;
+
+		case MODE_GAME:
+			gam_renderVisibleScreen(interpolation);
+			gam_renderHealingFrames (gam_getCurrentDeckName());
+			gam_renderDoorFrames ();
+
+			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2,  1.0);
+
+			if (d_showPhysics)
+				sys_getPhysicsWorld ()->DebugDraw();
+			break;
+
 	}
 
 	if (doScreenEffect)
 		textures.at("screen").render();
 
-	gam_renderHud ();
+	if ((currentMode != MODE_CONSOLE_EDIT) && (currentMode != MODE_CONSOLE_INIT))
+		gam_renderHud ();
+
 	sys_completeFrame ();
 }
 

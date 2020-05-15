@@ -1,5 +1,6 @@
 #include <io/console.h>
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
+#include <system/util.h>
 #include "gui/guiScrollbox.h"
 
 //----------------------------------------------------------------------------------------------------------------------

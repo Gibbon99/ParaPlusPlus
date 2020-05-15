@@ -1,6 +1,7 @@
 #include <io/console.h>
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
 #include <io/logFile.h>
+#include <system/util.h>
 #include "gui/guiButton.h"
 
 //----------------------------------------------------------------------------------------------------------------------

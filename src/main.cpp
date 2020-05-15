@@ -16,9 +16,6 @@ paraSprite   databaseSprite;
 
 std::map<std::string, paraTexture> textures;
 
-#define TICKS_PER_SECOND 30.0f
-#define MAX_FRAMESKIP 5
-
 bool   quitLoop             = false;
 Uint32 maxNumUpdateLoops    = 0;
 Uint32 fps                  = 0;
@@ -27,6 +24,7 @@ Uint32 thinkFPS             = 0;
 Uint32 thinkFPSPrint        = 0;
 double percentIntoNextFrame = 0.0f;
 int    currentMode;
+double pixelsPerMeter;          // From script
 
 //
 // Game levers

@@ -1,19 +1,22 @@
-#include <io/fileWatch.h>
-#include <io/keyboard.h>
-#include <io/joystick.h>
-#include <io/mouse.h>
-#include <gui/guiSideview.h>
-#include <gui/guiScrollbox.h>
-#include <game/hud.h>
-#include <gui/guiLanguage.h>
-#include "../../hdr/system/frameUpdate.h"
+#include "io/fileWatch.h"
+#include "io/keyboard.h"
+#include "io/joystick.h"
+#include "io/mouse.h"
+#include "gui/guiSideview.h"
+#include "gui/guiScrollbox.h"
+#include "game/shipDecks.h"
+#include "game/healing.h"
+#include "game/player.h"
+#include "system/util.h"
+#include "system/frameUpdate.h"
+#include "game/doors.h"
 
 SDL_Event evt;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Handle system events and populate the keyboard state array
-void sys_processSystemEvents ()
+void sys_processInputEvents ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	while (SDL_PollEvent (&evt) != 0)
@@ -40,24 +43,24 @@ void sys_processSystemEvents ()
 				break;
 
 			case SDL_JOYAXISMOTION:
-				io_joyMovement(evt.jaxis.which, evt.jaxis.axis, evt.jaxis.value);
+				io_joyMovement (evt.jaxis.which, evt.jaxis.axis, evt.jaxis.value);
 				break;
 
 			case SDL_MOUSEMOTION:
-				io_mouseMovement(evt.motion.x, evt.motion.y, evt.motion.state);
+				io_mouseMovement (evt.motion.x, evt.motion.y, evt.motion.state);
 				break;
 
 			case SDL_MOUSEWHEEL:
 				if (evt.wheel.y > 0)    // Scroll Up
-					io_mouseWheel(KEY_UP);
+					io_mouseWheel (KEY_UP);
 
 				if (evt.wheel.y < 0)    // Scroll down
-					io_mouseWheel(KEY_DOWN);
+					io_mouseWheel (KEY_DOWN);
 				break;
 
 			case SDL_MOUSEBUTTONDOWN:
 				if (evt.button.button == SDL_BUTTON_LEFT)
-					io_mouseButtonDown();
+					io_mouseButtonDown ();
 				break;
 
 			case SDL_KEYDOWN:
@@ -88,7 +91,6 @@ void sys_processSystemEvents ()
 						console.changeScrollBackOffset (1);
 				}
 
-
 				if (evt.key.keysym.sym == SDLK_F1)
 					sys_setNewMode (MODE_SHOW_SPLASH, true);
 
@@ -103,19 +105,28 @@ void sys_processSystemEvents ()
 					sys_setNewMode (MODE_CONSOLE_EDIT, true);
 
 				if (evt.key.keysym.sym == SDLK_F4)
-					sys_setNewMode(MODE_GUI_SHIPVIEW, true);
+					sys_setNewMode (MODE_GUI_SHIPVIEW, true);
 
 				if (evt.key.keysym.sym == SDLK_F5)
-					sys_setNewMode(MODE_GUI_INTROSCROLL, true);
+					sys_setNewMode (MODE_GUI_INTROSCROLL, true);
 
 				if (evt.key.keysym.sym == SDLK_F6)
 				{
-					gam_setHudText(gui_getString (std::string("terminalMenu.terminalText")));
-					sys_setNewMode (MODE_GUI_TERMINAL, true);
-					gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
-					gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.backButton");
+					gam_changeToDeck ("Staterooms", 0);
 				}
 
+				if (evt.key.state == SDL_PRESSED)
+				{
+					io_setKeyboardState (evt.key.keysym.scancode, SDL_PRESSED, evt.key.repeat);
+				}
+
+				break;
+
+			case SDL_KEYUP:
+				if (evt.key.state == SDL_RELEASED)
+				{
+					io_setKeyboardState (evt.key.keysym.scancode, SDL_RELEASED, evt.key.repeat);
+				}
 				break;
 
 			case SDL_TEXTINPUT:
@@ -124,7 +135,7 @@ void sys_processSystemEvents ()
 				break;
 		}
 	}
-	io_processKeyboardState();
+	io_processKeyboardState ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -139,12 +150,25 @@ void sys_gameTickRun ()
 
 	io_checkFileWatcher ();
 
-	sys_processSystemEvents ();
+	sys_processInputEvents ();
 
 	switch (currentMode)
 	{
+		case MODE_PRE_GAME:
+			sys_setNewMode (MODE_GAME, true);
+			break;
+
+		case MODE_GAME:
+			sys_processPhysics (TICKS_PER_SECOND);
+			gam_animateHealing (gam_getCurrentDeckName ());
+			playerDroid.sprite.animate ();
+			gam_doorCheckTriggerAreas ();
+			gam_doorProcessActions ();
+			break;
+
 		case MODE_GUI_SHIPVIEW:
-			gui_animateStarfield();
+		case MODE_GUI_LIFTVIEW:
+			gui_animateStarfield ();
 			break;
 
 		case MODE_GUI_INTROSCROLL:
@@ -155,8 +179,8 @@ void sys_gameTickRun ()
 			break;
 
 		case MODE_GUI_DATABASE:
-			gui_scrollScrollBox("databaseScreen.scrollbox");
-			databaseSprite.animate();
+			gui_scrollScrollBox ("databaseScreen.scrollbox");
+			databaseSprite.animate ();
 			break;
 	}
 }

@@ -1,3 +1,4 @@
+#include <system/util.h>
 #include "gui/guiLanguage.h"
 #include "game/texture.h"
 #include "game/database.h"

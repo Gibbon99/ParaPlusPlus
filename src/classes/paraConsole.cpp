@@ -1,5 +1,6 @@
 #include <iostream>
 #include <regex>
+#include <system/util.h>
 
 #include "../../hdr/classes/paraConsole.h"
 #include "../../hdr/wrapper.h"

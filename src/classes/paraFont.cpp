@@ -1,5 +1,6 @@
 #include <vector>
 #include <cstdarg>
+#include <system/startup.h>
 #include "../../hdr/classes/paraFont.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -202,7 +203,6 @@ void paraFont::render(SDL_Renderer *whichRenderer, double posX, double posY, int
 {
 	SDL_Surface     *tempSurface;
 	SDL_Texture     *tempTexture;
-//	SDL_Rect        tempRect;
 
 	if (text.size() == 0)
 		return;
@@ -220,6 +220,15 @@ void paraFont::render(SDL_Renderer *whichRenderer, double posX, double posY, int
 		funcOutput (-1, int_getString ("Unable to create temp texture when rendering console."));
 		return;
 	}
+
+	if (currentMode == MODE_GAME)   // Scale font down to low res gameplay resolution
+	{
+		pos.y *= (static_cast<double>(gameWinHeight) / hiresVirtualHeight);
+		pos.x *= (static_cast<double>(gameWinWidth) / hiresVirtualWidth);
+		pos.h = tempSurface->h * (static_cast<double>(gameWinHeight) / hiresVirtualHeight);
+		pos.w = tempSurface->w * (static_cast<double>(gameWinWidth) / hiresVirtualWidth);
+	}
+
 	SDL_RenderCopy (whichRenderer, tempTexture, nullptr, &pos);
 	SDL_DestroyTexture (tempTexture);
 }

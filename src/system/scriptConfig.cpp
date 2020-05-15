@@ -1,5 +1,9 @@
 #include <cassert>
 #include <game/tiles.h>
+#include <game/shipDecks.h>
+#include <game/healing.h>
+#include <game/player.h>
+#include <system/util.h>
 #include "game/audio.h"
 #include "gui/guiLanguage.h"
 #include "system/startup.h"
@@ -8,6 +12,7 @@
 #include "game/texture.h"
 #include "system/scriptConfig.h"
 #include "gui/guiSideview.h"
+#include "game/doors.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -19,6 +24,7 @@ void sys_scriptInitScriptFunctions ()
 	paraScriptInstance.addScriptFunction ("void as_getAudioSpecs()", "as_getAudioSpecs");
 	paraScriptInstance.addScriptFunction ("void as_loadAudioResources()", "as_loadAudioResources");
 	paraScriptInstance.addScriptFunction ("void as_loadTextureResources()", "as_loadTextureResources");
+	paraScriptInstance.addScriptFunction ("void as_loadAllDecks()", "as_loadAllDecks");
 
 	paraScriptInstance.addScriptFunction ("int as_getVolume()", "as_getVolume");
 	paraScriptInstance.addScriptFunction ("void as_setVolume(int newVolume)", "as_setVolume");
@@ -64,6 +70,11 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("string tileFilename", &tileFilename);
 	paraScriptInstance.addHostVariable ("string tileStyle", &tileStyle);
 	paraScriptInstance.addHostVariable ("string tileColor", &tileColor);
+	paraScriptInstance.addHostVariable ("double healingAnimSpeed", &healingAnimSpeed);
+	paraScriptInstance.addHostVariable ("double pixelsPerMeter", &pixelsPerMeter);
+	paraScriptInstance.addHostVariable ("double playerFriction", &playerFriction);
+	paraScriptInstance.addHostVariable ("double gravity", &gravity);
+	paraScriptInstance.addHostVariable ("double doorAnimSpeed", &doorAnimSpeed);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)
@@ -208,7 +219,7 @@ void sys_scriptInitFunctions ()
 	paraScriptInstance.addHostFunction ("void gam_setHudText(string &in)", (functionPtr)gam_setHudText);
 	paraScriptInstance.addHostFunction("void gam_loadTexture(string &in, string &in)", (functionPtr) &gam_loadTexture);
 	paraScriptInstance.addHostFunction("void gam_createCollisionMap(string &in)", (functionPtr) &gam_createCollisionMap);
-
 	paraScriptInstance.addHostFunction("void gam_setTileType()", (functionPtr) &gam_setTileType);
-	;
+	paraScriptInstance.addHostFunction("void gam_loadShipDeck (string &in)", (functionPtr) &gam_loadShipDeck);
+	paraScriptInstance.addHostFunction("void gam_changeToDeck (string &in, int whichLift)", (functionPtr) &gam_changeToDeck);
 }

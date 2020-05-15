@@ -1,6 +1,9 @@
 #pragma once
 
-#include "../../hdr/main.h"
+#include "main.h"
+#include "game/shipDecks.h"
+#include "system/startup.h"
+#include "io/console.h"
 
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
@@ -23,3 +26,12 @@ void sys_setNewMode (int newMode, bool doFade);
 
 // Get the operating system we are running on
 void sys_getOS();
+
+// Save a SDL_Texture to a file
+void sys_saveTexture(SDL_Renderer *ren, SDL_Texture *tex, const char *filename);
+
+// Convert worldPosition coords to screen coords
+paraVec2d sys_worldToScreen (paraVec2d worldPos, int shapeSize);
+
+// Is an object visible on the screen
+bool sys_visibleOnScreen (paraVec2d worldCoord, int shapeSize);

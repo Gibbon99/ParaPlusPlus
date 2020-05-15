@@ -28,7 +28,7 @@
 #include "classes/paraAudio.h"
 #include "system/eventsEngine.h"
 #include "system/shutdown.h"
-#include "system/util.h"
+//#include "system/util.h"
 #include "physfs/physfs.h"
 #include "classes/paraRenderer.h"
 
@@ -36,6 +36,24 @@
 
 #define HIRES_BACKING_TEXTURE "hiresBackingTexture"
 #define GAME_BACKING_TEXTURE "gameBackingTexture"
+
+#define NO_PASS_TILE                40
+#define LIFT_TILE                   NO_PASS_TILE + 1
+#define HEALING_TILE                LIFT_TILE + 4
+
+#define ALERT_GREEN_TILE            4
+#define ALERT_YELLOW_TILE           5
+#define ALERT_RED_TILE              6
+
+#define TERMINAL_TOP                51
+#define TERMINAL_BOTTOM             52
+#define TERMINAL_RIGHT              53
+#define TERMINAL_LEFT               54
+
+#define HEALING_TILE                LIFT_TILE + 4
+
+#define TICKS_PER_SECOND 30.0f
+#define MAX_FRAMESKIP 5
 
 using namespace std;
 
@@ -50,7 +68,7 @@ extern paraRenderer   renderer;
 extern paraAudio      audio;
 extern paraGui        gui;
 
-extern paraSprite   databaseSprite;
+extern paraSprite databaseSprite;
 
 extern std::map<std::string, paraTexture> textures;
 
@@ -59,7 +77,7 @@ extern Uint32 fpsPrint;
 extern Uint32 thinkFPSPrint;
 extern double percentIntoNextFrame;
 extern int    currentMode;
-
+extern double pixelsPerMeter;          // From script
 //
 // Game levers
 //

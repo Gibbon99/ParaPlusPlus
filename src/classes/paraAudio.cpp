@@ -157,6 +157,10 @@ void paraAudio::setMasterVolume (int volume)
 int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
 //-----------------------------------------------------------------------------------------------------------------------
 {
+
+	return 1; // TODO remote
+
+
 	if ((distance < 0) || (distance > 255))
 		distance = 128;
 

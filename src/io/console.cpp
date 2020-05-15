@@ -1,5 +1,6 @@
 #include <queue>
 #include <system/physics.h>
+#include <system/util.h>
 #include "../../hdr/io/console.h"
 #include "../../hdr/system/startup.h"
 #include "../../hdr/classes/paraEvent.h"
@@ -114,7 +115,7 @@ void con_renderConsole ()
 	PARA_Texture      *tempTexture  = nullptr;
 	static PARA_Mutex *consoleMutex = nullptr;
 
-	if (console.consoleText.size() == 0)
+	if (console.consoleText.size () == 0)
 		return;
 	//
 	// Block the thread from inserting new text while the iterator is rendering the array
@@ -246,13 +247,12 @@ void con_initConsole ()
 	console.addCommand ("quit", "Quit the game.", sys_shutdown);
 
 	console.addCommand ("testPlay", "Play sound", testPlay);
-
-
 	//
 	// Variables accessible from the console
 	//
 	console.addVariable ("quitLoop", VAR_TYPE_BOOL, &quitLoop);
 	console.addVariable ("d_showPhysics", VAR_TYPE_BOOL, &d_showPhysics);
+	console.addVariable ("d_doWallCollisions", VAR_TYPE_BOOL, &doWallCollisions);
 
 	console.addVariable ("height", VAR_TYPE_INT, &testVar);
 	console.addVariable ("testString", VAR_TYPE_STRING, &testVarString);

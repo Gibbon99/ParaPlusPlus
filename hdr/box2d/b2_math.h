@@ -499,7 +499,7 @@ inline b2Vec2 operator+ (const b2Vec2 &a, const b2Vec2 &b)
 }
 
 /// Subtract two vectors component-wise.
-inline b2Vec2 operator- (const b2Vec2 &a, const b2Vec2 &b)
+inline b2Vec2 operator- (b2Vec2 a, const b2Vec2 &b)
 {
 	return b2Vec2 (a.x - b.x, a.y - b.y);
 }

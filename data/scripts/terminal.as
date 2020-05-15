@@ -69,7 +69,7 @@ void as_handleTerminalMenu ()
 	{
 		//
 		// Change mode back to game
-//		sys_setNewMode(MODE_GAME, true);
+		sys_setNewMode(MODE_GAME, true);
 		return;
 	}
 }

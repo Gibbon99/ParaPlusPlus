@@ -91,7 +91,7 @@ private:
 	typedef struct
 	{
 		std::string scriptFunctionName;
-		void        *hostFunctionPtr = nullptr;
+		int        *hostFunctionPtr = nullptr;
 	}                                 _hostScriptFunctions;
 
 	typedef struct

@@ -1,4 +1,5 @@
-
+#include <system/util.h>
+#include <system/physics.h>
 #include "../../hdr/system/shutdown.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -8,6 +9,8 @@ void sys_closeSystems()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	io_saveConfigValues();
+
+	sys_freePhysicsEngine ();
 
 	io_closeJoystick();
 	paraScriptInstance.stop();

@@ -62,14 +62,18 @@ class paraEventGame
 {
 public:
 
-	paraEventGame (int newAction, int newCounter, const std::string &newText)
+	paraEventGame (int newAction, int newCounter, const std::string &newText1, const std::string &newText2, const std::string &newText3)
 	{
-		action   = newAction;
-		counter  = newCounter;
-		gameText = newText;
+		action    = newAction;
+		counter   = newCounter;
+		gameText1 = newText1;
+		gameText2 = newText2;
+		gameText3 = newText3;
 	}
 
-	std::string gameText;
+	std::string gameText1;
+	std::string gameText2;
+	std::string gameText3;
 	int         action;
 	int         counter;
 private:

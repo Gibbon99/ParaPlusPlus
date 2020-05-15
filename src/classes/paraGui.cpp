@@ -3,6 +3,7 @@
 #include <iostream>
 #include <game/audio.h>
 #include <io/console.h>
+#include <system/util.h>
 #include "classes/paraGui.h"
 
 void paraGui::AddRef ()
@@ -1952,14 +1953,13 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 	}
 }
 
-
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the bounding box coordinates for the object
 __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	__BOUNDING_BOX badBox;
+	__BOUNDING_BOX badBox{};
 
 	badBox.x1 = -1;
 	badBox.y1 = -1;
@@ -2221,12 +2221,12 @@ bool paraGui::canBeSelected (int objectType, int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check if the mouse is inside an elements bounding box - activate it if it is
-void paraGui::checkMousePosition ()
+void paraGui::processMousePosition ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static int previousElement = 0;
 
-	if (guiScreens.size() == 0)
+	if (guiScreens.size() == 0)     // size() == 0 is faster than .empty()
 		return;
 	
 	for (auto index = 0; index < static_cast<int>(guiScreens[currentScreen].objectType.size ()); index++)
@@ -2278,7 +2278,7 @@ void paraGui::checkMousePosition ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check movement actions
-void paraGui::checkMovementActions ()
+void paraGui::processMovementKeys ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int indexCount     = 1;
@@ -2303,6 +2303,7 @@ void paraGui::checkMovementActions ()
 
 	if (keyBinding[KEY_DOWN].active)
 	{
+		keyBinding[KEY_DOWN].active = false;
 		if (guiScreens[currentScreen].selectedObject != static_cast<int>(guiScreens[currentScreen].objectIDIndex.size ()) - 1)    // Don't go past number on screen
 		{
 			while (!canBeSelected (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject + indexCount],
@@ -2329,6 +2330,7 @@ void paraGui::checkMovementActions ()
 
 	if (keyBinding[KEY_UP].active)
 	{
+		keyBinding[KEY_UP].active = false;
 		indexCount = 1;
 		if (guiScreens[currentScreen].selectedObject > 0)
 		{
@@ -2370,6 +2372,7 @@ void paraGui::checkMovementActions ()
 
 	if (keyBinding[KEY_LEFT].active)
 	{
+		keyBinding[KEY_LEFT].active = false;
 		switch (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject])
 		{
 			case GUI_OBJECT_SLIDER:
@@ -2392,6 +2395,7 @@ void paraGui::checkMovementActions ()
 
 	if (keyBinding[KEY_RIGHT].active)
 	{
+		keyBinding[KEY_RIGHT].active = false;
 		switch (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject])
 		{
 			case GUI_OBJECT_SLIDER:
@@ -2421,6 +2425,7 @@ void paraGui::processAction ()
 
 	if (keyBinding[KEY_ACTION].active)
 	{
+		keyBinding[KEY_ACTION].active = false;
 		currentElement = guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject];
 		// Play good sound
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
@@ -2647,10 +2652,19 @@ void paraGui::setDefaultKeybindings ()
 	keyBinding[KEY_DOWN].keyValue       = SDL_SCANCODE_DOWN;
 	keyBinding[KEY_UP].keyValue         = SDL_SCANCODE_UP;
 	keyBinding[KEY_PAUSE].keyValue      = SDL_SCANCODE_P;
-	keyBinding[KEY_ACTION].keyValue     = SDL_SCANCODE_LCTRL;
+	keyBinding[KEY_ACTION].keyValue     = SDL_SCANCODE_SPACE;
 	keyBinding[KEY_ESCAPE].keyValue     = SDL_SCANCODE_ESCAPE;
 	keyBinding[KEY_CONSOLE].keyValue    = SDL_SCANCODE_GRAVE;
 	keyBinding[KEY_SCREENSHOT].keyValue = SDL_SCANCODE_S;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Get the repeat state for keys
+int paraGui::getRepeatOff()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return repeatOff;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -2664,15 +2678,24 @@ void paraGui::setRepeatOff (bool newState)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Return the current scancode for a key setting
+int paraGui::getScancode(int whichKey)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if ((whichKey < 0) || (whichKey > KEY_NUMBER_ACTIONS))
+		return -1;
+
+	return keyBinding[whichKey].keyValue;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Update the state of the keyboard mappings from the system keyboard state. Don't repeat keys if repeatOff is true
 void paraGui::update ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto keyCounter = 0; keyCounter != KEY_NUMBER_ACTIONS; keyCounter++)
-	{
-		keyboardState[keyBinding[keyCounter].keyValue] ? keyBinding[keyCounter].active = true : keyBinding[keyCounter].active = false;
-	}
-
+	return;
+	
 	if (repeatOff)
 	{
 		for (auto keyCounter = 0; keyCounter != KEY_NUMBER_ACTIONS; keyCounter++)
@@ -2695,6 +2718,10 @@ void paraGui::update ()
 				keyBinding[keyCounter].state  = PARA_KEY_UP;
 			}
 		}
+	}
+	else
+	{
+
 	}
 }
 
@@ -2734,7 +2761,7 @@ int paraGui::sliderSize (int whichSlider)
 int paraGui::getSelectPosition (int whichSlider)
 //-----------------------------------------------------------------------------
 {
-	if ((whichSlider < 0) || (whichSlider > guiSliders.size () - 1))
+	if ((whichSlider < 0) || (whichSlider > static_cast<int>(guiSliders.size () - 1)))
 		return -1;
 
 	return guiSliders[whichSlider].currentStep;
@@ -2863,15 +2890,11 @@ void paraGui::setTickedStatus (const std::string& objectID, int whichGroup, bool
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-//
-//----------------------------------------------------------------------------------------------------------------------
-//
 // Process the key events
-void paraGui::process ()
+void paraGui::processGuiInput ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	checkMousePosition ();
-	checkMovementActions ();
+	processMousePosition ();
+	processMovementKeys ();
 	processAction ();
 }
-

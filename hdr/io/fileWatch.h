@@ -44,7 +44,7 @@ public:
 				// Don't restart on temporary files being written from a file save
 				if (paraScriptInstance.isScriptName(filename))
 				{
-					gam_addEvent (EVENT_ACTION_GAME_SCRIPT_RESTART, 5, "");
+					gam_addEvent (EVENT_ACTION_GAME_SCRIPT_RESTART, 5, (string &) "");
 					std::cout << "File (" << dir + "\\" + filename << ") Modified! " << std::endl;
 				}
 

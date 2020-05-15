@@ -20,5 +20,9 @@ void gam_setTileType ()
 void gam_loadTileSet()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	gam_loadTexture(tileFilename, "tiles");
+	std::string tileKeyName;
+
+	tileKeyName = "tiles";
+
+	gam_loadTexture(tileFilename, tileKeyName);
 }
