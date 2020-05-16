@@ -1,3 +1,5 @@
+#include <game/pathFind.h>
+#include <game/droids.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
@@ -108,7 +110,19 @@ void sys_processInputEvents ()
 					sys_setNewMode (MODE_GUI_SHIPVIEW, true);
 
 				if (evt.key.keysym.sym == SDLK_F5)
-					sys_setNewMode (MODE_GUI_INTROSCROLL, true);
+				{
+
+					b2Vec2 start;
+					b2Vec2 dest;
+
+					start.x = static_cast<int>(testDroid.worldPosInPixels.x) / tileSize;
+					start.y = static_cast<int>(testDroid.worldPosInPixels.y) / tileSize;
+
+					dest.x = static_cast<int>(playerDroid.worldPosInPixels.x) / tileSize;
+					dest.y = static_cast<int>(playerDroid.worldPosInPixels.y) / tileSize;
+
+					testDroid.aStarIndex = gam_requestNewPath (start, dest, 0, gam_getCurrentDeckName());
+				}
 
 				if (evt.key.keysym.sym == SDLK_F6)
 				{
@@ -164,6 +178,17 @@ void sys_gameTickRun ()
 			playerDroid.sprite.animate ();
 			gam_doorCheckTriggerAreas ();
 			gam_doorProcessActions ();
+
+			gam_moveTestCircle ();
+			if (path.size() != 0)
+			{
+//				if (!path[testDroid.aStarIndex].wayPointsReady)
+//					gam_AStarSearchThread (testDroid.aStarIndex);
+			}
+			break;
+
+		case MODE_GUI_DECKVIEW:
+			gam_animateHealing (gam_getCurrentDeckName ());
 			break;
 
 		case MODE_GUI_SHIPVIEW:

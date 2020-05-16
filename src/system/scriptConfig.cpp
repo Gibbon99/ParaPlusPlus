@@ -13,6 +13,7 @@
 #include "system/scriptConfig.h"
 #include "gui/guiSideview.h"
 #include "game/doors.h"
+#include "game/pathFind.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -75,6 +76,7 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("double playerFriction", &playerFriction);
 	paraScriptInstance.addHostVariable ("double gravity", &gravity);
 	paraScriptInstance.addHostVariable ("double doorAnimSpeed", &doorAnimSpeed);
+	paraScriptInstance.addHostVariable ("int numAStarPaths", &numAStarPaths);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)

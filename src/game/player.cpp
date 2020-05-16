@@ -9,6 +9,31 @@
 droidClass playerDroid;
 double     playerFriction;      // From script
 
+droidClass testCircle;
+static double angleCounter = 1.0;
+int radius = 40;
+
+//-----------------------------------------------------------------------------------------------------------------
+//
+// Render the test circle
+void gam_moveTestCircle ()
+//-----------------------------------------------------------------------------------------------------------------
+{
+	static int angle = 0;
+
+	angleCounter -= 1.0 / 0.3;
+	if (angleCounter < 0)
+	{
+		angleCounter = 1.0;
+		angle++;
+		if (angle > 359)
+			angle = 0;
+	}
+
+	testCircle.worldPosInPixels.x = (gameWinWidth / 2) + (radius * cos (angle * (3.14 / 180)));
+	testCircle.worldPosInPixels.y = (gameWinHeight / 2) + (radius * sin (angle * (3.14 / 180)));
+}
+
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Setup the player droid - run once
@@ -17,9 +42,15 @@ void gam_setupPlayerDroid ()
 {
 	playerDroid.droidType = 0;
 	playerDroid.droidName = "001";
-	playerDroid.sprite.create(playerDroid.droidName, 9, 0.3);
+	playerDroid.sprite.create (playerDroid.droidName, 9, 0.3);
 	playerDroid.acceleration = dataBaseEntry[0].accelerate;
-	playerDroid.maxSpeed = dataBaseEntry[0].maxSpeed;
+	playerDroid.maxSpeed     = dataBaseEntry[0].maxSpeed;
+
+	testCircle.droidType = 0;
+	testCircle.droidName = "001";
+	testCircle.sprite.create (playerDroid.droidName, 9, 0.3);
+	testCircle.worldPosInPixels = {0, 0};
+
 
 	sys_setupPlayerPhysics ();
 }
@@ -30,7 +61,7 @@ void gam_setupPlayerDroid ()
 void gam_processPlayerMovement ()
 //-----------------------------------------------------------------------------
 {
-	if (gui.keyDown(KEY_LEFT))
+	if (gui.keyDown (KEY_LEFT))
 	{
 		playerDroid.velocity.x -= playerDroid.acceleration;
 		if (playerDroid.velocity.x < -playerDroid.maxSpeed)
@@ -39,7 +70,7 @@ void gam_processPlayerMovement ()
 		}
 	}
 
-	else if (gui.keyDown(KEY_RIGHT))
+	else if (gui.keyDown (KEY_RIGHT))
 	{
 		playerDroid.velocity.x += playerDroid.acceleration;
 		if (playerDroid.velocity.x > playerDroid.maxSpeed)
@@ -48,7 +79,7 @@ void gam_processPlayerMovement ()
 		}
 	}
 
-	if (gui.keyDown(KEY_UP))
+	if (gui.keyDown (KEY_UP))
 	{
 		playerDroid.velocity.y -= playerDroid.acceleration;
 		if (playerDroid.velocity.y < -playerDroid.maxSpeed)
@@ -57,7 +88,7 @@ void gam_processPlayerMovement ()
 		}
 	}
 
-	else if (gui.keyDown(KEY_DOWN))
+	else if (gui.keyDown (KEY_DOWN))
 	{
 		playerDroid.velocity.y += playerDroid.acceleration;
 		if (playerDroid.velocity.y > playerDroid.maxSpeed)
@@ -68,7 +99,7 @@ void gam_processPlayerMovement ()
 
 //
 // Do gravity slowdown when no key is pressed
-	if (!gui.keyDown(KEY_LEFT))
+	if (!gui.keyDown (KEY_LEFT))
 	{
 		if (playerDroid.velocity.x < 0.0f)
 		{
@@ -80,7 +111,7 @@ void gam_processPlayerMovement ()
 		}
 	}
 
-	if (!gui.keyDown(KEY_RIGHT))
+	if (!gui.keyDown (KEY_RIGHT))
 	{
 		if (playerDroid.velocity.x > 0.0f)
 		{
@@ -92,7 +123,7 @@ void gam_processPlayerMovement ()
 		}
 	}
 
-	if (!gui.keyDown(KEY_UP))
+	if (!gui.keyDown (KEY_UP))
 	{
 		if (playerDroid.velocity.y < 0.0f)
 		{
@@ -104,7 +135,7 @@ void gam_processPlayerMovement ()
 		}
 	}
 
-	if (!gui.keyDown(KEY_DOWN))
+	if (!gui.keyDown (KEY_DOWN))
 	{
 		if (playerDroid.velocity.y > 0.0f)
 		{
@@ -126,20 +157,20 @@ void gam_processActionKey ()
 {
 //	gui.setState(KEY_ACTION, false, 0);
 
-	gam_setHudText("hudMoving");
+	gam_setHudText ("hudMoving");
 
 	if (playerDroid.inTransferMode)
-		gam_setHudText( "hudTransfer");
+		gam_setHudText ("hudTransfer");
 	//
 	// Actions when no movements are down
-	if ((!gui.keyDown(KEY_LEFT)) && (!gui.keyDown(KEY_RIGHT)) && (!gui.keyDown(KEY_DOWN)) && (!gui.keyDown(KEY_UP)))
+	if ((!gui.keyDown (KEY_LEFT)) && (!gui.keyDown (KEY_RIGHT)) && (!gui.keyDown (KEY_DOWN)) && (!gui.keyDown (KEY_UP)))
 	{
 		if (playerDroid.overLiftTile)
 		{
 			if (!playerDroid.inTransferMode)
 			{
-				gui.setState(KEY_ACTION, false, 0);
-				gam_setCurrentTunnelDeckIndex();
+				gui.setState (KEY_ACTION, false, 0);
+				gam_setCurrentTunnelDeckIndex ();
 				gam_performLiftAction ();
 				return;
 			}
@@ -149,7 +180,7 @@ void gam_processActionKey ()
 		{
 			if (!playerDroid.inTransferMode)
 			{
-				gui.setState(KEY_ACTION, false, 0);
+				gui.setState (KEY_ACTION, false, 0);
 				gam_setHudText (gui_getString (std::string ("terminalMenu.terminalText")));
 				sys_setNewMode (MODE_GUI_TERMINAL, true);
 				gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
@@ -162,13 +193,13 @@ void gam_processActionKey ()
 		{
 			playerDroid.inTransferMode = true;
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferMove.wav");
-			gam_setHudText( "hudTransfer");
+			gam_setHudText ("hudTransfer");
 		}
 	}
 
 	if (!playerDroid.inTransferMode)
 	{
-		if ((!gui.keyDown(KEY_LEFT)) && (!gui.keyDown(KEY_RIGHT)) && (!gui.keyDown(KEY_DOWN)) && (!gui.keyDown(KEY_UP)))
+		if ((!gui.keyDown (KEY_LEFT)) && (!gui.keyDown (KEY_RIGHT)) && (!gui.keyDown (KEY_DOWN)) && (!gui.keyDown (KEY_UP)))
 		{
 			if (playerDroid.weaponCanFire)
 			{
@@ -176,8 +207,8 @@ void gam_processActionKey ()
 					return;
 
 //				gam_addPhysicAction (PHYSIC_EVENT_TYPE_NEW_BULLET, 0, 0, 0, -1, {0, 0});
-				playerDroid.weaponCanFire               = false;
-				gam_setHudText("hudRecharging");
+				playerDroid.weaponCanFire = false;
+				gam_setHudText ("hudRecharging");
 				return;
 			}
 		}

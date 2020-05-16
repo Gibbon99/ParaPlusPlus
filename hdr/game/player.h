@@ -6,6 +6,8 @@
 extern droidClass playerDroid;
 extern double     playerFriction;      // From script
 
+extern droidClass testCircle;
+
 // Setup the player droid - run once
 void gam_setupPlayerDroid ();
 
@@ -14,3 +16,6 @@ void gam_processPlayerMovement ();
 
 // Start all the actions resulting from pressing the action key
 void gam_processActionKey ();
+
+// Render the test circle
+void gam_moveTestCircle ();

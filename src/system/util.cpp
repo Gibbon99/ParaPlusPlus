@@ -1,4 +1,5 @@
 #include <game/player.h>
+#include <game/droids.h>
 #include "system/util.h"
 
 struct paraMemoryMap
@@ -118,6 +119,9 @@ void sys_setNewMode (int newMode, bool doFade)
 		case MODE_PRE_GAME:
 			gui.setRepeatOff (false);
 			currentMode = newMode;
+
+			createTestDroid();
+
 			break;
 
 		case MODE_GAME:
@@ -342,8 +346,11 @@ paraVec2d sys_worldToScreen (paraVec2d worldPos, int shapeSize)
 	}
 	else
 	{
-		screenCoords.x = -1;
-		screenCoords.y = -1;
+		screenCoords.x = worldPos.x - viewportRect.x;
+		screenCoords.y = worldPos.y - viewportRect.y;
+
+//		screenCoords.x = -1;
+//		screenCoords.y = -1;
 	}
 	return screenCoords;
 }

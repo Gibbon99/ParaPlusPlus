@@ -4,6 +4,8 @@
 #include <game/healing.h>
 #include <game/player.h>
 #include <gui/guiDeckView.h>
+#include <game/pathFind.h>
+#include <game/droids.h>
 #include "gui/guiRender.h"
 #include "system/frameRender.h"
 #include "io/console.h"
@@ -76,6 +78,7 @@ void sys_renderFrame (double interpolation)
 			break;
 
 		case MODE_GUI_DECKVIEW:
+			gam_renderHealingFrames (gam_getCurrentDeckName());
 			gui_renderTerminalDeck ();
 			gui_renderGUI ();
 			break;
@@ -100,8 +103,14 @@ void sys_renderFrame (double interpolation)
 
 			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2,  1.0);
 
+			testCircle.sprite.render(testCircle.worldPosInPixels.x, testCircle.worldPosInPixels.y, 0.5);
+
+			renderTestDroid();
+
 			if (d_showPhysics)
 				sys_getPhysicsWorld ()->DebugDraw();
+
+			gam_AStarDebugWayPoints (testDroid.aStarIndex);
 			break;
 
 	}

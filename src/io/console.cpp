@@ -1,12 +1,9 @@
 #include <queue>
-#include <system/physics.h>
-#include <system/util.h>
-#include "../../hdr/io/console.h"
-#include "../../hdr/system/startup.h"
-#include "../../hdr/classes/paraEvent.h"
-#include "../../hdr/io/logFile.h"
-#include "../main.h"
-#include "../../hdr/io/consoleFunctions.h"
+#include "system/physics.h"
+#include "system/util.h"
+#include "classes/paraEvent.h"
+#include "io/logFile.h"
+#include "io/consoleFunctions.h"
 
 std::queue<paraEventConsole *> consoleEvents;
 

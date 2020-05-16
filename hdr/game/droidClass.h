@@ -33,6 +33,9 @@ public:
 	b2Vec2     destDirection;              // Which way is the droid heading
 	b2Vec2     velocity;
 	paraSprite sprite;
+	//
+	// Enemy droid fields
+	int        aStarIndex;
 private:
 	// Current speed
 };
