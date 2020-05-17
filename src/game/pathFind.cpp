@@ -14,10 +14,12 @@
 // Flag set when the path is found and the compressed waypoints are copied into the path array
 //--------------------------------------------------------------------------------------------------------
 
-//#define DEBUG_ASTAR 1
+#define DEBUG_ASTAR 1
 
 std::vector<_nodeList> path;
 int                    numAStarPaths;
+bool                   d_showNodeArrays = false;
+bool                   d_showAStarPath  = false;
 
 //--------------------------------------------------------------------------------------------------------
 //
@@ -33,6 +35,44 @@ void gam_AStarDebugDraw (paraVec2d lineStart, paraVec2d lineFinish, int whichPat
 	roundedRectangleRGBA (renderer.renderer, lineStart.x - 8, lineStart.y - 8, lineStart.x + 8, lineStart.y + 8, 2, 0, 200, 0, 255);
 
 	roundedRectangleRGBA (renderer.renderer, lineFinish.x - 4, lineFinish.y - 4, lineFinish.x + 4, lineFinish.y + 4, 2, 0, 200, 0, 255);
+}
+
+//--------------------------------------------------------------------------------------------------------
+//
+// Show the open and closed nodes
+void gam_AStarDebugNodes (int whichPath)
+//--------------------------------------------------------------------------------------------------------
+{
+	paraVec2d drawPosition;
+
+	if (path.size () == 0)
+		return;
+
+	if (path[whichPath].openNodes.size () == 0)
+		return;
+
+	if (path[whichPath].closedNodes.size () == 0)
+		return;
+
+	for (auto openItr : path[whichPath].openNodes)
+	{
+		drawPosition.x = openItr.tileLocation.x * tileSize;
+		drawPosition.y = openItr.tileLocation.y * tileSize;
+
+		drawPosition = sys_worldToScreen (drawPosition, tileSize);
+
+		boxRGBA (renderer.renderer, drawPosition.x, drawPosition.y, drawPosition.x + tileSize, drawPosition.y + tileSize, 0, 150, 0, 128);
+	}
+
+	for (auto closedItr : path[whichPath].closedNodes)
+	{
+		drawPosition.x = closedItr.tileLocation.x * tileSize;
+		drawPosition.y = closedItr.tileLocation.y * tileSize;
+
+		drawPosition = sys_worldToScreen (drawPosition, tileSize);
+
+		boxRGBA (renderer.renderer, drawPosition.x, drawPosition.y, drawPosition.x + tileSize, drawPosition.y + tileSize, 0, 0, 150, 128);
+	}
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -85,6 +125,10 @@ int gam_AStarFindDistance (b2Vec2 fromTile, b2Vec2 toTile)
 {
 	int costX, costY;
 
+#ifdef DEBUG_ASTAR
+	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("Checking distance between tiles."));
+#endif
+
 	costX = static_cast<int>(fromTile.x - toTile.x);
 	costY = static_cast<int>(fromTile.y - toTile.y);
 
@@ -113,6 +157,10 @@ inline void gam_AStarAddTileToOpenNode (int whichPath, b2Vec2 whichTile, int mov
 
 	tempNode.h_estMoveCost = gam_AStarFindDistance (whichTile, path[whichPath].destTile);
 	tempNode.f_score       = tempNode.g_movementCost + tempNode.h_estMoveCost;
+
+#ifdef DEBUG_ASTAR
+	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("Tempnode movement cost [ %i ] estMoveCost [ %i ] f_score [ %i ]", tempNode.g_movementCost, tempNode.h_estMoveCost, tempNode.f_score));
+#endif
 
 	path[whichPath].openNodes.push_back (tempNode);
 
@@ -225,7 +273,7 @@ int gam_AStarFindLowestCostNode (int whichPath)
 
 	for (int i = 0; i != (int) path[whichPath].openNodes.size (); i++)
 	{
-		if (path[whichPath].openNodes[i].f_score < lowestCost)
+		if (path[whichPath].openNodes[i].f_score < lowestCost)  // Change to 0 ??
 		{
 			lowestCost           = path[whichPath].openNodes[i].f_score;
 			lowestNodeIndexArray = i;
@@ -277,6 +325,9 @@ bool gam_AStarIsTileSolid (int tileIndex, int whichPath)
 	if (tileIndex < 0)
 		return true;
 
+	if (tileIndex > shipdecks.at (path[whichPath].whichLevel).tiles.size ())
+		sys_shutdownWithError (sys_getString ("Access outside size of tile array."));
+
 	int whichTile = shipdecks.at (path[whichPath].whichLevel).tiles[tileIndex];
 
 	switch (whichTile)
@@ -317,6 +368,9 @@ bool gam_AStarIsTileSolid (int tileIndex, int whichPath)
 bool gam_AStarIsNodeInClosedList (int whichPath, b2Vec2 whichNode)
 //--------------------------------------------------------------------------------------------------------
 {
+	whichNode.x = (int) whichNode.x;
+	whichNode.y = (int) whichNode.y;
+
 	for (int i = 0; i != (int) path[whichPath].closedNodes.size (); i++)
 	{
 		if ((whichNode.x == path[whichPath].closedNodes[i].tileLocation.x) && (whichNode.y == path[whichPath].closedNodes[i].tileLocation.y))
@@ -331,6 +385,9 @@ bool gam_AStarIsNodeInClosedList (int whichPath, b2Vec2 whichNode)
 bool gam_AStarIsNodeInOpenList (int whichPath, b2Vec2 whichNode)
 //--------------------------------------------------------------------------------------------------------
 {
+	whichNode.x = (int) whichNode.x;
+	whichNode.y = (int) whichNode.y;
+
 	for (int i = 0; i != (int) path[whichPath].openNodes.size (); i++)
 	{
 		if ((whichNode.x == path[whichPath].openNodes[i].tileLocation.x) && (whichNode.y == path[whichPath].openNodes[i].tileLocation.y))
@@ -408,6 +465,18 @@ bool gam_AStarGenerateNewNode (int whichPath, int whichDirection)
 	{
 		return false; // Solid - don't use
 	}
+
+	int tileCostModify = gam_getInfluenceMapValue ((tempNode.tileLocation.y * (shipdecks.at (path[whichPath].whichLevel).levelDimensions.x) + tempNode.tileLocation.x));
+	moveTileCost += tileCostModify;
+
+	static int count = 0;
+
+	if (path[whichPath].currentNodePtrClosedList == 59)
+	{
+		std::cout << "Break here : " << count << std::endl;
+		count++;
+	}
+
 	//
 	// See if we have found a path to the destination tile
 	if ((tempNode.tileLocation.x == path[whichPath].destTile.x) && (tempNode.tileLocation.y == path[whichPath].destTile.y))
@@ -440,14 +509,19 @@ bool gam_AStarGenerateNewNode (int whichPath, int whichDirection)
 	openNodeSize   = path[whichPath].openNodes.size ();
 	closedNodeSize = path[whichPath].closedNodes.size ();
 
-	if (nodeIndex <= static_cast<int>(closedNodeSize))
+	if (nodeIndex <= static_cast<int>(closedNodeSize - 1))
 	{
-		if (path[whichPath].openNodes[openNodeSize].g_movementCost < path[whichPath].closedNodes[nodeIndex].g_movementCost)
+		if (path[whichPath].openNodes[openNodeSize - 1].g_movementCost < 0)
+		{
+			sys_shutdownWithError (sys_getString ("Invalid movement cost [ %i ]", path[whichPath].openNodes[openNodeSize - 1].g_movementCost));
+		}
+
+		if (path[whichPath].openNodes[openNodeSize - 1].g_movementCost < path[whichPath].closedNodes[nodeIndex - 1].g_movementCost)
 		{
 #ifdef DEBUG_ASTAR
 			con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("New node is better than the old one"));
 #endif
-			gam_AStarAddTileToOpenNode (whichPath, path[whichPath].openNodes[openNodeSize].tileLocation, moveTileCost, path[whichPath].currentNodePtrClosedList);
+			gam_AStarAddTileToOpenNode (whichPath, path[whichPath].openNodes[openNodeSize - 1].tileLocation, moveTileCost, path[whichPath].currentNodePtrClosedList);
 		}
 	}
 	return true;
@@ -498,14 +572,17 @@ void gam_AStarCompressWaypoints (int whichPath)
 {
 	int                 current = 1;
 	std::vector<b2Vec2> newPoints;
+	b2Vec2              tempPoint;
 
-	newPoints.push_back (path[whichPath].wayPoints[0]);
+	tempPoint = path[whichPath].wayPoints[0];
+	newPoints.push_back (tempPoint);
 
 	for (int i = 0; i != (int) path[whichPath].wayPoints.size () - 1; i++)
 	{
-		if ((path[whichPath].wayPoints[current - 1].x != path[whichPath].wayPoints[current + 1].x) && (path[whichPath].wayPoints[current - 1].y != path[whichPath].wayPoints[current + 1].y))
+		if ((tempPoint.x != path[whichPath].wayPoints[current].x) || (tempPoint.y != path[whichPath].wayPoints[current].y))
 		{
-			newPoints.push_back (path[whichPath].wayPoints[current]);
+			tempPoint = path[whichPath].wayPoints[current];
+			newPoints.push_back (tempPoint);
 			current++;
 		}
 		else
@@ -514,7 +591,7 @@ void gam_AStarCompressWaypoints (int whichPath)
 		}
 	}
 
-	newPoints.push_back (path[whichPath].wayPoints[current]);
+//	newPoints.push_back (path[whichPath].wayPoints[current]);
 
 	//
 	// Copy back into structure
@@ -550,6 +627,8 @@ void gam_AStarConvertToCoords (int whichPath)
 		tempWaypoint.x /= tileSize;
 		tempWaypoint.y /= tileSize;
 	}
+
+	return;
 
 	if (path[whichPath].wayPoints.size () > 4)
 		gam_AStarCompressWaypoints (whichPath);

@@ -121,6 +121,9 @@ void sys_processInputEvents ()
 					dest.x = static_cast<int>(playerDroid.worldPosInPixels.x) / tileSize;
 					dest.y = static_cast<int>(playerDroid.worldPosInPixels.y) / tileSize;
 
+					dest.x = 20;
+					dest.y = 6;
+
 					testDroid.aStarIndex = gam_requestNewPath (start, dest, 0, gam_getCurrentDeckName());
 				}
 
@@ -178,6 +181,8 @@ void sys_gameTickRun ()
 			playerDroid.sprite.animate ();
 			gam_doorCheckTriggerAreas ();
 			gam_doorProcessActions ();
+
+			gam_populateInfluenceMap(playerDroid.worldPosInPixels);
 
 			gam_moveTestCircle ();
 			if (path.size() != 0)

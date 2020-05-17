@@ -4,6 +4,7 @@
 #include <game/lifts.h>
 #include <game/player.h>
 #include <system/util.h>
+#include <sdl2_gfx/SDL2_gfxPrimitives.h>
 #include "game/shipDecks.h"
 #include "game/doors.h"
 #include "game/terminal.h"
@@ -17,6 +18,118 @@ PARA_Texture *playfieldTexture;
 std::string                                  currentDeckName;
 SDL_Rect                                     viewportRect;
 int                                          currentDeckNumber;
+std::vector<int>                             influenceMap;
+bool                                         d_showInfluenceMap = false;
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Get the value from the influence map
+int gam_getInfluenceMapValue (int tileIndex)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if (tileIndex > influenceMap.size ())
+		sys_shutdownWithError ("tileIndex greater than influenceMap size.");
+
+	return influenceMap[tileIndex];
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Set influence map values
+void gam_setInfluenceValues (b2Vec2 startPos, int value, int size)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	paraVec2d topRight;
+	int       finalSize;
+
+	finalSize = size * 2;
+
+	influenceMap[startPos.y * (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + startPos.x] = value;
+
+	topRight.x = startPos.x + size;
+	topRight.y = startPos.y + size;
+
+	for (auto i = 0; i != finalSize; i++)
+	{
+		topRight.y--;
+		influenceMap[topRight.y * (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + topRight.x] = value;
+	}
+
+	for (auto i = 0; i != finalSize; i++)
+	{
+		topRight.x--;
+		influenceMap[topRight.y * (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + topRight.x] = value;
+	}
+
+	for (auto i = 0; i != finalSize; i++)
+	{
+		topRight.y++;
+		influenceMap[topRight.y * (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + topRight.x] = value;
+	}
+
+	for (auto i = 0; i != finalSize; i++)
+	{
+		topRight.x++;
+		influenceMap[topRight.y * (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + topRight.x] = value;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Change player pixel coords into tile coords
+void gam_populateInfluenceMap (b2Vec2 playerPositionInPixels)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	b2Vec2 newPosition;
+
+	std::fill (influenceMap.begin (), influenceMap.end (), 0);
+
+	newPosition.x = static_cast<int>(playerPositionInPixels.x) / tileSize;
+	newPosition.y = static_cast<int>(playerPositionInPixels.y) / tileSize;
+
+	gam_setInfluenceValues (newPosition, 15, 2);
+	gam_setInfluenceValues (newPosition, 25, 1);
+//	gam_setInfluenceValues (newPosition, 20, 3);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Create the influence map to be same size as deck dimensions - call on deck change
+void gam_createInfluenceMap ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	//
+	// Create the influence map and set to 0 values
+	influenceMap.resize (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x * shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.y);
+	std::fill (influenceMap.begin (), influenceMap.end (), 0);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Debug influence map
+void gam_debugInfluenceMap ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int       influenceValue;
+	paraVec2d drawPosition;
+
+	for (auto countY = 0; countY != shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.y; countY++)
+	{
+		for (auto countX = 0; countX != shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x; countX++)
+		{
+			influenceValue = influenceMap[(countY * shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + countX];
+			if (influenceValue > 0)
+			{
+				drawPosition.x = countX * tileSize;
+				drawPosition.y = countY * tileSize;
+
+				drawPosition = sys_worldToScreen (drawPosition, tileSize);
+
+				boxRGBA (renderer.renderer, drawPosition.x, drawPosition.y, drawPosition.x + tileSize, drawPosition.y + tileSize, 30 + ((influenceValue / 10) * 40), 0, 0, 60);
+			}
+		}
+	}
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -30,7 +143,7 @@ PARA_Texture *gam_getPlayfieldTexture ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the deck index number based on current deck name
-int gam_getCurrentDeckIndex()
+int gam_getCurrentDeckIndex ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	for (auto deckItr : shipdecks)
@@ -261,7 +374,7 @@ void gam_loadShipDeck (const std::string &fileName)
 
 	gam_findHealingTiles (tempLevel.levelName);
 
-	if (shipdecks.size() == 20)
+	if (shipdecks.size () == 20)
 		gam_setupLifts ();
 
 	con_addEvent (-1, sys_getString ("Loaded ship level [ %s ] - index [ %i ]", tempLevel.levelName, tempLevel.deckNumber));
@@ -374,7 +487,9 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	playerDroid.worldPosInPixels         = gam_getLiftWorldPosition (whichLift, deckName);
 	sys_setPlayerPhysicsPosition (playerDroid.worldPosInPixels);
 
-	currentDeckNumber = gam_getCurrentDeckIndex();
+	gam_createInfluenceMap ();
+
+	currentDeckNumber = gam_getCurrentDeckIndex ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------

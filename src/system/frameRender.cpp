@@ -107,12 +107,19 @@ void sys_renderFrame (double interpolation)
 
 			renderTestDroid();
 
+			if (d_showInfluenceMap)
+				gam_debugInfluenceMap();
+
+			if (d_showNodeArrays)
+				gam_AStarDebugNodes(testDroid.aStarIndex);
+
 			if (d_showPhysics)
 				sys_getPhysicsWorld ()->DebugDraw();
 
-			gam_AStarDebugWayPoints (testDroid.aStarIndex);
-			break;
+			if (d_showAStarPath)
+				gam_AStarDebugWayPoints (testDroid.aStarIndex);
 
+			break;
 	}
 
 	if (doScreenEffect)

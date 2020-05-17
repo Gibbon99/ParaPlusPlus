@@ -1,4 +1,5 @@
 #include <queue>
+#include <game/pathFind.h>
 #include "system/physics.h"
 #include "system/util.h"
 #include "classes/paraEvent.h"
@@ -250,6 +251,9 @@ void con_initConsole ()
 	console.addVariable ("quitLoop", VAR_TYPE_BOOL, &quitLoop);
 	console.addVariable ("d_showPhysics", VAR_TYPE_BOOL, &d_showPhysics);
 	console.addVariable ("d_doWallCollisions", VAR_TYPE_BOOL, &doWallCollisions);
+	console.addVariable ("d_showInfluenceMap", VAR_TYPE_BOOL, &d_showInfluenceMap);
+	console.addVariable ("d_showNodeArrays", VAR_TYPE_BOOL, &d_showNodeArrays);
+	console.addVariable ("d_showAStarPath", VAR_TYPE_BOOL, &d_showAStarPath);
 
 	console.addVariable ("height", VAR_TYPE_INT, &testVar);
 	console.addVariable ("testString", VAR_TYPE_STRING, &testVarString);

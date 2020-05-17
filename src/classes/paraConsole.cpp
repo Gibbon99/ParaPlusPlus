@@ -56,8 +56,8 @@ void paraConsole::addTempLine(const _consoleLine &newTempLine)
 
 	if (paraConsole::consoleText.size() < CONSOLE_MEM_SIZE)
 		paraConsole::consoleText.push_back(newTempLine);
-	else
-		std::cout << "Error: Exceeded memory buffer for console text." << std::endl;
+//	else
+//		std::cout << "Error: Exceeded memory buffer for console text." << std::endl;
 }
 
 void paraConsole::add(float linePosX, int red, int green, int blue, int alpha, const std::string &newLine)

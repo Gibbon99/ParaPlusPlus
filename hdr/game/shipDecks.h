@@ -128,7 +128,7 @@ struct _deckStruct
 	int                       deckNumber;         // Use this to reference by a number
 	int                       numEnemiesAlive;
 	std::vector<_liftBasic>   lifts;
-	paraLift                    liftClass;
+	paraLift                  liftClass;
 //	std::vector<_droid>       droid;
 
 	std::vector<_basicHealing> healing;
@@ -141,6 +141,7 @@ extern SDL_Rect                                     viewportRect;
 extern int                                          tileSize;
 extern std::unordered_map<std::string, _deckStruct> shipdecks;
 extern int                                          currentDeckNumber;
+extern bool                                         d_showInfluenceMap;
 
 // Populate the shipdeck structure from a file in memory
 void gam_loadShipDeck (const std::string &fileName);
@@ -163,4 +164,16 @@ PARA_Texture *gam_getPlayfieldTexture ();
 std::string gam_returnLevelNameFromDeck (int deckNumber);
 
 // Return the deck index number based on current deck name
-int gam_getCurrentDeckIndex();
+int gam_getCurrentDeckIndex ();
+
+// Create the influence map to be same size as deck dimensions - call on deck change
+void gam_createInfluenceMap ();
+
+// Change player pixel coords into tile coords
+void gam_populateInfluenceMap (b2Vec2 playerPositionInPixels);
+
+// Get the value from the influence map
+int gam_getInfluenceMapValue (int tileIndex);
+
+// Debug influence map
+void gam_debugInfluenceMap ();

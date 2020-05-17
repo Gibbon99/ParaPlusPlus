@@ -42,6 +42,8 @@ struct _nodeList
 
 extern std::vector<_nodeList> path;
 extern int numAStarPaths;
+extern bool d_showNodeArrays;
+extern bool d_showAStarPath;
 
 // Start a new path
 int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int whichDroid, std::string whichLevel);
@@ -51,3 +53,6 @@ void gam_AStarDebugWayPoints (int whichPath);
 
 // A thread to run the aStar searching function
 void gam_AStarSearchThread (int whichPathArg);
+
+// Show the open and closed nodes
+void gam_AStarDebugNodes(int whichPath);
