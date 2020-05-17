@@ -151,6 +151,6 @@ void gui_renderButton (int whichButton, bool hasFocus)
 		log_addEvent (sys_getString ("%s", "Unable to create temp texture when rendering console."));
 		return;
 	}
-	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
+	SDL_RenderCopyF (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
 	SDL_DestroyTexture (tempTexture);
 }

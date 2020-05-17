@@ -513,13 +513,14 @@ void gam_renderVisibleScreen (double interpolation)
 	renderPosition.x += playerDroid.previousWorldPosInPixels.x;
 	renderPosition.y += playerDroid.previousWorldPosInPixels.y;
 
-	sourceRect.x = static_cast<int>(renderPosition.x) - (gameWinWidth / 2);
-	sourceRect.y = static_cast<int>(renderPosition.y) - (gameWinHeight / 2);
+	sourceRect.x = renderPosition.x - (gameWinWidth / 2);
+	sourceRect.y = renderPosition.y - (gameWinHeight / 2);
 	sourceRect.w = gameWinWidth;
 	sourceRect.h = gameWinHeight;
 
 	renderer.setCurrentBackingTexture (GAME_BACKING_TEXTURE);
 	SDL_RenderSetLogicalSize (renderer.renderer, gameWinWidth, gameWinHeight);
-
-	SDL_RenderCopy (renderer.renderer, playfieldTexture, &sourceRect, nullptr);
+	//
+	// Rendercopy Float still uses Integer values for source...
+	SDL_RenderCopyF (renderer.renderer, playfieldTexture, &sourceRect, nullptr);
 }

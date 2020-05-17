@@ -223,12 +223,12 @@ void paraFont::render(SDL_Renderer *whichRenderer, double posX, double posY, int
 
 	if (currentMode == MODE_GAME)   // Scale font down to low res gameplay resolution
 	{
-		pos.y *= (static_cast<double>(gameWinHeight) / hiresVirtualHeight);
-		pos.x *= (static_cast<double>(gameWinWidth) / hiresVirtualWidth);
-		pos.h = tempSurface->h * (static_cast<double>(gameWinHeight) / hiresVirtualHeight);
-		pos.w = tempSurface->w * (static_cast<double>(gameWinWidth) / hiresVirtualWidth);
+		pos.y *= (static_cast<float>(gameWinHeight) / hiresVirtualHeight);
+		pos.x *= (static_cast<float>(gameWinWidth) / hiresVirtualWidth);
+		pos.h = tempSurface->h * (static_cast<float>(gameWinHeight) / hiresVirtualHeight);
+		pos.w = tempSurface->w * (static_cast<float>(gameWinWidth) / hiresVirtualWidth);
 	}
 
-	SDL_RenderCopy (whichRenderer, tempTexture, nullptr, &pos);
+	SDL_RenderCopyF (whichRenderer, tempTexture, nullptr, &pos);
 	SDL_DestroyTexture (tempTexture);
 }

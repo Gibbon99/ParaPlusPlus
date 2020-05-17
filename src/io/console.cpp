@@ -146,7 +146,7 @@ void con_renderConsole ()
 			return;
 		}
 
-		SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
+		SDL_RenderCopyF (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
 
 		SDL_DestroyTexture (tempTexture);
 
@@ -173,7 +173,7 @@ void con_renderConsole ()
 		log_addEvent (sys_getString ("%s", "Unable to create temp texture when rendering console."));
 		return;
 	}
-	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
+	SDL_RenderCopyF (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
 	SDL_DestroyTexture (tempTexture);
 
 	console.isDrawing = false;
@@ -195,7 +195,7 @@ void con_renderConsole ()
 		log_addEvent (sys_getString ("%s", "Unable to create temp texture when rendering console."));
 		return;
 	}
-	SDL_RenderCopy (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
+	SDL_RenderCopyF (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
 	SDL_DestroyTexture (tempTexture);
 }
 
