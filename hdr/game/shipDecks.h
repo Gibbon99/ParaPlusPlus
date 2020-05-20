@@ -4,6 +4,7 @@
 #include <box2d/b2_collision.h>
 #include <classes/paraLift.h>
 #include "main.h"
+#include "droids.h"
 
 #define MAP_VERSION                116
 
@@ -111,37 +112,37 @@ struct _basicHealing
 
 struct _deckStruct
 {
-	int                       mapVersion;
-	int                       numLineSegments;
-	int                       numWaypoints;
-	int                       numDroids;
-	int                       numLifts;
-	paraVec2d                 levelDimensions;
-	std::vector<_lineSegment> lineSegments; // Need to be floats for load ??
-	std::vector<paraVec2d>    wayPoints;
-	std::vector<int>          tiles;
-	std::vector<int>          droidTypes;
-	char                      levelName[20];
+	int                        mapVersion;
+	int                        numLineSegments;
+	int                        numWaypoints;
+	int                        numDroids;
+	int                        numLifts;
+	paraVec2d                  levelDimensions;
+	std::vector<_lineSegment>  lineSegments; // Need to be floats for load ??
+	std::vector<paraVec2d>     wayPoints;
+	std::vector<int>           tiles;
+	std::vector<int>           droidTypes;
+	char                       levelName[20];
 	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	// Above here is loaded from file
 	//
-	int                       deckNumber;         // Use this to reference by a number
-	int                       numEnemiesAlive;
-	std::vector<_liftBasic>   lifts;
-	paraLift                  liftClass;
-//	std::vector<_droid>       droid;
-
+	int                        deckNumber;         // Use this to reference by a number
+	int                        numEnemiesAlive;
+	std::vector<_liftBasic>    lifts;
+	paraLift                   liftClass;
 	std::vector<_basicHealing> healing;
+	std::vector<droidClass>    droid;
 
 	bool wallPhysicsCreated  = false;
 	bool droidPhysicsCreated = false;
 };
 
-extern SDL_Rect                                     viewportRect;
-extern int                                          tileSize;
-extern std::unordered_map<std::string, _deckStruct> shipdecks;
-extern int                                          currentDeckNumber;
-extern bool                                         d_showInfluenceMap;
+extern SDL_Rect                                               viewportRect;
+extern int                                                    tileSize;
+extern std::unordered_map<std::string, _deckStruct>           shipdecks;
+extern int                                                    currentDeckNumber;
+extern bool                                                   d_showInfluenceMap;
+extern std::unordered_map<std::string, _deckStruct>::iterator g_shipDeckItr;
 
 // Populate the shipdeck structure from a file in memory
 void gam_loadShipDeck (const std::string &fileName);
@@ -177,3 +178,6 @@ int gam_getInfluenceMapValue (int tileIndex);
 
 // Debug influence map
 void gam_debugInfluenceMap ();
+
+// Render the waypoint segments
+void gam_showWayPoints (const std::string levelName);

@@ -79,8 +79,6 @@ int main (int argc, char *argv[])
 			maxNumUpdateLoops++;
 		}
 		percentIntoNextFrame = timeLag / msPerUpdate;
-		//
-		// Clamp to upper and lower limits - less then 0.5 to stop rounding up when rendering with an INT
 		percentIntoNextFrame = percentIntoNextFrame > 1.0 ? 1.0 : percentIntoNextFrame;
 		percentIntoNextFrame = percentIntoNextFrame < 0.0 ? 0.0 : percentIntoNextFrame;
 

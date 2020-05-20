@@ -179,6 +179,7 @@ void sys_gameTickRun ()
 			sys_processPhysics (TICKS_PER_SECOND);
 			gam_animateHealing (gam_getCurrentDeckName ());
 			playerDroid.sprite.animate ();
+			gam_animateDroids(gam_getCurrentDeckName());
 			gam_doorCheckTriggerAreas ();
 			gam_doorProcessActions ();
 

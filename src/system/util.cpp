@@ -1,6 +1,7 @@
 #include <game/player.h>
 #include <game/droids.h>
 #include "system/util.h"
+#include "game/game.h"
 
 struct paraMemoryMap
 {
@@ -119,9 +120,7 @@ void sys_setNewMode (int newMode, bool doFade)
 		case MODE_PRE_GAME:
 			gui.setRepeatOff (false);
 			currentMode = newMode;
-
-			createTestDroid();
-
+			gam_startNewGame();
 			break;
 
 		case MODE_GAME:

@@ -9,6 +9,7 @@ class droidClass
 {
 public:
 
+	int           index;          // Used in physics callback
 	int           currentMode;                // What is the droid doing; transfer, healing, terminal etc
 	int           droidType;
 	double        currentSpeed;

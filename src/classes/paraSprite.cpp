@@ -6,7 +6,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return width of a frame
-int paraSprite::getFrameWidth()
+int paraSprite::getFrameWidth ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return frameWidth;
@@ -15,7 +15,7 @@ int paraSprite::getFrameWidth()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return height of a frame
-int paraSprite::getFrameHeight()
+int paraSprite::getFrameHeight ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return frameHeight;
@@ -24,14 +24,14 @@ int paraSprite::getFrameHeight()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a sprite
-void paraSprite::create(std::string setTextureKeyname, int setNumFrames, double setAnimateSpeed)
+void paraSprite::create (std::string setTextureKeyname, int setNumFrames, double setAnimateSpeed)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	numFrames = setNumFrames;
-	animateSpeed = setAnimateSpeed;
-	currentFrame = 0;
+	numFrames      = setNumFrames;
+	animateSpeed   = setAnimateSpeed;
+	currentFrame   = 0;
 	animateCounter = 0;
-	textureKeyName = std::move(setTextureKeyname);
+	textureKeyName = std::move (setTextureKeyname);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -40,29 +40,37 @@ void paraSprite::create(std::string setTextureKeyname, int setNumFrames, double 
 void paraSprite::render (double posX, double posY, double scale)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_Rect    srcRect;
-	SDL_Rect    destRect;
+	SDL_Rect  srcRect;
+	SDL_FRect destRect;
+	static std::map<std::string, paraTexture>::iterator textureItr;
 
-	frameWidth = textures.at(textureKeyName).getWidth() / numFrames;
-	frameHeight = textures.at(textureKeyName).getHeight();
+	if (nullptr == texturePtr)
+	{
+		texturePtr = textures.at(textureKeyName).getTexture();
+		textureItr = textures.find(textureKeyName);
+		frameWidth  = textureItr->second.getWidth () / numFrames;
+		frameHeight = textureItr->second.getHeight ();
+	}
 
-	destRect.x = static_cast<int>(posX) - (frameWidth / 2);
-	destRect.y = static_cast<int>(posY) - (frameHeight / 2);
-	destRect.w = static_cast<int>(frameWidth * scale);
-	destRect.h = static_cast<int>(textures.at(textureKeyName).getHeight() * scale);
+	destRect.x = posX - (frameWidth / 2);
+	destRect.y = posY - (frameHeight / 2);
+	destRect.w = frameWidth * scale;
+	destRect.h = frameHeight * scale;
 
 	srcRect.x = frameWidth * currentFrame;
 	srcRect.y = 0;
 	srcRect.w = frameWidth;
-	srcRect.h = textures.at(textureKeyName).getHeight();
+	srcRect.h = frameHeight;
 
-	SDL_RenderCopy(renderer.renderer, textures.at(textureKeyName).getTexture(), &srcRect, &destRect);
+	SDL_SetTextureColorMod (textures.at (textureKeyName).getTexture (), tintColor.r, tintColor.g, tintColor.b);
+
+	SDL_RenderCopyF (renderer.renderer, texturePtr, &srcRect, &destRect);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Animate the sprite
-void paraSprite::animate()
+void paraSprite::animate ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	animateCounter += 1.0 * animateSpeed;
@@ -78,7 +86,7 @@ void paraSprite::animate()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the animate speed
-void paraSprite::setAnimateSpeed(double newSpeed)
+void paraSprite::setAnimateSpeed (double newSpeed)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	animateSpeed = newSpeed;
@@ -87,8 +95,12 @@ void paraSprite::setAnimateSpeed(double newSpeed)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the tint color to render the sprite in
-void paraSprite::setTintColor(Uint8 r, Uint8 g, Uint8 b)
+void paraSprite::setTintColor (Uint8 r, Uint8 g, Uint8 b)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_SetTextureColorMod(textures.at(paraSprite::textureKeyName).getTexture(), r, g, b);
+	tintColor.r = r;
+	tintColor.g = g;
+	tintColor.b = b;
+
+	//SDL_SetTextureColorMod (textures.at (paraSprite::textureKeyName).getTexture (), r, g, b);
 }

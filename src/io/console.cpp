@@ -179,24 +179,6 @@ void con_renderConsole ()
 	console.isDrawing = false;
 
 	PARA_UnlockMutex (consoleMutex);
-
-	//
-	// Show performance stats
-	fontClass.setColor (255, 0, 255, 255);
-	tempSurface = fontClass.write (1, 10, sys_getString ("intoNextFrame : %f Think : %i FPS : %i", percentIntoNextFrame, thinkFPSPrint, fpsPrint));
-	if (nullptr == tempSurface)
-	{
-		log_addEvent (sys_getString ("%s", "Unable to create temp surface when rendering console."));
-		return;
-	}
-	tempTexture = SDL_CreateTextureFromSurface (renderer.renderer, tempSurface);
-	if (nullptr == tempTexture)
-	{
-		log_addEvent (sys_getString ("%s", "Unable to create temp texture when rendering console."));
-		return;
-	}
-	SDL_RenderCopyF (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
-	SDL_DestroyTexture (tempTexture);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

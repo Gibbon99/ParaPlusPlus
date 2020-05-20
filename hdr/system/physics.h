@@ -57,3 +57,6 @@ b2World *sys_getPhysicsWorld();
 void sys_setupSolidWalls (const std::string levelName);
 
 void sys_freePhysicsEngine ();
+
+// Create the physics bodies and shapes for the enemy droids
+void sys_setupEnemyPhysics (std::string levelName);

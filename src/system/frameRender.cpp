@@ -6,6 +6,8 @@
 #include <gui/guiDeckView.h>
 #include <game/pathFind.h>
 #include <game/droids.h>
+#include <system/util.h>
+#include <io/logFile.h>
 #include "gui/guiRender.h"
 #include "system/frameRender.h"
 #include "io/console.h"
@@ -101,11 +103,14 @@ void sys_renderFrame (double interpolation)
 			gam_renderHealingFrames (gam_getCurrentDeckName());
 			gam_renderDoorFrames ();
 
+			playerDroid.sprite.setTintColor(255,255,255);
 			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2,  1.0);
 
-			testCircle.sprite.render(testCircle.worldPosInPixels.x, testCircle.worldPosInPixels.y, 0.5);
+//			testCircle.sprite.render(testCircle.worldPosInPixels.x, testCircle.worldPosInPixels.y, 0.5);
 
-			renderTestDroid();
+			gam_renderDroids(gam_getCurrentDeckName());
+
+			gam_showWayPoints (gam_getCurrentDeckName());
 
 			if (d_showInfluenceMap)
 				gam_debugInfluenceMap();
@@ -127,6 +132,9 @@ void sys_renderFrame (double interpolation)
 
 	if ((currentMode != MODE_CONSOLE_EDIT) && (currentMode != MODE_CONSOLE_INIT))
 		gam_renderHud ();
+
+	fontClass.use("guiFont");
+	fontClass.render(renderer.renderer, 1, 10, 0, 0, 0, 255, sys_getString ("Think : %i FPS : %i intoNextFrame : %f ", thinkFPSPrint, fpsPrint, percentIntoNextFrame));
 
 	sys_completeFrame ();
 }

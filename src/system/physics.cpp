@@ -1,5 +1,6 @@
 #include <game/player.h>
 #include <game/shipDecks.h>
+#include <system/util.h>
 #include "system/physics.h"
 
 struct __physicWall
@@ -45,6 +46,14 @@ void sys_processPhysics (double tickTime)
 	playerDroid.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);           // Change to pixels
 	playerDroid.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
 
+	for (auto &droidItr : shipdecks.at(gam_getCurrentDeckName()).droid)
+	{
+		droidItr.previousWorldPosInPixels = droidItr.worldPosInPixels;
+		droidItr.worldPosInPixels = droidItr.body->GetPosition();       // In Meters
+		droidItr.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);  // Change to pixels for rendering
+		droidItr.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
+		droidItr.body->SetLinearVelocity({0, 0});
+	}
 //	gam_processPhysicActions ();
 	playerDroid.body->SetLinearVelocity ({0, 0});
 }
@@ -216,4 +225,45 @@ void sys_freePhysicsEngine ()
 //	bul_clearAllBullets ();
 //	gam_clearAllDoors ();
 	delete physicsWorld;
+}
+
+//-------------------------------------------------------------------
+//
+// Create the physics bodies and shapes for the enemy droids
+void sys_setupEnemyPhysics (std::string levelName)
+//-------------------------------------------------------------------
+{
+	int droidPhysicsIndex = 0;
+
+	if (!physicsStarted)
+		sys_shutdownWithError (sys_getString ("Attempting to setup droid physics with no engine."));
+
+	for (auto &droidItr : shipdecks.at(levelName).droid)
+	{
+		droidItr.index        = droidPhysicsIndex;
+		if (droidItr.currentMode == DROID_MODE_NORMAL)
+		{
+			droidItr.bodyDef.type = b2_dynamicBody;
+			droidItr.bodyDef.position.Set (droidItr.worldPosInPixels.x / pixelsPerMeter, droidItr.worldPosInPixels.y / pixelsPerMeter);
+			droidItr.bodyDef.angle = 0;
+			droidItr.body          = physicsWorld->CreateBody (&droidItr.bodyDef);
+
+			droidItr.userData                 = new _userData;
+			droidItr.userData->userType       = PHYSIC_TYPE_ENEMY;
+			droidItr.userData->dataValue      = droidPhysicsIndex;      // TODO - check this matches the actual index of the droid
+			droidItr.userData->wallIndexValue = -1;
+			droidItr.body->SetUserData (droidItr.userData);
+
+			droidItr.shape.m_radius = (float) (24 * 0.5f) / pixelsPerMeter;
+			droidItr.shape.m_p.Set (0, 0);
+
+			droidItr.fixtureDef.shape               = &droidItr.shape;
+			droidItr.fixtureDef.density             = 1;
+			droidItr.fixtureDef.friction            = 0.3f;
+			droidItr.fixtureDef.restitution         = 1.0f;
+			droidItr.fixtureDef.filter.categoryBits = PHYSIC_TYPE_ENEMY;
+			droidItr.fixtureDef.filter.maskBits     = PHYSIC_TYPE_WALL | PHYSIC_TYPE_BULLET_PLAYER | PHYSIC_TYPE_BULLET_ENEMY | PHYSIC_TYPE_PLAYER | PHYSIC_TYPE_ENEMY | PHYSIC_TYPE_DOOR_CLOSED;
+			droidItr.body->CreateFixture (&droidItr.fixtureDef);
+		}
+	}
 }

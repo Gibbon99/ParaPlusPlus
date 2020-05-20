@@ -9,9 +9,9 @@
 droidClass playerDroid;
 double     playerFriction;      // From script
 
-droidClass testCircle;
+droidClass    testCircle;
 static double angleCounter = 1.0;
-int radius = 40;
+int           radius       = 40;
 
 //-----------------------------------------------------------------------------------------------------------------
 //

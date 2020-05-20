@@ -8,6 +8,7 @@
 #include "game/shipDecks.h"
 #include "game/doors.h"
 #include "game/terminal.h"
+#include "game/game.h"
 
 int                                          tileSize;
 int                                          numTileAcrossInTexture = 8;
@@ -20,6 +21,8 @@ SDL_Rect                                     viewportRect;
 int                                          currentDeckNumber;
 std::vector<int>                             influenceMap;
 bool                                         d_showInfluenceMap = false;
+
+std::unordered_map<std::string, _deckStruct>::iterator  g_shipDeckItr;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -322,8 +325,8 @@ void gam_loadShipDeck (const std::string &fileName)
 
 		paraVec2d tempVec2{};
 
-		tempVec2.x = tempWaypoint.x;
-		tempVec2.y = tempWaypoint.y;
+		tempVec2.x = tempWaypoint.x - (tileSize / 2);
+		tempVec2.y = tempWaypoint.y - (tileSize / 2);
 
 		tempLevel.wayPoints.push_back (tempVec2);
 	}
@@ -373,6 +376,8 @@ void gam_loadShipDeck (const std::string &fileName)
 	gam_addPaddingToLevel (tempLevel.levelName);
 
 	gam_findHealingTiles (tempLevel.levelName);
+
+	gam_initDroids (tempLevel.levelName);
 
 	if (shipdecks.size () == 20)
 		gam_setupLifts ();
@@ -456,7 +461,7 @@ std::string gam_returnLevelNameFromDeck (int deckNumber)
 //----------------------------------------------------------------------------------------------------------------------
 {
 //
-// Using   for (auto levelItr : shipLevel)
+// Using   for (auto levelItr : shipdecks)
 // Results in massive FPS drop
 //
 	for (auto const &levelItr : shipdecks)
@@ -475,6 +480,10 @@ std::string gam_returnLevelNameFromDeck (int deckNumber)
 void gam_changeToDeck (const std::string &deckName, int whichLift)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	//
+	// Clear out droid physics before changing level name
+	gam_clearDroidPhysics(gam_getCurrentDeckName());
+
 	currentDeckName = deckName;
 	gam_createDeckTexture (deckName);
 
@@ -490,6 +499,7 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	gam_createInfluenceMap ();
 
 	currentDeckNumber = gam_getCurrentDeckIndex ();
+	g_shipDeckItr = shipdecks.find(currentDeckName);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -523,4 +533,59 @@ void gam_renderVisibleScreen (double interpolation)
 	//
 	// Rendercopy Float still uses Integer values for source...
 	SDL_RenderCopyF (renderer.renderer, playfieldTexture, &sourceRect, nullptr);
+}
+
+
+//--------------------------------------------------------------------------
+//
+// Render the waypoint segments
+void gam_showWayPoints (const std::string levelName)
+//--------------------------------------------------------------------------
+{
+	int          indexCount;
+	b2Vec2       lineStart;
+	b2Vec2       lineFinish;
+	_lineSegment tempLine;
+	paraVec2d       wallStartDraw, wallFinishDraw;
+
+	indexCount = 0;
+
+	for (auto it: shipdecks.at (levelName).wayPoints)
+	{
+		tempLine.start.x = shipdecks.at (levelName).wayPoints[indexCount].x;
+		tempLine.start.y = shipdecks.at (levelName).wayPoints[indexCount].y;
+
+		if (indexCount + 1 < shipdecks.at (levelName).numWaypoints)
+		{
+			tempLine.finish.x = shipdecks.at (levelName).wayPoints[indexCount + 1].x;
+			tempLine.finish.y = shipdecks.at (levelName).wayPoints[indexCount + 1].y;
+		}
+		else
+		{
+			tempLine.finish.x = shipdecks.at (levelName).wayPoints[0].x;
+			tempLine.finish.y = shipdecks.at (levelName).wayPoints[0].y;
+		}
+
+		lineStart.x = static_cast<float>(tempLine.start.x);
+		lineStart.y = static_cast<float>(tempLine.start.y);
+
+		lineFinish.x = static_cast<float>(tempLine.finish.x);
+		lineFinish.y = static_cast<float>(tempLine.finish.y);
+
+		wallStartDraw.x = lineStart.x;
+		wallStartDraw.y = lineStart.y;
+		wallFinishDraw.x = lineFinish.x;
+		wallFinishDraw.y = lineFinish.y;
+
+		wallStartDraw  = sys_worldToScreen (wallStartDraw, 50);
+		wallFinishDraw = sys_worldToScreen (wallFinishDraw, 50);
+
+		thickLineRGBA (renderer.renderer, wallStartDraw.x, wallStartDraw.y, wallFinishDraw.x, wallFinishDraw.y, 3, 0, 0, 200, 255);
+
+		roundedRectangleRGBA (renderer.renderer, wallStartDraw.x - 8, wallStartDraw.y - 8, wallStartDraw.x + 8, wallStartDraw.y + 8, 2, 0, 200, 0, 255);
+
+		roundedRectangleRGBA (renderer.renderer, wallFinishDraw.x - 4, wallFinishDraw.y - 4, wallFinishDraw.x + 4, wallFinishDraw.y + 4, 2, 0, 200, 0, 255);
+
+		indexCount++;
+	}
 }

@@ -64,7 +64,7 @@ void gam_processGameEventQueue ()
 	{
 
 #ifdef MY_DEBUG
-		if (gameEvents.size() > 35)
+		if (gameEvents.size() > 60)
 			sys_shutdownWithError(sys_getString("Too many events on the game event queue [ %i ].", gameEvents.size()));
 #endif
 		if (nullptr == gameMutex)

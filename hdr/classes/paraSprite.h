@@ -31,6 +31,7 @@ private:
 	double      animateSpeed   = -1.0;
 	double      animateCounter = -1.0;
 	std::string textureKeyName = "";
+	PARA_Texture    *texturePtr = nullptr;
 	PARA_Color tintColor;
 };
 
