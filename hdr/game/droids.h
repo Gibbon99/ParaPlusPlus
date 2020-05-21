@@ -20,3 +20,6 @@ void createTestDroid();
 
 // Render the test droid
 void renderTestDroid();
+
+// Process the AI for each droid
+void gam_processAI(std::string levelName);

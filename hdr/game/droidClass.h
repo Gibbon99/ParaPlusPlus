@@ -3,6 +3,7 @@
 
 #include <box2d/b2_body.h>
 #include <box2d/box2d.h>
+#include <classes/paraAI.h>
 #include "system/physics.h"
 
 class droidClass
@@ -13,8 +14,8 @@ public:
 	int           currentMode;                // What is the droid doing; transfer, healing, terminal etc
 	int           droidType;
 	double        currentSpeed;
-	double        acceleration;
-	double        maxSpeed;
+//	double        acceleration;
+//	double        maxSpeed;
 	bool          overTerminalTile;
 	bool          inTransferMode;
 	bool          overLiftTile;
@@ -34,6 +35,7 @@ public:
 	b2Vec2     destDirection;              // Which way is the droid heading
 	b2Vec2     velocity;
 	paraSprite sprite;
+	paraAI     ai;
 	//
 	// Enemy droid fields
 	int        aStarIndex;

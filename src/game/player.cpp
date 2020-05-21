@@ -43,8 +43,8 @@ void gam_setupPlayerDroid ()
 	playerDroid.droidType = 0;
 	playerDroid.droidName = "001";
 	playerDroid.sprite.create (playerDroid.droidName, 9, 0.3);
-	playerDroid.acceleration = dataBaseEntry[0].accelerate;
-	playerDroid.maxSpeed     = dataBaseEntry[0].maxSpeed;
+	playerDroid.ai.setAcceleration(dataBaseEntry[0].accelerate);
+	playerDroid.ai.setMaxSpeed(dataBaseEntry[0].maxSpeed);
 
 	testCircle.droidType = 0;
 	testCircle.droidName = "001";
@@ -63,37 +63,37 @@ void gam_processPlayerMovement ()
 {
 	if (gui.keyDown (KEY_LEFT))
 	{
-		playerDroid.velocity.x -= playerDroid.acceleration;
-		if (playerDroid.velocity.x < -playerDroid.maxSpeed)
+		playerDroid.velocity.x -= playerDroid.ai.getAcceleration();
+		if (playerDroid.velocity.x < -playerDroid.ai.getMaxSpeed())
 		{
-			playerDroid.velocity.x = -playerDroid.maxSpeed;
+			playerDroid.velocity.x = -playerDroid.ai.getMaxSpeed();
 		}
 	}
 
 	else if (gui.keyDown (KEY_RIGHT))
 	{
-		playerDroid.velocity.x += playerDroid.acceleration;
-		if (playerDroid.velocity.x > playerDroid.maxSpeed)
+		playerDroid.velocity.x += playerDroid.ai.getAcceleration();
+		if (playerDroid.velocity.x > playerDroid.ai.getMaxSpeed())
 		{
-			playerDroid.velocity.x = playerDroid.maxSpeed;
+			playerDroid.velocity.x = playerDroid.ai.getMaxSpeed();
 		}
 	}
 
 	if (gui.keyDown (KEY_UP))
 	{
-		playerDroid.velocity.y -= playerDroid.acceleration;
-		if (playerDroid.velocity.y < -playerDroid.maxSpeed)
+		playerDroid.velocity.y -= playerDroid.ai.getAcceleration();
+		if (playerDroid.velocity.y < -playerDroid.ai.getMaxSpeed())
 		{
-			playerDroid.velocity.y = -playerDroid.maxSpeed;
+			playerDroid.velocity.y = -playerDroid.ai.getMaxSpeed();
 		}
 	}
 
 	else if (gui.keyDown (KEY_DOWN))
 	{
-		playerDroid.velocity.y += playerDroid.acceleration;
-		if (playerDroid.velocity.y > playerDroid.maxSpeed)
+		playerDroid.velocity.y += playerDroid.ai.getAcceleration();
+		if (playerDroid.velocity.y > playerDroid.ai.getMaxSpeed())
 		{
-			playerDroid.velocity.y = playerDroid.maxSpeed;
+			playerDroid.velocity.y = playerDroid.ai.getMaxSpeed();
 		}
 	}
 

@@ -185,6 +185,8 @@ void sys_gameTickRun ()
 
 			gam_populateInfluenceMap(playerDroid.worldPosInPixels);
 
+			gam_processAI(gam_getCurrentDeckName());
+
 			gam_moveTestCircle ();
 			if (path.size() != 0)
 			{

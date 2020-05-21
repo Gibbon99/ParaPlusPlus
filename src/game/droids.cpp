@@ -91,7 +91,7 @@ std::string gam_getDroidName (int droidType)
 void gam_initDroids (std::string levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
-	int        wayPointStartIndex   = 0;
+	int        wayPointStartIndex = 0;
 	droidClass tempDroid;
 
 	if (!shipdecks.at (levelName).droid.empty ())
@@ -104,14 +104,16 @@ void gam_initDroids (std::string levelName)
 	for (auto droidItr : shipdecks.at (levelName).droidTypes)
 	{
 		tempDroid.droidType                       = droidItr;
-		tempDroid.worldPosInPixels.x              = shipdecks.at (levelName).wayPoints[wayPointStartIndex++].x;
+		tempDroid.worldPosInPixels.x              = shipdecks.at (levelName).wayPoints[wayPointStartIndex].x;
 		tempDroid.worldPosInPixels.y              = shipdecks.at (levelName).wayPoints[wayPointStartIndex++].y;
+		tempDroid.ai.setWaypointIndex(wayPointStartIndex);
 		if (wayPointStartIndex > shipdecks.at (levelName).numWaypoints)
 			shipdecks.at (levelName).numWaypoints = 0;
 
-		tempDroid.droidName    = gam_getDroidName (tempDroid.droidType);
-		tempDroid.acceleration = dataBaseEntry[tempDroid.droidType].accelerate;
-		tempDroid.maxSpeed     = dataBaseEntry[tempDroid.droidType].maxSpeed;
+		tempDroid.droidName = gam_getDroidName (tempDroid.droidType);
+
+		tempDroid.ai.setAcceleration (dataBaseEntry[tempDroid.droidType].accelerate);
+		tempDroid.ai.setMaxSpeed (dataBaseEntry[tempDroid.droidType].maxSpeed);
 
 		tempDroid.currentMode = DROID_MODE_NORMAL;
 
@@ -128,14 +130,19 @@ void gam_renderDroids (std::string levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
 	paraVec2d droidScreenPosition{};
+	b2Vec2 worldPosInMeters;
 
 	for (auto droidItr : g_shipDeckItr->second.droid)
 	{
+		worldPosInMeters = droidItr.body->GetPosition();
+		droidItr.worldPosInPixels.x = worldPosInMeters.x * pixelsPerMeter;
+		droidItr.worldPosInPixels.y = worldPosInMeters.y * pixelsPerMeter;
+
 		droidScreenPosition.x = droidItr.worldPosInPixels.x;
 		droidScreenPosition.y = droidItr.worldPosInPixels.y;
 
 		droidScreenPosition = sys_worldToScreen (droidScreenPosition, 24);
-		droidItr.sprite.setTintColor(0, 0, 0);
+		droidItr.sprite.setTintColor (0, 0, 0);
 		droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0);
 	}
 }
@@ -149,5 +156,18 @@ void gam_animateDroids (std::string levelName)
 	for (auto &droidItr : g_shipDeckItr->second.droid)
 	{
 		droidItr.sprite.animate ();
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
+// Process the AI for each droid
+void gam_processAI(std::string levelName)
+//-------------------------------------------------------------------------------------------------------------
+{
+	for (auto &droidItr : g_shipDeckItr->second.droid)
+	{
+		droidItr.ai.process(droidItr.body->GetPosition());
+		droidItr.body->ApplyForce(droidItr.ai.getVelocity(), droidItr.body->GetWorldCenter(), true);
 	}
 }

@@ -37,27 +37,26 @@ void gam_doorCheckTriggerAreas ()
 			doorItr.inUse = false;    // this will reset all the doors the player is not in
 		}
 	}
-	/*
+
 	//
 	// now check all the enemy sprites against the doors
 	//
 	for (auto &doorItr : doorTriggers)
 	{
-		for (j = 0; j != shipLevel[lvl_getCurrentLevelName ()].numDroids; j++)
+		for (j = 0; j != shipdecks[gam_getCurrentDeckName()].numDroids; j++)
 		{
-			if (shipLevel.at (lvl_getCurrentLevelName ()).droid[j].currentMode == DROID_MODE_NORMAL)
+			if (shipdecks.at (gam_getCurrentDeckName ()).droid[j].currentMode == DROID_MODE_NORMAL)
 			{
-				if ((shipLevel[lvl_getCurrentLevelName ()].droid[j].worldPos.x + (SPRITE_SIZE / 2) > doorItr.topLeft.x) &&
-				    (shipLevel[lvl_getCurrentLevelName ()].droid[j].worldPos.y + (SPRITE_SIZE / 2) > doorItr.topLeft.y) &&
-				    (shipLevel[lvl_getCurrentLevelName ()].droid[j].worldPos.x + (SPRITE_SIZE / 2) < doorItr.botRight.x) &&
-				    (shipLevel[lvl_getCurrentLevelName ()].droid[j].worldPos.y + (SPRITE_SIZE / 2) < doorItr.botRight.y))
+				if ((shipdecks[gam_getCurrentDeckName ()].droid[j].worldPosInPixels.x + (24 / 2) > doorItr.topLeft.x) &&
+				    (shipdecks[gam_getCurrentDeckName ()].droid[j].worldPosInPixels.y + (24 / 2) > doorItr.topLeft.y) &&
+				    (shipdecks[gam_getCurrentDeckName ()].droid[j].worldPosInPixels.x + (24 / 2) < doorItr.botRight.x) &&
+				    (shipdecks[gam_getCurrentDeckName ()].droid[j].worldPosInPixels.y + (24 / 2) < doorItr.botRight.y))
 				{
 					doorItr.inUse = true;
 				}
 			}
 		}
 	}
-	*/
 }
 
 
