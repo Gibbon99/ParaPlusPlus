@@ -210,6 +210,8 @@ bool io_getDBDroidInfo (std::string fileName)
 	tempDataBaseEntry.notes       = gui_getString (tempDataBaseEntry.dbImageFileName);
 
 	dataBaseEntry.push_back (tempDataBaseEntry);
+
+	return true;
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------

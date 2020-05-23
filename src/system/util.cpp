@@ -402,5 +402,5 @@ b2Vec2 sys_convertToTiles(b2Vec2 convertFrom)
 int sys_convertToInt(std::string convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	strtol(convertFrom.c_str(), nullptr, 10);
+	return static_cast<int>(strtol(convertFrom.c_str(), nullptr, 10));
 }

@@ -179,9 +179,11 @@ static int gam_processAStarWithThread (void *ptr)
 	int testIndex;
 
 	pathIndex = reinterpret_cast<int>((int *) ptr);
-	testIndex = reinterpret_cast<int>(pathIndex);
+	testIndex = pathIndex;
 
 	gam_AStarSearchThread (testIndex);
+
+	return 0;
 }
 
 //--------------------------------------------------------------------------------------------------------

@@ -193,4 +193,6 @@ static int sys_startInit(void *ptr)
 	gam_setupPlayerDroid ();
 
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
+
+	return 0;
 }

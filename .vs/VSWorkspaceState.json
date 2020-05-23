@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\data",
-    "\\data\\scripts",
     "\\hdr",
-    "\\hdr\\box2d",
+    "\\hdr\\classes",
     "\\hdr\\gui",
     "\\src",
+    "\\src\\classes",
+    "\\src\\game",
+    "\\src\\gui",
     "\\src\\io",
-    "\\src\\script",
     "\\src\\system"
   ],
-  "SelectedNode": "\\src\\classes\\paraConsole.cpp",
+  "SelectedNode": "\\src\\io\\configFile.cpp",
   "PreviewInSolutionExplorer": false
 }
