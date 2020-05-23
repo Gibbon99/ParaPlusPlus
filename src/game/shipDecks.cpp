@@ -13,7 +13,7 @@
 int                                          tileSize;
 int                                          numTileAcrossInTexture = 8;
 int                                          numTilesDownInTexture  = 8;
-paraVec2i                                    drawOffset;
+b2Vec2                                    drawOffset;
 std::unordered_map<std::string, _deckStruct> shipdecks;
 PARA_Texture *playfieldTexture;
 std::string                                  currentDeckName;
@@ -42,7 +42,7 @@ int gam_getInfluenceMapValue (int tileIndex)
 void gam_setInfluenceValues (b2Vec2 startPos, int value, int size)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraVec2d topRight;
+	b2Vec2 topRight;
 	int       finalSize;
 
 	finalSize = size * 2;
@@ -114,7 +114,7 @@ void gam_debugInfluenceMap ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int       influenceValue;
-	paraVec2d drawPosition;
+	b2Vec2 drawPosition;
 
 	for (auto countY = 0; countY != shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.y; countY++)
 	{
@@ -173,7 +173,7 @@ void gam_addPaddingToLevel (const std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::vector<int> tempLevel;
-	paraVec2d        tempDimensions{};
+	b2Vec2        tempDimensions{};
 	int              countY, countX, whichTile;
 	int              destX, destY;
 	std::string      levelName;
@@ -232,7 +232,7 @@ void gam_loadShipDeck (const std::string &fileName)
 	int          checkVersion;
 	_deckStruct  tempLevel;
 	_lineSegment tempSegment{};
-	paraVec2d    tempWaypoint{};
+	b2Vec2    tempWaypoint{};
 	int          tempDroidType;
 	int          tempTile;
 	int          fileSize;
@@ -323,7 +323,7 @@ void gam_loadShipDeck (const std::string &fileName)
 		tempWaypoint.x += drawOffset.x;
 		tempWaypoint.y += drawOffset.y;
 
-		paraVec2d tempVec2{};
+		b2Vec2 tempVec2{};
 
 		tempVec2.x = tempWaypoint.x - (tileSize / 2);
 		tempVec2.y = tempWaypoint.y - (tileSize / 2);
@@ -509,7 +509,7 @@ void gam_renderVisibleScreen (double interpolation)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Rect  sourceRect;
-	paraVec2d renderPosition{};
+	b2Vec2 renderPosition{};
 
 	viewportRect.x = playerDroid.worldPosInPixels.x - (gameWinWidth / 2);
 	viewportRect.y = playerDroid.worldPosInPixels.y - (gameWinHeight / 2);
@@ -546,7 +546,7 @@ void gam_showWayPoints (const std::string levelName)
 	b2Vec2       lineStart;
 	b2Vec2       lineFinish;
 	_lineSegment tempLine;
-	paraVec2d       wallStartDraw, wallFinishDraw;
+	b2Vec2       wallStartDraw, wallFinishDraw;
 
 	indexCount = 0;
 
@@ -580,11 +580,11 @@ void gam_showWayPoints (const std::string levelName)
 		wallStartDraw  = sys_worldToScreen (wallStartDraw, 50);
 		wallFinishDraw = sys_worldToScreen (wallFinishDraw, 50);
 
-		thickLineRGBA (renderer.renderer, wallStartDraw.x, wallStartDraw.y, wallFinishDraw.x, wallFinishDraw.y, 3, 0, 0, 200, 255);
+		thickLineRGBA (renderer.renderer, wallStartDraw.x, wallStartDraw.y, wallFinishDraw.x, wallFinishDraw.y, 3, 0, 0, 200, 55);
 
-		roundedRectangleRGBA (renderer.renderer, wallStartDraw.x - 8, wallStartDraw.y - 8, wallStartDraw.x + 8, wallStartDraw.y + 8, 2, 0, 200, 0, 255);
+		roundedRectangleRGBA (renderer.renderer, wallStartDraw.x - 8, wallStartDraw.y - 8, wallStartDraw.x + 8, wallStartDraw.y + 8, 2, 0, 200, 0, 55);
 
-		roundedRectangleRGBA (renderer.renderer, wallFinishDraw.x - 4, wallFinishDraw.y - 4, wallFinishDraw.x + 4, wallFinishDraw.y + 4, 2, 0, 200, 0, 255);
+		roundedRectangleRGBA (renderer.renderer, wallFinishDraw.x - 4, wallFinishDraw.y - 4, wallFinishDraw.x + 4, wallFinishDraw.y + 4, 2, 0, 200, 0, 55);
 
 		indexCount++;
 	}

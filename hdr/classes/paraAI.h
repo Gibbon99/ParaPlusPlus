@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <box2d/b2_math.h>
+#include <box2d/b2_fixture.h>
+
+#define LOOK_AHEAD_DISTANCE     3.5     // In meters
 
 enum _AI_MODES
 {
@@ -32,11 +35,19 @@ public:
 
 	void modifyScore (int whichScore, int modifyAmount);
 
+	void checkHealth ();
+
 	void checkScores ();
 
 	void process (b2Vec2 newWorldPosInMeters);
 
 	void patrol ();
+
+	void heal ();
+
+	void renderVelocity ();
+
+	void swapWaypointDirection ();
 
 	void changeModeTo (int newAIMode);
 
@@ -46,18 +57,30 @@ public:
 
 	void setWaypointIndex (int newIndex);
 
+	void setHealthPercent (float newHealthPercent);
+
 	double getAcceleration ();
 
 	double getMaxSpeed ();
 
 	void getWaypointDestination ();
 
-	b2Vec2 getVelocity();
+	void getNextAStarDestination ();
+
+	b2Vec2 getVelocity ();
+
+	b2Vec2 findHealingTile ();
 
 private:
+	bool             haveAStarDestination;
+	int              aStarIndex          = -1;
+	int              aStarWaypointIndex;
+	bool             haveRequestedAStar  = false;
 	double           acceleration;
 	double           maxSpeed;
 	double           currentSpeed;
+	float            healthPercent;
+	double           aiActionCounter;
 	b2Vec2           currentVelocity;
 	b2Vec2           destination;
 	int              wayPointIndex;
@@ -67,6 +90,8 @@ private:
 	b2Vec2           destinationCoordsInMeters;
 	b2Vec2           worldPositionInMeters;
 	b2Vec2           destDirection;
+	b2Vec2           lookAheadVelocity;                // How far ahead does the droid look for a player collision
+	b2Fixture        *playerDroidFixture = nullptr;    // Used to determine if the droid will run into the player on current velocity
 	std::vector<int> ai;
 };
 

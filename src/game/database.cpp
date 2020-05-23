@@ -22,10 +22,6 @@ bool io_getDBDroidInfo (std::string fileName)
 	if (returnCode < 0)
 		sys_shutdownWithError (sys_getString ("Unable to open database file [ %s ].", fileName.c_str ()));
 
-	tempDataBaseEntry.maxHealth = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "max_health", 0));
-	if (tempDataBaseEntry.maxHealth == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "max_health"));
-
 	if (dataBaseEntry.empty ())    // 001 base droid stats
 	{
 		tempDataBaseEntry.maxSpeed = databaseFile.GetDoubleValue ("droidInfo", "max_speed", -1.0);
@@ -39,6 +35,11 @@ bool io_getDBDroidInfo (std::string fileName)
 			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "accelerate"));
 
 		tempDataBaseEntry.accelerate /= baseGameSpeed;
+
+		tempDataBaseEntry.maxHealth = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "max_health", 0));
+		if (tempDataBaseEntry.maxHealth == 0)
+			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "max_health"));
+
 	}
 	else
 	{
@@ -63,6 +64,10 @@ bool io_getDBDroidInfo (std::string fileName)
 		tempDataBaseEntry.maxSpeed /= baseGameSpeed;
 		tempDataBaseEntry.accelerate /= baseGameSpeed;
 
+		tempDataBaseEntry.maxHealth = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "max_health", 0));
+		if (tempDataBaseEntry.maxHealth == 0)
+			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "max_health"));
+		tempDataBaseEntry.maxHealth += dataBaseEntry[0].maxHealth;
 	}
 
 	tempDataBaseEntry.score = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "score", -1));

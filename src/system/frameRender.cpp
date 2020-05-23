@@ -121,8 +121,8 @@ void sys_renderFrame (double interpolation)
 			if (d_showPhysics)
 				sys_getPhysicsWorld ()->DebugDraw();
 
-			if (d_showAStarPath)
-				gam_AStarDebugWayPoints (testDroid.aStarIndex);
+//			if (d_showAStarPath)
+				gam_AStarDebugWayPoints (0);
 
 			break;
 	}

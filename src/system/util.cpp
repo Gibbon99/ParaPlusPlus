@@ -306,7 +306,7 @@ void sys_freeMemory ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Is an object visible on the screen
-bool sys_visibleOnScreen (paraVec2d worldCoord, int shapeSize)
+bool sys_visibleOnScreen (b2Vec2 worldCoord, int shapeSize)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static int previousShapeSize = -1;
@@ -333,10 +333,10 @@ bool sys_visibleOnScreen (paraVec2d worldCoord, int shapeSize)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Convert worldPosition coords to screen coords
-paraVec2d sys_worldToScreen (paraVec2d worldPos, int shapeSize)
+b2Vec2 sys_worldToScreen (b2Vec2 worldPos, int shapeSize)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraVec2d screenCoords{};
+	b2Vec2 screenCoords{};
 
 	if (sys_visibleOnScreen (worldPos, shapeSize) != 0)
 	{
@@ -352,4 +352,55 @@ paraVec2d sys_worldToScreen (paraVec2d worldPos, int shapeSize)
 //		screenCoords.y = -1;
 	}
 	return screenCoords;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Convert coords to pixels from meters
+b2Vec2 sys_convertToMeters(b2Vec2 convertFrom)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	b2Vec2 returnValue;
+
+	returnValue.x = convertFrom.x / pixelsPerMeter;
+	returnValue.y = convertFrom.y / pixelsPerMeter;
+
+	return returnValue;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Convert coords from meters to pixels
+b2Vec2 sys_convertToPixels(b2Vec2 convertFrom)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	b2Vec2 returnValue;
+
+	returnValue.x = convertFrom.x * pixelsPerMeter;
+	returnValue.y = convertFrom.y * pixelsPerMeter;
+
+	return returnValue;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Convert from pixels to tileSize coordinates
+b2Vec2 sys_convertToTiles(b2Vec2 convertFrom)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	b2Vec2 returnValue;
+
+	returnValue.x = convertFrom.x / tileSize;
+	returnValue.y = convertFrom.y / tileSize;
+
+	return returnValue;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Convert a string to an integer value
+int sys_convertToInt(std::string convertFrom)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	strtol(convertFrom.c_str(), nullptr, 10);
 }

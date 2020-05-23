@@ -1,6 +1,7 @@
 #include <game/database.h>
 #include <game/shipDecks.h>
 #include <system/util.h>
+#include <game/player.h>
 #include "game/droids.h"
 
 droidClass testDroid;
@@ -103,10 +104,11 @@ void gam_initDroids (std::string levelName)
 	shipdecks.at (levelName).numEnemiesAlive = shipdecks.at (levelName).numDroids;
 	for (auto droidItr : shipdecks.at (levelName).droidTypes)
 	{
-		tempDroid.droidType                       = droidItr;
-		tempDroid.worldPosInPixels.x              = shipdecks.at (levelName).wayPoints[wayPointStartIndex].x;
-		tempDroid.worldPosInPixels.y              = shipdecks.at (levelName).wayPoints[wayPointStartIndex++].y;
-		tempDroid.ai.setWaypointIndex(wayPointStartIndex);
+		tempDroid.droidType          = droidItr;
+		tempDroid.currentHealth      = dataBaseEntry[tempDroid.droidType].maxHealth;
+		tempDroid.worldPosInPixels.x = shipdecks.at (levelName).wayPoints[wayPointStartIndex].x;
+		tempDroid.worldPosInPixels.y = shipdecks.at (levelName).wayPoints[wayPointStartIndex++].y;
+		tempDroid.ai.setWaypointIndex (wayPointStartIndex);
 		if (wayPointStartIndex > shipdecks.at (levelName).numWaypoints)
 			shipdecks.at (levelName).numWaypoints = 0;
 
@@ -129,12 +131,12 @@ void gam_initDroids (std::string levelName)
 void gam_renderDroids (std::string levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
-	paraVec2d droidScreenPosition{};
+	b2Vec2 droidScreenPosition{};
 	b2Vec2 worldPosInMeters;
 
 	for (auto droidItr : g_shipDeckItr->second.droid)
 	{
-		worldPosInMeters = droidItr.body->GetPosition();
+		worldPosInMeters = droidItr.body->GetPosition ();
 		droidItr.worldPosInPixels.x = worldPosInMeters.x * pixelsPerMeter;
 		droidItr.worldPosInPixels.y = worldPosInMeters.y * pixelsPerMeter;
 
@@ -144,6 +146,8 @@ void gam_renderDroids (std::string levelName)
 		droidScreenPosition = sys_worldToScreen (droidScreenPosition, 24);
 		droidItr.sprite.setTintColor (0, 0, 0);
 		droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0);
+
+		droidItr.ai.renderVelocity ();
 	}
 }
 
@@ -162,12 +166,74 @@ void gam_animateDroids (std::string levelName)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Process the AI for each droid
-void gam_processAI(std::string levelName)
+void gam_processAI (std::string levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
 	for (auto &droidItr : g_shipDeckItr->second.droid)
 	{
-		droidItr.ai.process(droidItr.body->GetPosition());
-		droidItr.body->ApplyForce(droidItr.ai.getVelocity(), droidItr.body->GetWorldCenter(), true);
+		droidItr.ai.process (droidItr.body->GetPosition ());
+		droidItr.body->ApplyForce (droidItr.ai.getVelocity (), droidItr.body->GetWorldCenter (), true);
+		//
+		// Slowly decrement the collision counter
+		if (droidItr.userData->ignoreCollision)
+		{
+			droidItr.collisionCounterDelay -= 0.3f;
+			if (droidItr.collisionCounterDelay < 0.0)
+			{
+				droidItr.collisionCounterDelay     = collisionCount;
+				droidItr.userData->ignoreCollision = false;
+				droidItr.collisionCounter          = 0;
+			}
+		}
 	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
+// Process the counter to ignore collisions
+void gam_processCollision (int droidA)
+//-------------------------------------------------------------------------------------------------------------
+{
+	if (g_shipDeckItr->second.droid[droidA].userData->ignoreCollision)
+		return;
+
+	g_shipDeckItr->second.droid[droidA].collisionCounter++;
+
+	if (g_shipDeckItr->second.droid[droidA].collisionCounter > collisionLimit)
+	{
+		g_shipDeckItr->second.droid[droidA].collisionCounterDelay = collisionCount;
+		g_shipDeckItr->second.droid[droidA].userData->ignoreCollision = true;
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
+// Process damage to a droid
+//
+// damageSource can be either a bullet, explosion or a collision with player or another droid
+void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
+//-------------------------------------------------------------------------------------------------------------
+{
+	float newHealthPercent;
+
+	switch (damageSource)
+	{
+		case PHYSIC_DAMAGE_BUMP:
+			if (sourceDroid == -1)  // Hit from player
+				shipdecks.at (gam_getCurrentDeckName ()).droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bounceDamage;
+			else
+				shipdecks.at (gam_getCurrentDeckName()).droid[targetDroid].currentHealth -= dataBaseEntry[shipdecks.at(gam_getCurrentDeckName()).droid[sourceDroid].droidType].bounceDamage;
+
+			shipdecks.at (gam_getCurrentDeckName()).droid[targetDroid].currentHealth < 0 ? 0 : shipdecks.at (gam_getCurrentDeckName()).droid[targetDroid].currentHealth;
+			break;
+	}
+
+	newHealthPercent = static_cast<float>(shipdecks.at (gam_getCurrentDeckName ()).droid[targetDroid].currentHealth) / static_cast<float>(dataBaseEntry[shipdecks.at (gam_getCurrentDeckName ()).droid[targetDroid].droidType].maxHealth);
+	newHealthPercent *= 100.0;
+
+	newHealthPercent = newHealthPercent > 100 ? 100 : newHealthPercent;
+	newHealthPercent = newHealthPercent < 0 ? 0 : newHealthPercent;
+
+	shipdecks.at(gam_getCurrentDeckName()).droid[targetDroid].ai.setHealthPercent(newHealthPercent);
+	shipdecks.at(gam_getCurrentDeckName()).droid[targetDroid].ai.checkHealth();
 }

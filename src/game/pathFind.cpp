@@ -14,7 +14,7 @@
 // Flag set when the path is found and the compressed waypoints are copied into the path array
 //--------------------------------------------------------------------------------------------------------
 
-#define DEBUG_ASTAR 1
+// #define DEBUG_ASTAR 1
 
 std::vector<_nodeList> path;
 int                    numAStarPaths;
@@ -24,7 +24,7 @@ bool                   d_showAStarPath  = false;
 //--------------------------------------------------------------------------------------------------------
 //
 // Draw debug graphic
-void gam_AStarDebugDraw (paraVec2d lineStart, paraVec2d lineFinish, int whichPath, int count)
+void gam_AStarDebugDraw (b2Vec2 lineStart, b2Vec2 lineFinish, int whichPath, int count)
 //--------------------------------------------------------------------------------------------------------
 {
 	lineStart  = sys_worldToScreen (lineStart, 2);
@@ -43,7 +43,7 @@ void gam_AStarDebugDraw (paraVec2d lineStart, paraVec2d lineFinish, int whichPat
 void gam_AStarDebugNodes (int whichPath)
 //--------------------------------------------------------------------------------------------------------
 {
-	paraVec2d drawPosition;
+	b2Vec2 drawPosition;
 
 	if (path.size () == 0)
 		return;
@@ -81,8 +81,8 @@ void gam_AStarDebugNodes (int whichPath)
 void gam_AStarDebugWayPoints (int whichPath)
 //--------------------------------------------------------------------------------------------------------
 {
-	paraVec2d lineStart;
-	paraVec2d lineFinish;
+	b2Vec2 lineStart;
+	b2Vec2 lineFinish;
 	int       i = 0;
 
 	if (-1 == whichPath)
@@ -182,6 +182,15 @@ static int gam_processAStarWithThread (void *ptr)
 	testIndex = reinterpret_cast<int>(pathIndex);
 
 	gam_AStarSearchThread (testIndex);
+}
+
+//--------------------------------------------------------------------------------------------------------
+//
+// See if the path is ready to use
+bool gam_isAStarReady(int whichPath)
+//--------------------------------------------------------------------------------------------------------
+{
+	return path[whichPath].pathReady;
 }
 
 //--------------------------------------------------------------------------------------------------------

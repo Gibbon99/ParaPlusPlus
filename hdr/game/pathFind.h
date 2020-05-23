@@ -56,3 +56,6 @@ void gam_AStarSearchThread (int whichPathArg);
 
 // Show the open and closed nodes
 void gam_AStarDebugNodes(int whichPath);
+
+// See if the path is ready to use
+bool gam_isAStarReady(int whichPath);

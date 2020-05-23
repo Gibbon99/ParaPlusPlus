@@ -243,7 +243,7 @@ if (UNIX)
     if (CMAKE_BUILD_TYPE MATCHES debug)
 
         link_libraries(
-		        asan
+#		        asan
                 SDL2main
                 SDL2
                 SDL2_image

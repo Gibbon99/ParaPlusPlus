@@ -11,7 +11,7 @@ void as_handleMainMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.startGameButton"))
 	{
-		gam_changeToDeck ("Engineering", 0);
+		gam_changeToDeck ("Stores", 0);
 		gam_setHudText ("Game on");
 		sys_setNewMode (MODE_PRE_GAME, false);
 		return;
@@ -644,6 +644,8 @@ void as_createGUI ()
 	gravity           = 100.0;
 	doorAnimSpeed     = 1.0f;
 	numAStarPaths     = 8;
+	collisionLimit    = 5;
+	collisionCount    = 3.0;
 
 	hudTextPosX = 15;
 	hudTextPosY = 27;

@@ -8,6 +8,7 @@
 
 #define MAP_VERSION                116
 
+/*
 class paraVec2d
 {
 public:
@@ -72,7 +73,7 @@ struct paraVec2i
 {
 	int x, y;
 };
-
+*/
 //-----------------------------------------------------------------------------
 //
 // Loaded from disk per level
@@ -80,8 +81,8 @@ struct paraVec2i
 //-----------------------------------------------------------------------------
 struct _lineSegment
 {
-	paraVec2d start;
-	paraVec2d finish;
+	b2Vec2 start;
+	b2Vec2 finish;
 };
 
 //-----------------------------------------------------------------------------
@@ -106,8 +107,8 @@ struct _basicHealing
 	int       pos;                 // position in array
 	int       currentFrame;        // which frame are we on
 	double    frameDelay;          // animation counter
-	paraVec2d worldPos;            // Position in world coords
-	paraVec2d renderPosition;      // Position on the map to update image
+	b2Vec2 worldPosInPixels;    // Position in world coords
+	b2Vec2    worldPosInMeters;      // Position on the map to update image
 };
 
 struct _deckStruct
@@ -117,9 +118,9 @@ struct _deckStruct
 	int                        numWaypoints;
 	int                        numDroids;
 	int                        numLifts;
-	paraVec2d                  levelDimensions;
+	b2Vec2                  levelDimensions;
 	std::vector<_lineSegment>  lineSegments; // Need to be floats for load ??
-	std::vector<paraVec2d>     wayPoints;
+	std::vector<b2Vec2>     wayPoints;
 	std::vector<int>           tiles;
 	std::vector<int>           droidTypes;
 	char                       levelName[20];

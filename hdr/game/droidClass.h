@@ -6,6 +6,9 @@
 #include <classes/paraAI.h>
 #include "system/physics.h"
 
+extern int   collisionLimit;
+extern float collisionCount;
+
 class droidClass
 {
 public:
@@ -13,32 +16,31 @@ public:
 	int           index;          // Used in physics callback
 	int           currentMode;                // What is the droid doing; transfer, healing, terminal etc
 	int           droidType;
-	double        currentSpeed;
-//	double        acceleration;
-//	double        maxSpeed;
+	int           currentHealth;
+//	float         currentHealthPercent;
 	bool          overTerminalTile;
 	bool          inTransferMode;
 	bool          overLiftTile;
 	int           liftIndex;
 	bool          weaponCanFire;
+	int           collisionCounter;
+	float         collisionCounterDelay;
 	std::string   droidName;
 	b2BodyDef     bodyDef;                      // Used for physics and collisions
 	b2CircleShape shape;
 	b2FixtureDef  fixtureDef;
 	b2Body        *body;
 	_userData     *userData = nullptr;
-
-	b2Vec2 worldPosInPixels;
-	b2Vec2 previousWorldPosInPixels;
-
-	b2Vec2     destinationCoords;          // This is the line segment end point
-	b2Vec2     destDirection;              // Which way is the droid heading
-	b2Vec2     velocity;
-	paraSprite sprite;
-	paraAI     ai;
+	b2Vec2        worldPosInPixels;
+	b2Vec2        previousWorldPosInPixels;
+//	b2Vec2     destinationCoords;          // This is the line segment end point
+//	b2Vec2     destDirection;              // Which way is the droid heading
+	b2Vec2        velocity;
+	paraSprite    sprite;
+	paraAI        ai;
 	//
 	// Enemy droid fields
-	int        aStarIndex;
+	int           aStarIndex;
 private:
 	// Current speed
 };

@@ -64,8 +64,8 @@ void gam_processGameEventQueue ()
 	{
 
 #ifdef MY_DEBUG
-		if (gameEvents.size() > 60)
-			sys_shutdownWithError(sys_getString("Too many events on the game event queue [ %i ].", gameEvents.size()));
+//		if (gameEvents.size() > 60)
+//			sys_shutdownWithError(sys_getString("Too many events on the game event queue [ %i ].", gameEvents.size()));
 #endif
 		if (nullptr == gameMutex)
 		{
@@ -116,11 +116,20 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_GAME_LOAD_FONT:
-					fontClass.load (strtol (tempEvent->gameText3.c_str (), nullptr, 10), tempEvent->gameText2, tempEvent->gameText1);
+					fontClass.load (sys_convertToInt (tempEvent->gameText3), tempEvent->gameText2, tempEvent->gameText1);
 					break;
 
 				case EVENT_ACTION_GAME_CHANGE_MODE:
-					sys_setNewMode (strtol (tempEvent->gameText1.c_str (), nullptr, 10), static_cast<bool>(strtol (tempEvent->gameText2.c_str (), nullptr, 10)));
+					sys_setNewMode (sys_convertToInt (tempEvent->gameText1), static_cast<bool>(sys_convertToInt (tempEvent->gameText2)));
+					break;
+
+				case EVENT_ACTION_DAMAGE_TO_DROID:
+					//int targetDroid, int damageSource, int sourceDroid,
+					gam_damageToDroid (sys_convertToInt (tempEvent->gameText1), sys_convertToInt (tempEvent->gameText2), sys_convertToInt (tempEvent->gameText3));
+					break;
+
+				case EVENT_ACTION_DROID_COLLISION:
+					gam_processCollision (sys_convertToInt (tempEvent->gameText1));
 					break;
 			}
 

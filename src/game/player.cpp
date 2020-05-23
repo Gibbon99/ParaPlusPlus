@@ -51,7 +51,6 @@ void gam_setupPlayerDroid ()
 	testCircle.sprite.create (playerDroid.droidName, 9, 0.3);
 	testCircle.worldPosInPixels = {0, 0};
 
-
 	sys_setupPlayerPhysics ();
 }
 

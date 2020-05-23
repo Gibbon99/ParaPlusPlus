@@ -77,6 +77,8 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("double gravity", &gravity);
 	paraScriptInstance.addHostVariable ("double doorAnimSpeed", &doorAnimSpeed);
 	paraScriptInstance.addHostVariable ("int numAStarPaths", &numAStarPaths);
+	paraScriptInstance.addHostVariable ("float collisionCount", &collisionCount);
+	paraScriptInstance.addHostVariable ("int collisionLimit", &collisionLimit);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)

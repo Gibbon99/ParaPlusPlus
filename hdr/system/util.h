@@ -31,7 +31,19 @@ void sys_getOS();
 void sys_saveTexture(SDL_Renderer *ren, SDL_Texture *tex, const char *filename);
 
 // Convert worldPosition coords to screen coords
-paraVec2d sys_worldToScreen (paraVec2d worldPos, int shapeSize);
+b2Vec2 sys_worldToScreen (b2Vec2 worldPos, int shapeSize);
 
 // Is an object visible on the screen
-bool sys_visibleOnScreen (paraVec2d worldCoord, int shapeSize);
+bool sys_visibleOnScreen (b2Vec2 worldCoord, int shapeSize);
+
+// Convert coords to pixels from meters
+b2Vec2 sys_convertToMeters(b2Vec2 convertFrom);
+
+// Convert coords from meters to pixels
+b2Vec2 sys_convertToPixels(b2Vec2 convertFrom);
+
+// Convert from pixels to tileSize coordinates
+b2Vec2 sys_convertToTiles(b2Vec2 convertFrom);
+
+// Convert a string to an integer value
+int sys_convertToInt(std::string convertFrom);

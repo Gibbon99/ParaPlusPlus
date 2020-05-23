@@ -46,13 +46,13 @@ typedef struct
 	int            direction;
 
 	bool inUse;
-	paraVec2d         topLeft;
-	paraVec2d         topRight;
-	paraVec2d         botLeft;
-	paraVec2d         botRight;
+	b2Vec2         topLeft;
+	b2Vec2         topRight;
+	b2Vec2         botLeft;
+	b2Vec2         botRight;
 
-	paraVec2d         worldPosition  = {0, 0};
-	paraVec2d         renderPosition = {0, 0};
+	b2Vec2         worldPosition  = {0, 0};
+	b2Vec2         renderPosition = {0, 0};
 	b2BodyDef      bodyDef;                      // Used for physics and collisions
 	b2PolygonShape shape;
 	b2FixtureDef   fixtureDef;

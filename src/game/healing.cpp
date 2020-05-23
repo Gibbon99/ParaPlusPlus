@@ -22,7 +22,7 @@ void gam_renderHealingFrames (const std::string& deckName)
 	{
 //		if (sys_visibleOnScreen (healingItr.renderPosition, tileSize))
 		{
-			gam_renderSingleTile (healingItr.renderPosition.x, healingItr.renderPosition.y, healingItr.currentFrame);
+			gam_renderSingleTile (healingItr.worldPosInPixels.x, healingItr.worldPosInPixels.y, healingItr.currentFrame);
 		}
 	}
 
@@ -98,11 +98,11 @@ void gam_findHealingTiles (std::string deckName)
 			case HEALING_TILE + 1:
 			case HEALING_TILE + 2:
 			case HEALING_TILE + 3:
-				shipdecks.at (deckName).healing[countHealing].renderPosition.x = countX * tileSize;
-				shipdecks.at (deckName).healing[countHealing].renderPosition.y = countY * tileSize;
+				shipdecks.at (deckName).healing[countHealing].worldPosInPixels.x = countX * tileSize;
+				shipdecks.at (deckName).healing[countHealing].worldPosInPixels.y = countY * tileSize;
 
-				shipdecks.at (deckName).healing[countHealing].worldPos.x = countX * tileSize;
-				shipdecks.at (deckName).healing[countHealing].worldPos.y = countY * tileSize;
+				shipdecks.at (deckName).healing[countHealing].worldPosInMeters.x = (countX * tileSize) / pixelsPerMeter;
+				shipdecks.at (deckName).healing[countHealing].worldPosInMeters.y = (countY * tileSize) / pixelsPerMeter;
 
 				countHealing++;
 				break;

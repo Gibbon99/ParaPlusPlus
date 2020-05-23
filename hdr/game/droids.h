@@ -23,3 +23,11 @@ void renderTestDroid();
 
 // Process the AI for each droid
 void gam_processAI(std::string levelName);
+
+// Process damage to a droid
+//
+// damageSource can be either a bullet, explosion or a collision with player or another droid
+void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid);
+
+// Process the counter to ignore collisions
+void gam_processCollision (int droidA);

@@ -2,6 +2,7 @@
 #include <game/shipDecks.h>
 #include <system/util.h>
 #include <game/player.h>
+#include <system/gameEvents.h>
 #include "game/physicsCollisions.h"
 
 bool doWallCollisions = true;
@@ -55,7 +56,7 @@ void paraDebugDraw::DrawSolidPolygon (const b2Vec2 *vertices, int32 vertexCount,
 void paraDebugDraw::DrawCircle (const b2Vec2 &center, float radius, const b2Color &color)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraVec2d tempPosition{};
+	b2Vec2 tempPosition{};
 
 	tempPosition.x = center.x;
 	tempPosition.y = center.y;
@@ -73,7 +74,7 @@ void paraDebugDraw::DrawCircle (const b2Vec2 &center, float radius, const b2Colo
 void paraDebugDraw::DrawSolidCircle (const b2Vec2 &center, float radius, const b2Vec2 &axis, const b2Color &color)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraVec2d tempPosition{};
+	b2Vec2 tempPosition{};
 
 	tempPosition.x = center.x;
 	tempPosition.y = center.y;
@@ -91,8 +92,8 @@ void paraDebugDraw::DrawSolidCircle (const b2Vec2 &center, float radius, const b
 void paraDebugDraw::DrawSegment (const b2Vec2 &p1, const b2Vec2 &p2, const b2Color &color)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraVec2d point1{};
-	paraVec2d point2{};
+	b2Vec2 point1{};
+	b2Vec2 point2{};
 
 	point1.x = p1.x;
 	point1.y = p1.y;
@@ -123,7 +124,7 @@ void paraDebugDraw::DrawTransform (const b2Transform &xf)
 void paraDebugDraw::DrawPoint (const b2Vec2 &p, float size, const b2Color &color)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraVec2d point1{};
+	b2Vec2 point1{};
 
 	point1.x = p.x;
 	point1.y = p.y;
@@ -180,6 +181,30 @@ void contactListener::BeginContact (b2Contact *contact)
 				return;
 			}
 			break;
+
+		case PHYSIC_TYPE_PLAYER:
+			if (!playerDroid.inTransferMode)
+			{
+				if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
+				{
+					// int targetDroid, int damageSource, int sourceDroid,
+					gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BUMP, -1));
+					// TODO - do damage to player
+				}
+			}
+			else
+			{
+				// TODO - change to transfer mode
+			}
+			break;
+
+		case PHYSIC_TYPE_ENEMY:
+			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
+			{
+				if (!bodyUserData_B->ignoreCollision)
+					gam_addEvent (EVENT_ACTION_DROID_COLLISION, 0, sys_getString ("%i|", bodyUserData_B->dataValue));
+			}
+			break;
 	}
 
 	//--------------------------------------------------------
@@ -218,6 +243,30 @@ void contactListener::BeginContact (b2Contact *contact)
 				std::cout << "Over lift : " << playerDroid.liftIndex << std::endl;
 
 				return;
+			}
+			break;
+
+		case PHYSIC_TYPE_PLAYER:
+			if (!playerDroid.inTransferMode)
+			{
+				if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
+				{
+					// int targetDroid, int damageSource, int sourceDroid,
+					gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_A->dataValue, PHYSIC_DAMAGE_BUMP, -1));
+					// TODO - do damage to player
+				}
+			}
+			else
+			{
+				// TODO - change to transfer mode
+			}
+			break;
+
+		case PHYSIC_TYPE_ENEMY:
+			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
+			{
+				if (!bodyUserData_A->ignoreCollision)
+					gam_addEvent (EVENT_ACTION_DROID_COLLISION, 0, sys_getString ("%i|", bodyUserData_A->dataValue));
 			}
 			break;
 	}
@@ -299,6 +348,14 @@ void contactListener::PreSolve (b2Contact *contact, const b2Manifold *manifold)
 				return;
 			}
 			break;
+
+		case PHYSIC_TYPE_ENEMY:
+			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
+			{
+				if (bodyUserData_A->ignoreCollision)
+					contact->SetEnabled (false);
+				return;
+			}
 	}
 
 	switch (bodyUserData_B->userType)
@@ -310,5 +367,13 @@ void contactListener::PreSolve (b2Contact *contact, const b2Manifold *manifold)
 				return;
 			}
 			break;
+
+		case PHYSIC_TYPE_ENEMY:
+			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
+			{
+				if (bodyUserData_B->ignoreCollision)
+					contact->SetEnabled (false);
+				return;
+			}
 	}
 }

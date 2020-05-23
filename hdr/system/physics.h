@@ -27,6 +27,7 @@ struct _userData
 	int userType;
 	int dataValue;
 	int wallIndexValue;
+	bool ignoreCollision;
 };
 
 extern bool   d_showPhysics;

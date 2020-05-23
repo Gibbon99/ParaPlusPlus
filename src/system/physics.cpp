@@ -12,18 +12,18 @@ struct __physicWall
 	_userData    *userData;
 };
 
-std::vector<__physicWall>  solidWalls;
-b2World *physicsWorld;
-bool    d_showPhysics      = false;
-bool    physicsStarted     = true;
-int32   velocityIterations = 8;   //how strongly to correct velocity
-int32   positionIterations = 3;   //how strongly to correct position
-double  gravity;         // Set from script
+std::vector<__physicWall> solidWalls;
+b2World                   *physicsWorld;
+bool                      d_showPhysics      = false;
+bool                      physicsStarted     = true;
+int32                     velocityIterations = 8;   //how strongly to correct velocity
+int32                     positionIterations = 3;   //how strongly to correct position
+double                    gravity;         // Set from script
 
 //----------------------------------------------------------------------------------------------------------------
 //
 // Return a pointer to the current physics world
-b2World *sys_getPhysicsWorld()
+b2World *sys_getPhysicsWorld ()
 //----------------------------------------------------------------------------------------------------------------
 {
 	return physicsWorld;
@@ -46,13 +46,13 @@ void sys_processPhysics (double tickTime)
 	playerDroid.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);           // Change to pixels
 	playerDroid.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
 
-	for (auto &droidItr : shipdecks.at(gam_getCurrentDeckName()).droid)
+	for (auto &droidItr : shipdecks.at (gam_getCurrentDeckName ()).droid)
 	{
 		droidItr.previousWorldPosInPixels = droidItr.worldPosInPixels;
-		droidItr.worldPosInPixels = droidItr.body->GetPosition();       // In Meters
+		droidItr.worldPosInPixels         = droidItr.body->GetPosition ();       // In Meters
 		droidItr.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);  // Change to pixels for rendering
 		droidItr.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
-		droidItr.body->SetLinearVelocity({0, 0});
+		droidItr.body->SetLinearVelocity ({0, 0});
 	}
 //	gam_processPhysicActions ();
 	playerDroid.body->SetLinearVelocity ({0, 0});
@@ -129,9 +129,10 @@ void sys_setupPlayerPhysics ()
 	playerDroid.bodyDef.angle = 0;
 	playerDroid.body          = physicsWorld->CreateBody (&playerDroid.bodyDef);
 
-	playerDroid.userData            = new _userData;
-	playerDroid.userData->userType  = PHYSIC_TYPE_PLAYER;
-	playerDroid.userData->dataValue = -1;
+	playerDroid.userData                  = new _userData;
+	playerDroid.userData->userType        = PHYSIC_TYPE_PLAYER;
+	playerDroid.userData->dataValue       = -1;
+	playerDroid.userData->ignoreCollision = false;
 	playerDroid.body->SetUserData (playerDroid.userData);
 
 //	playerDroid.shape.m_radius = static_cast<float>((playerDroid.sprite.getFrameWidth () / 2) / pixelsPerMeter);
@@ -238,9 +239,9 @@ void sys_setupEnemyPhysics (std::string levelName)
 	if (!physicsStarted)
 		sys_shutdownWithError (sys_getString ("Attempting to setup droid physics with no engine."));
 
-	for (auto &droidItr : shipdecks.at(levelName).droid)
+	for (auto &droidItr : shipdecks.at (levelName).droid)
 	{
-		droidItr.index        = droidPhysicsIndex;
+		droidItr.index = droidPhysicsIndex;
 		if (droidItr.currentMode == DROID_MODE_NORMAL)
 		{
 			droidItr.bodyDef.type = b2_dynamicBody;
@@ -248,10 +249,11 @@ void sys_setupEnemyPhysics (std::string levelName)
 			droidItr.bodyDef.angle = 0;
 			droidItr.body          = physicsWorld->CreateBody (&droidItr.bodyDef);
 
-			droidItr.userData                 = new _userData;
-			droidItr.userData->userType       = PHYSIC_TYPE_ENEMY;
-			droidItr.userData->dataValue      = droidPhysicsIndex;      // TODO - check this matches the actual index of the droid
-			droidItr.userData->wallIndexValue = -1;
+			droidItr.userData                  = new _userData;
+			droidItr.userData->userType        = PHYSIC_TYPE_ENEMY;
+			droidItr.userData->dataValue       = droidPhysicsIndex;      // TODO - check this matches the actual index of the droid
+			droidItr.userData->wallIndexValue  = -1;
+			droidItr.userData->ignoreCollision = false;
 			droidItr.body->SetUserData (droidItr.userData);
 
 			droidItr.shape.m_radius = (float) (24 * 0.5f) / pixelsPerMeter;
@@ -265,5 +267,6 @@ void sys_setupEnemyPhysics (std::string levelName)
 			droidItr.fixtureDef.filter.maskBits     = PHYSIC_TYPE_WALL | PHYSIC_TYPE_BULLET_PLAYER | PHYSIC_TYPE_BULLET_ENEMY | PHYSIC_TYPE_PLAYER | PHYSIC_TYPE_ENEMY | PHYSIC_TYPE_DOOR_CLOSED;
 			droidItr.body->CreateFixture (&droidItr.fixtureDef);
 		}
+		droidPhysicsIndex++;
 	}
 }
