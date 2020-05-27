@@ -1,5 +1,11 @@
 #include <game/audio.h>
+#include <game/shipDecks.h>
 #include "../../hdr/io/consoleFunctions.h"
+
+void debug_showAIValues()
+{
+	shipdecks.at(gam_getCurrentDeckName()).droid[0].ai.showValues();
+}
 
 void debug_getCurrentBackingTexture ()
 {

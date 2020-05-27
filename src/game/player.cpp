@@ -4,6 +4,7 @@
 #include <system/util.h>
 #include <game/audio.h>
 #include <game/lifts.h>
+#include <system/gameEvents.h>
 #include "game/player.h"
 
 droidClass playerDroid;
@@ -32,6 +33,28 @@ void gam_moveTestCircle ()
 
 	testCircle.worldPosInPixels.x = (gameWinWidth / 2) + (radius * cos (angle * (3.14 / 180)));
 	testCircle.worldPosInPixels.y = (gameWinHeight / 2) + (radius * sin (angle * (3.14 / 180)));
+}
+
+//-----------------------------------------------------------------------------
+//
+// Recharge player weapon
+void gam_weaponRechargePlayer ()
+//-----------------------------------------------------------------------------
+{
+	if (!playerDroid.weaponCanFire)
+	{
+		if (dataBaseEntry[playerDroid.droidType].canShoot)
+			playerDroid.weaponDelay += dataBaseEntry[playerDroid.droidType].rechargeTime;
+		else
+			playerDroid.weaponDelay += dataBaseEntry[0].rechargeTime;
+
+		if (playerDroid.weaponDelay > 1.0f)
+		{
+			playerDroid.weaponDelay   = 0.0f;
+			playerDroid.weaponCanFire = true;
+			gam_setHudText ("hudMoving");
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -158,6 +181,9 @@ void gam_processActionKey ()
 
 	gam_setHudText ("hudMoving");
 
+	if ((!gui.keyDown(KEY_ACTION) && (playerDroid.inTransferMode)))
+		playerDroid.inTransferMode = false;
+
 	if (playerDroid.inTransferMode)
 		gam_setHudText ("hudTransfer");
 	//
@@ -190,7 +216,8 @@ void gam_processActionKey ()
 
 		if (!playerDroid.inTransferMode)
 		{
-			playerDroid.inTransferMode = true;
+			// TODO Get out of transfer mode
+//			playerDroid.inTransferMode = true;
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferMove.wav");
 			gam_setHudText ("hudTransfer");
 		}
@@ -198,15 +225,16 @@ void gam_processActionKey ()
 
 	if (!playerDroid.inTransferMode)
 	{
-		if ((!gui.keyDown (KEY_LEFT)) && (!gui.keyDown (KEY_RIGHT)) && (!gui.keyDown (KEY_DOWN)) && (!gui.keyDown (KEY_UP)))
+//		if ((!gui.keyDown (KEY_LEFT)) && (!gui.keyDown (KEY_RIGHT)) && (!gui.keyDown (KEY_DOWN)) && (!gui.keyDown (KEY_UP)))
 		{
 			if (playerDroid.weaponCanFire)
 			{
 				if ((playerDroid.velocity.x == 0.0f) && (playerDroid.velocity.y == 0.0f))       // Don't create bullet with no velocity
 					return;
 
-//				gam_addPhysicAction (PHYSIC_EVENT_TYPE_NEW_BULLET, 0, 0, 0, -1, {0, 0});
+				gam_addEvent (EVENT_ACTION_CREATE_BULLET, 0, sys_getString("%i|", -1));
 				playerDroid.weaponCanFire = false;
+				gui.setState(KEY_ACTION, false, 0);
 				gam_setHudText ("hudRecharging");
 				return;
 			}

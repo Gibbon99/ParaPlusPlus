@@ -104,11 +104,11 @@ struct _liftBasic
 //-----------------------------------------------------------------------------
 struct _basicHealing
 {
-	int       pos;                 // position in array
-	int       currentFrame;        // which frame are we on
-	double    frameDelay;          // animation counter
+	int    pos;                 // position in array
+	int    currentFrame;        // which frame are we on
+	double frameDelay;          // animation counter
 	b2Vec2 worldPosInPixels;    // Position in world coords
-	b2Vec2    worldPosInMeters;      // Position on the map to update image
+	b2Vec2 worldPosInMeters;      // Position on the map to update image
 };
 
 struct _deckStruct
@@ -118,9 +118,9 @@ struct _deckStruct
 	int                        numWaypoints;
 	int                        numDroids;
 	int                        numLifts;
-	b2Vec2                  levelDimensions;
+	b2Vec2                     levelDimensions;
 	std::vector<_lineSegment>  lineSegments; // Need to be floats for load ??
-	std::vector<b2Vec2>     wayPoints;
+	std::vector<b2Vec2>        wayPoints;
 	std::vector<int>           tiles;
 	std::vector<int>           droidTypes;
 	char                       levelName[20];

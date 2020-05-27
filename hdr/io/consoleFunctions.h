@@ -14,5 +14,6 @@ void debug_getRenderInfo ();
 
 void debug_getAllRenderers ();
 
+void debug_showAIValues();
 
 void testPlay ();

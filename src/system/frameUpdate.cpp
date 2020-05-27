@@ -1,5 +1,6 @@
 #include <game/pathFind.h>
 #include <game/droids.h>
+#include <game/bullet.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
@@ -109,24 +110,6 @@ void sys_processInputEvents ()
 				if (evt.key.keysym.sym == SDLK_F4)
 					sys_setNewMode (MODE_GUI_SHIPVIEW, true);
 
-				if (evt.key.keysym.sym == SDLK_F5)
-				{
-
-					b2Vec2 start;
-					b2Vec2 dest;
-
-					start.x = static_cast<int>(testDroid.worldPosInPixels.x) / tileSize;
-					start.y = static_cast<int>(testDroid.worldPosInPixels.y) / tileSize;
-
-					dest.x = static_cast<int>(playerDroid.worldPosInPixels.x) / tileSize;
-					dest.y = static_cast<int>(playerDroid.worldPosInPixels.y) / tileSize;
-
-					dest.x = 20;
-					dest.y = 6;
-
-					testDroid.aStarIndex = gam_requestNewPath (start, dest, 0, gam_getCurrentDeckName());
-				}
-
 				if (evt.key.keysym.sym == SDLK_F6)
 				{
 					gam_changeToDeck ("Staterooms", 0);
@@ -179,20 +162,18 @@ void sys_gameTickRun ()
 			sys_processPhysics (TICKS_PER_SECOND);
 			gam_animateHealing (gam_getCurrentDeckName ());
 			playerDroid.sprite.animate ();
+			gam_weaponRechargePlayer ();
 			gam_animateDroids(gam_getCurrentDeckName());
 			gam_doorCheckTriggerAreas ();
 			gam_doorProcessActions ();
+			gam_processBullets ();
 
 			gam_populateInfluenceMap(playerDroid.worldPosInPixels);
 
 			gam_processAI(gam_getCurrentDeckName());
 
-			gam_moveTestCircle ();
-			if (path.size() != 0)
-			{
-//				if (!path[testDroid.aStarIndex].wayPointsReady)
-//					gam_AStarSearchThread (testDroid.aStarIndex);
-			}
+//			gam_moveTestCircle ();
+
 			break;
 
 		case MODE_GUI_DECKVIEW:

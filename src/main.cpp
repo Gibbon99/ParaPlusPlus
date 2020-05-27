@@ -12,7 +12,7 @@ paraRenderer   renderer;
 paraAudio      audio;
 paraGui        gui;
 
-paraSprite   databaseSprite;
+paraSprite databaseSprite;
 
 std::map<std::string, paraTexture> textures;
 
@@ -24,7 +24,7 @@ Uint32 thinkFPS             = 0;
 Uint32 thinkFPSPrint        = 0;
 double percentIntoNextFrame = 0.0f;
 int    currentMode;
-double pixelsPerMeter;          // From script
+double  pixelsPerMeter;          // From script
 
 //
 // Game levers
@@ -65,9 +65,9 @@ int main (int argc, char *argv[])
 
 	while (!quitLoop)
 	{
-		previousTime             = currentTime;
-		currentTime              = PARA_GetTicks ();
-		maxNumUpdateLoops        = 0;
+		previousTime         = currentTime;
+		currentTime          = PARA_GetTicks ();
+		maxNumUpdateLoops    = 0;
 
 		timeLag += (currentTime - previousTime);
 

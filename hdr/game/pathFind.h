@@ -59,3 +59,9 @@ void gam_AStarDebugNodes(int whichPath);
 
 // See if the path is ready to use
 bool gam_isAStarReady(int whichPath);
+
+// Clear coord memory and flag ready for reuse
+void gam_AStarRemovePath (int whichPath);
+
+// Is a tile considered 'solid' or not - no bounds checking version
+bool gam_AStarIsTileSolid (int tileIndex);

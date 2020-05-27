@@ -1,5 +1,4 @@
 #include <game/player.h>
-#include <game/droids.h>
 #include "system/util.h"
 #include "game/game.h"
 
@@ -390,8 +389,8 @@ b2Vec2 sys_convertToTiles(b2Vec2 convertFrom)
 {
 	b2Vec2 returnValue;
 
-	returnValue.x = convertFrom.x / tileSize;
-	returnValue.y = convertFrom.y / tileSize;
+	returnValue.x = static_cast<int>(convertFrom.x / tileSize);
+	returnValue.y = static_cast<int>(convertFrom.y / tileSize);
 
 	return returnValue;
 }

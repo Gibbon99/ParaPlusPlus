@@ -8,6 +8,8 @@
 #include <game/droids.h>
 #include <system/util.h>
 #include <io/logFile.h>
+#include <game/bullet.h>
+#include <system/gameEvents.h>
 #include "gui/guiRender.h"
 #include "system/frameRender.h"
 #include "io/console.h"
@@ -112,16 +114,18 @@ void sys_renderFrame (double interpolation)
 
 			gam_showWayPoints (gam_getCurrentDeckName());
 
+			gam_renderBullets();
+
 			if (d_showInfluenceMap)
 				gam_debugInfluenceMap();
-
-			if (d_showNodeArrays)
-				gam_AStarDebugNodes(testDroid.aStarIndex);
 
 			if (d_showPhysics)
 				sys_getPhysicsWorld ()->DebugDraw();
 
-//			if (d_showAStarPath)
+			if (d_showNodeArrays)
+				gam_AStarDebugNodes(0);
+
+			if (d_showAStarPath)
 				gam_AStarDebugWayPoints (0);
 
 			break;
@@ -134,7 +138,7 @@ void sys_renderFrame (double interpolation)
 		gam_renderHud ();
 
 	fontClass.use("guiFont");
-	fontClass.render(renderer.renderer, 1, 10, 0, 0, 0, 255, sys_getString ("Think : %i FPS : %i intoNextFrame : %f ", thinkFPSPrint, fpsPrint, percentIntoNextFrame));
+	fontClass.render(renderer.renderer, 1, 10, 0, 0, 0, 255, sys_getString ("Game : %i Think : %i FPS : %i intoNextFrame : %f ", gam_gameEventQueueSize(), thinkFPSPrint, fpsPrint, percentIntoNextFrame));
 
 	sys_completeFrame ();
 }

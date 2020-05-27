@@ -52,6 +52,8 @@
 
 #define HEALING_TILE                LIFT_TILE + 4
 
+#define SPRITE_SIZE                 24      // Pixels
+
 #define TICKS_PER_SECOND 30.0f
 #define MAX_FRAMESKIP 5
 
@@ -77,7 +79,7 @@ extern Uint32 fpsPrint;
 extern Uint32 thinkFPSPrint;
 extern double percentIntoNextFrame;
 extern int    currentMode;
-extern double pixelsPerMeter;          // From script
+extern double  pixelsPerMeter;          // From script
 //
 // Game levers
 //

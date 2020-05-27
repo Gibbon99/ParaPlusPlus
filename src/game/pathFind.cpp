@@ -83,7 +83,7 @@ void gam_AStarDebugWayPoints (int whichPath)
 {
 	b2Vec2 lineStart;
 	b2Vec2 lineFinish;
-	int       i = 0;
+	int    i = 0;
 
 	if (-1 == whichPath)
 		return;
@@ -183,13 +183,15 @@ static int gam_processAStarWithThread (void *ptr)
 
 	gam_AStarSearchThread (testIndex);
 
+	std::cout << "Thread has finished processing pathfind : " << testIndex << std::endl;
+
 	return 0;
 }
 
 //--------------------------------------------------------------------------------------------------------
 //
 // See if the path is ready to use
-bool gam_isAStarReady(int whichPath)
+bool gam_isAStarReady (int whichPath)
 //--------------------------------------------------------------------------------------------------------
 {
 	return path[whichPath].pathReady;
@@ -207,9 +209,22 @@ int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int whichDroid, std::s
 	double     distanceTest;
 	SDL_Thread *thread;
 
+	start.x = (int)start.x;
+	start.y = (int)start.y;
+
+	destination.x = (int)destination.x;
+	destination.y = (int)destination.y;
+
+
+	std::cout << "[ " << whichDroid << " ] aStar Start : " << start.x << " " << start.y << " Dest : " << destination.x << " " << destination.y << std::endl;
+
 	distanceTest = static_cast<double>(b2Distance (start, destination));
+	std::cout << "[ " << whichDroid << " ] Distance between start and destination [ " << distanceTest << " ]" << std::endl;
 	if (distanceTest < 2)   // 2 Tiles
 		return PATH_TOO_SHORT;
+
+	if (gam_AStarIsTileSolid ((start.y * (shipdecks.at (gam_getCurrentDeckName()).levelDimensions.x) + start.x)))
+		return PATH_TOO_SHORT; // Solid - don't use
 
 	//
 	// Setup a number of paths ready to use
@@ -228,10 +243,11 @@ int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int whichDroid, std::s
 	}
 	//
 	// Find an unused path slot and use it
-	for (int   i = 0; i != static_cast<int>(path.size ()); i++)
+	for (int i = 0; i != static_cast<int>(path.size ()); i++)
 	{
 		if (!path[i].inUse)
 		{
+			path[i].inUse = true;
 			path[i].pathReady                = false;
 			path[i].wayPointsReady           = false;
 			path[i].startTile                = start;
@@ -241,18 +257,20 @@ int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int whichDroid, std::s
 			path[i].whichLevel               = whichLevel;
 			path[i].openNodes.reserve (initialNumReserveNodes);
 			path[i].closedNodes.reserve (initialNumReserveNodes);
-			path[i].inUse = true;
+
 			gam_AStarAddTileToOpenNode (i, start, 0, -1);
 #ifdef DEBUG_ASTAR
 			con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("Requesting new path start [ %32.f %3.2f ] Dest [ %3.2f %3.2f ]", start.x, start.y, destination.x, destination.y));
 #endif
-
-			// TODO - change to real droid
-			testDroid.aStarIndex = i;
 			//
 			// Create a thread and detach so it runs the pathfinding
 			thread = SDL_CreateThread (gam_processAStarWithThread, "pathFindingThread", reinterpret_cast<void *>(i));
+			if (nullptr == thread)
+				sys_shutdownWithError(sys_getString("Unable to create pathfind thread [ %s ]", SDL_GetError()));
+
 			SDL_DetachThread (thread);
+
+			std::cout << "aStar thread created and detached." << std::endl;
 
 			return i;
 		}
@@ -336,10 +354,53 @@ bool gam_AStarIsTileSolid (int tileIndex, int whichPath)
 	if (tileIndex < 0)
 		return true;
 
-	if (tileIndex > shipdecks.at (path[whichPath].whichLevel).tiles.size ())
+	if (tileIndex > static_cast<int>(shipdecks.at (path[whichPath].whichLevel).tiles.size ()))
 		sys_shutdownWithError (sys_getString ("Access outside size of tile array."));
 
 	int whichTile = shipdecks.at (path[whichPath].whichLevel).tiles[tileIndex];
+
+	switch (whichTile)
+	{
+		case DOOR_ACROSS_CLOSED:
+		case DOOR_ACROSS_OPEN_1:
+		case DOOR_ACROSS_OPEN_2:
+		case DOOR_ACROSS_CLOSING_1:
+		case DOOR_ACROSS_CLOSING_2:
+
+		case DOOR_UP_CLOSED:
+		case DOOR_UP_OPEN_1:
+		case DOOR_UP_OPEN_2:
+		case DOOR_UP_CLOSING_1:
+		case DOOR_UP_CLOSING_2:
+			return false;
+			break;
+
+		case TERMINAL_BOTTOM:
+		case TERMINAL_LEFT:
+		case TERMINAL_RIGHT:
+		case TERMINAL_TOP:
+			return true;
+			break;
+	}
+
+	if (whichTile <= NO_PASS_TILE)    // This stops the wall tile being considered passable
+		return true;
+	else
+		return false;
+
+	return true;    // Should never get here
+}
+
+//--------------------------------------------------------------------------------------------------------
+//
+// Is a tile considered 'solid' or not - no bounds checking version
+bool gam_AStarIsTileSolid (int tileIndex)
+//--------------------------------------------------------------------------------------------------------
+{
+	if (tileIndex < 0)
+		return true;
+
+	int whichTile = shipdecks.at (gam_getCurrentDeckName()).tiles[tileIndex];
 
 	switch (whichTile)
 	{
@@ -480,6 +541,7 @@ bool gam_AStarGenerateNewNode (int whichPath, int whichDirection)
 	int tileCostModify = gam_getInfluenceMapValue ((tempNode.tileLocation.y * (shipdecks.at (path[whichPath].whichLevel).levelDimensions.x) + tempNode.tileLocation.x));
 	moveTileCost += tileCostModify;
 
+	/*
 	static int count = 0;
 
 	if (path[whichPath].currentNodePtrClosedList == 59)
@@ -487,7 +549,7 @@ bool gam_AStarGenerateNewNode (int whichPath, int whichDirection)
 		std::cout << "Break here : " << count << std::endl;
 		count++;
 	}
-
+*/
 	//
 	// See if we have found a path to the destination tile
 	if ((tempNode.tileLocation.x == path[whichPath].destTile.x) && (tempNode.tileLocation.y == path[whichPath].destTile.y))
@@ -669,6 +731,11 @@ void gam_AStarRemovePath (int whichPath)
 	path[whichPath].closedNodes.clear ();
 	path[whichPath].wayPoints.clear ();
 	path[whichPath].foundPath.clear ();
+	path[whichPath].openNodes.resize (0);
+	path[whichPath].closedNodes.resize (0);
+	path[whichPath].wayPoints.resize (0);
+	path[whichPath].foundPath.resize (0);
+
 	path[whichPath].inUse = false;
 }
 
@@ -713,8 +780,13 @@ void gam_AStarSearchThread (int whichPathArg)
 		{
 			// Look for the lowest F cost node on the open list - this becomes the current node
 			currentNodeIndex = gam_AStarFindLowestCostNode (whichPathArg);
-//		if (currentNodeIndex < 0)
-//			return;
+			if (currentNodeIndex < 0)
+			{
+				path[whichPathArg].pathReady      = false;
+				path[whichPathArg].wayPointsReady = false;
+				path[whichPathArg].inUse          = false;
+				return;     // Something has gone wrong
+			}
 
 			// Move it to the closed node list
 			gam_AStarMoveNodeToClosedList (whichPathArg, currentNodeIndex);

@@ -61,6 +61,7 @@ typedef struct
 } _doorTrigger;
 
 extern double doorAnimSpeed;
+extern std::vector<_doorTrigger> doorTriggers;
 
 // Find the doors for this level and prepare a sensor object
 void gam_doorTriggerSetup (const std::string deckName);

@@ -2,10 +2,19 @@
 #define PARA_PARAAI_H
 
 #include <vector>
+#include <string>
 #include <box2d/b2_math.h>
 #include <box2d/b2_fixture.h>
 
 #define LOOK_AHEAD_DISTANCE     3.5     // In meters
+
+enum __PATROL_ACTIONS
+{
+	NORMAL_PATROL = 0,
+	FIND_WAYPOINT,
+	FOLLOW_ASTAR,
+	MOVE_DIRECT_TO_LOCATION
+};
 
 enum _AI_MODES
 {
@@ -31,7 +40,21 @@ public:
 
 	~paraAI ();
 
+	int getHealScore ();
+
+	void showValues ();
+
+	void initAI ();
+
 	int getCurrentMode ();
+
+	std::string getPatrolAction ();
+
+	int getAStarIndex ();
+
+	void sanityCheck ();
+
+	std::string getString (int whichMode);
 
 	void modifyScore (int whichScore, int modifyAmount);
 
@@ -44,6 +67,10 @@ public:
 	void patrol ();
 
 	void heal ();
+
+	void changeVelocity ();
+
+	b2Vec2 findLocationWithLOS (int locationType);
 
 	void renderVelocity ();
 
@@ -59,6 +86,12 @@ public:
 
 	void setHealthPercent (float newHealthPercent);
 
+	void setTargetDroid (int newTargetDroid);
+
+	void setArrayIndex (int newIndex);
+
+	void followAStar ();
+
 	double getAcceleration ();
 
 	double getMaxSpeed ();
@@ -72,27 +105,27 @@ public:
 	b2Vec2 findHealingTile ();
 
 private:
-	bool             haveAStarDestination;
-	int              aStarIndex          = -1;
-	int              aStarWaypointIndex;
-	bool             haveRequestedAStar  = false;
-	double           acceleration;
-	double           maxSpeed;
-	double           currentSpeed;
-	float            healthPercent;
-	double           aiActionCounter;
-	b2Vec2           currentVelocity;
-	b2Vec2           destination;
-	int              wayPointIndex;
-	int              wayPointDirection;
-	int              currentAIMode;
-	float            wayPointDistanceInMeters;
-	b2Vec2           destinationCoordsInMeters;
-	b2Vec2           worldPositionInMeters;
-	b2Vec2           destDirection;
-	b2Vec2           lookAheadVelocity;                // How far ahead does the droid look for a player collision
-	b2Fixture        *playerDroidFixture = nullptr;    // Used to determine if the droid will run into the player on current velocity
-	std::vector<int> ai;
+	int       arrayIndex{};
+	bool      haveAStarDestination{};
+	int       aStarIndex                = -1;
+	int       aStarWaypointIndex{};
+	float     acceleration{};
+	float     maxSpeed{};
+	float     currentSpeed{};
+	float     healthPercent{};
+	float     aiActionCounter{};
+	b2Vec2    currentVelocity           = {0, 0};
+	int       wayPointIndex             = 0;
+	int       wayPointDirection         = 0;
+	int       currentAIMode             = 0;
+	int       patrolAction              = 0;
+	int       targetDroid{};
+	float     wayPointDistanceInMeters  = 0.0f;
+	b2Vec2    destinationCoordsInMeters = {0, 0};
+	b2Vec2    worldPositionInMeters     = {0, 0};
+	b2Vec2    lookAheadVelocity         = {0, 0};                // How far ahead does the droid look for a player collision
+	b2Fixture *playerDroidFixture       = nullptr;    // Used to determine if the droid will run into the player on current velocity
+	int       ai[AI_MODE_NUMBER]{};
 };
 
 #endif //PARA_PARAAI_H

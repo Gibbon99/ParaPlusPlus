@@ -19,3 +19,6 @@ void gam_processActionKey ();
 
 // Render the test circle
 void gam_moveTestCircle ();
+
+// Recharge player weapon
+void gam_weaponRechargePlayer ();

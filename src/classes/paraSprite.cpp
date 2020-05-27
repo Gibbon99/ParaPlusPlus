@@ -69,6 +69,40 @@ void paraSprite::render (double posX, double posY, double scale)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Render a sprite at the passed in location
+void paraSprite::render (double posX, double posY, double scale, double angle)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	SDL_Rect  srcRect;
+	SDL_FRect destRect;
+	static std::map<std::string, paraTexture>::iterator textureItr;
+
+	if (nullptr == texturePtr)
+	{
+		texturePtr = textures.at(textureKeyName).getTexture();
+		textureItr = textures.find(textureKeyName);
+		frameWidth  = textureItr->second.getWidth () / numFrames;
+		frameHeight = textureItr->second.getHeight ();
+	}
+
+	destRect.x = posX - (frameWidth / 2);
+	destRect.y = posY - (frameHeight / 2);
+	destRect.w = frameWidth * scale;
+	destRect.h = frameHeight * scale;
+
+	srcRect.x = frameWidth * currentFrame;
+	srcRect.y = 0;
+	srcRect.w = frameWidth;
+	srcRect.h = frameHeight;
+
+	SDL_SetTextureColorMod (textures.at (textureKeyName).getTexture (), tintColor.r, tintColor.g, tintColor.b);
+
+	SDL_RenderCopyExF(renderer.renderer, texturePtr, &srcRect, &destRect, angle, nullptr, SDL_FLIP_NONE);
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Animate the sprite
 void paraSprite::animate ()
 //----------------------------------------------------------------------------------------------------------------------

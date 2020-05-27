@@ -256,7 +256,7 @@ void sys_setupEnemyPhysics (std::string levelName)
 			droidItr.userData->ignoreCollision = false;
 			droidItr.body->SetUserData (droidItr.userData);
 
-			droidItr.shape.m_radius = (float) (24 * 0.5f) / pixelsPerMeter;
+			droidItr.shape.m_radius = static_cast<float>((SPRITE_SIZE * 0.5) / pixelsPerMeter);
 			droidItr.shape.m_p.Set (0, 0);
 
 			droidItr.fixtureDef.shape               = &droidItr.shape;

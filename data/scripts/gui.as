@@ -11,7 +11,7 @@ void as_handleMainMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.startGameButton"))
 	{
-		gam_changeToDeck ("Stores", 0);
+		gam_changeToDeck ("Mid cargo", 0);
 		gam_setHudText ("Game on");
 		sys_setNewMode (MODE_PRE_GAME, false);
 		return;
@@ -636,19 +636,22 @@ void as_createGUI ()
 {
 	as_setLanguageStrings ();
 
-	baseGameSpeed     = 1.0;
-	sideviewDrawScale = 1.2;
-	healingAnimSpeed  = 0.3;
-	pixelsPerMeter    = 12.0;        // 12 pixels is 1 meter
-	playerFriction    = 0.7;
-	gravity           = 100.0;
-	doorAnimSpeed     = 1.0f;
-	numAStarPaths     = 8;
-	collisionLimit    = 5;
-	collisionCount    = 3.0;
-
-	hudTextPosX = 15;
-	hudTextPosY = 27;
+	baseGameSpeed        = 1.0;
+	sideviewDrawScale    = 1.2;
+	healingAnimSpeed     = 0.3;
+	pixelsPerMeter       = 12.0;        // 12 pixels is 1 meter
+	playerFriction       = 0.7;
+	gravity              = 100.0;
+	doorAnimSpeed        = 1.0f;
+	numAStarPaths        = 8;
+	collisionLimit       = 3;
+	collisionCount       = 6.0;
+	bulletDensity        = 0.2f;
+	bulletFriction       = 0.3f;
+	bulletAnimationSpeed = 1.0f;
+	bulletMoveSpeed      = 0.4f;
+	hudTextPosX          = 15;
+	hudTextPosY          = 27;
 
 	as_setSideviewColors ();
 

@@ -150,11 +150,42 @@ void contactListener::BeginContact (b2Contact *contact)
 
 	switch (bodyUserData_A->userType)
 	{
+		case PHYSIC_TYPE_WALL:
+		{
+			if ((bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY) || (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_PLAYER))
+			{
+//				par_addEmitter (bullets[bodyUserData_B->dataValue].body->GetPosition (), PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+				return;
+			}
+			break;
+		}
+
+		case PHYSIC_TYPE_BULLET_PLAYER:
+		{
+			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
+			{
+				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BULLET, bodyUserData_A->dataValue));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+				return;
+			}
+
+			if (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY)
+			{
+//				par_addEmitter (bullets[bodyUserData_B->dataValue].worldPos, PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+				return;
+			}
+			break;
+		}
+
+
 		case PHYSIC_TYPE_DOOR_BULLET:
 			if ((bodyUserData_B->userType == PHYSIC_TYPE_BULLET_PLAYER) || (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY))
 			{
 //				par_addEmitter (bullets[bodyUserData_B->dataValue].worldPos, PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
-//				gam_addPhysicAction (PHYSIC_EVENT_TYPE_REMOVE_BULLET, 0, 0, 0, bodyUserData_B->dataValue, {0, 0});
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
 				return;
 			}
 			break;
@@ -163,9 +194,6 @@ void contactListener::BeginContact (b2Contact *contact)
 			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
 			{
 				playerDroid.overTerminalTile = true;
-
-				std::cout << "Player over terminal tile" << std::endl;
-
 				return;
 			}
 			break;
@@ -175,9 +203,6 @@ void contactListener::BeginContact (b2Contact *contact)
 			{
 				playerDroid.overLiftTile = true;
 				playerDroid.liftIndex    = bodyUserData_A->dataValue;
-
-				std::cout << "Over lift : " << playerDroid.liftIndex << std::endl;
-
 				return;
 			}
 			break;
@@ -214,11 +239,41 @@ void contactListener::BeginContact (b2Contact *contact)
 	//--------------------------------------------------------
 	switch (bodyUserData_B->userType)
 	{
+		case PHYSIC_TYPE_WALL:
+		{
+			if ((bodyUserData_A->userType == PHYSIC_TYPE_BULLET_ENEMY) || (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_PLAYER))
+			{
+//				par_addEmitter (bullets[bodyUserData_A->dataValue].worldPos, PARTICLE_TYPE_SPARK, bodyUserData_A->dataValue);
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+				return;
+			}
+			break;
+		}
+
+		case PHYSIC_TYPE_BULLET_PLAYER:
+		{
+			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
+			{
+				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString("%i|%i|%i", bodyUserData_A->dataValue, PHYSIC_DAMAGE_BULLET, -1));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+				return;
+			}
+
+			if (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_ENEMY)
+			{
+//				par_addEmitter (bullets[bodyUserData_B->dataValue].worldPos, PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+				return;
+			}
+			break;
+		}
+
 		case PHYSIC_TYPE_DOOR_BULLET:
 			if ((bodyUserData_A->userType == PHYSIC_TYPE_BULLET_PLAYER) || (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_ENEMY))
 			{
 //				par_addEmitter (bullets[bodyUserData_A->dataValue].worldPos, PARTICLE_TYPE_SPARK, bodyUserData_A->dataValue);
-//				gam_addPhysicAction (PHYSIC_EVENT_TYPE_REMOVE_BULLET, 0, 0, 0, bodyUserData_A->dataValue, {0, 0});
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
 				return;
 			}
 			break;
@@ -227,9 +282,6 @@ void contactListener::BeginContact (b2Contact *contact)
 			if (bodyUserData_A->userType == PHYSIC_TYPE_TERMINAL)
 			{
 				playerDroid.overTerminalTile = true;
-
-				std::cout << "Player over terminal tile" << std::endl;
-
 				return;
 			}
 			break;
@@ -239,9 +291,6 @@ void contactListener::BeginContact (b2Contact *contact)
 			{
 				playerDroid.overLiftTile = true;
 				playerDroid.liftIndex    = bodyUserData_B->dataValue;
-
-				std::cout << "Over lift : " << playerDroid.liftIndex << std::endl;
-
 				return;
 			}
 			break;

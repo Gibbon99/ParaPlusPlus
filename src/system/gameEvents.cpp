@@ -3,6 +3,7 @@
 #include <game/texture.h>
 #include <game/shipDecks.h>
 #include <system/util.h>
+#include <game/bullet.h>
 #include "../../hdr/system/gameEvents.h"
 #include "../../hdr/classes/paraEvent.h"
 
@@ -53,6 +54,15 @@ void gam_addEvent (int newAction, int newCounter, const string &newLine)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Returns the current size of the game event queue
+int gam_gameEventQueueSize()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return gameEvents.size();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Run an event queue on the same thread as the graphics drawing thread
 void gam_processGameEventQueue ()
 //----------------------------------------------------------------------------------------------------------------------
@@ -60,7 +70,8 @@ void gam_processGameEventQueue ()
 	paraEventGame     *tempEvent;
 	static PARA_Mutex *gameMutex = nullptr;
 
-	if (!gameEvents.empty ())     // events in the queue to process
+	while (!gameEvents.empty ())     // events in the queue to process
+//	if (!gameEvents.empty ())     // events in the queue to process
 	{
 
 #ifdef MY_DEBUG
@@ -124,12 +135,19 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_DAMAGE_TO_DROID:
-					//int targetDroid, int damageSource, int sourceDroid,
 					gam_damageToDroid (sys_convertToInt (tempEvent->gameText1), sys_convertToInt (tempEvent->gameText2), sys_convertToInt (tempEvent->gameText3));
 					break;
 
 				case EVENT_ACTION_DROID_COLLISION:
 					gam_processCollision (sys_convertToInt (tempEvent->gameText1));
+					break;
+
+				case EVENT_ACTION_CREATE_BULLET:
+					gam_addBullet (sys_convertToInt (tempEvent->gameText1));
+					break;
+
+				case EVENT_ACTION_REMOVE_BULLET:
+					gam_removeBullet(sys_convertToInt(tempEvent->gameText1));
 					break;
 			}
 
@@ -139,4 +157,28 @@ void gam_processGameEventQueue ()
 			PARA_UnlockMutex (gameMutex);
 		}
 	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Changing decks, to clear all the events from previous deck
+void gam_clearGameEvents()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	static PARA_Mutex *gameMutex = nullptr;
+
+	if (nullptr == gameMutex)
+	{
+		gameMutex = evt_getMutex (GAME_MUTEX_NAME);    // cache the mutex value
+		if (nullptr == gameMutex)
+			sys_shutdownWithError (sys_getString ("Unable to get Mutex value [ %s ] - [ %s ]", GAME_MUTEX_NAME, SDL_GetError ()));
+	}
+
+	PARA_LockMutex (gameMutex);
+	while (!gameEvents.empty())
+	{
+		delete (gameEvents.front ());         // Free memory
+		gameEvents.pop ();
+	}
+	PARA_UnlockMutex (gameMutex);
 }

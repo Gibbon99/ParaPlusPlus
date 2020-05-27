@@ -208,7 +208,7 @@ namespace FW
 					{
 						for(auto& id : it.second->_ids)
 						{
-							if (id.id == pevent->wd)
+							if (id.id == static_cast<WatchID>(pevent->wd))
 							{
 								root = id.path;
 								watch = it.second;

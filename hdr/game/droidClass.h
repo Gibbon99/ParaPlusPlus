@@ -17,7 +17,6 @@ public:
 	int           currentMode;                // What is the droid doing; transfer, healing, terminal etc
 	int           droidType;
 	int           currentHealth;
-//	float         currentHealthPercent;
 	bool          overTerminalTile;
 	bool          inTransferMode;
 	bool          overLiftTile;
@@ -25,6 +24,7 @@ public:
 	bool          weaponCanFire;
 	int           collisionCounter;
 	float         collisionCounterDelay;
+	float         weaponDelay;
 	std::string   droidName;
 	b2BodyDef     bodyDef;                      // Used for physics and collisions
 	b2CircleShape shape;
@@ -33,8 +33,6 @@ public:
 	_userData     *userData = nullptr;
 	b2Vec2        worldPosInPixels;
 	b2Vec2        previousWorldPosInPixels;
-//	b2Vec2     destinationCoords;          // This is the line segment end point
-//	b2Vec2     destDirection;              // Which way is the droid heading
 	b2Vec2        velocity;
 	paraSprite    sprite;
 	paraAI        ai;

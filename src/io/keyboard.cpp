@@ -4,6 +4,7 @@
 #include <io/mouse.h>
 #include <game/player.h>
 #include <game/lifts.h>
+#include <system/util.h>
 #include "io/keyboard.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -78,8 +79,19 @@ void io_processKeyboardState ()
 			gam_processPlayerMovement ();
 			if (gui.keyDown (KEY_ACTION))
 				gam_processActionKey ();
+			if (gui.keyDown(KEY_CONSOLE))
+			{
+				sys_setNewMode (MODE_CONSOLE_EDIT, true);
+				gui.setState(KEY_CONSOLE, false, 0);
+			}
 			break;
 
+		case MODE_CONSOLE_EDIT:
+		if (gui.keyDown(KEY_CONSOLE))
+		{
+			sys_setNewMode (MODE_GAME, true);
+			gui.setState (KEY_CONSOLE, false, 0);
+		}
 		default:
 			break;
 	}

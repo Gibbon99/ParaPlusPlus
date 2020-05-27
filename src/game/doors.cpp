@@ -9,7 +9,6 @@ double doorAnimSpeed = 1.0f;
 std::vector<_doorTrigger> doorTriggers;
 std::vector<_doorTrigger> doorBulletSensor;
 
-
 // ----------------------------------------------------------------------------
 //
 // Check door trigger areas against sprite positions
@@ -101,7 +100,7 @@ void gam_doorProcessActions ()
 	if (doorTriggers.empty())
 		return;
 
-	for (i = 0; i < doorTriggers.size (); i++)
+	for (i = 0; i < static_cast<int>(doorTriggers.size ()); i++)
 	{
 		if (doorTriggers[i].inUse)
 		{

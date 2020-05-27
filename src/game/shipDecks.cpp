@@ -5,24 +5,26 @@
 #include <game/player.h>
 #include <system/util.h>
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
+#include <game/bullet.h>
+#include <system/gameEvents.h>
 #include "game/shipDecks.h"
 #include "game/doors.h"
 #include "game/terminal.h"
 #include "game/game.h"
 
-int                                          tileSize;
-int                                          numTileAcrossInTexture = 8;
-int                                          numTilesDownInTexture  = 8;
-b2Vec2                                    drawOffset;
-std::unordered_map<std::string, _deckStruct> shipdecks;
-PARA_Texture *playfieldTexture;
-std::string                                  currentDeckName;
-SDL_Rect                                     viewportRect;
-int                                          currentDeckNumber;
-std::vector<int>                             influenceMap;
-bool                                         d_showInfluenceMap = false;
+int                                                    tileSize;
+int                                                    numTileAcrossInTexture = 8;
+int                                                    numTilesDownInTexture  = 8;
+b2Vec2                                                 drawOffset;
+std::string                                            currentDeckName;
+SDL_Rect                                               viewportRect;
+int                                                    currentDeckNumber;
+std::vector<int>                                       influenceMap;
+bool                                                   d_showInfluenceMap     = false;
 
-std::unordered_map<std::string, _deckStruct>::iterator  g_shipDeckItr;
+PARA_Texture *playfieldTexture;
+std::unordered_map<std::string, _deckStruct>           shipdecks;
+std::unordered_map<std::string, _deckStruct>::iterator g_shipDeckItr;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -30,7 +32,7 @@ std::unordered_map<std::string, _deckStruct>::iterator  g_shipDeckItr;
 int gam_getInfluenceMapValue (int tileIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (tileIndex > influenceMap.size ())
+	if (tileIndex > static_cast<int>(influenceMap.size ()))
 		sys_shutdownWithError ("tileIndex greater than influenceMap size.");
 
 	return influenceMap[tileIndex];
@@ -43,7 +45,7 @@ void gam_setInfluenceValues (b2Vec2 startPos, int value, int size)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	b2Vec2 topRight;
-	int       finalSize;
+	int    finalSize;
 
 	finalSize = size * 2;
 
@@ -113,7 +115,7 @@ void gam_createInfluenceMap ()
 void gam_debugInfluenceMap ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int       influenceValue;
+	int    influenceValue;
 	b2Vec2 drawPosition;
 
 	for (auto countY = 0; countY != shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.y; countY++)
@@ -173,7 +175,7 @@ void gam_addPaddingToLevel (const std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::vector<int> tempLevel;
-	b2Vec2        tempDimensions{};
+	b2Vec2           tempDimensions{};
 	int              countY, countX, whichTile;
 	int              destX, destY;
 	std::string      levelName;
@@ -232,7 +234,7 @@ void gam_loadShipDeck (const std::string &fileName)
 	int          checkVersion;
 	_deckStruct  tempLevel;
 	_lineSegment tempSegment{};
-	b2Vec2    tempWaypoint{};
+	b2Vec2       tempWaypoint{};
 	int          tempDroidType;
 	int          tempTile;
 	int          fileSize;
@@ -480,17 +482,21 @@ std::string gam_returnLevelNameFromDeck (int deckNumber)
 void gam_changeToDeck (const std::string &deckName, int whichLift)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	gam_clearGameEvents();
 	//
 	// Clear out droid physics before changing level name
-	gam_clearDroidPhysics(gam_getCurrentDeckName());
+	gam_clearDroidPhysics (gam_getCurrentDeckName ());
 
-	currentDeckName = deckName;
+	currentDeckName = std::string(deckName);
 	gam_createDeckTexture (deckName);
+
+	sys_setupEnemyPhysics (deckName);
 
 	sys_setupSolidWalls (deckName);
 	gam_doorTriggerSetup (deckName);
 	gam_findTerminalPositions (deckName);
 	gam_findLiftPositions (deckName);
+	gam_resetBullets ();
 
 	playerDroid.previousWorldPosInPixels = {-1, -1};
 	playerDroid.worldPosInPixels         = gam_getLiftWorldPosition (whichLift, deckName);
@@ -499,7 +505,7 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	gam_createInfluenceMap ();
 
 	currentDeckNumber = gam_getCurrentDeckIndex ();
-	g_shipDeckItr = shipdecks.find(currentDeckName);
+	g_shipDeckItr     = shipdecks.find (currentDeckName);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -508,8 +514,8 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 void gam_renderVisibleScreen (double interpolation)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_Rect  sourceRect;
-	b2Vec2 renderPosition{};
+	SDL_Rect sourceRect;
+	b2Vec2   renderPosition{};
 
 	viewportRect.x = playerDroid.worldPosInPixels.x - (gameWinWidth / 2);
 	viewportRect.y = playerDroid.worldPosInPixels.y - (gameWinHeight / 2);
@@ -572,8 +578,8 @@ void gam_showWayPoints (const std::string levelName)
 		lineFinish.x = static_cast<float>(tempLine.finish.x);
 		lineFinish.y = static_cast<float>(tempLine.finish.y);
 
-		wallStartDraw.x = lineStart.x;
-		wallStartDraw.y = lineStart.y;
+		wallStartDraw.x  = lineStart.x;
+		wallStartDraw.y  = lineStart.y;
 		wallFinishDraw.x = lineFinish.x;
 		wallFinishDraw.y = lineFinish.y;
 

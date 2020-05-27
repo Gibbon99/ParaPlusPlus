@@ -215,6 +215,8 @@ void con_initConsole ()
 	console.addCommand ("d_showCurrentRendererInfo", "Show available renderer information.", debug_getRenderInfo);
 	console.addCommand ("d_showAllRenderers", "Shows information on all renderers available", debug_getAllRenderers);
 
+	console.addCommand("d_showAIValues", "Show AI Values for all droids", debug_showAIValues);
+
 	console.addCommand ("d_useRenderer", "Use a new renderer - pass in index", "as_useNewRenderer");
 	console.addCommand ("d_audioSpecs", "Show the audio device specs in use.", "as_getAudioSpecs");
 	console.addCommand ("loadAudioResources", "Load all the audio files.", "as_loadAudioResources");

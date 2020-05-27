@@ -4,6 +4,7 @@
 #include <game/healing.h>
 #include <game/player.h>
 #include <system/util.h>
+#include <game/bullet.h>
 #include "game/audio.h"
 #include "gui/guiLanguage.h"
 #include "system/startup.h"
@@ -79,6 +80,12 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("int numAStarPaths", &numAStarPaths);
 	paraScriptInstance.addHostVariable ("float collisionCount", &collisionCount);
 	paraScriptInstance.addHostVariable ("int collisionLimit", &collisionLimit);
+	paraScriptInstance.addHostVariable ("float bulletDensity", &bulletDensity);
+	paraScriptInstance.addHostVariable ("float bulletFriction", &bulletFriction);
+	paraScriptInstance.addHostVariable ("float bulletAnimationSpeed", &bulletAnimationSpeed);
+	paraScriptInstance.addHostVariable ("float numDisrupterFrames", &numDisrupterFrames);
+	paraScriptInstance.addHostVariable ("float disrupterFadeAmount", &disrupterFadeAmount);
+	paraScriptInstance.addHostVariable ("float bulletMoveSpeed", &bulletMoveSpeed);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)

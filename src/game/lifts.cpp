@@ -45,7 +45,7 @@ void gam_setCurrentTunnelDeckIndex ()
 		}
 	}
 
-	for (auto i = 0; i != tunnelLinks[tempTunnel].linkedDecks.size (); i++)
+	for (auto i = 0; i != static_cast<int>(tunnelLinks[tempTunnel].linkedDecks.size ()); i++)
 	{
 		if (tunnelLinks[tempTunnel].linkedDecks[i] == currentDeckNumber)
 		{
@@ -124,7 +124,7 @@ void gam_moveLift (int direction)
 	switch (direction)
 	{
 		case 2: //DOWN
-			if (currentTunnelDeckIndex != tunnelLinks[currentTunnel].linkedDecks.size () - 1)
+			if (currentTunnelDeckIndex != static_cast<int>(tunnelLinks[currentTunnel].linkedDecks.size () - 1))
 			{
 				currentTunnelDeckIndex++;
 

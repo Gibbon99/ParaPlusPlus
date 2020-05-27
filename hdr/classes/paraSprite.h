@@ -11,6 +11,8 @@ class paraSprite
 public:
 	void render (double posX, double posY, double scale);
 
+	void render (double posX, double posY, double scale, double angle);
+
 	void animate ();
 
 	void setAnimateSpeed (double newSpeed);
