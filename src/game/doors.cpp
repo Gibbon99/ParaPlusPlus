@@ -42,14 +42,14 @@ void gam_doorCheckTriggerAreas ()
 	//
 	for (auto &doorItr : doorTriggers)
 	{
-		for (j = 0; j != shipdecks[gam_getCurrentDeckName()].numDroids; j++)
+		for (auto droidItr : g_shipDeckItr->second.droid)
 		{
-			if (shipdecks.at (gam_getCurrentDeckName ()).droid[j].currentMode == DROID_MODE_NORMAL)
+			if (droidItr.currentMode == DROID_MODE_NORMAL)
 			{
-				if ((shipdecks[gam_getCurrentDeckName ()].droid[j].worldPosInPixels.x + (24 / 2) > doorItr.topLeft.x) &&
-				    (shipdecks[gam_getCurrentDeckName ()].droid[j].worldPosInPixels.y + (24 / 2) > doorItr.topLeft.y) &&
-				    (shipdecks[gam_getCurrentDeckName ()].droid[j].worldPosInPixels.x + (24 / 2) < doorItr.botRight.x) &&
-				    (shipdecks[gam_getCurrentDeckName ()].droid[j].worldPosInPixels.y + (24 / 2) < doorItr.botRight.y))
+				if ((droidItr.worldPosInPixels.x + (SPRITE_SIZE / 2) > doorItr.topLeft.x) &&
+				    (droidItr.worldPosInPixels.y + (SPRITE_SIZE / 2) > doorItr.topLeft.y) &&
+				    (droidItr.worldPosInPixels.x + (SPRITE_SIZE / 2) < doorItr.botRight.x) &&
+				    (droidItr.worldPosInPixels.y + (SPRITE_SIZE / 2) < doorItr.botRight.y))
 				{
 					doorItr.inUse = true;
 				}

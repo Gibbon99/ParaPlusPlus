@@ -104,7 +104,7 @@ void gam_initDroids (std::string levelName)
 	}
 
 	shipdecks.at (levelName).numEnemiesAlive = shipdecks.at (levelName).numDroids;
-	for (auto droidItr : shipdecks.at (levelName).droidTypes)
+	for (auto &droidItr : shipdecks.at (levelName).droidTypes)
 	{
 		tempDroid.ai.initAI();
 		tempDroid.ai.setArrayIndex (droidIndex);
@@ -160,7 +160,7 @@ void gam_renderDroids (std::string levelName)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Animate the droid sprites
-void gam_animateDroids (std::string levelName)
+void gam_animateDroids ()
 //-------------------------------------------------------------------------------------------------------------
 {
 	for (auto &droidItr : g_shipDeckItr->second.droid)
@@ -172,7 +172,7 @@ void gam_animateDroids (std::string levelName)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Process the AI for each droid
-void gam_processAI (std::string levelName)
+void gam_processAI ()
 //-------------------------------------------------------------------------------------------------------------
 {
 	for (auto &droidItr : g_shipDeckItr->second.droid)
@@ -200,16 +200,13 @@ void gam_processAI (std::string levelName)
 void gam_processCollision (int droidA)
 //-------------------------------------------------------------------------------------------------------------
 {
-	if (droidA > static_cast<int>(g_shipDeckItr->second.droid.size() - 1))
-		return;
-
-//		sys_shutdownWithError(sys_getString("Attempted out of bounds access on gam_processCollision with index [ %i ]", droidA));
+//	if (droidA > static_cast<int>(g_shipDeckItr->second.droid.size()))
+	//	return;
 
 	if (g_shipDeckItr->second.droid[droidA].userData->ignoreCollision)
 		return;
 
 	g_shipDeckItr->second.droid[droidA].collisionCounter++;
-
 	if (g_shipDeckItr->second.droid[droidA].collisionCounter > collisionLimit)
 	{
 		g_shipDeckItr->second.droid[droidA].collisionCounterDelay     = collisionCount;

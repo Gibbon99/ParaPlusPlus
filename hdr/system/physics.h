@@ -61,3 +61,6 @@ void sys_freePhysicsEngine ();
 
 // Create the physics bodies and shapes for the enemy droids
 void sys_setupEnemyPhysics (std::string levelName);
+
+// Clear previous level - remove physics objects from droid before changing level name
+void gam_clearDroidPhysics(std::string levelName);

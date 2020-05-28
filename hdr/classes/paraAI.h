@@ -52,6 +52,8 @@ public:
 
 	int getAStarIndex ();
 
+	int getArrayIndex();
+	
 	void sanityCheck ();
 
 	std::string getString (int whichMode);

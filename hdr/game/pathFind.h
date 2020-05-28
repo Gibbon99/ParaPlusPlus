@@ -16,28 +16,28 @@
 
 struct _pathNode
 {
-	bool   walkable;
-	b2Vec2 tileLocation;
-	int    parent;
-	int    g_movementCost;
-	int    h_estMoveCost;
-	int    f_score;
+	bool   walkable = false;
+	b2Vec2 tileLocation = {0,0};
+	int    parent = -1;
+	int    g_movementCost = 0;
+	int    h_estMoveCost = 0;
+	int    f_score = 0;
 };
 
 struct _nodeList
 {
-	int                    whichDroid;        // Who owns this path
-	std::string            whichLevel;        // Which level is this droid on
-	bool                   pathReady;
-	bool                   wayPointsReady;
-	bool                   inUse;
-	b2Vec2                 startTile;
-	b2Vec2                 destTile;
-	int                    currentNodePtrClosedList;
-	std::vector<_pathNode> openNodes;
-	std::vector<_pathNode> closedNodes;
-	std::vector<_pathNode> foundPath;
-	std::vector<b2Vec2>    wayPoints;
+	int                    whichDroid = -1;        // Who owns this path
+	std::string            whichLevel = "";        // Which level is this droid on
+	bool                   pathReady = false;
+	bool                   wayPointsReady = false;
+	bool                   inUse = false;
+	b2Vec2                 startTile = {0,0};
+	b2Vec2                 destTile = {0, 0};
+	int                    currentNodePtrClosedList = -1;;
+	std::vector<_pathNode> openNodes{};
+	std::vector<_pathNode> closedNodes{};
+	std::vector<_pathNode> foundPath{};
+	std::vector<b2Vec2>    wayPoints{};
 };
 
 extern std::vector<_nodeList> path;

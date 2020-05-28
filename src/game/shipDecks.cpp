@@ -486,8 +486,11 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	//
 	// Clear out droid physics before changing level name
 	gam_clearDroidPhysics (gam_getCurrentDeckName ());
-
+	
 	currentDeckName = std::string(deckName);
+	currentDeckNumber = gam_getCurrentDeckIndex();
+	g_shipDeckItr = shipdecks.find(currentDeckName);
+
 	gam_createDeckTexture (deckName);
 
 	sys_setupEnemyPhysics (deckName);
@@ -503,9 +506,6 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	sys_setPlayerPhysicsPosition (playerDroid.worldPosInPixels);
 
 	gam_createInfluenceMap ();
-
-	currentDeckNumber = gam_getCurrentDeckIndex ();
-	g_shipDeckItr     = shipdecks.find (currentDeckName);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

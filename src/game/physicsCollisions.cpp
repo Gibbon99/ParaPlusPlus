@@ -315,7 +315,7 @@ void contactListener::BeginContact (b2Contact *contact)
 			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
 			{
 				if (!bodyUserData_A->ignoreCollision)
-					gam_addEvent (EVENT_ACTION_DROID_COLLISION, 0, sys_getString ("%i|", bodyUserData_A->dataValue));
+					gam_addEvent(EVENT_ACTION_DROID_COLLISION, 0, sys_getString("%i|", bodyUserData_A->dataValue));
 			}
 			break;
 	}

@@ -10,7 +10,7 @@ extern droidClass  testDroid;
 void gam_initDroids (std::string levelName);
 
 // Animate the droid sprites
-void gam_animateDroids(std::string levelName);
+void gam_animateDroids();
 
 // Render the droids on the current level
 void gam_renderDroids(std::string levelName);
@@ -22,7 +22,7 @@ void createTestDroid();
 void renderTestDroid();
 
 // Process the AI for each droid
-void gam_processAI(std::string levelName);
+void gam_processAI();
 
 // Process damage to a droid
 //

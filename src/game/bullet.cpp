@@ -200,7 +200,8 @@ void gam_removeBullet (int bulletIndex)
 	{
 		if (bullets.at (bulletIndex).body != nullptr)
 		{
-			sys_getPhysicsWorld ()->DestroyBody (bullets.at (bulletIndex).body);
+			bullets.at(bulletIndex).body->GetWorld()->DestroyBody(bullets.at(bulletIndex).body);
+//			sys_getPhysicsWorld ()->DestroyBody (bullets.at (bulletIndex).body);
 			bullets.at (bulletIndex).body = nullptr;
 		}
 		bullets.at (bulletIndex).inUse = false;

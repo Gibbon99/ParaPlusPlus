@@ -110,10 +110,6 @@ void sys_processInputEvents ()
 				if (evt.key.keysym.sym == SDLK_F4)
 					sys_setNewMode (MODE_GUI_SHIPVIEW, true);
 
-				if (evt.key.keysym.sym == SDLK_F6)
-				{
-					gam_changeToDeck ("Staterooms", 0);
-				}
 
 				if (evt.key.state == SDL_PRESSED)
 				{
@@ -163,14 +159,14 @@ void sys_gameTickRun ()
 			gam_animateHealing (gam_getCurrentDeckName ());
 			playerDroid.sprite.animate ();
 			gam_weaponRechargePlayer ();
-			gam_animateDroids(gam_getCurrentDeckName());
+			gam_animateDroids();
 			gam_doorCheckTriggerAreas ();
 			gam_doorProcessActions ();
 			gam_processBullets ();
 
 			gam_populateInfluenceMap(playerDroid.worldPosInPixels);
 
-			gam_processAI(gam_getCurrentDeckName());
+			gam_processAI();
 
 //			gam_moveTestCircle ();
 

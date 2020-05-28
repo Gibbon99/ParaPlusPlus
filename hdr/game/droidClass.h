@@ -3,7 +3,7 @@
 
 #include <box2d/b2_body.h>
 #include <box2d/box2d.h>
-#include <classes/paraAI.h>
+#include "classes/paraAI.h"
 #include "system/physics.h"
 
 extern int   collisionLimit;
@@ -13,7 +13,7 @@ class droidClass
 {
 public:
 
-	int           index;          // Used in physics callback
+	int           index;					  // Used in physics callback
 	int           currentMode;                // What is the droid doing; transfer, healing, terminal etc
 	int           droidType;
 	int           currentHealth;
@@ -22,8 +22,6 @@ public:
 	bool          overLiftTile;
 	int           liftIndex;
 	bool          weaponCanFire;
-	int           collisionCounter;
-	float         collisionCounterDelay;
 	float         weaponDelay;
 	std::string   droidName;
 	b2BodyDef     bodyDef;                      // Used for physics and collisions
@@ -38,7 +36,10 @@ public:
 	paraAI        ai;
 	//
 	// Enemy droid fields
-	int           aStarIndex;
+	int           aStarIndex = -1;
+	int           collisionCounter = 0;
+	float         collisionCounterDelay = 0.0f;
+
 private:
 	// Current speed
 };

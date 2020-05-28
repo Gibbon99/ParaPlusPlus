@@ -119,7 +119,7 @@ void sys_renderFrame (double interpolation)
 			if (d_showInfluenceMap)
 				gam_debugInfluenceMap();
 
-			if (d_showPhysics)
+//			if (d_showPhysics)
 				sys_getPhysicsWorld ()->DebugDraw();
 
 			if (d_showNodeArrays)

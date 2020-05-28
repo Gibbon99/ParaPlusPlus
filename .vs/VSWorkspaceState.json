@@ -11,6 +11,6 @@
     "\\src\\io",
     "\\src\\system"
   ],
-  "SelectedNode": "\\src\\io\\configFile.cpp",
+  "SelectedNode": "\\src\\game\\pathFind.cpp",
   "PreviewInSolutionExplorer": false
 }

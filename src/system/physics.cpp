@@ -14,7 +14,7 @@ struct __physicWall
 
 std::vector<__physicWall> solidWalls;
 b2World                   *physicsWorld;
-bool                      d_showPhysics      = false;
+bool                      d_showPhysics      = true;
 bool                      physicsStarted     = true;
 int32                     velocityIterations = 8;   //how strongly to correct velocity
 int32                     positionIterations = 3;   //how strongly to correct position
@@ -46,16 +46,19 @@ void sys_processPhysics (double tickTime)
 	playerDroid.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);           // Change to pixels
 	playerDroid.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
 
-	for (auto &droidItr : shipdecks.at (gam_getCurrentDeckName ()).droid)
+	if (g_shipDeckItr->second.droidPhysicsCreated)
 	{
-		droidItr.previousWorldPosInPixels = droidItr.worldPosInPixels;
-		droidItr.worldPosInPixels         = droidItr.body->GetPosition ();       // In Meters
-		droidItr.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);  // Change to pixels for rendering
-		droidItr.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
-		droidItr.body->SetLinearVelocity ({0, 0});
+		for (auto &droidItr : g_shipDeckItr->second.droid)
+		{
+			droidItr.previousWorldPosInPixels = droidItr.worldPosInPixels;
+			droidItr.worldPosInPixels = droidItr.body->GetPosition();       // In Meters
+			droidItr.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);  // Change to pixels for rendering
+			droidItr.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
+			droidItr.body->SetLinearVelocity({ 0, 0 });
+		}
+		//	gam_processPhysicActions ();
+		playerDroid.body->SetLinearVelocity({ 0, 0 });
 	}
-//	gam_processPhysicActions ();
-	playerDroid.body->SetLinearVelocity ({0, 0});
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -135,8 +138,7 @@ void sys_setupPlayerPhysics ()
 	playerDroid.userData->ignoreCollision = false;
 	playerDroid.body->SetUserData (playerDroid.userData);
 
-//	playerDroid.shape.m_radius = static_cast<float>((playerDroid.sprite.getFrameWidth () / 2) / pixelsPerMeter);
-	playerDroid.shape.m_radius = 12 / pixelsPerMeter;   // 28 / 2 for radius
+	playerDroid.shape.m_radius = (SPRITE_SIZE / 2) / pixelsPerMeter;
 	playerDroid.shape.m_p.Set (0, 0);
 
 	playerDroid.fixtureDef.shape               = &playerDroid.shape;
@@ -160,9 +162,16 @@ void sys_clearSolidWalls ()
 	for (auto &wallItr : solidWalls)
 	{
 		if (wallItr.userData != nullptr)
+		{
 			delete (wallItr.userData);
+			wallItr.userData = nullptr;
+		}
+		
 		if (wallItr.body != nullptr)
-			sys_getPhysicsWorld ()->DestroyBody (wallItr.body);
+		{
+			wallItr.body->GetWorld()->DestroyBody(wallItr.body);
+			wallItr.body = nullptr;
+		}
 	}
 	solidWalls.clear ();
 }
@@ -183,13 +192,13 @@ void sys_setupSolidWalls (const std::string levelName)
 	if (!solidWalls.empty ())
 		sys_clearSolidWalls ();
 
-	for (int i = 0; i != shipdecks.at (levelName).numLineSegments; i++)
+	for (auto i = 0; i != shipdecks.at (levelName).numLineSegments; i++)
 	{
-		wallStart.x = (shipdecks.at (levelName).lineSegments[i].start.x - tileSize / 2) / pixelsPerMeter;
-		wallStart.y = (shipdecks.at (levelName).lineSegments[i].start.y - tileSize / 2) / pixelsPerMeter;
+		wallStart.x = (shipdecks.at (levelName).lineSegments[i].start.x - (tileSize / 2)) / pixelsPerMeter;
+		wallStart.y = (shipdecks.at (levelName).lineSegments[i].start.y - (tileSize / 2)) / pixelsPerMeter;
 
-		wallFinish.x = (shipdecks.at (levelName).lineSegments[i].finish.x - tileSize / 2) / pixelsPerMeter;
-		wallFinish.y = (shipdecks.at (levelName).lineSegments[i].finish.y - tileSize / 2) / pixelsPerMeter;
+		wallFinish.x = (shipdecks.at (levelName).lineSegments[i].finish.x - (tileSize / 2)) / pixelsPerMeter;
+		wallFinish.y = (shipdecks.at (levelName).lineSegments[i].finish.y - (tileSize / 2)) / pixelsPerMeter;
 
 		tempWall.bodyDef.type = b2_staticBody;
 		tempWall.bodyDef.position.Set (0, 0);
@@ -228,20 +237,52 @@ void sys_freePhysicsEngine ()
 	delete physicsWorld;
 }
 
+//-------------------------------------------------------------------------------------------------------------
+//
+// Clear previous level - remove physics objects from droid before changing level name
+void gam_clearDroidPhysics(std::string levelName)
+//-------------------------------------------------------------------------------------------------------------
+{
+	if (levelName.empty())      // First run - no level set as yet
+		return;
+
+	for (auto& droidItr : shipdecks.at(levelName).droid)
+	{
+		if (droidItr.userData != nullptr)
+		{
+			delete (droidItr.userData);
+			droidItr.userData = nullptr;
+		}
+
+		if (droidItr.body != nullptr)
+		{
+			droidItr.body->GetWorld()->DestroyBody(droidItr.body);
+			//			sys_getPhysicsWorld()->DestroyBody(droidItr.body);
+			droidItr.body = nullptr;
+		}
+	}
+	shipdecks.at(levelName).droidPhysicsCreated = false;
+}
+
 //-------------------------------------------------------------------
 //
 // Create the physics bodies and shapes for the enemy droids
 void sys_setupEnemyPhysics (std::string levelName)
 //-------------------------------------------------------------------
 {
-	int droidPhysicsIndex = 0;
-
+	std::cout << "Setting up enemy physics for level : " << levelName << std::endl;
+	
 	if (!physicsStarted)
 		sys_shutdownWithError (sys_getString ("Attempting to setup droid physics with no engine."));
 
+	if (g_shipDeckItr->second.droidPhysicsCreated)
+	{
+		std::cout << "Droid physics already created for level : " << levelName << std::endl;
+		return;
+	}
+	
 	for (auto &droidItr : shipdecks.at (levelName).droid)
 	{
-		droidItr.index = droidPhysicsIndex;
 		if (droidItr.currentMode == DROID_MODE_NORMAL)
 		{
 			droidItr.bodyDef.type = b2_dynamicBody;
@@ -251,7 +292,7 @@ void sys_setupEnemyPhysics (std::string levelName)
 
 			droidItr.userData                  = new _userData;
 			droidItr.userData->userType        = PHYSIC_TYPE_ENEMY;
-			droidItr.userData->dataValue       = droidPhysicsIndex;      // TODO - check this matches the actual index of the droid
+			droidItr.userData->dataValue	   = droidItr.ai.getArrayIndex();
 			droidItr.userData->wallIndexValue  = -1;
 			droidItr.userData->ignoreCollision = false;
 			droidItr.body->SetUserData (droidItr.userData);
@@ -267,6 +308,13 @@ void sys_setupEnemyPhysics (std::string levelName)
 			droidItr.fixtureDef.filter.maskBits     = PHYSIC_TYPE_WALL | PHYSIC_TYPE_BULLET_PLAYER | PHYSIC_TYPE_BULLET_ENEMY | PHYSIC_TYPE_PLAYER | PHYSIC_TYPE_ENEMY | PHYSIC_TYPE_DOOR_CLOSED;
 			droidItr.body->CreateFixture (&droidItr.fixtureDef);
 		}
-		droidPhysicsIndex++;
 	}
+
+
+	for (auto droidItr : shipdecks.at(levelName).droid)
+	{
+		std::cout << "[ " << droidItr.ai.getArrayIndex() << " ] Position : " << droidItr.body->GetPosition().x << " " << droidItr.body->GetPosition().y << std::endl;
+	}
+	
+	g_shipDeckItr->second.droidPhysicsCreated = true;
 }
