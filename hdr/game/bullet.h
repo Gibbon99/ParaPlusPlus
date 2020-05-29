@@ -8,16 +8,15 @@
 class paraBullet
 {
 public:
-
+	int            type;
 	bool           inUse     = false;
+	bool		   toRemove = false;
 	float          angle     = 0.0;
 	b2Vec2         worldPosInMeters;
 	b2Vec2         worldDestInMeters;
 	b2Vec2         velocity;
-	int            type;
 	b2BodyDef      bodyDef;                      // Used for physics and collisions
-	b2CircleShape  shape;
-	b2PolygonShape boxShape;
+	b2PolygonShape shape;
 	b2FixtureDef   fixtureDef;
 	b2Body         *body     = nullptr;
 	_userData      *userData = nullptr;
@@ -51,3 +50,6 @@ void gam_processBullets ();
 
 // Render any visible bullets to screen
 void gam_renderBullets();
+
+// Debug bullets
+void gam_debugBullets();

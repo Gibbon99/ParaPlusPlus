@@ -53,6 +53,8 @@ public:
 	int getAStarIndex ();
 
 	int getArrayIndex();
+
+	int getTargetDroid();
 	
 	void sanityCheck ();
 

@@ -24,15 +24,16 @@ int paraSprite::getFrameHeight ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a sprite
-void paraSprite::create (std::string setTextureKeyname, int setNumFrames, double setAnimateSpeed)
+void paraSprite::create(std::string setTextureKeyname, int setNumFrames, double setAnimateSpeed)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	numFrames      = setNumFrames;
-	animateSpeed   = setAnimateSpeed;
-	currentFrame   = 0;
+	numFrames = setNumFrames;
+	animateSpeed = setAnimateSpeed;
+	currentFrame = 0;
 	animateCounter = 0;
-	textureKeyName = std::move (setTextureKeyname);
+	textureKeyName = std::move(setTextureKeyname);
 }
+
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -44,27 +45,34 @@ void paraSprite::render (double posX, double posY, double scale)
 	SDL_FRect destRect;
 	static std::map<std::string, paraTexture>::iterator textureItr;
 
-	if (nullptr == texturePtr)
+	try
 	{
-		texturePtr = textures.at(textureKeyName).getTexture();
-		textureItr = textures.find(textureKeyName);
-		frameWidth  = textureItr->second.getWidth () / numFrames;
-		frameHeight = textureItr->second.getHeight ();
+		if (nullptr == texturePtr)
+		{
+			texturePtr = textures.at(textureKeyName).getTexture();
+			textureItr = textures.find(textureKeyName);
+			frameWidth = textureItr->second.getWidth() / numFrames;
+			frameHeight = textureItr->second.getHeight();
+		}
+		destRect.x = posX - (frameWidth / 2);
+		destRect.y = posY - (frameHeight / 2);
+		destRect.w = frameWidth * scale;
+		destRect.h = frameHeight * scale;
+
+		srcRect.x = frameWidth * currentFrame;
+		srcRect.y = 0;
+		srcRect.w = frameWidth;
+		srcRect.h = frameHeight;
+
+		SDL_SetTextureColorMod(textures.at(textureKeyName).getTexture(), tintColor.r, tintColor.g, tintColor.b);
+
+		SDL_RenderCopyF(renderer.renderer, texturePtr, &srcRect, &destRect);
 	}
 
-	destRect.x = posX - (frameWidth / 2);
-	destRect.y = posY - (frameHeight / 2);
-	destRect.w = frameWidth * scale;
-	destRect.h = frameHeight * scale;
-
-	srcRect.x = frameWidth * currentFrame;
-	srcRect.y = 0;
-	srcRect.w = frameWidth;
-	srcRect.h = frameHeight;
-
-	SDL_SetTextureColorMod (textures.at (textureKeyName).getTexture (), tintColor.r, tintColor.g, tintColor.b);
-
-	SDL_RenderCopyF (renderer.renderer, texturePtr, &srcRect, &destRect);
+	catch (std::out_of_range& outOfRange)
+	{
+		std::cout << "Texture not loaded to create sprite." << std::endl;
+	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -76,28 +84,35 @@ void paraSprite::render (double posX, double posY, double scale, double angle)
 	SDL_Rect  srcRect;
 	SDL_FRect destRect;
 	static std::map<std::string, paraTexture>::iterator textureItr;
-
-	if (nullptr == texturePtr)
+	
+	try
 	{
-		texturePtr = textures.at(textureKeyName).getTexture();
-		textureItr = textures.find(textureKeyName);
-		frameWidth  = textureItr->second.getWidth () / numFrames;
-		frameHeight = textureItr->second.getHeight ();
+		if (nullptr == texturePtr)
+		{
+			texturePtr = textures.at(textureKeyName).getTexture();
+			textureItr = textures.find(textureKeyName);
+			frameWidth = textureItr->second.getWidth() / numFrames;
+			frameHeight = textureItr->second.getHeight();
+		}
+		destRect.x = posX - (frameWidth / 2);
+		destRect.y = posY - (frameHeight / 2);
+		destRect.w = frameWidth * scale;
+		destRect.h = frameHeight * scale;
+
+		srcRect.x = frameWidth * currentFrame;
+		srcRect.y = 0;
+		srcRect.w = frameWidth;
+		srcRect.h = frameHeight;
+
+		SDL_SetTextureColorMod(textures.at(textureKeyName).getTexture(), tintColor.r, tintColor.g, tintColor.b);
+
+		SDL_RenderCopyExF(renderer.renderer, texturePtr, &srcRect, &destRect, angle, nullptr, SDL_FLIP_NONE);
 	}
-
-	destRect.x = posX - (frameWidth / 2);
-	destRect.y = posY - (frameHeight / 2);
-	destRect.w = frameWidth * scale;
-	destRect.h = frameHeight * scale;
-
-	srcRect.x = frameWidth * currentFrame;
-	srcRect.y = 0;
-	srcRect.w = frameWidth;
-	srcRect.h = frameHeight;
-
-	SDL_SetTextureColorMod (textures.at (textureKeyName).getTexture (), tintColor.r, tintColor.g, tintColor.b);
-
-	SDL_RenderCopyExF(renderer.renderer, texturePtr, &srcRect, &destRect, angle, nullptr, SDL_FLIP_NONE);
+	
+	catch (std::out_of_range& outOfRange)
+	{
+		std::cout << "Texture not loaded to create sprite." << std::endl;
+	}
 }
 
 

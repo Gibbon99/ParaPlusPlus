@@ -14,9 +14,9 @@ struct __physicWall
 
 std::vector<__physicWall> solidWalls;
 b2World                   *physicsWorld;
-bool                      d_showPhysics      = true;
+bool                      d_showPhysics      = false;
 bool                      physicsStarted     = true;
-int32                     velocityIterations = 8;   //how strongly to correct velocity
+int32                     velocityIterations = 6;   //how strongly to correct velocity
 int32                     positionIterations = 3;   //how strongly to correct position
 double                    gravity;         // Set from script
 

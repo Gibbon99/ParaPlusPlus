@@ -7,6 +7,8 @@
 #include <system/gameEvents.h>
 #include "game/player.h"
 
+#include "game/bullet.h"
+
 droidClass playerDroid;
 double     playerFriction;      // From script
 
@@ -232,7 +234,8 @@ void gam_processActionKey ()
 				if ((playerDroid.velocity.x == 0.0f) && (playerDroid.velocity.y == 0.0f))       // Don't create bullet with no velocity
 					return;
 
-				gam_addEvent (EVENT_ACTION_CREATE_BULLET, 0, sys_getString("%i|", -1));
+//				gam_addEvent (EVENT_ACTION_CREATE_BULLET, 0, sys_getString("%i|", -1));
+				gam_addBullet(-1);
 				playerDroid.weaponCanFire = false;
 				gui.setState(KEY_ACTION, false, 0);
 				gam_setHudText ("hudRecharging");

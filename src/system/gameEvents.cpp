@@ -143,7 +143,7 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_CREATE_BULLET:
-					gam_addBullet (sys_convertToInt (tempEvent->gameText1));
+//					gam_addBullet (sys_convertToInt (tempEvent->gameText1));
 					break;
 
 				case EVENT_ACTION_REMOVE_BULLET:

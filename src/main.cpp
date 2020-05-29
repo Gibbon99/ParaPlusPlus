@@ -2,6 +2,7 @@
 #include "../hdr/system/startup.h"
 #include "../hdr/system/frameUpdate.h"
 #include "../hdr/system/frameRender.h"
+#include "system/gameEvents.h"
 
 paraScript     paraScriptInstance;
 paraLogFile    logFile;
@@ -71,6 +72,9 @@ int main (int argc, char *argv[])
 
 		timeLag += (currentTime - previousTime);
 
+		sys_processInputEvents();
+		gam_processGameEventQueue();
+		
 		while (timeLag >= msPerUpdate && maxNumUpdateLoops < MAX_FRAMESKIP)
 		{
 			sys_gameTickRun ();

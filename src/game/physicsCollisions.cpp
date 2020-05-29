@@ -5,6 +5,8 @@
 #include <system/gameEvents.h>
 #include "game/physicsCollisions.h"
 
+#include "game/bullet.h"
+
 bool doWallCollisions = true;
 
 contactListener myContactListenerInstance;
@@ -38,7 +40,24 @@ paraDebugDraw::~paraDebugDraw () = default;
 void paraDebugDraw::DrawPolygon (const b2Vec2 *vertices, int32 vertexCount, const b2Color &color)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	std::vector<short>	xCoords;
+	std::vector<short>	yCoords;
+	b2Vec2	tempPosition;
 
+	for (auto i = 0; i != vertexCount; i++)
+	{
+		tempPosition.x = vertices[i].x;
+		tempPosition.y = vertices[i].y;
+		tempPosition *= pixelsPerMeter;
+
+		tempPosition = sys_worldToScreen(tempPosition, 32);
+
+		xCoords.push_back(tempPosition.x);
+		yCoords.push_back(tempPosition.y);
+	}
+
+
+	polygonRGBA(renderer.renderer, &xCoords[0], &yCoords[0], vertexCount, color.r * 255, color.g * 0, color.b * 255, color.a * 255);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -47,7 +66,23 @@ void paraDebugDraw::DrawPolygon (const b2Vec2 *vertices, int32 vertexCount, cons
 void paraDebugDraw::DrawSolidPolygon (const b2Vec2 *vertices, int32 vertexCount, const b2Color &color)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	std::vector<short>	xCoords;
+	std::vector<short>	yCoords;
+	b2Vec2	tempPosition;
+	
+	for (auto i = 0; i != vertexCount; i++)
+	{
+		tempPosition.x = vertices[i].x;
+		tempPosition.y = vertices[i].y;
+		tempPosition *= pixelsPerMeter;
 
+		tempPosition = sys_worldToScreen(tempPosition, 32);
+		
+		xCoords.push_back(tempPosition.x);
+		yCoords.push_back(tempPosition.y);
+	}
+
+	filledPolygonRGBA(renderer.renderer, &xCoords[0], &yCoords[0], vertexCount, color.r * 0, color.g * 255, color.b * 255, color.a * 255);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -156,10 +191,13 @@ void contactListener::BeginContact (b2Contact *contact)
 			{
 //				par_addEmitter (bullets[bodyUserData_B->dataValue].body->GetPosition (), PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
 				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+
+				bullets[bodyUserData_B->dataValue].inUse = false;
+				
 				return;
 			}
-			break;
 		}
+		break;
 
 		case PHYSIC_TYPE_BULLET_PLAYER:
 		{
@@ -167,6 +205,9 @@ void contactListener::BeginContact (b2Contact *contact)
 			{
 				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BULLET, bodyUserData_A->dataValue));
 				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+
+				bullets[bodyUserData_A->dataValue].inUse = false;
+				
 				return;
 			}
 
@@ -177,8 +218,16 @@ void contactListener::BeginContact (b2Contact *contact)
 				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
 				return;
 			}
-			break;
+
+			if (bodyUserData_B->userType == PHYSIC_TYPE_WALL)
+			{
+				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+
+				bullets[bodyUserData_A->dataValue].inUse = false;
+				return;
+			}
 		}
+		break;
 
 
 		case PHYSIC_TYPE_DOOR_BULLET:
@@ -245,10 +294,13 @@ void contactListener::BeginContact (b2Contact *contact)
 			{
 //				par_addEmitter (bullets[bodyUserData_A->dataValue].worldPos, PARTICLE_TYPE_SPARK, bodyUserData_A->dataValue);
 				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+
+				bullets[bodyUserData_A->dataValue].inUse = false;
+				
 				return;
 			}
-			break;
 		}
+		break;
 
 		case PHYSIC_TYPE_BULLET_PLAYER:
 		{
@@ -256,6 +308,9 @@ void contactListener::BeginContact (b2Contact *contact)
 			{
 				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString("%i|%i|%i", bodyUserData_A->dataValue, PHYSIC_DAMAGE_BULLET, -1));
 				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+				
+				bullets[bodyUserData_B->dataValue].inUse = false;
+				
 				return;
 			}
 
@@ -266,8 +321,17 @@ void contactListener::BeginContact (b2Contact *contact)
 				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
 				return;
 			}
-			break;
+
+			if (bodyUserData_A->userType == PHYSIC_TYPE_WALL)
+			{
+				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+
+				bullets[bodyUserData_B->dataValue].inUse = false;
+
+				return;
+			}
 		}
+		break;
 
 		case PHYSIC_TYPE_DOOR_BULLET:
 			if ((bodyUserData_A->userType == PHYSIC_TYPE_BULLET_PLAYER) || (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_ENEMY))
@@ -405,6 +469,40 @@ void contactListener::PreSolve (b2Contact *contact, const b2Manifold *manifold)
 					contact->SetEnabled (false);
 				return;
 			}
+			break;
+
+		case PHYSIC_TYPE_BULLET_PLAYER:
+		{
+			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
+			{
+				gam_addEvent(EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BULLET, bodyUserData_A->dataValue));
+				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+
+				bullets[bodyUserData_A->dataValue].inUse = false;
+				contact->SetEnabled(false);
+
+				return;
+			}
+
+			if (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY)
+			{
+				//				par_addEmitter (bullets[bodyUserData_B->dataValue].worldPos, PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
+				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+				contact->SetEnabled(false);
+				return;
+			}
+
+			if (bodyUserData_B->userType == PHYSIC_TYPE_WALL)
+			{
+				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+
+				bullets[bodyUserData_A->dataValue].inUse = false;
+				contact->SetEnabled(false);
+				return;
+			}		
+		}
+		break;
 	}
 
 	switch (bodyUserData_B->userType)
@@ -424,5 +522,40 @@ void contactListener::PreSolve (b2Contact *contact, const b2Manifold *manifold)
 					contact->SetEnabled (false);
 				return;
 			}
+			break;
+
+		case PHYSIC_TYPE_BULLET_PLAYER:
+		{
+			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
+			{
+				gam_addEvent(EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString("%i|%i|%i", bodyUserData_A->dataValue, PHYSIC_DAMAGE_BULLET, -1));
+				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+
+				bullets[bodyUserData_B->dataValue].inUse = false;
+				contact->SetEnabled(false);
+
+				return;
+			}
+
+			if (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_ENEMY)
+			{
+				//				par_addEmitter (bullets[bodyUserData_B->dataValue].worldPos, PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
+				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+				contact->SetEnabled(false);
+				return;
+			}
+
+			if (bodyUserData_A->userType == PHYSIC_TYPE_WALL)
+			{
+				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+
+				bullets[bodyUserData_B->dataValue].inUse = false;
+				contact->SetEnabled(false);
+
+				return;
+			}
+		}
+		break;
 	}
 }

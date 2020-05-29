@@ -3,6 +3,7 @@
 #include "system/physics.h"
 #include "system/util.h"
 #include "classes/paraEvent.h"
+#include "game/bullet.h"
 #include "io/logFile.h"
 #include "io/consoleFunctions.h"
 
@@ -217,12 +218,14 @@ void con_initConsole ()
 
 	console.addCommand("d_showAIValues", "Show AI Values for all droids", debug_showAIValues);
 
+	console.addCommand("d_bullets", "Show info on bullet array", gam_debugBullets);
+
 	console.addCommand ("d_useRenderer", "Use a new renderer - pass in index", "as_useNewRenderer");
 	console.addCommand ("d_audioSpecs", "Show the audio device specs in use.", "as_getAudioSpecs");
 	console.addCommand ("loadAudioResources", "Load all the audio files.", "as_loadAudioResources");
 	console.addCommand ("setVolume", "Change Volume level.", "as_setVolume");
 	console.addCommand ("getVolume", "View the current Volume level.", "as_getVolume");
-
+	
 	console.addCommand ("testScript", "test", "as_testFunction");
 
 	console.addCommand ("d_getOS", "Show which OS is in use.", sys_getOS);

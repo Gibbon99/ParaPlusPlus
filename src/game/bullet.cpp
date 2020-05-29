@@ -40,8 +40,6 @@ paraBullet createBullet (int bulletSourceIndex, int arrayIndex)
 	b2Vec2     newWorldPosInMeters;
 	int        bulletType;
 
-//	std::cout << "Create new bullet" << std::endl;
-
 	if (-1 == bulletSourceIndex)        // Bullet from player
 	{
 		bulletType          = dataBaseEntry[playerDroid.droidType].bulletType;
@@ -57,16 +55,26 @@ paraBullet createBullet (int bulletSourceIndex, int arrayIndex)
 	}
 	else
 	{
-		bulletType          = dataBaseEntry[shipdecks.at (gam_getCurrentDeckName ()).droid[bulletSourceIndex].droidType].bulletType;
-		newVelocity         = shipdecks.at (gam_getCurrentDeckName ()).droid[bulletSourceIndex].worldPosInPixels - playerDroid.worldPosInPixels;
+		bulletType = dataBaseEntry[shipdecks.at(gam_getCurrentDeckName()).droid[bulletSourceIndex].droidType].bulletType;
+		
+		if (g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid() == -1)
+		{
+			// Aim at player position
+			newVelocity = shipdecks.at(gam_getCurrentDeckName()).droid[bulletSourceIndex].worldPosInPixels - playerDroid.worldPosInPixels;
+		}
+		else
+		{
+			// Aim at other droid
+			newVelocity = shipdecks.at(gam_getCurrentDeckName()).droid[bulletSourceIndex].worldPosInPixels - 
+				g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid()].worldPosInPixels;
+		}
+		
 		newWorldPosInMeters = sys_convertToMeters (shipdecks.at (gam_getCurrentDeckName ()).droid[bulletSourceIndex].worldPosInPixels);
 		//
 		// Set its direction
 		tempBullet.velocity = newVelocity;
 		tempBullet.velocity.Normalize ();
-		tempVelocity = tempBullet.velocity;
-		tempVelocity *= 50.0f;
-		tempBullet.worldDestInMeters = sys_convertToMeters (playerDroid.worldPosInPixels);   // TODO Put in index for other droid if that is the target
+		tempBullet.velocity.operator *= (bulletMoveSpeed);
 	}
 
 	if (bulletType != BULLET_TYPE_DISRUPTER)
@@ -75,13 +83,14 @@ paraBullet createBullet (int bulletSourceIndex, int arrayIndex)
 		// Bullet starting position is outside sprite size to avoid collision
 		tempPosition = newVelocity;
 		tempPosition.Normalize ();
-		tempPosition *= SPRITE_SIZE / 2.0;
+		tempPosition *= (SPRITE_SIZE / 2.0) / pixelsPerMeter;
 		tempBullet.worldPosInMeters = newWorldPosInMeters + tempPosition;
 
 		tempBullet.angle = getAngle (tempBullet.worldPosInMeters, tempBullet.worldDestInMeters);
 
 		tempBullet.bodyDef.type = b2_dynamicBody;
-		tempBullet.bodyDef.position.Set (newWorldPosInMeters.x, newWorldPosInMeters.y);
+		tempBullet.bodyDef.position.Set (tempBullet.worldPosInMeters.x, tempBullet.worldPosInMeters.y);
+		tempBullet.bodyDef.angle = 0;
 		tempBullet.bodyDef.bullet = true;
 		tempBullet.body           = sys_getPhysicsWorld ()->CreateBody (&tempBullet.bodyDef);
 		if (tempBullet.body == nullptr)
@@ -103,25 +112,22 @@ paraBullet createBullet (int bulletSourceIndex, int arrayIndex)
 	{
 		case BULLET_TYPE_NORMAL:
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser.wav");
-			tempBullet.sprite.create ("bullet_001", 9, bulletAnimationSpeed);
-			tempBullet.shape.m_radius = static_cast<float>((tempBullet.sprite.getFrameHeight () * 0.5f) / pixelsPerMeter);
-			tempBullet.shape.m_p.Set (0, 0);
+			tempBullet.sprite.create ("bullet_001", 8, bulletAnimationSpeed);
+			tempBullet.shape.SetAsBox(6.0f / pixelsPerMeter, 6.0f / pixelsPerMeter);
 			tempBullet.fixtureDef.shape = &tempBullet.shape;
 			break;
 
 		case BULLET_TYPE_SINGLE:
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser.wav");
-			tempBullet.sprite.create ("bullet_476", 9, bulletAnimationSpeed);
-			tempBullet.shape.m_radius = static_cast<float>((tempBullet.sprite.getFrameHeight () * 0.5f) / pixelsPerMeter);
-			tempBullet.shape.m_p.Set (0, 0);
+			tempBullet.sprite.create ("bullet_476", 8, bulletAnimationSpeed);
+			tempBullet.shape.SetAsBox(9.0f / pixelsPerMeter, 3.0f / pixelsPerMeter);
 			tempBullet.fixtureDef.shape = &tempBullet.shape;
 			break;
 
 		case BULLET_TYPE_DOUBLE:
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser.wav");
-			tempBullet.sprite.create ("bullet_821", 9, bulletAnimationSpeed);
-			tempBullet.shape.m_radius = static_cast<float>((tempBullet.sprite.getFrameHeight () * 0.5f) / pixelsPerMeter);
-			tempBullet.shape.m_p.Set (0, 0);
+			tempBullet.sprite.create ("bullet_821", 8, bulletAnimationSpeed);
+			tempBullet.shape.SetAsBox(12.0f / pixelsPerMeter, 6.0f / pixelsPerMeter);
 			tempBullet.fixtureDef.shape = &tempBullet.shape;
 			break;
 
@@ -151,7 +157,7 @@ paraBullet createBullet (int bulletSourceIndex, int arrayIndex)
 		}
 		tempBullet.fixtureDef.density     = bulletDensity;
 		tempBullet.fixtureDef.friction    = bulletFriction;
-		tempBullet.fixtureDef.restitution = 0.0f;
+		tempBullet.fixtureDef.restitution = 0.01f;
 		tempBullet.body->CreateFixture (&tempBullet.fixtureDef);
 	}
 
@@ -184,7 +190,7 @@ void gam_addBullet (int bulletSourceIndex)
 		}
 	}
 
-	bullets.push_back (createBullet (bulletSourceIndex, static_cast<int>(bullets.size () - 1)));
+	bullets.push_back (createBullet (bulletSourceIndex, static_cast<int>(bullets.size ())));
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -198,13 +204,14 @@ void gam_removeBullet (int bulletIndex)
 
 	try
 	{
+		bullets.at(bulletIndex).inUse = false;
+		
 		if (bullets.at (bulletIndex).body != nullptr)
 		{
 			bullets.at(bulletIndex).body->GetWorld()->DestroyBody(bullets.at(bulletIndex).body);
 //			sys_getPhysicsWorld ()->DestroyBody (bullets.at (bulletIndex).body);
 			bullets.at (bulletIndex).body = nullptr;
 		}
-		bullets.at (bulletIndex).inUse = false;
 
 		// TODO remove particle emitter
 
@@ -213,6 +220,8 @@ void gam_removeBullet (int bulletIndex)
 			free (bullets.at (bulletIndex).userData);
 			bullets.at (bulletIndex).userData = nullptr;
 		}
+
+		bullets.at(bulletIndex).velocity = { 0,0 };
 	}
 	catch (const std::out_of_range &outOfRange)
 	{
@@ -274,4 +283,25 @@ void gam_renderBullets ()
 			}
 		}
 	}
+}
+
+//---------------------------------------------------------------------------------------------------------------
+//
+// Debug bullets
+void gam_debugBullets()
+//---------------------------------------------------------------------------------------------------------------
+{
+	int activeCounter = 0;
+
+	for (auto bulletItr : bullets)
+	{
+		if (bulletItr.inUse)
+		{
+			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Index [ %i ] inUse [ %i ] Velocity [ %3.3f %3.3f ]", bulletItr.userData->dataValue, bulletItr.inUse,
+				bulletItr.velocity.x, bulletItr.velocity.y));
+			activeCounter++;
+		}
+	}
+
+	con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Bullet array size [ %i ] - number active [ %i ]", bullets.size(), activeCounter));
 }

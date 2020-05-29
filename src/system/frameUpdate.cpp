@@ -140,13 +140,10 @@ void sys_processInputEvents ()
 void sys_gameTickRun ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	gam_processGameEventQueue ();
 	if (renderer.currentFadeState != FADE_STATE_NONE)
 		renderer.updateFade ();
 
-	io_checkFileWatcher ();
-
-	sys_processInputEvents ();
+	io_checkFileWatcher ();	
 
 	switch (currentMode)
 	{

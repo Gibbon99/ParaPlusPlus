@@ -646,10 +646,10 @@ void as_createGUI ()
 	numAStarPaths        = 8;
 	collisionLimit       = 3;
 	collisionCount       = 6.0;
-	bulletDensity        = 0.2f;
-	bulletFriction       = 0.3f;
+	bulletDensity        = 0.1f;
+	bulletFriction       = 0.01f;
 	bulletAnimationSpeed = 1.0f;
-	bulletMoveSpeed      = 0.4f;
+	bulletMoveSpeed      = 0.6f;
 	hudTextPosX          = 15;
 	hudTextPosY          = 27;
 

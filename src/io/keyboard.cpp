@@ -77,8 +77,10 @@ void io_processKeyboardState ()
 
 		case MODE_GAME:
 			gam_processPlayerMovement ();
+		
 			if (gui.keyDown (KEY_ACTION))
 				gam_processActionKey ();
+		
 			if (gui.keyDown(KEY_CONSOLE))
 			{
 				sys_setNewMode (MODE_CONSOLE_EDIT, true);
