@@ -3,9 +3,9 @@
 #include <system/util.h>
 #include <game/player.h>
 #include <game/audio.h>
+#include <game/particles.h>
+#include <game/pathFind.h>
 #include "game/droids.h"
-
-//droidClass testDroid;
 
 //-------------------------------------------------------------------------------------------------------------
 //
@@ -142,18 +142,25 @@ void gam_renderDroids (std::string levelName)
 
 	for (auto droidItr : g_shipDeckItr->second.droid)
 	{
-		worldPosInMeters = droidItr.body->GetPosition ();
-		droidItr.worldPosInPixels.x = worldPosInMeters.x * pixelsPerMeter;
-		droidItr.worldPosInPixels.y = worldPosInMeters.y * pixelsPerMeter;
+		if ((droidItr.currentMode == DROID_MODE_EXPLODING) || (droidItr.currentMode == DROID_MODE_NORMAL))
+		{
+			worldPosInMeters = droidItr.body->GetPosition ();
+			droidItr.worldPosInPixels.x = worldPosInMeters.x * pixelsPerMeter;
+			droidItr.worldPosInPixels.y = worldPosInMeters.y * pixelsPerMeter;
 
-		droidScreenPosition.x = droidItr.worldPosInPixels.x;
-		droidScreenPosition.y = droidItr.worldPosInPixels.y;
+			droidScreenPosition.x = droidItr.worldPosInPixels.x;
+			droidScreenPosition.y = droidItr.worldPosInPixels.y;
 
-		droidScreenPosition = sys_worldToScreen (droidScreenPosition, 24);
-		droidItr.sprite.setTintColor (0, 0, 0);
-		droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0);
+			droidScreenPosition = sys_worldToScreen (droidScreenPosition, 24);
+			if (droidItr.currentMode == DROID_MODE_NORMAL)
+				droidItr.sprite.setTintColor (0, 0, 0);
+			else
+				droidItr.sprite.setTintColor(255,255,255);
 
-		droidItr.ai.renderVelocity ();
+			droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0);
+
+			droidItr.ai.renderVelocity ();
+		}
 	}
 }
 
@@ -163,9 +170,17 @@ void gam_renderDroids (std::string levelName)
 void gam_animateDroids ()
 //-------------------------------------------------------------------------------------------------------------
 {
+	bool animationEnd = false;
+
 	for (auto &droidItr : g_shipDeckItr->second.droid)
 	{
-		droidItr.sprite.animate ();
+		if ((droidItr.currentMode == DROID_MODE_EXPLODING) || (droidItr.currentMode == DROID_MODE_NORMAL))
+			animationEnd = droidItr.sprite.animate ();
+
+		if ((animationEnd) && (droidItr.currentMode == DROID_MODE_EXPLODING))
+		{
+			droidItr.currentMode = DROID_MODE_FOR_REMOVAL;
+		}
 	}
 }
 
@@ -177,18 +192,21 @@ void gam_processAI ()
 {
 	for (auto &droidItr : g_shipDeckItr->second.droid)
 	{
-		droidItr.ai.process (droidItr.body->GetPosition ());
-		droidItr.body->ApplyForce (droidItr.ai.getVelocity (), droidItr.body->GetWorldCenter (), true);
-		//
-		// Slowly decrement the collision counter
-		if (droidItr.userData->ignoreCollision)
+		if (droidItr.currentMode == DROID_MODE_NORMAL)
 		{
-			droidItr.collisionCounterDelay -= 0.3f;
-			if (droidItr.collisionCounterDelay < 0.0)
+			droidItr.ai.process (droidItr.body->GetPosition ());
+			droidItr.body->ApplyForce (droidItr.ai.getVelocity (), droidItr.body->GetWorldCenter (), true);
+			//
+			// Slowly decrement the collision counter
+			if (droidItr.userData->ignoreCollision)
 			{
-				droidItr.collisionCounterDelay     = collisionCount;
-				droidItr.userData->ignoreCollision = false;
-				droidItr.collisionCounter          = 0;
+				droidItr.collisionCounterDelay -= 0.3f;
+				if (droidItr.collisionCounterDelay < 0.0)
+				{
+					droidItr.collisionCounterDelay     = collisionCount;
+					droidItr.userData->ignoreCollision = false;
+					droidItr.collisionCounter          = 0;
+				}
 			}
 		}
 	}
@@ -200,17 +218,17 @@ void gam_processAI ()
 void gam_processCollision (int droidA)
 //-------------------------------------------------------------------------------------------------------------
 {
-//	if (droidA > static_cast<int>(g_shipDeckItr->second.droid.size()))
-	//	return;
-
-	if (g_shipDeckItr->second.droid[droidA].userData->ignoreCollision)
-		return;
-
-	g_shipDeckItr->second.droid[droidA].collisionCounter++;
-	if (g_shipDeckItr->second.droid[droidA].collisionCounter > collisionLimit)
+	if (g_shipDeckItr->second.droid[droidA].currentMode == DROID_MODE_NORMAL)
 	{
-		g_shipDeckItr->second.droid[droidA].collisionCounterDelay     = collisionCount;
-		g_shipDeckItr->second.droid[droidA].userData->ignoreCollision = true;
+		if (g_shipDeckItr->second.droid[droidA].userData->ignoreCollision)
+			return;
+
+		g_shipDeckItr->second.droid[droidA].collisionCounter++;
+		if (g_shipDeckItr->second.droid[droidA].collisionCounter > collisionLimit)
+		{
+			g_shipDeckItr->second.droid[droidA].collisionCounterDelay     = collisionCount;
+			g_shipDeckItr->second.droid[droidA].userData->ignoreCollision = true;
+		}
 	}
 }
 
@@ -223,6 +241,9 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
 	float newHealthPercent;
+
+	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_NORMAL)
+		return;
 
 	switch (damageSource)
 	{
@@ -254,7 +275,16 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 				else
 					g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[0].bulletDamage;
 
-				// TODO - check for death
+				//
+				// See if droid is dead - set explosion sprite and change mode
+				if (g_shipDeckItr->second.droid[targetDroid].currentHealth < 0)
+				{
+					g_shipDeckItr->second.droid[targetDroid].velocity = {0,0};
+					g_shipDeckItr->second.droid[targetDroid].currentMode = DROID_MODE_EXPLODING;
+					g_shipDeckItr->second.droid[targetDroid].sprite.create("explosion", 25, 1.4f);
+
+					gam_addEmitter(sys_convertToMeters(g_shipDeckItr->second.droid[targetDroid].worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+				}
 			}
 			else
 			{
@@ -285,4 +315,43 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 
 	shipdecks.at (gam_getCurrentDeckName ()).droid[targetDroid].ai.setHealthPercent (newHealthPercent);
 	shipdecks.at (gam_getCurrentDeckName ()).droid[targetDroid].ai.checkHealth ();
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
+// Check for any droids that need to be removed - died last tick
+void gam_removeDroids()
+//-------------------------------------------------------------------------------------------------------------
+{
+	for (auto &droidItr : g_shipDeckItr->second.droid)
+	{
+		if (droidItr.currentMode == DROID_MODE_FOR_REMOVAL)
+		{
+			g_shipDeckItr->second.numEnemiesAlive--;
+
+			droidItr.currentMode = DROID_MODE_DEAD;
+			//
+			// Remove physics
+			droidItr.body->GetWorld()->DestroyBody(droidItr.body);
+			droidItr.body = nullptr;
+			//
+			// Free memory
+			delete droidItr.userData;
+			droidItr.userData = nullptr;
+			//
+			// Remove any path it may have been following
+			if (droidItr.aStarIndex > 0)
+				gam_AStarRemovePath(droidItr.aStarIndex);
+
+			// add to score
+
+		}
+	}
+
+	//
+	// See if the deck is empty
+	if (g_shipDeckItr->second.numEnemiesAlive == 0)
+	{
+		// TODO - Change tile set to empty - play sound - add score
+	}
 }

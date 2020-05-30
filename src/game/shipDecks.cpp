@@ -499,7 +499,7 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	gam_doorTriggerSetup (deckName);
 	gam_findTerminalPositions (deckName);
 	gam_findLiftPositions (deckName);
-	gam_resetBullets ();
+	gam_initBulletArray();
 
 	playerDroid.previousWorldPosInPixels = {-1, -1};
 	playerDroid.worldPosInPixels         = gam_getLiftWorldPosition (whichLift, deckName);

@@ -13,7 +13,7 @@ public:
 
 	void render (double posX, double posY, double scale, double angle);
 
-	void animate ();
+	bool animate ();
 
 	void setAnimateSpeed (double newSpeed);
 

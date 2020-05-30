@@ -1,3 +1,4 @@
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load all the Audio sound files
@@ -49,6 +50,8 @@ void as_loadTextureResources()
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, "planet.bmp|planet| ");
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, "hudNew.bmp|hudNew| ");
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, "screen.bmp|screen| ");
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, "lightmap.bmp|lightmap| ");
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, "explosion.bmp|explosion| ");
 
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, "db_999.bmp|db_droid| ");
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, "001.bmp|001| ");

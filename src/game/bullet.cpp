@@ -3,7 +3,13 @@
 #include <game/shipDecks.h>
 #include <game/audio.h>
 #include <system/util.h>
+#include <game/particles.h>
+#include <game/lightMaps.h>
 #include "game/bullet.h"
+
+//#define DEBUG_BULLET 1
+
+#define MAX_NUM_BULLETS     32
 
 float                   bulletDensity;
 float                   bulletFriction;
@@ -30,7 +36,7 @@ auto getAngle (b2Vec2 sourcePos, b2Vec2 destPos) -> float
 //---------------------------------------------------------------------------------------------------------------
 //
 // Create a new bullet - called from game event
-paraBullet createBullet (int bulletSourceIndex, int arrayIndex)
+paraBullet createBullet (int bulletSourceIndex, Uint32 bulletID)
 //---------------------------------------------------------------------------------------------------------------
 {
 	paraBullet tempBullet;
@@ -39,6 +45,10 @@ paraBullet createBullet (int bulletSourceIndex, int arrayIndex)
 	b2Vec2     newVelocity;
 	b2Vec2     newWorldPosInMeters;
 	int        bulletType;
+
+#ifdef DEBUG_BULLET
+	std::cout << "Creating a bullet with ID of : " << bulletID << std::endl;
+#endif
 
 	if (-1 == bulletSourceIndex)        // Bullet from player
 	{
@@ -102,10 +112,15 @@ paraBullet createBullet (int bulletSourceIndex, int arrayIndex)
 		else
 			tempBullet.userData->userType = PHYSIC_TYPE_BULLET_ENEMY;
 
-		tempBullet.userData->dataValue = arrayIndex;
+		tempBullet.userData->ID = bulletID;
+		tempBullet.userData->dataValue = bulletSourceIndex;
 		tempBullet.userData->wallIndexValue = -1;
 		tempBullet.userData->ignoreCollision = false;
 		tempBullet.body->SetUserData (tempBullet.userData);
+
+#ifdef DEBUG_BULLET
+		std::cout << "Bullet ID set to : " << tempBullet.userData->ID << std::endl;
+#endif
 	}
 
 	switch (bulletType)
@@ -163,8 +178,53 @@ paraBullet createBullet (int bulletSourceIndex, int arrayIndex)
 
 	tempBullet.type  = bulletType;
 	tempBullet.inUse = true;
+	tempBullet.ID = bulletID;
 
 	return tempBullet;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+//
+// Preallocate the bullet array - clear out on level change
+void gam_initBulletArray()
+//---------------------------------------------------------------------------------------------------------------
+{
+	paraBullet  tempBullet;
+
+	if (bullets.size() > 0)
+	{
+		for (auto &bulletItr : bullets)
+		{
+			bulletItr.inUse = false;
+			bulletItr.ID = 0;
+		}
+	}
+
+	for (auto i = 0; i != MAX_NUM_BULLETS; i++)
+	{
+		tempBullet.inUse = false;
+		tempBullet.ID = 0;
+		bullets.push_back(tempBullet);
+	}
+}
+
+//---------------------------------------------------------------------------------------------------------------
+//
+// Return the index of a bullet using its ID
+int gam_getArrayIndex(Uint32 bulletID)
+//---------------------------------------------------------------------------------------------------------------
+{
+	int indexCounter = 0;
+
+	for (const auto& bulletItr : bullets)
+	{
+		if (bulletItr.ID == bulletID)
+			return indexCounter;
+
+		indexCounter++;
+	}
+
+	sys_shutdownWithError(sys_getString("Unable to locate bullet index by ID [ %i ]", bulletID));
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -173,34 +233,43 @@ paraBullet createBullet (int bulletSourceIndex, int arrayIndex)
 void gam_addBullet (int bulletSourceIndex)
 //---------------------------------------------------------------------------------------------------------------
 {
-	if (bullets.size () == 0)
-	{
-		bullets.push_back (createBullet (bulletSourceIndex, 0));
-		return;
-	}
+	int indexCounter = 0;
+	Uint32 bulletID;
 
-	for (auto i = 0; i != static_cast<int>(bullets.size ()); i++)
+	bulletID = SDL_GetTicks();
+
+	for (auto &bulletItr : bullets)
 	{
-		if (!bullets[i].inUse)
+		if (!bulletItr.inUse)
 		{
-			auto tempBullet = createBullet (bulletSourceIndex, i);
-			if (tempBullet.type != -1)
-				bullets[i] = tempBullet;
+			bulletItr = createBullet(bulletSourceIndex, bulletID);
+			if (bulletSourceIndex < 0)  // Player bullet
+			{
+				gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_TRAIL, bulletID);
+				gam_addNewLightmap (sys_convertToMeters (playerDroid.worldPosInPixels), LIGHTMAP_TYPE_BULLET, bulletID);
+			}
+#ifdef DEBUG_BULLET
+			std::cout << "Bullet with ID : " << bulletID << " added to array position : " << indexCounter << std::endl;
+#endif
+
 			return;
 		}
+		indexCounter++;
 	}
-
-	bullets.push_back (createBullet (bulletSourceIndex, static_cast<int>(bullets.size ())));
 }
 
 //---------------------------------------------------------------------------------------------------------------
 //
 // Remove a bullet - called from Game Event loop - outside of Physics world step
-void gam_removeBullet (int bulletIndex)
+void gam_removeBullet (Uint32 bulletID)
 //---------------------------------------------------------------------------------------------------------------
 {
+	int bulletIndex = -1;
 
-//	std::cout << "Remove bullet " << bulletIndex << std::endl;
+	bulletIndex = gam_getArrayIndex(bulletID);
+#ifdef DEBUG_BULLET
+	std::cout << "Remove a bullet : " << bulletID << " with position in array : " << bulletIndex << std::endl;
+#endif
 
 	try
 	{
@@ -209,11 +278,8 @@ void gam_removeBullet (int bulletIndex)
 		if (bullets.at (bulletIndex).body != nullptr)
 		{
 			bullets.at(bulletIndex).body->GetWorld()->DestroyBody(bullets.at(bulletIndex).body);
-//			sys_getPhysicsWorld ()->DestroyBody (bullets.at (bulletIndex).body);
 			bullets.at (bulletIndex).body = nullptr;
 		}
-
-		// TODO remove particle emitter
 
 		if (bullets.at (bulletIndex).userData != nullptr)
 		{
@@ -222,22 +288,15 @@ void gam_removeBullet (int bulletIndex)
 		}
 
 		bullets.at(bulletIndex).velocity = { 0,0 };
+		bullets.at(bulletIndex).inUse = false;
+
+		gam_removeEmitter(bulletID);
+		gam_removeLightmap(bulletID);
 	}
+
 	catch (const std::out_of_range &outOfRange)
 	{
 		sys_shutdownWithError (sys_getString ("Attempting to remove bullet with index [ %i ]. Out of range.", bulletIndex));
-	}
-}
-
-//---------------------------------------------------------------------------------------------------------------
-//
-// Remove all the bullets
-void gam_resetBullets ()
-//---------------------------------------------------------------------------------------------------------------
-{
-	for (auto i = 0; i != static_cast<int>(bullets.size ()); i++)
-	{
-		gam_removeBullet (i);
 	}
 }
 
@@ -269,15 +328,16 @@ void gam_renderBullets ()
 //---------------------------------------------------------------------------------------------------------------
 {
 	b2Vec2 tempPosition;
+	SDL_Rect    destination;
 
-	for (auto bulletItr : bullets)
+	for (auto &bulletItr : bullets)
 	{
 		if (bulletItr.type != BULLET_TYPE_DISRUPTER)
 		{
 			if (bulletItr.inUse)
 			{
-				tempPosition = bulletItr.body->GetPosition ();
-				tempPosition = sys_convertToPixels (tempPosition);
+				bulletItr.worldPosInMeters = bulletItr.body->GetPosition ();
+				tempPosition = sys_convertToPixels (bulletItr.worldPosInMeters);
 				tempPosition = sys_worldToScreen (tempPosition, SPRITE_SIZE);
 				bulletItr.sprite.render (tempPosition.x, tempPosition.y, 1.0f, bulletItr.angle);
 			}
@@ -293,7 +353,7 @@ void gam_debugBullets()
 {
 	int activeCounter = 0;
 
-	for (auto bulletItr : bullets)
+	for (const auto& bulletItr : bullets)
 	{
 		if (bulletItr.inUse)
 		{

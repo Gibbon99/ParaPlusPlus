@@ -1,6 +1,8 @@
 #include <game/pathFind.h>
 #include <game/droids.h>
 #include <game/bullet.h>
+#include <game/particles.h>
+#include <game/lightMaps.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
@@ -159,13 +161,16 @@ void sys_gameTickRun ()
 			gam_animateDroids();
 			gam_doorCheckTriggerAreas ();
 			gam_doorProcessActions ();
+			gam_animateParticles();
+			gam_removeDeadEmitters();
+			gam_animateLightmaps();
 			gam_processBullets ();
 
 			gam_populateInfluenceMap(playerDroid.worldPosInPixels);
 
 			gam_processAI();
 
-//			gam_moveTestCircle ();
+			gam_removeDroids();
 
 			break;
 

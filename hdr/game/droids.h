@@ -31,3 +31,6 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid);
 
 // Process the counter to ignore collisions
 void gam_processCollision (int droidA);
+
+// Check for any droids that need to be removed - died last tick
+void gam_removeDroids();

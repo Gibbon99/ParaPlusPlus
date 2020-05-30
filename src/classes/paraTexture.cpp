@@ -149,7 +149,7 @@ void paraTexture::render ()
 //
 // Render a texture to the current backing target - or screen if backing texture is not used
 //
-// Pass in destination coords
+// Pass in destination coords - coords are in pixel space
 void paraTexture::render (SDL_Rect *destination)
 //----------------------------------------------------------------------------------------------------------------------
 {

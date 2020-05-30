@@ -648,8 +648,8 @@ void as_createGUI ()
 	collisionCount       = 6.0;
 	bulletDensity        = 0.1f;
 	bulletFriction       = 0.01f;
-	bulletAnimationSpeed = 1.0f;
-	bulletMoveSpeed      = 0.6f;
+	bulletAnimationSpeed = 0.5f;
+	bulletMoveSpeed      = 0.5f;
 	hudTextPosX          = 15;
 	hudTextPosY          = 27;
 

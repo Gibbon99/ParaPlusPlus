@@ -50,11 +50,14 @@ void sys_processPhysics (double tickTime)
 	{
 		for (auto &droidItr : g_shipDeckItr->second.droid)
 		{
-			droidItr.previousWorldPosInPixels = droidItr.worldPosInPixels;
-			droidItr.worldPosInPixels = droidItr.body->GetPosition();       // In Meters
-			droidItr.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);  // Change to pixels for rendering
-			droidItr.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
-			droidItr.body->SetLinearVelocity({ 0, 0 });
+			if (droidItr.currentMode == DROID_MODE_NORMAL)
+			{
+				droidItr.previousWorldPosInPixels = droidItr.worldPosInPixels;
+				droidItr.worldPosInPixels         = droidItr.body->GetPosition ();       // In Meters
+				droidItr.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);       // Change to pixels for rendering
+				droidItr.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
+				droidItr.body->SetLinearVelocity ({0, 0});
+			}
 		}
 		//	gam_processPhysicActions ();
 		playerDroid.body->SetLinearVelocity({ 0, 0 });

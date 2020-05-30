@@ -9,6 +9,7 @@
 #include <system/util.h>
 #include <game/player.h>
 #include <game/lifts.h>
+#include <classes/paraLightmap.h>
 #include "../../hdr/system/startup.h"
 #include "../../hdr/system/scriptEngine.h"
 #include "../../hdr/system/scriptConfig.h"
@@ -126,6 +127,8 @@ void sys_startSystems ()
 	fontClass.setColor (255, 255, 255, 255);
 
 	evt_registerMutex (GAME_MUTEX_NAME);
+
+	setupBulletLightmapColors();
 
 	sys_setNewMode (MODE_CONSOLE_INIT, false);
 

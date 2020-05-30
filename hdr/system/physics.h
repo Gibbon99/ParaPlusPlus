@@ -26,8 +26,18 @@ struct _userData
 {
 	int userType;
 	int dataValue;
+	Uint32 ID;
 	int wallIndexValue;
 	bool ignoreCollision;
+};
+
+struct _PHYSIC_OBJECT
+{
+	b2BodyDef     bodyDef;            // Used for physics and collisions
+	b2CircleShape shape;
+	b2FixtureDef  fixtureDef;
+	b2Body        *body = nullptr;
+	_userData     *userData;
 };
 
 extern bool   d_showPhysics;

@@ -1,5 +1,6 @@
 #include <system/util.h>
 #include <system/physics.h>
+#include <game/particles.h>
 #include "../../hdr/system/shutdown.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -10,6 +11,7 @@ void sys_closeSystems()
 {
 	io_saveConfigValues();
 
+	gam_clearEmitters();
 	sys_freePhysicsEngine ();
 
 	io_closeJoystick();

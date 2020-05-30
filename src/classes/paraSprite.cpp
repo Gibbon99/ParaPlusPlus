@@ -118,8 +118,8 @@ void paraSprite::render (double posX, double posY, double scale, double angle)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Animate the sprite
-void paraSprite::animate ()
+// Animate the sprite - return TRUE if reached end of the animation
+bool paraSprite::animate ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	animateCounter += 1.0 * animateSpeed;
@@ -128,8 +128,12 @@ void paraSprite::animate ()
 		animateCounter = 0.0;
 		currentFrame++;
 		if (currentFrame == numFrames)
+		{
 			currentFrame = 0;
+			return true;
+		}
 	}
+	return false;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

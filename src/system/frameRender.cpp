@@ -10,6 +10,8 @@
 #include <io/logFile.h>
 #include <game/bullet.h>
 #include <system/gameEvents.h>
+#include <game/particles.h>
+#include <game/lightMaps.h>
 #include "gui/guiRender.h"
 #include "system/frameRender.h"
 #include "io/console.h"
@@ -108,18 +110,18 @@ void sys_renderFrame (double interpolation)
 			playerDroid.sprite.setTintColor(255,255,255);
 			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2,  1.0);
 
-//			testCircle.sprite.render(testCircle.worldPosInPixels.x, testCircle.worldPosInPixels.y, 0.5);
-
 			gam_renderDroids(gam_getCurrentDeckName());
 
-			gam_showWayPoints (gam_getCurrentDeckName());
-
+			gam_renderLightmaps();
 			gam_renderBullets();
+			gam_renderParticles();
 
+
+//			gam_showWayPoints (gam_getCurrentDeckName());
 			if (d_showInfluenceMap)
 				gam_debugInfluenceMap();
 
-//			if (d_showPhysics)
+			if (d_showPhysics)
 				sys_getPhysicsWorld ()->DebugDraw();
 
 			if (d_showNodeArrays)
