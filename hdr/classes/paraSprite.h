@@ -9,7 +9,7 @@ class paraSprite
 {
 
 public:
-	void render (double posX, double posY, double scale);
+	void render (double posX, double posY, double scale, Uint8 alphaMod);
 
 	void render (double posX, double posY, double scale, double angle);
 

@@ -5,6 +5,7 @@
 #include <game/audio.h>
 #include <game/particles.h>
 #include <game/pathFind.h>
+#include <game/lineOfSight.h>
 #include "game/droids.h"
 
 //-------------------------------------------------------------------------------------------------------------
@@ -142,7 +143,8 @@ void gam_renderDroids (std::string levelName)
 
 	for (auto droidItr : g_shipDeckItr->second.droid)
 	{
-		if ((droidItr.currentMode == DROID_MODE_EXPLODING) || (droidItr.currentMode == DROID_MODE_NORMAL))
+		if ((droidItr.currentMode == DROID_MODE_EXPLODING) ||
+		    (droidItr.currentMode == DROID_MODE_NORMAL) )
 		{
 			worldPosInMeters = droidItr.body->GetPosition ();
 			droidItr.worldPosInPixels.x = worldPosInMeters.x * pixelsPerMeter;
@@ -153,11 +155,12 @@ void gam_renderDroids (std::string levelName)
 
 			droidScreenPosition = sys_worldToScreen (droidScreenPosition, 24);
 			if (droidItr.currentMode == DROID_MODE_NORMAL)
-				droidItr.sprite.setTintColor (0, 0, 0);
+				droidItr.sprite.setTintColor (0, 0, 0);     // Draw in black color
 			else
-				droidItr.sprite.setTintColor(255,255,255);
+				droidItr.sprite.setTintColor(255,255,255);  // Full color for explosion
 
-			droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0);
+			if (droidItr.visibleToPlayer)
+				droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0, static_cast<Uint8>(droidItr.visibleValue));
 
 			droidItr.ai.renderVelocity ();
 		}
@@ -181,6 +184,8 @@ void gam_animateDroids ()
 		{
 			droidItr.currentMode = DROID_MODE_FOR_REMOVAL;
 		}
+
+		gam_checkLOS(droidItr);
 	}
 }
 

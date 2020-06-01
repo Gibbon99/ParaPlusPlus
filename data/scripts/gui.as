@@ -652,6 +652,7 @@ void as_createGUI ()
 	bulletMoveSpeed      = 0.5f;
 	hudTextPosX          = 15;
 	hudTextPosY          = 27;
+	visibleFadeValue     = 30;
 
 	as_setSideviewColors ();
 

@@ -77,8 +77,7 @@ void sys_renderFrame (double interpolation)
 
 		case MODE_GUI_DATABASE:
 			gui_renderScrollbox ("databaseScreen.scrollbox", interpolation);
-			databaseSprite.render (finalPoint,
-					((((hiresVirtualHeight - (hiresVirtualHeight / 2) - databaseSprite.getFrameHeight())) / 2) + (textures.at("hudNew").getHeight())), 2.0);
+			databaseSprite.render (finalPoint, ((((hiresVirtualHeight - (hiresVirtualHeight / 2) - databaseSprite.getFrameHeight ())) / 2) + (textures.at ("hudNew").getHeight ())), 2.0, static_cast<Uint8>(255));
 
 			gui_renderGUI ();
 			break;
@@ -108,7 +107,7 @@ void sys_renderFrame (double interpolation)
 			gam_renderDoorFrames ();
 
 			playerDroid.sprite.setTintColor(255,255,255);
-			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2,  1.0);
+			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2, 1.0, static_cast<Uint8>(255));
 
 			gam_renderDroids(gam_getCurrentDeckName());
 

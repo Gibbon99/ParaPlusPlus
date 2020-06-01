@@ -6,6 +6,7 @@
 #include <system/util.h>
 #include <game/bullet.h>
 #include <game/particles.h>
+#include <game/lineOfSight.h>
 #include "game/audio.h"
 #include "gui/guiLanguage.h"
 #include "system/startup.h"
@@ -87,7 +88,7 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("float numDisrupterFrames", &numDisrupterFrames);
 	paraScriptInstance.addHostVariable ("float disrupterFadeAmount", &disrupterFadeAmount);
 	paraScriptInstance.addHostVariable ("float bulletMoveSpeed", &bulletMoveSpeed);
-
+	paraScriptInstance.addHostVariable ("int visibleFadeValue", &visibleFadeValue);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)

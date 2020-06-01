@@ -38,7 +38,7 @@ void paraSprite::create(std::string setTextureKeyname, int setNumFrames, double 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a sprite at the passed in location
-void paraSprite::render (double posX, double posY, double scale)
+void paraSprite::render (double posX, double posY, double scale, Uint8 alphaMod)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Rect  srcRect;
@@ -65,6 +65,7 @@ void paraSprite::render (double posX, double posY, double scale)
 		srcRect.h = frameHeight;
 
 		SDL_SetTextureColorMod(textures.at(textureKeyName).getTexture(), tintColor.r, tintColor.g, tintColor.b);
+		SDL_SetTextureAlphaMod(textures.at(textureKeyName).getTexture(), alphaMod);
 
 		SDL_RenderCopyF(renderer.renderer, texturePtr, &srcRect, &destRect);
 	}

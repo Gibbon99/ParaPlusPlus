@@ -7,7 +7,7 @@ std::vector<PARA_Color> bulletColors;
 
 //-----------------------------------------------------------------------------------------------------------
 //
-// Populate the table holding the bullet lightmap colors
+// Populate the table holding the bullet lightmap colors - should mirror to bullet frame colors
 void setupBulletLightmapColors ()
 //-----------------------------------------------------------------------------------------------------------
 {
