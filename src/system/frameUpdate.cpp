@@ -3,6 +3,7 @@
 #include <game/bullet.h>
 #include <game/particles.h>
 #include <game/lightMaps.h>
+#include <game/alertLevel.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
@@ -15,6 +16,7 @@
 #include "system/util.h"
 #include "system/frameUpdate.h"
 #include "game/doors.h"
+#include "game/score.h"
 
 SDL_Event evt;
 
@@ -151,6 +153,7 @@ void sys_gameTickRun ()
 	{
 		case MODE_PRE_GAME:
 			sys_setNewMode (MODE_GAME, true);
+			gam_setAlertLevel (ALERT_GREEN_TILE);
 			break;
 
 		case MODE_GAME:
@@ -171,6 +174,7 @@ void sys_gameTickRun ()
 			gam_processAI();
 
 			gam_removeDroids();
+			gam_processScore();
 
 			break;
 

@@ -88,6 +88,10 @@ void gam_processAudioEventQueue ()
 						audio.setMasterVolume(g_volumeLevel); // Loaded from config file
 						break;
 
+					case EVENT_ACTION_AUDIO_STOP:
+						audio.stop(audioEvent->keyName);
+						break;
+
 					default:
 						cout << "ERROR: Unknown audio action [ " << audioEvent->action << " ]" << audioEvent->keyName << endl;
 						break;

@@ -2241,7 +2241,7 @@ void paraGui::processMousePosition ()
 						guiScreens[currentScreen].selectedObject = index;
 						if (previousElement != index)
 						{
-							gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+							gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 							previousElement = index;
 						}
 					}
@@ -2253,7 +2253,7 @@ void paraGui::processMousePosition ()
 						guiScreens[currentScreen].selectedObject = index;
 						if (previousElement != index)
 						{
-							gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+							gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 							previousElement = index;
 						}
 					}
@@ -2265,7 +2265,7 @@ void paraGui::processMousePosition ()
 						guiScreens[currentScreen].selectedObject = index;
 						if (previousElement != index)
 						{
-							gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+							gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 							previousElement = index;
 						}
 					}
@@ -2316,15 +2316,15 @@ void paraGui::processMovementKeys ()
 			if (indexCount > static_cast<int>(guiScreens[currentScreen].objectIDIndex.size ()))
 			{
 				indexCount = static_cast<int>(guiScreens[currentScreen].objectIDIndex.size ());
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 			}
 			else
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 		}
 		else
 		{
 			// play bad sound
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 		}
 	}
 
@@ -2339,7 +2339,7 @@ void paraGui::processMovementKeys ()
 				indexCount++;
 				if ((guiScreens[currentScreen].selectedObject - indexCount) < 0)        // Stop out of bounds
 				{
-					gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+					gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 					return;
 				}
 			}
@@ -2347,26 +2347,26 @@ void paraGui::processMovementKeys ()
 			if (guiScreens[currentScreen].selectedObject - indexCount == 0)
 			{
 				guiScreens[currentScreen].selectedObject = 0;
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 				return;
 			}
 
 			if (guiScreens[currentScreen].selectedObject - indexCount < 0)
 			{
 				guiScreens[currentScreen].selectedObject = 0;
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 				return;
 			}
 
 			guiScreens[currentScreen].selectedObject -= indexCount;
 			// Play good sound
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 			if (guiScreens[currentScreen].selectedObject < 0)
 				guiScreens[currentScreen].selectedObject = 0;
 		}
 		else if (guiScreens[currentScreen].selectedObject == 0)
 		{
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 		}
 	}
 
@@ -2378,10 +2378,10 @@ void paraGui::processMovementKeys ()
 			case GUI_OBJECT_SLIDER:
 				if (guiSliders[selectedSlider].currentStep == 0)
 				{
-					gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+					gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 					return;
 				}
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 				guiSliders[selectedSlider].currentStep -= 1;
 				if (guiSliders[selectedSlider].currentStep < 0)
 					guiSliders[selectedSlider].currentStep = 0;
@@ -2401,10 +2401,10 @@ void paraGui::processMovementKeys ()
 			case GUI_OBJECT_SLIDER:
 				if (guiSliders[selectedSlider].currentStep == static_cast<int>(guiSliders[selectedSlider].element.size () - 1 ))
 				{
-					gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+					gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 					return;
 				}
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 				guiSliders[selectedSlider].currentStep += 1;
 				if (guiSliders[selectedSlider].currentStep > static_cast<int>(guiSliders[selectedSlider].element.size () - 1))
 					guiSliders[selectedSlider].currentStep = static_cast<int>(guiSliders[selectedSlider].element.size () - 1);
@@ -2428,7 +2428,7 @@ void paraGui::processAction ()
 		keyBinding[KEY_ACTION].active = false;
 		currentElement = guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject];
 		// Play good sound
-		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 
 		switch (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject])
 		{

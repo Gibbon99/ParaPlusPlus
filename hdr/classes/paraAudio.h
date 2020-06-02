@@ -61,6 +61,8 @@ public:
 
 	int play (std::string keyName, bool loop, int distance, int pan);
 
+	void stop (std::string keyName);
+
 	void setOutputFunction (audioFunctionPtrStr outputFunction);
 
 private:

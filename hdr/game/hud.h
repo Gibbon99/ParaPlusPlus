@@ -4,6 +4,8 @@
 
 extern double hudTextPosX;
 extern double hudTextPosY;
+extern double hudScorePosX;
+extern double hudScorePosY;
 
 // Render the HUD to the screen
 void gam_renderHud();

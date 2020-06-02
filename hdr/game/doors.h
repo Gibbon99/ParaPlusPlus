@@ -60,6 +60,7 @@ typedef struct
 	_userData      *userData;
 } _doorTrigger;
 
+extern float distanceForDoorSoundMax;
 extern double doorAnimSpeed;
 extern std::vector<_doorTrigger> doorTriggers;
 

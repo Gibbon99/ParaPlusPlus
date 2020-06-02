@@ -58,6 +58,46 @@ void setupBulletLightmapColors ()
 
 //-----------------------------------------------------------------------------------------------------------
 //
+// Set the color for the lightmap
+void paraLightmap::setColor(int newColorType)
+//-----------------------------------------------------------------------------------------------------------
+{
+	switch (newColorType)
+	{
+		case ALERT_RED_TILE:
+			color.r = 255;
+			color.g = 0;
+			color.b = 0;
+			color.a = 32;
+			break;
+
+		case ALERT_YELLOW_TILE:
+			color.r = 255;
+			color.g = 255;
+			color.b = 0;
+			color.a = 32;
+			break;
+
+		case ALERT_GREEN_TILE:
+			color.r = 0;
+			color.g = 255;
+			color.b = 0;
+			color.a = 32;
+			break;
+	}
+}
+
+//-----------------------------------------------------------------------------------------------------------
+//
+// Return the type of lightmap
+int paraLightmap::getType()
+//-----------------------------------------------------------------------------------------------------------
+{
+	return type;
+}
+
+//-----------------------------------------------------------------------------------------------------------
+//
 // Return inUse status for this emitter
 bool paraLightmap::inUse ()
 //-----------------------------------------------------------------------------------------------------------
@@ -126,6 +166,12 @@ paraLightmap::paraLightmap (b2Vec2 newWorldPos, int newType, int newWhichBullet)
 
 		case LIGHTMAP_TYPE_ALERT:
 			attachedToBullet = false;
+			color.r = 0;
+			color.g = 255;
+			color.b = 0;
+			color.a = 32;
+			worldPosInPixels.x +=  (tileSize / 2);
+			worldPosInPixels.y +=  (tileSize / 2);
 			break;
 	}
 
@@ -222,6 +268,19 @@ void paraLightmap::render ()
 			break;
 
 		case LIGHTMAP_TYPE_ALERT:
+			renderPosition.x = worldPosInPixels.x - (static_cast<float>(textureWidth) / 2);
+			renderPosition.y = worldPosInPixels.y - (static_cast<float>(textureHeight) / 2);
+
+			renderPosition = sys_worldToScreen (renderPosition, textureWidth);
+
+			destRectInPixels.x = static_cast<int>(renderPosition.x);
+			destRectInPixels.y = static_cast<int>(renderPosition.y);
+			destRectInPixels.w = textureWidth;
+			destRectInPixels.h = textureHeight;
+
+			SDL_SetTextureAlphaMod (textureCache, color.a);
+			SDL_SetTextureColorMod (textureCache, color.r, color.g, color.b);
+			textures.at ("lightmap").render (&destRectInPixels);
 			break;
 	}
 }

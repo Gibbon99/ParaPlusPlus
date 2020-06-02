@@ -7,10 +7,12 @@
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
 #include <game/bullet.h>
 #include <system/gameEvents.h>
+#include <game/lightMaps.h>
 #include "game/shipDecks.h"
 #include "game/doors.h"
 #include "game/terminal.h"
 #include "game/game.h"
+#include "game/alertLevel.h"
 
 int                                                    tileSize;
 int                                                    numTileAcrossInTexture = 8;
@@ -482,16 +484,19 @@ std::string gam_returnLevelNameFromDeck (int deckNumber)
 void gam_changeToDeck (const std::string &deckName, int whichLift)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	gam_clearGameEvents();
+	gam_clearGameEvents ();
 	//
 	// Clear out droid physics before changing level name
 	gam_clearDroidPhysics (gam_getCurrentDeckName ());
-	
-	currentDeckName = std::string(deckName);
-	currentDeckNumber = gam_getCurrentDeckIndex();
-	g_shipDeckItr = shipdecks.find(currentDeckName);
 
+	currentDeckName   = std::string (deckName);
+	currentDeckNumber = gam_getCurrentDeckIndex ();
+	g_shipDeckItr     = shipdecks.find (currentDeckName);
+
+	gam_removeAllLightmaps ();
+	gam_locateAlertTiles ();
 	gam_createDeckTexture (deckName);
+	gam_renderAlertTiles ();
 
 	sys_setupEnemyPhysics (deckName);
 
@@ -499,7 +504,7 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	gam_doorTriggerSetup (deckName);
 	gam_findTerminalPositions (deckName);
 	gam_findLiftPositions (deckName);
-	gam_initBulletArray();
+	gam_initBulletArray ();
 
 	playerDroid.previousWorldPosInPixels = {-1, -1};
 	playerDroid.worldPosInPixels         = gam_getLiftWorldPosition (whichLift, deckName);

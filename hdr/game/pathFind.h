@@ -46,7 +46,7 @@ extern bool d_showNodeArrays;
 extern bool d_showAStarPath;
 
 // Start a new path
-int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int whichDroid, std::string whichLevel);
+int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int newWhichDroid, std::string whichLevel);
 
 // Show aStar waypoint lines
 void gam_AStarDebugWayPoints (int whichPath);
@@ -65,3 +65,6 @@ void gam_AStarRemovePath (int whichPath);
 
 // Is a tile considered 'solid' or not - no bounds checking version
 bool gam_AStarIsTileSolid (int tileIndex);
+
+// Remove a path based on droid using it
+void gam_removeWhichDroidPath(int newWhichDroid);

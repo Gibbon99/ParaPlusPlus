@@ -4,7 +4,8 @@
 #include <game/player.h>
 #include "game/doors.h"
 
-double doorAnimSpeed = 1.0f;
+double doorAnimSpeed           = 1.0f;
+float  distanceForDoorSoundMax = 10;   // In meters
 
 std::vector<_doorTrigger> doorTriggers;
 std::vector<_doorTrigger> doorBulletSensor;
@@ -23,11 +24,8 @@ void gam_doorCheckTriggerAreas ()
 
 	for (auto &doorItr : doorTriggers)
 	{
-		if ((playerDroid.previousWorldPosInPixels  .x > doorItr.topLeft.x) &&
-		    (playerDroid.previousWorldPosInPixels.y > doorItr.topLeft.y) &&
-		    (playerDroid.previousWorldPosInPixels.x < doorItr.botRight.x) &&
+		if ((playerDroid.previousWorldPosInPixels.x > doorItr.topLeft.x) && (playerDroid.previousWorldPosInPixels.y > doorItr.topLeft.y) && (playerDroid.previousWorldPosInPixels.x < doorItr.botRight.x) &&
 		    (playerDroid.previousWorldPosInPixels.y < doorItr.botRight.y))
-
 		{    // player sprite is inside a trigger area
 			doorItr.inUse = true;
 		}
@@ -46,9 +44,7 @@ void gam_doorCheckTriggerAreas ()
 		{
 			if (droidItr.currentMode == DROID_MODE_NORMAL)
 			{
-				if ((droidItr.worldPosInPixels.x + (SPRITE_SIZE / 2) > doorItr.topLeft.x) &&
-				    (droidItr.worldPosInPixels.y + (SPRITE_SIZE / 2) > doorItr.topLeft.y) &&
-				    (droidItr.worldPosInPixels.x + (SPRITE_SIZE / 2) < doorItr.botRight.x) &&
+				if ((droidItr.worldPosInPixels.x + (SPRITE_SIZE / 2) > doorItr.topLeft.x) && (droidItr.worldPosInPixels.y + (SPRITE_SIZE / 2) > doorItr.topLeft.y) && (droidItr.worldPosInPixels.x + (SPRITE_SIZE / 2) < doorItr.botRight.x) &&
 				    (droidItr.worldPosInPixels.y + (SPRITE_SIZE / 2) < doorItr.botRight.y))
 				{
 					doorItr.inUse = true;
@@ -87,6 +83,54 @@ void gam_changeDoorFilters (int doorState, int whichDoor)
 	fixture->SetFilterData (filter);
 }
 
+// ----------------------------------------------------------------------------
+//
+// Play a door sound - taking into account distance and orientation to player
+void gam_playDoorSound (int whichTrigger, std::string keyName)
+// ----------------------------------------------------------------------------
+{
+	int   soundPan;
+	float distanceToDoor;
+	float distanceSoundLevel;
+	float distanceOrientation;
+
+	//
+	// How far is player from this door - attenuate for distance
+	distanceToDoor         = b2Distance (sys_convertToMeters (doorTriggers[whichTrigger].worldPosition), sys_convertToMeters (playerDroid.worldPosInPixels));
+	if (distanceToDoor > distanceForDoorSoundMax)
+		distanceSoundLevel = 254;
+	else
+	{
+		distanceSoundLevel = 254 * (distanceForDoorSoundMax / 10.0f);
+		distanceSoundLevel = 255 - distanceSoundLevel;
+	}
+	//
+	// Which side should the sound come from - attenuate for distance
+	if (doorTriggers[whichTrigger].worldPosition.x < playerDroid.worldPosInPixels.x)   // Door is to the left
+	{
+		if (distanceToDoor > distanceForDoorSoundMax)
+			distanceOrientation = 254;  // All the way to the left
+		else
+		{
+			distanceOrientation = 127 * 1.0f - (distanceForDoorSoundMax / 10.0f);
+			distanceOrientation = 254 - distanceOrientation;
+		}
+	}
+	else
+	{
+		if (distanceToDoor > distanceForDoorSoundMax)
+			distanceOrientation = 0;        // All the way to the right
+		else
+		{
+			distanceOrientation = 127 * 1.0f - (distanceForDoorSoundMax / 10.0f);
+//			distanceOrientation = 127 - distanceOrientation;
+		}
+	}
+
+//	std::cout << "Playing door sound : distance " << distanceSoundLevel << " Orientation level : " << distanceOrientation << std::endl;
+
+	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, static_cast<int>(distanceSoundLevel), static_cast<int>(distanceOrientation), keyName);
+}
 
 // ----------------------------------------------------------------------------
 //
@@ -95,9 +139,8 @@ void gam_doorProcessActions ()
 // ----------------------------------------------------------------------------
 {
 	int i;
-//	int doorDelayTime = 0;
 
-	if (doorTriggers.empty())
+	if (doorTriggers.empty ())
 		return;
 
 	for (i = 0; i < static_cast<int>(doorTriggers.size ()); i++)
@@ -112,8 +155,7 @@ void gam_doorProcessActions ()
 				{
 					case DOOR_ACROSS_CLOSED:
 						doorTriggers[i].currentFrame = DOOR_ACROSS_OPEN_1;
-						gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "doorOpen.wav");
-						//gam_playDoorSound(i);
+						gam_playDoorSound (1, "doorOpen");
 						break;
 					case DOOR_ACROSS_OPEN_1:
 						doorTriggers[i].currentFrame = DOOR_ACROSS_OPEN_2;
@@ -133,8 +175,7 @@ void gam_doorProcessActions ()
 
 					case DOOR_UP_CLOSED:
 						doorTriggers[i].currentFrame = DOOR_UP_OPEN_1;
-						gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "doorOpen.wav");
-						//gam_playDoorSound(i);
+						gam_playDoorSound (1, "doorOpen");
 						break;
 					case DOOR_UP_OPEN_1:
 						doorTriggers[i].currentFrame = DOOR_UP_OPEN_2;
@@ -153,7 +194,7 @@ void gam_doorProcessActions ()
 						break;
 
 				}    // end of switch statement
-				shipdecks.at (gam_getCurrentDeckName()).tiles[doorTriggers[i].tileIndex] = doorTriggers[i].currentFrame;
+				shipdecks.at (gam_getCurrentDeckName ()).tiles[doorTriggers[i].tileIndex] = doorTriggers[i].currentFrame;
 				gam_changeDoorFilters (doorTriggers[i].currentFrame, i);
 			}    // end of nextFrame test
 		}    // end of inUse is true test
@@ -166,9 +207,8 @@ void gam_doorProcessActions ()
 				switch (doorTriggers[i].currentFrame)
 				{
 					case DOOR_ACROSS_OPENED:
-//						gam_playDoorSound(i);
 						doorTriggers[i].currentFrame = DOOR_ACROSS_CLOSING_1;
-						gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "doorClose.wav");
+						gam_playDoorSound (1, "doorClose");
 						break;
 					case DOOR_ACROSS_CLOSING_1:
 						doorTriggers[i].currentFrame = DOOR_ACROSS_CLOSING_2;
@@ -185,9 +225,8 @@ void gam_doorProcessActions ()
 						break;
 
 					case DOOR_UP_OPENED:
-//						gam_playDoorSound(i);
 						doorTriggers[i].currentFrame = DOOR_UP_CLOSING_1;
-						gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "doorClose.wav");
+						gam_playDoorSound (1, "doorClose");
 						break;
 					case DOOR_UP_CLOSING_1:
 						doorTriggers[i].currentFrame = DOOR_UP_CLOSING_2;
@@ -216,11 +255,11 @@ void gam_doorProcessActions ()
 void gam_renderDoorFrames ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	PARA_Texture    *tempTexture;
+	PARA_Texture *tempTexture;
 
-	tempTexture = SDL_GetRenderTarget(renderer.renderer);
+	tempTexture = SDL_GetRenderTarget (renderer.renderer);
 
-	SDL_SetRenderTarget(renderer.renderer, gam_getPlayfieldTexture());
+	SDL_SetRenderTarget (renderer.renderer, gam_getPlayfieldTexture ());
 
 	for (const auto &doorIndex : doorTriggers)
 	{
@@ -229,7 +268,7 @@ void gam_renderDoorFrames ()
 			gam_renderSingleTile (doorIndex.renderPosition.x, doorIndex.renderPosition.y, doorIndex.currentFrame);
 		}
 	}
-	SDL_SetRenderTarget(renderer.renderer, tempTexture);
+	SDL_SetRenderTarget (renderer.renderer, tempTexture);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -301,7 +340,7 @@ void gam_doorTriggerSetup (const std::string deckName)
 		currentTile = shipdecks.at (deckName).tiles[i];
 		if (currentTile < 0)
 		{
-			sys_shutdownWithError(sys_getString ("Tile in doorTriggerSetup is invalid - Tile [ %i ]", i));
+			sys_shutdownWithError (sys_getString ("Tile in doorTriggerSetup is invalid - Tile [ %i ]", i));
 		}
 
 		switch (currentTile)

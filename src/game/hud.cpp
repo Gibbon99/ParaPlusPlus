@@ -1,10 +1,14 @@
 #include <system/startup.h>
+#include <system/util.h>
 #include "game/hud.h"
+#include "game/score.h"
 
 std::string hudText;
 std::string hudScore;
 double hudTextPosX;
 double hudTextPosY;
+double hudScorePosX;
+double hudScorePosY;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -47,4 +51,6 @@ void gam_renderHud()
 
 	fontClass.use("guiFont");
 	fontClass.render(renderer.renderer, hudTextPosX, hudTextPosY, 0, 0, 0, 255, hudText);
+
+	fontClass.render(renderer.renderer, hudScorePosX, hudScorePosY, 0, 0, 0, 255, sys_getString("%06i", gam_getPrintableScore()));
 }

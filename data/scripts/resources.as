@@ -6,38 +6,38 @@ void as_loadAudioResources()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "collosion1.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "console1.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "console2.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "doorOpen.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "doorClose.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "disruptor.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "damage.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "explode1.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "explode2.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "energyHeal.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "endTransmission2.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "endTransmission1.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "greenAlert.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "lift1.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "scrollBeeps.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferdeadlock.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "yellowAlert.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "console1.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "endTransmission2.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "keypressBad.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "lift2.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "start1.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferMove.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "console2.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "energyHeal.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "keyPressGood.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "lift3.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "start2.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferStage1.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "damage.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "explode1.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "keyPressBad.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "laser.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "lowEnergy.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "startAll.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferStage2.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "disruptor.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "explode2.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "lift2.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "lift3.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "levelShutdown.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "redAlert.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "startAll.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "start2.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "start1.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "scrollBeeps.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferdeadlock.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferMove.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferStage1.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferStage2.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transfer1.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferStart.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "doorOpen.wav");
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "doorClose.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "yellowAlert.wav");
 }
 
 //----------------------------------------------------------------------------------------------------------------------

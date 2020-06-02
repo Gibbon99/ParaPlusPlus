@@ -3,6 +3,8 @@
 #include <system/startup.h>
 #include "classes/paraAudio.h"
 
+//#define AUDIO_DEBUG 1
+
 #define MAX_NUM_CHANNELS    64
 #define DEFAULT_NUM_CHANNELS    16
 
@@ -71,9 +73,9 @@ int paraAudio::init (int numMaxActiveChannels, audioFunctionPtrStr outputFunctio
 	__audioActiveSounds tempActiveSounds;
 
 	paraAudio::funcOutput = outputFunction;
-	paraAudio::funcLoad = loadFunction;
+	paraAudio::funcLoad   = loadFunction;
 
-	audioDeviceOpened   = false;
+	audioDeviceOpened = false;
 
 	// Open 44.1KHz, signed 16bit, system byte order, stereo audio, using 1024 byte chunks
 	if (Mix_OpenAudio (44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
@@ -149,6 +151,21 @@ void paraAudio::setMasterVolume (int volume)
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
+// Stop playing a sound based on name
+void paraAudio::stop (std::string keyName)
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	for (auto &audioItr : audio)
+	{
+		if (keyName == audioItr.second.keyName)
+		{
+			Mix_HaltChannel (audioItr.second.playingOnChannel);
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
 // Play a sound file - record the channel it is playing on - -1 for error
 //
 // Distance: 0 (close / loud ) to 255 (far / quiet)
@@ -157,8 +174,7 @@ void paraAudio::setMasterVolume (int volume)
 int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
 //-----------------------------------------------------------------------------------------------------------------------
 {
-
-	return 1; // TODO remote
+//	return 1; // TODO remote
 
 
 	if ((distance < 0) || (distance > 255))
@@ -180,23 +196,23 @@ int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
 		{
 			if (Mix_Playing (activeItr.whichChannel) == 0)   // Channel is not playing
 			{
-				Mix_UnregisterAllEffects(activeItr.whichChannel);       // Reset any effects from previous sounds
+				Mix_UnregisterAllEffects (activeItr.whichChannel);       // Reset any effects from previous sounds
 
-				if (!Mix_SetPanning(activeItr.whichChannel, pan, 254 - pan))
-					funcOutput(-1, int_getString("Failed to set panning for [ %s ] - [ %s ]", keyName.c_str(), Mix_GetError()));
+				if (!Mix_SetPanning (activeItr.whichChannel, pan, 254 - pan))
+					funcOutput (-1, int_getString ("Failed to set panning for [ %s ] - [ %s ]", keyName.c_str (), Mix_GetError ()));
 
-				if (!Mix_SetDistance(activeItr.whichChannel, distance))
-					funcOutput(-1, int_getString("Failed to set attenuation for [ %s ] - [ %s ]", keyName.c_str(), Mix_GetError()));
+				if (!Mix_SetDistance (activeItr.whichChannel, distance))
+					funcOutput (-1, int_getString ("Failed to set attenuation for [ %s ] - [ %s ]", keyName.c_str (), Mix_GetError ()));
 
 				activeItr.whichChannel = Mix_PlayChannel(activeItr.whichChannel, audio[keyName].audio, loop ? -1 : 0);
 				activeItr.keyName      = keyName;
-#ifdef MY_DEBUG
+#ifdef AUDIO_DEBUG
 				std::cout << "Playing : " << keyName << " on channel : " << activeItr.whichChannel << std::endl;
 #endif
 				return activeItr.whichChannel;
 			}
 		}
-		funcOutput(-1, int_getString("Unable to play sound [ %s ]. No active channels left.", keyName.c_str()));
+		funcOutput (-1, int_getString ("Unable to play sound [ %s ]. No active channels left.", keyName.c_str ()));
 		return -1;
 	}
 	funcOutput (-1, int_getString ("File [ %s ] has not been loaded.", keyName.c_str ()));
@@ -220,8 +236,8 @@ bool paraAudio::load (std::string fileName)
 	}
 
 	tempAudio.fileName = fileName;
-	tempAudio.keyName  = fileName.erase(fileName.find_last_of("."), std::string::npos);;
-	tempAudio.audio    = Mix_LoadWAV_RW (funcLoad (tempAudio.fileName), 0);
+	tempAudio.keyName  = fileName.erase (fileName.find_last_of ("."), std::string::npos);;
+	tempAudio.audio = Mix_LoadWAV_RW (funcLoad (tempAudio.fileName), 0);
 	if (nullptr == tempAudio.audio)
 	{
 		funcOutput (-1, int_getString ("Unable to load audio file [ %s ]", tempAudio.fileName.c_str ()));

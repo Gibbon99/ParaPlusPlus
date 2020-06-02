@@ -636,23 +636,29 @@ void as_createGUI ()
 {
 	as_setLanguageStrings ();
 
-	baseGameSpeed        = 1.0;
-	sideviewDrawScale    = 1.2;
-	healingAnimSpeed     = 0.3;
-	pixelsPerMeter       = 12.0;        // 12 pixels is 1 meter
-	playerFriction       = 0.7;
-	gravity              = 100.0;
-	doorAnimSpeed        = 1.0f;
-	numAStarPaths        = 8;
-	collisionLimit       = 3;
-	collisionCount       = 6.0;
-	bulletDensity        = 0.1f;
-	bulletFriction       = 0.01f;
-	bulletAnimationSpeed = 0.5f;
-	bulletMoveSpeed      = 0.5f;
-	hudTextPosX          = 15;
-	hudTextPosY          = 27;
-	visibleFadeValue     = 30;
+	baseGameSpeed           = 1.0;
+	sideviewDrawScale       = 1.2;
+	healingAnimSpeed        = 0.3;
+	pixelsPerMeter          = 12.0;        // 12 pixels is 1 meter
+	playerFriction          = 0.7;
+	gravity                 = 100.0;
+	doorAnimSpeed           = 1.0f;
+	numAStarPaths           = 8;
+	collisionLimit          = 3;
+	collisionCount          = 6.0;
+	bulletDensity           = 0.1f;
+	bulletFriction          = 0.01f;
+	bulletAnimationSpeed    = 0.5f;
+	bulletMoveSpeed         = 0.5f;
+	hudTextPosX             = 15;
+	hudTextPosY             = 27;
+	hudScorePosX            = 580;
+	hudScorePosY            = 27;
+	visibleFadeValue        = 30;
+	redAlertLevel           = 500;
+	yellowAlertLevel        = 300;
+	updateScoreDelay        = 0.5f;
+	distanceForDoorSoundMax = 10.0f;   // In meters
 
 	as_setSideviewColors ();
 

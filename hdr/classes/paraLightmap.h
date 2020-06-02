@@ -25,6 +25,10 @@ public:
 
 	void render ();
 
+	int getType();
+
+	void setColor(int newColorType);
+
 private:
 
 	bool   isInUse               = false;

@@ -126,28 +126,28 @@ paraBullet createBullet (int bulletSourceIndex, Uint32 bulletID)
 	switch (bulletType)
 	{
 		case BULLET_TYPE_NORMAL:
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser.wav");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser");
 			tempBullet.sprite.create ("bullet_001", 8, bulletAnimationSpeed);
 			tempBullet.shape.SetAsBox(6.0f / pixelsPerMeter, 6.0f / pixelsPerMeter);
 			tempBullet.fixtureDef.shape = &tempBullet.shape;
 			break;
 
 		case BULLET_TYPE_SINGLE:
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser.wav");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser");
 			tempBullet.sprite.create ("bullet_476", 8, bulletAnimationSpeed);
 			tempBullet.shape.SetAsBox(9.0f / pixelsPerMeter, 3.0f / pixelsPerMeter);
 			tempBullet.fixtureDef.shape = &tempBullet.shape;
 			break;
 
 		case BULLET_TYPE_DOUBLE:
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser.wav");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser");
 			tempBullet.sprite.create ("bullet_821", 8, bulletAnimationSpeed);
 			tempBullet.shape.SetAsBox(12.0f / pixelsPerMeter, 6.0f / pixelsPerMeter);
 			tempBullet.fixtureDef.shape = &tempBullet.shape;
 			break;
 
 		case BULLET_TYPE_DISRUPTER:
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "disrupter.wav");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "disrupter");
 			tempBullet.disrupterFadeAmount = disrupterFadeAmount / numDisrupterFrames;
 			tempBullet.disrupterFade       = disrupterFadeAmount;
 			// TODO - Disrupter damage

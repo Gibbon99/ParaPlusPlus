@@ -7,6 +7,7 @@
 #include <game/pathFind.h>
 #include <game/lineOfSight.h>
 #include "game/droids.h"
+#include "game/score.h"
 
 //-------------------------------------------------------------------------------------------------------------
 //
@@ -254,8 +255,6 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 	{
 		case PHYSIC_DAMAGE_BUMP:
 
-//			std::cout << "Droid [ " << targetDroid << " ] damaged by collision from [ " << sourceDroid << " ]" << std::endl;
-
 			if (sourceDroid == -1)  // Hit from player
 				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bounceDamage;
 //			else
@@ -266,12 +265,10 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 
 		case PHYSIC_DAMAGE_BULLET:
 
-			std::cout << "Droid [ " << targetDroid << " ] hit by bullet from [ " << sourceDroid << " ]" << std::endl;
-
 			g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid (sourceDroid);
 //			g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 40);
 
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "damage.wav");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "damage");
 
 			if (-1 == sourceDroid)      // Player shot this bullet
 			{
@@ -288,10 +285,14 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 					g_shipDeckItr->second.droid[targetDroid].currentMode = DROID_MODE_EXPLODING;
 					g_shipDeckItr->second.droid[targetDroid].sprite.create("explosion", 25, 1.4f);
 
+					if (g_shipDeckItr->second.droid[targetDroid].droidType < 10)
+						gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "explode1");
+					else
+						gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "explode2");
 					gam_addEmitter(sys_convertToMeters(g_shipDeckItr->second.droid[targetDroid].worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
 				}
 			}
-			else
+			else        // Droid shot this bullet
 			{
 				if (sourceDroid == targetDroid)
 					return;
@@ -345,11 +346,16 @@ void gam_removeDroids()
 			droidItr.userData = nullptr;
 			//
 			// Remove any path it may have been following
-			if (droidItr.aStarIndex > 0)
-				gam_AStarRemovePath(droidItr.aStarIndex);
+			gam_removeWhichDroidPath(droidItr.ai.getArrayIndex());
 
+			if (droidItr.aStarIndex > -1)
+			{
+ 				std::cout << "Removing aStar path from removed droid : " << droidItr.aStarIndex << std::endl;
+				gam_AStarRemovePath (droidItr.aStarIndex);
+			}
+			//
 			// add to score
-
+			gam_modifyScore(dataBaseEntry[droidItr.droidType].score);
 		}
 	}
 

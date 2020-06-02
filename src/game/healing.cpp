@@ -1,4 +1,5 @@
 #include <game/shipDecks.h>
+#include <system/util.h>
 #include "game/healing.h"
 #include "game/shipDecks.h"
 
@@ -6,7 +7,7 @@ double healingAnimSpeed;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Render current door frames onto map
+// Render current healing frames onto map
 void gam_renderHealingFrames (const std::string& deckName)
 //----------------------------------------------------------------------------------------------------------------------
 {
@@ -20,7 +21,7 @@ void gam_renderHealingFrames (const std::string& deckName)
 
 	for (const auto &healingItr : shipdecks.at (deckName).healing)
 	{
-//		if (sys_visibleOnScreen (healingItr.renderPosition, tileSize))
+		if (sys_visibleOnScreen (healingItr.worldPosInPixels, tileSize))
 		{
 			gam_renderSingleTile (healingItr.worldPosInPixels.x, healingItr.worldPosInPixels.y, healingItr.currentFrame);
 		}

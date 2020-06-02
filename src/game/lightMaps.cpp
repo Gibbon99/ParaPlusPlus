@@ -1,7 +1,38 @@
 #include <classes/paraLightmap.h>
+#include <game/alertLevel.h>
 #include "game/lightMaps.h"
 
 std::vector<paraLightmap>       lightMaps;
+
+//-----------------------------------------------------------------------------------------------------------
+//
+// Remove all the lightmaps - ready for new level
+void gam_removeAllLightmaps()
+//-----------------------------------------------------------------------------------------------------------
+{
+	for (auto &lightMapItr : lightMaps)
+	{
+		lightMapItr.setInUseState(false);
+	}
+}
+
+//-----------------------------------------------------------------------------------------------------------
+//
+// Change the color of lightmaps
+void gam_changeAlertColor (int newAlertLevel)
+//-----------------------------------------------------------------------------------------------------------
+{
+	for (auto &lightMapItr : lightMaps)
+	{
+		if (lightMapItr.inUse())
+		{
+			if (lightMapItr.getType() == LIGHTMAP_TYPE_ALERT)
+			{
+				lightMapItr.setColor(newAlertLevel);
+			}
+		}
+	}
+}
 
 //-----------------------------------------------------------------------------------------------------------
 //

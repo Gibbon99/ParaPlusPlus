@@ -132,12 +132,12 @@ void gam_moveLift (int direction)
 
 				currentDeckNumber = tunnelLinks[currentTunnel].linkedDecks[currentTunnelDeckIndex];
 
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 			}
 			else
 			{
 				std::cout << "deckIndex : " << currentTunnelDeckIndex << std::endl;
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 			}
 
 			break;
@@ -150,12 +150,12 @@ void gam_moveLift (int direction)
 				std::cout << "deckIndex : " << currentTunnelDeckIndex << std::endl;
 
 				currentDeckNumber = tunnelLinks[currentTunnel].linkedDecks[currentTunnelDeckIndex];
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 			}
 			else
 			{
 				std::cout << "deckIndex : " << currentTunnelDeckIndex << std::endl;
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad.wav");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 			}
 
 			break;
@@ -172,7 +172,7 @@ void gam_moveLift (int direction)
 
 			gam_changeToDeck (gam_returnLevelNameFromDeck (currentDeckNumber), shipdecks.at (gam_returnLevelNameFromDeck (currentDeckNumber)).liftClass.getLiftIndex (currentTunnel));
 
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood.wav");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 
 			sys_setNewMode (MODE_GAME, true);
 

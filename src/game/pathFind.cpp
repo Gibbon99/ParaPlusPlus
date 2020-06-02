@@ -192,8 +192,6 @@ static int gam_processAStarWithThread(void* ptr)
 
 	gam_AStarSearchThread(testIndex);
 
-	std::cout << "Thread has finished processing pathfind : " << testIndex << std::endl;
-
 	return 0;
 }
 
@@ -209,7 +207,7 @@ bool gam_isAStarReady(int whichPath)
 //--------------------------------------------------------------------------------------------------------
 //
 // Start a new path and create a detached thread to run the pathfinding
-int gam_requestNewPath(b2Vec2 start, b2Vec2 destination, int whichDroid, std::string whichLevel)
+int gam_requestNewPath(b2Vec2 start, b2Vec2 destination, int newWhichDroid, std::string whichLevel)
 //--------------------------------------------------------------------------------------------------------
 {
 	static bool initDone = false;
@@ -224,13 +222,7 @@ int gam_requestNewPath(b2Vec2 start, b2Vec2 destination, int whichDroid, std::st
 	destination.x = static_cast<int>(destination.x);
 	destination.y = static_cast<int>(destination.y);
 
-
-	std::cout << "[ " << whichDroid << " ] aStar Start : " << start.x << " " << start.y << " Dest : " << destination.x
-		<< " " << destination.y << std::endl;
-
 	distanceTest = static_cast<double>(b2Distance(start, destination));
-	std::cout << "[ " << whichDroid << " ] Distance between start and destination [ " << distanceTest << " ]" <<
-		std::endl;
 	if (distanceTest < 2) // 2 Tiles
 		return PATH_TOO_SHORT;
 
@@ -265,7 +257,7 @@ int gam_requestNewPath(b2Vec2 start, b2Vec2 destination, int whichDroid, std::st
 			path[i].startTile = start;
 			path[i].destTile = destination;
 			path[i].currentNodePtrClosedList = -1;
-			path[i].whichDroid = whichDroid;
+			path[i].whichDroid = newWhichDroid;
 			path[i].whichLevel = whichLevel;
 			path[i].openNodes.reserve(initialNumReserveNodes);
 			path[i].closedNodes.reserve(initialNumReserveNodes);
@@ -281,8 +273,6 @@ int gam_requestNewPath(b2Vec2 start, b2Vec2 destination, int whichDroid, std::st
 				sys_shutdownWithError(sys_getString("Unable to create pathfind thread [ %s ]", SDL_GetError()));
 
 			SDL_DetachThread(thread);
-
-			std::cout << "aStar thread created and detached." << std::endl;
 
 			return i;
 		}
@@ -566,11 +556,9 @@ bool gam_AStarGenerateNewNode(int whichPath, int whichDirection)
 
 	//
 	// See if we have found a path to the destination tile
-	if ((tempNode.tileLocation.x == path[whichPath].destTile.x) && (tempNode.tileLocation.y == path[whichPath]
-	                                                                                           .destTile.y))
+	if ((tempNode.tileLocation.x == path[whichPath].destTile.x) && (tempNode.tileLocation.y == path[whichPath].destTile.y))
 	{
-		gam_AStarAddTileToOpenNode(whichPath, tempNode.tileLocation, moveTileCost,
-		                           path[whichPath].currentNodePtrClosedList);
+		gam_AStarAddTileToOpenNode(whichPath, tempNode.tileLocation, moveTileCost,path[whichPath].currentNodePtrClosedList);
 		gam_AStarMoveNodeToClosedList(whichPath, path[whichPath].openNodes.size() - 1);
 		path[whichPath].pathReady = true;
 		return true;
@@ -741,9 +729,6 @@ void gam_AStarRemovePath(int whichPath)
 		return;
 	}
 
-	// TODO - reset droid aStarIndexes
-	//	shipdecks.at (path[whichPath].whichLevel).droids[path[whichPath].whichDroid].aStarPathIndex = -1;
-
 	path[whichPath].pathReady = false;
 	path[whichPath].wayPointsReady = false;
 	path[whichPath].currentNodePtrClosedList = 0;
@@ -794,8 +779,6 @@ void gam_AStarSearchThread(int whichPathArg)
 	if (!path[whichPathArg].inUse)
 		return;
 
-	std::cout << "Path index : " << whichPathArg << std::endl;
-
 	while (!path[whichPathArg].pathReady)
 	{
 		if (!path[whichPathArg].pathReady)
@@ -830,4 +813,19 @@ void gam_AStarSearchThread(int whichPathArg)
 	gam_AStarExtractPath(whichPathArg);
 	gam_AStarConvertToCoords(whichPathArg);
 	path[whichPathArg].wayPointsReady = true;
+}
+
+//--------------------------------------------------------------------------------------------------------
+//
+// Remove a path based on droid using it
+void gam_removeWhichDroidPath(int newWhichDroid)
+//--------------------------------------------------------------------------------------------------------
+{
+	for (auto &pathItr : path)
+	{
+		if (pathItr.whichDroid == newWhichDroid)
+		{
+			pathItr.inUse = false;
+		}
+	}
 }

@@ -7,6 +7,7 @@
 #include <game/bullet.h>
 #include <game/particles.h>
 #include <game/lineOfSight.h>
+#include <game/score.h>
 #include "game/audio.h"
 #include "gui/guiLanguage.h"
 #include "system/startup.h"
@@ -70,6 +71,8 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("double baseGameSpeed", &baseGameSpeed);
 	paraScriptInstance.addHostVariable ("double hudTextPosX", &hudTextPosX);
 	paraScriptInstance.addHostVariable ("double hudTextPosY", &hudTextPosY);
+	paraScriptInstance.addHostVariable ("double hudScorePosX", &hudScorePosX);
+	paraScriptInstance.addHostVariable ("double hudScorePosY", &hudScorePosY);
 	paraScriptInstance.addHostVariable ("bool doScreenEffect", &doScreenEffect);
 	paraScriptInstance.addHostVariable ("string tileFilename", &tileFilename);
 	paraScriptInstance.addHostVariable ("string tileStyle", &tileStyle);
@@ -89,6 +92,10 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("float disrupterFadeAmount", &disrupterFadeAmount);
 	paraScriptInstance.addHostVariable ("float bulletMoveSpeed", &bulletMoveSpeed);
 	paraScriptInstance.addHostVariable ("int visibleFadeValue", &visibleFadeValue);
+	paraScriptInstance.addHostVariable ("int redAlertLevel", &redAlertLevel);
+	paraScriptInstance.addHostVariable ("int yellowAlertLevel", &yellowAlertLevel);
+	paraScriptInstance.addHostVariable ("float updateScoreDelay", &updateScoreDelay);
+	paraScriptInstance.addHostVariable ("float distanceForDoorSoundMax", &distanceForDoorSoundMax);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)

@@ -7,7 +7,7 @@
 #include <classes/paraRandom.h>
 #include "classes/paraAI.h"
 
-#define DEBUG_AI 1
+// #define DEBUG_AI 1
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
@@ -416,8 +416,6 @@ void paraAI::getWaypointDestination ()
 	}
 
 	destinationCoordsInMeters = sys_convertToMeters (shipdecks.at (gam_getCurrentDeckName ()).wayPoints[wayPointIndex]);
-//	destination.x = shipdecks.at (gam_getCurrentDeckName ()).wayPoints[wayPointIndex].x;
-//	destination.y = shipdecks.at (gam_getCurrentDeckName ()).wayPoints[wayPointIndex].y;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -588,7 +586,7 @@ void paraAI::changeModeTo (int newAIMode)
 			if (tileDestination.x < 0)                // No healing tiles on level - change to flee
 			{
 				modifyScore (AI_MODE_HEAL, -100);
-				modifyScore (AI_MODE_FLEE, +100);
+				modifyScore (AI_MODE_FLEE, 100);
 				return;
 			}
 

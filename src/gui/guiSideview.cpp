@@ -4,6 +4,7 @@
 #include <classes/paraRandom.h>
 #include <system/util.h>
 #include <game/lifts.h>
+#include <game/alertLevel.h>
 #include "gui/guiSideview.h"
 
 paraRandom randomStar;
@@ -220,8 +221,6 @@ void gui_renderSideView ()
 	Uint8         r, g, b, a;
 	SDL_BlendMode tempMode;
 
-	auto currentAlertLevel = ALERT_GREEN_TILE;
-
 	fontClass.use ("guiFont");
 
 	sideViewTextPosX = 5;
@@ -272,7 +271,7 @@ void gui_renderSideView ()
 	}
 	else    // Static view of ship from terminal
 	{
-		switch (currentAlertLevel)
+		switch (gam_getCurrentAlertLevel())
 		{
 			case ALERT_GREEN_TILE:
 				tempAlert.r = 0;

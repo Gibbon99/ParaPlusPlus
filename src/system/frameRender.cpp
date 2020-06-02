@@ -77,6 +77,7 @@ void sys_renderFrame (double interpolation)
 
 		case MODE_GUI_DATABASE:
 			gui_renderScrollbox ("databaseScreen.scrollbox", interpolation);
+			playerDroid.sprite.setTintColor(255,255,255);
 			databaseSprite.render (finalPoint, ((((hiresVirtualHeight - (hiresVirtualHeight / 2) - databaseSprite.getFrameHeight ())) / 2) + (textures.at ("hudNew").getHeight ())), 2.0, static_cast<Uint8>(255));
 
 			gui_renderGUI ();
@@ -139,7 +140,7 @@ void sys_renderFrame (double interpolation)
 		gam_renderHud ();
 
 	fontClass.use("guiFont");
-	fontClass.render(renderer.renderer, 1, 10, 0, 0, 0, 255, sys_getString ("Game : %i Think : %i FPS : %i intoNextFrame : %f ", gam_gameEventQueueSize(), thinkFPSPrint, fpsPrint, percentIntoNextFrame));
+	fontClass.render(renderer.renderer, 1, 50, 0, 0, 0, 255, sys_getString ("Game : %i Think : %i FPS : %i intoNextFrame : %f ", gam_gameEventQueueSize(), thinkFPSPrint, fpsPrint, percentIntoNextFrame));
 
 	sys_completeFrame ();
 }
