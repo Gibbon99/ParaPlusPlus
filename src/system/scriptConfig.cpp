@@ -8,6 +8,7 @@
 #include <game/particles.h>
 #include <game/lineOfSight.h>
 #include <game/score.h>
+#include <game/transferRender.h>
 #include "game/audio.h"
 #include "gui/guiLanguage.h"
 #include "system/startup.h"
@@ -96,6 +97,13 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("int yellowAlertLevel", &yellowAlertLevel);
 	paraScriptInstance.addHostVariable ("float updateScoreDelay", &updateScoreDelay);
 	paraScriptInstance.addHostVariable ("float distanceForDoorSoundMax", &distanceForDoorSoundMax);
+
+	paraScriptInstance.addHostVariable ("int numberTransferRows", &numberTransferRows);
+	paraScriptInstance.addHostVariable ("int transferBitmapHeight", &transferBitmapHeight);
+	paraScriptInstance.addHostVariable ("int transferBitmapWidth", &transferBitmapWidth);
+
+	paraScriptInstance.addHostVariable ("float transferRowHeight", &transferRowHeight);
+	paraScriptInstance.addHostVariable ("float transferRowStartY", &transferRowStartY);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)
@@ -237,10 +245,10 @@ void sys_scriptInitFunctions ()
 	paraScriptInstance.addHostFunction ("void gam_previousDatabase()", (functionPtr) &gam_previousDatabase);
 	paraScriptInstance.addHostFunction ("void gam_nextDatabase()", (functionPtr) &gam_nextDatabase);
 	paraScriptInstance.addHostFunction ("void gam_prepareDatabaseScreen(int whichDroidIndex)", (functionPtr) &gam_prepareDatabaseScreen);
-	paraScriptInstance.addHostFunction ("void gam_setHudText(string &in)", (functionPtr)gam_setHudText);
-	paraScriptInstance.addHostFunction("void gam_loadTexture(string &in, string &in)", (functionPtr) &gam_loadTexture);
-	paraScriptInstance.addHostFunction("void gam_createCollisionMap(string &in)", (functionPtr) &gam_createCollisionMap);
-	paraScriptInstance.addHostFunction("void gam_setTileType()", (functionPtr) &gam_setTileType);
-	paraScriptInstance.addHostFunction("void gam_loadShipDeck (string &in)", (functionPtr) &gam_loadShipDeck);
-	paraScriptInstance.addHostFunction("void gam_changeToDeck (string &in, int whichLift)", (functionPtr) &gam_changeToDeck);
+	paraScriptInstance.addHostFunction ("void gam_setHudText(string &in)", (functionPtr) gam_setHudText);
+	paraScriptInstance.addHostFunction ("void gam_loadTexture(string &in, string &in)", (functionPtr) &gam_loadTexture);
+	paraScriptInstance.addHostFunction ("void gam_createCollisionMap(string &in)", (functionPtr) &gam_createCollisionMap);
+	paraScriptInstance.addHostFunction ("void gam_setTileType()", (functionPtr) &gam_setTileType);
+	paraScriptInstance.addHostFunction ("void gam_loadShipDeck (string &in)", (functionPtr) &gam_loadShipDeck);
+	paraScriptInstance.addHostFunction ("void gam_changeToDeck (string &in, int whichLift)", (functionPtr) &gam_changeToDeck);
 }

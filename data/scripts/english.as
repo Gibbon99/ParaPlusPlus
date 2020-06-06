@@ -94,5 +94,10 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("databaseScreen.previousButton", "Previous");
 	gui_addKeyAndText ("databaseScreen.nextButton", "Next");
 
+	gui_addKeyAndText ("guiTransferOne.heading", "Transfer - Current Unit");
+	gui_addKeyAndText ("guiTransferOne.textbox", "This is the unit that you currently control.")
+
+	gui_addKeyAndText ("guiTransferTwo.heading", "Transfer - Target Unit");
+	gui_addKeyAndText ("guiTransferTwo.textbox", "This is the unit that you wish to control. Prepare to attempt transfer takeover.")
 }
 

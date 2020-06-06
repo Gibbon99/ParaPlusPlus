@@ -328,10 +328,11 @@ private:
 	int                          currentScreen = 0;
 	double                       renderWidth   = 0;
 	double                       renderHeight  = 0;
-	std::vector<__SCREEN_OBJECT> guiScreens;    // ** Add new vectors to restart for .clear() when adding a new element
+	std::vector<__SCREEN_OBJECT> guiScreens;    // ** Add new vectors to restart() for .clear() when adding a new element
 	std::vector<__GUI_OBJECT>    guiButtons;
 	std::vector<__GUI_SLIDER>    guiSliders;
 	std::vector<__GUI_OBJECT>    guiLabels;
+	std::vector<__GUI_OBJECT>    guiTextboxes;
 	std::vector<__GUI_SCROLLBOX> guiScrollBoxes;
 	std::vector<__GUI_CHECKBOX>  guiCheckBoxes;
 	funcPtrIntStr                funcOutput;

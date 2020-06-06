@@ -27,7 +27,6 @@ int paraGui::getActiveObjectIndex ()
 #endif
 
 	return guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject];
-//	return guiScreens[currentScreen].selectedObject;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -193,6 +192,7 @@ void paraGui::restart ()
 	guiLabels.clear ();
 	guiScrollBoxes.clear ();
 	guiCheckBoxes.clear ();
+	guiTextboxes.clear ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -321,6 +321,16 @@ int paraGui::getIndex (int objectType, const std::string& objectID)
 			}
 			break;
 
+		case GUI_OBJECT_TEXTBOX:
+			for (const auto &itr : guiTextboxes)
+			{
+				if (itr.ID == objectID)
+					return indexCounter;
+
+				indexCounter++;
+			}
+			break;
+
 		default:
 			return GUI_OBJECT_NOT_FOUND;
 	}
@@ -338,6 +348,7 @@ void paraGui::create (int objectType, std::string objectID)
 	__GUI_OBJECT        newLabel;
 	__GUI_SCROLLBOX     newScrollbox;
 	__GUI_CHECKBOX      newCheckBox;
+	__GUI_OBJECT        newTextbox;
 
 	if (objectID.empty ())
 	{
@@ -478,6 +489,27 @@ void paraGui::create (int objectType, std::string objectID)
 				}
 			}
 			guiCheckBoxes.push_back(newCheckBox);
+			break;
+
+		case GUI_OBJECT_TEXTBOX:
+			newTextbox.ID = objectID;
+			newTextbox.canFocus = false;
+			newTextbox.positionCalled = false;
+
+			if (guiTextboxes.empty())
+			{
+				guiTextboxes.push_back(newTextbox);
+				break;
+			}
+			for (auto textboxItr : guiTextboxes)
+			{
+				if (textboxItr.ID == objectID)
+				{
+					funcOutput(-1, int_getString("Textbox [ %s ] already exists.", objectID.c_str()));
+					return;
+				}
+			}
+			guiTextboxes.push_back(newTextbox);
 			break;
 
 		default:
@@ -905,6 +937,30 @@ void paraGui::setPosition (int objectType, std::string objectID, int newRadius, 
 			guiCheckBoxes[objectIndex].positionCalled = true;
 			break;
 
+		case GUI_OBJECT_TEXTBOX:
+			guiTextboxes[objectIndex].cornerRadius   = -1;
+
+			if (GUI_COORD_PERCENT == coordType)
+			{
+				tempWidth  = renderWidth * (newWidth / 100.0);
+				tempHeight = renderHeight * (newHeight / 100.0);
+
+				guiTextboxes[objectIndex].boundingBox.x1 = renderWidth * (newPosX / 100.0);
+				guiTextboxes[objectIndex].boundingBox.y1 = renderHeight * (newPosY / 100.0);
+
+				guiTextboxes[objectIndex].boundingBox.x2 = guiTextboxes[objectIndex].boundingBox.x1 + tempWidth;
+				guiTextboxes[objectIndex].boundingBox.y2 = guiTextboxes[objectIndex].boundingBox.y1 + tempHeight;
+			}
+			else
+			{
+				guiTextboxes[objectIndex].boundingBox.x1 = newPosX;
+				guiTextboxes[objectIndex].boundingBox.y1 = newPosY;
+				guiTextboxes[objectIndex].boundingBox.x2 = guiTextboxes[objectIndex].boundingBox.x1 + newWidth;
+				guiTextboxes[objectIndex].boundingBox.y2 = guiTextboxes[objectIndex].boundingBox.y1 + newHeight;
+			}
+			guiTextboxes[objectIndex].positionCalled = true;
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to set position."));
 			break;
@@ -950,7 +1006,7 @@ std::string paraGui::getFontName (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
 			{
-				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
 				return "";
 			}
 			return guiLabels[objectIndex].fontName;
@@ -978,6 +1034,18 @@ std::string paraGui::getFontName (int objectType, int objectIndex)
 				return "";
 			}
 			return guiCheckBoxes[objectIndex].fontName;
+			break;
+
+		case GUI_OBJECT_TEXTBOX:
+			if (guiTextboxes.size () == 0)
+				return "";
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiTextboxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
+				return "";
+			}
+			return guiTextboxes[objectIndex].fontName;
 			break;
 
 		default:
@@ -1027,6 +1095,10 @@ void paraGui::setFontName (int objectType, std::string objectID, std::string new
 
 		case GUI_OBJECT_CHECKBOX:
 			guiCheckBoxes[objectIndex].fontName = std::move (newFontName);
+			break;
+
+		case GUI_OBJECT_TEXTBOX:
+			guiTextboxes[objectIndex].fontName = std::move (newFontName);
 			break;
 
 		default:
@@ -1092,6 +1164,12 @@ void paraGui::setLabel (int objectType, std::string objectID, int newGapSize, in
 			guiCheckBoxes[objectIndex].label = newLabel;
 			guiCheckBoxes[objectIndex].labelPos = newLabelPos;
 			guiCheckBoxes[objectIndex].gapSize = newGapSize;
+			break;
+
+		case GUI_OBJECT_TEXTBOX:
+			guiTextboxes[objectIndex].label = newLabel;
+			guiTextboxes[objectIndex].labelPos = newLabelPos;
+			guiTextboxes[objectIndex].gapSize = newGapSize;
 			break;
 
 		default:
@@ -1299,6 +1377,22 @@ void paraGui::setColorByIndex (int objectType, int objectIndex, int whichColor, 
 			}
 		break;
 
+		case GUI_OBJECT_TEXTBOX:
+			switch (whichColor)
+			{
+				case GUI_COL_ACTIVE:
+					guiTextboxes[objectIndex].hasFocusColor.r = red;
+					guiTextboxes[objectIndex].hasFocusColor.g = green;
+					guiTextboxes[objectIndex].hasFocusColor.b = blue;
+					guiTextboxes[objectIndex].hasFocusColor.a = alpha;
+					break;
+
+				default:
+					funcOutput (-1, int_getString ("Unknown color type."));
+					break;
+			}
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to set colors."));
 			break;
@@ -1336,6 +1430,10 @@ void paraGui::setColor (int objectType, std::string objectID, int whichColor, in
 
 			case GUI_OBJECT_CHECKBOX:
 				numObjects = guiCheckBoxes.size();
+				break;
+
+			case GUI_OBJECT_TEXTBOX:
+				numObjects = guiTextboxes.size();
 				break;
 
 			default:
@@ -1404,6 +1502,10 @@ void paraGui::setReady (int objectType, std::string objectID, bool newState)
 
 		case GUI_OBJECT_CHECKBOX:
 			guiCheckBoxes[objectIndex].ready = newState;
+			break;
+
+		case GUI_OBJECT_TEXTBOX:
+			guiTextboxes[objectIndex].ready = newState;
 			break;
 
 		default:
@@ -1496,6 +1598,25 @@ std::string paraGui::getLabelText (int objectType, int objectIndex)
 			return guiCheckBoxes[objectIndex].label;
 			break;
 
+		case GUI_OBJECT_TEXTBOX:
+			if (guiTextboxes.size () == 0)
+				return "";
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiTextboxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
+				return "";
+			}
+
+			if (guiTextboxes[objectIndex].label.size () == 0)
+			{
+				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no label set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				return "";
+			}
+
+			return guiTextboxes[objectIndex].label;
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get label text."));
 			break;
@@ -1560,6 +1681,19 @@ int paraGui::getGapSize (int objectType, int objectIndex)
 			}
 
 			return guiCheckBoxes[objectIndex].gapSize;
+			break;
+
+		case GUI_OBJECT_TEXTBOX:
+			if (guiTextboxes.size () == 0)
+				return GUI_OBJECT_NOT_FOUND;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiTextboxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			return guiTextboxes[objectIndex].gapSize;
 			break;
 
 		default:
@@ -1650,6 +1784,25 @@ int paraGui::getLabelPos (int objectType, int objectIndex)
 			}
 
 			return guiCheckBoxes[objectIndex].labelPos;
+			break;
+
+		case GUI_OBJECT_TEXTBOX:
+			if (guiTextboxes.size () == 0)
+				return GUI_OBJECT_NOT_FOUND;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiTextboxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			if (!guiTextboxes[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			return guiTextboxes[objectIndex].labelPos;
 			break;
 
 		default:
@@ -1850,13 +2003,13 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
 			{
-				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
+				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
 				return badColor;
 			}
 
 			if (!guiLabels[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Label index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
 				return badColor;
 			}
 
@@ -1879,13 +2032,13 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiScrollBoxes.size ())))
 			{
-				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiScrollBoxes.size ())));
+				funcOutput (-1, int_getString ("Scrollbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiScrollBoxes.size ())));
 				return badColor;
 			}
 
 			if (!guiScrollBoxes[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiScrollBoxes[objectIndex].label.empty () ? "Unknown" : guiScrollBoxes[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Scrollbox index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiScrollBoxes[objectIndex].label.empty () ? "Unknown" : guiScrollBoxes[objectIndex].label.c_str ()));
 				return badColor;
 			}
 
@@ -1912,13 +2065,13 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiCheckBoxes.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiCheckBoxes.size ())));
+				funcOutput (-1, int_getString ("Checkbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiCheckBoxes.size ())));
 				return badColor;
 			}
 
 			if (!guiCheckBoxes[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiCheckBoxes[objectIndex].label.empty () ? "Unknown" : guiCheckBoxes[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Checkbox index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiCheckBoxes[objectIndex].label.empty () ? "Unknown" : guiCheckBoxes[objectIndex].label.c_str ()));
 				return badColor;
 			}
 
@@ -1938,6 +2091,35 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 
 				case GUI_COL_INACTIVE_LABEL:
 					return guiCheckBoxes[objectIndex].labelNoFocusColor;
+					break;
+
+				default:
+					funcOutput (-1, int_getString ("Invalid color type."));
+					return badColor;
+					break;
+			}
+			break;
+
+		case GUI_OBJECT_TEXTBOX:
+			if (guiTextboxes.size () == 0)
+				return badColor;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiTextboxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Textbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
+				return badColor;
+			}
+
+			if (!guiTextboxes[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Textbox index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				return badColor;
+			}
+
+			switch (whichColor)
+			{
+				case GUI_COL_ACTIVE:
+					return guiTextboxes[objectIndex].hasFocusColor;
 					break;
 
 				default:
@@ -1993,13 +2175,13 @@ __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiSliders.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
 				return badBox;
 			}
 
 			if (!guiSliders[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiSliders[objectIndex].label.empty () ? "Unknown" : guiSliders[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiSliders[objectIndex].label.empty () ? "Unknown" : guiSliders[objectIndex].label.c_str ()));
 				return badBox;
 			}
 
@@ -2012,13 +2194,13 @@ __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
+				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
 				return badBox;
 			}
 
 			if (!guiLabels[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Label index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
 				return badBox;
 			}
 
@@ -2031,13 +2213,13 @@ __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiScrollBoxes.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiScrollBoxes.size ())));
+				funcOutput (-1, int_getString ("Scrollbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiScrollBoxes.size ())));
 				return badBox;
 			}
 
 			if (!guiScrollBoxes[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiScrollBoxes[objectIndex].label.empty () ? "Unknown" : guiScrollBoxes[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Scrollbox index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiScrollBoxes[objectIndex].label.empty () ? "Unknown" : guiScrollBoxes[objectIndex].label.c_str ()));
 				return badBox;
 			}
 
@@ -2050,17 +2232,36 @@ __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiCheckBoxes.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiCheckBoxes.size ())));
+				funcOutput (-1, int_getString ("Checkbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiCheckBoxes.size ())));
 				return badBox;
 			}
 
 			if (!guiCheckBoxes[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiCheckBoxes[objectIndex].label.empty () ? "Unknown" : guiCheckBoxes[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Checkbox index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiCheckBoxes[objectIndex].label.empty () ? "Unknown" : guiCheckBoxes[objectIndex].label.c_str ()));
 				return badBox;
 			}
 
 			return guiCheckBoxes[objectIndex].boundingBox;
+			break;
+
+		case GUI_OBJECT_TEXTBOX:
+			if (guiTextboxes.size () == 0)
+				return badBox;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiTextboxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
+				return badBox;
+			}
+
+			if (!guiTextboxes[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Label index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				return badBox;
+			}
+
+			return guiTextboxes[objectIndex].boundingBox;
 			break;
 
 		default:
@@ -2141,13 +2342,13 @@ bool paraGui::isReady (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiSliders.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
 				return false;
 			}
 
 			if (!guiSliders[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiSliders[objectIndex].label.empty () ? "Unknown" : guiSliders[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiSliders[objectIndex].label.empty () ? "Unknown" : guiSliders[objectIndex].label.c_str ()));
 				return false;
 			}
 
@@ -2160,13 +2361,13 @@ bool paraGui::isReady (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
+				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
 				return false;
 			}
 
 			if (!guiLabels[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Label index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
 				return false;
 			}
 
@@ -2179,17 +2380,36 @@ bool paraGui::isReady (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiCheckBoxes.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiCheckBoxes.size ())));
+				funcOutput (-1, int_getString ("Checkbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiCheckBoxes.size ())));
 				return false;
 			}
 
 			if (!guiCheckBoxes[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiCheckBoxes[objectIndex].label.empty () ? "Unknown" : guiCheckBoxes[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Checkbox index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiCheckBoxes[objectIndex].label.empty () ? "Unknown" : guiCheckBoxes[objectIndex].label.c_str ()));
 				return false;
 			}
 
 			return guiCheckBoxes[objectIndex].ready;
+			break;
+
+		case GUI_OBJECT_TEXTBOX:
+			if (guiTextboxes.size () == 0)
+				return false;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiTextboxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
+				return false;
+			}
+
+			if (!guiTextboxes[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Label index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				return false;
+			}
+
+			return guiTextboxes[objectIndex].ready;
 			break;
 
 		default:

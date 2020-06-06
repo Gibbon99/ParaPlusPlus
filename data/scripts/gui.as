@@ -440,7 +440,7 @@ void createControlsMenu ()
 	as_paraGui.setReady (GUI_OBJECT_LABEL, "controlsOptions.heading", true);
 
 	as_paraGui.create (GUI_OBJECT_BUTTON, "controlsMenu.backButton");
-	as_paraGui.addToScreen (GUI_OBJECT_BUTTON, "controlsMenu.backButton", "controlsMenu");
+	as_paraGui.create (GUI_OBJECT_BUTTON, "controlsMenu.backButton", "controlsMenu");
 	as_paraGui.setLabel (GUI_OBJECT_BUTTON, "controlsMenu.backButton", 3, GUI_LABEL_CENTER, gui_getString ("backButton"));
 	as_paraGui.setFontName (GUI_OBJECT_BUTTON, "controlsMenu.backButton", "guiFont");
 	as_paraGui.setPosition (GUI_OBJECT_BUTTON, "controlsMenu.backButton", 8, GUI_COORD_PERCENT, buttonStartX, buttonSpacing * 5, buttonWidth, buttonHeight);
@@ -663,6 +663,8 @@ void as_createGUI ()
 	as_setSideviewColors ();
 
 	as_setupIntroScrollBox ();
+
+	as_setupTransferValues ();
 
 	createMainMenu ();
 	createOptionsMenu ();
