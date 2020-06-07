@@ -271,7 +271,10 @@ void contactListener::BeginContact (b2Contact *contact)
 			}
 			else
 			{
-				// TODO - change to transfer mode
+				if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
+				{
+					gam_addEvent (EVENT_ACTION_GO_TRANSFER_MODE, 0, sys_getString ("%i|", bodyUserData_B->dataValue));
+				}
 			}
 			break;
 
@@ -371,7 +374,10 @@ void contactListener::BeginContact (b2Contact *contact)
 			}
 			else
 			{
-				// TODO - change to transfer mode
+				if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
+				{
+					gam_addEvent (EVENT_ACTION_GO_TRANSFER_MODE, 0, sys_getString ("%i|", bodyUserData_A->dataValue));
+				}
 			}
 			break;
 

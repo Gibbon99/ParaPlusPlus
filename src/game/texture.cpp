@@ -8,12 +8,12 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a collision map for passed in keyName
-void gam_createCollisionMap(std::string &keyName)
+void gam_createCollisionMap (std::string &keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	try
 	{
-		textures.at(keyName).createMap();
+		textures.at (keyName).createMap ();
 	}
 	catch (std::out_of_range outOfRange)
 	{
@@ -24,21 +24,26 @@ void gam_createCollisionMap(std::string &keyName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load a texture passing in filename from script - replace if it already exists
-void gam_loadTexture(std::string &fileName, std::string &keyName)
+void gam_loadTexture (std::string &fileName, std::string &keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraTexture tempTexture(con_addEvent, io_loadRawFile);
+	paraTexture tempTexture (con_addEvent, io_loadRawFile);
 
-	if (tempTexture.load(fileName, keyName))
+	if (tempTexture.load (fileName, keyName))
 	{
-		auto textureItr = textures.find(keyName);
-		if (textureItr != textures.end())
-			textures.erase(textureItr);
+		tempTexture.setFileName (fileName);
 
-		tempTexture.setFileName(fileName);
+		auto textureItr = textures.find (keyName);
+		if (textureItr != textures.end ())
+		{
+			SDL_DestroyTexture (textureItr->second.getTexture ());
+			textures.erase (textureItr);
+		}
+
+		tempTexture.setFileName (fileName);
 		textures.insert (std::pair<std::string, paraTexture> (keyName, tempTexture));
 	}
 	else
-		sys_shutdownWithError(sys_getString("Unable to load texture [ %s ]", fileName.c_str()));
+		sys_shutdownWithError (sys_getString ("Unable to load texture [ %s ]", fileName.c_str ()));
 }
 

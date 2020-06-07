@@ -1,8 +1,15 @@
 #include <game/transferRender.h>
 #include <classes/paraRandom.h>
+#include <system/util.h>
+#include <game/alertLevel.h>
+#include <game/audio.h>
+#include <game/player.h>
+#include <game/database.h>
+#include <game/texture.h>
 #include "game/transfer.h"
 
-paraRandom      transferRandom;
+paraRandom transferRandom;
+int transferTargetDroidIndex;
 
 //--------------------------------------------------------
 //
@@ -10,12 +17,8 @@ paraRandom      transferRandom;
 bool trn_isCircuitSplit (int whichType)
 //--------------------------------------------------------
 {
-	return (whichType == TRANSFER_ROW_TWO_INTO_ONE_MIDDLE) ||
-	       (whichType == TRANSFER_ROW_ONE_INTO_TWO_MIDDLE) ||
-	       (whichType == TRANSFER_ROW_TWO_INTO_ONE_BOTTOM) ||
-	       (whichType == TRANSFER_ROW_TWO_INTO_ONE_TOP) ||
-	       (whichType == TRANSFER_ROW_ONE_INTO_TWO_TOP) ||
-	       (whichType == TRANSFER_ROW_ONE_INTO_TWO_BOTTOM);
+	return (whichType == TRANSFER_ROW_TWO_INTO_ONE_MIDDLE) || (whichType == TRANSFER_ROW_ONE_INTO_TWO_MIDDLE) || (whichType == TRANSFER_ROW_TWO_INTO_ONE_BOTTOM) || (whichType == TRANSFER_ROW_TWO_INTO_ONE_TOP) ||
+	       (whichType == TRANSFER_ROW_ONE_INTO_TWO_TOP) || (whichType == TRANSFER_ROW_ONE_INTO_TWO_BOTTOM);
 }
 
 //------------------------------------------------------------
@@ -34,7 +37,7 @@ void trn_setupTransferCellValues ()
 //
 // Left side
 //
-		randNum = transferRandom.get (0, TRANSFER_ROW_FULL_LINE_3);
+		randNum = transferRandom.get (0, TRANSFER_ROW_FULL_LINE_3 - 1);
 		randNum = randNum + 1;
 
 		if (randNum > TRANSFER_ROW_FULL_LINE_3)
@@ -133,11 +136,32 @@ void trn_setupTransferCellValues ()
 
 //-------------------------------------------------------------------------------------------------------------------
 //
+// Get ready for the second transfer screen
+void trn_initTransferScreenTwo()
+//-------------------------------------------------------------------------------------------------------------------
+{
+	std::string    newFileName;
+	std::string    newKeyName;
+
+	newKeyName = "db_droid";
+	newFileName = dataBaseEntry[g_shipDeckItr->second.droid[transferTargetDroidIndex].droidType].dbImageFileName + ".bmp";
+	gam_loadTexture (newFileName, newKeyName);
+
+	databaseSprite.setCurrentFrame(0);
+	databaseSprite.setTintColor(64,64,64);
+
+	sys_setNewMode(MODE_TRANSFER_SCREEN_TWO, true);
+}
+
+//-------------------------------------------------------------------------------------------------------------------
+//
 // Setup the default values for the transfer rows
-void trn_initTransferValues ()
+void trn_initTransferValues (int transferTargetIndex)
 //-------------------------------------------------------------------------------------------------------------------
 {
 	__TRANSFER_ROW tempTransferRow{};
+	std::string    newFileName;
+	std::string    newKeyName;
 
 	if (transferRows.empty ())
 	{
@@ -182,5 +206,21 @@ void trn_initTransferValues ()
 	transferColorRightActive.b = 0;
 	transferColorRightActive.a = 255;
 
+	transferTargetDroidIndex = transferTargetIndex;
+
 	trn_setupTransferCellValues ();
+
+	gam_stopAlertLevelSound (gam_getCurrentAlertLevel());
+	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 127, "transferMove");
+	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "guiTransferOne"));
+	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "guiTransferOne.nextButton");
+	gui.setState (KEY_ACTION, false, 0);
+
+	newKeyName = "db_droid";
+	newFileName = dataBaseEntry[playerDroid.droidType].dbImageFileName + ".bmp";
+	gam_loadTexture (newFileName, newKeyName);
+	databaseSprite.setCurrentFrame (0);
+	databaseSprite.setTintColor (64, 64, 64);
+
+	sys_setNewMode(MODE_TRANSFER_SCREEN_ONE, true);
 }

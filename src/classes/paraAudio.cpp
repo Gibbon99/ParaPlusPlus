@@ -155,11 +155,11 @@ void paraAudio::setMasterVolume (int volume)
 void paraAudio::stop (std::string keyName)
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &audioItr : audio)
+	for (auto &audioItr : activeSounds)
 	{
-		if (keyName == audioItr.second.keyName)
+		if (keyName == audioItr.keyName)
 		{
-			Mix_HaltChannel (audioItr.second.playingOnChannel);
+			Mix_HaltChannel (audioItr.whichChannel);
 		}
 	}
 }

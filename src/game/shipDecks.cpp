@@ -511,6 +511,8 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	sys_setPlayerPhysicsPosition (playerDroid.worldPosInPixels);
 
 	gam_createInfluenceMap ();
+
+	gam_startAlertLevelSound (gam_getCurrentAlertLevel());
 }
 
 //----------------------------------------------------------------------------------------------------------------------

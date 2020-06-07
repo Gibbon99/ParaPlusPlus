@@ -94,18 +94,3 @@ void gam_findTerminalPositions (const std::string &levelName)
 		}
 	}
 }
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Pressed the action key while over a terminal tile
-void gam_performTerminalAction ()
-//----------------------------------------------------------------------------------------------------------------------
-{
-/*
-	evt_pushEvent (0, PARA_EVENT_AUDIO, GAME_EVENT_STOP_AUDIO, 0, 0, "greenAlert"); // TODO: Change to current alert
-	gui_changeToGUIScreen (gui_findIndex (GUI_OBJECT_SCREEN, "mainTerminalScreen"));
-	sys_changeMode (MODE_GUI_TERMINAL, true);
-	gui_hostSetObjectFocus ("terminalLogoffButton");
-	hud_setText (false, "hudTerminal");
-	*/
-}

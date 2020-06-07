@@ -47,6 +47,8 @@ void io_processKeyboardState ()
 		case MODE_GUI_DATABASE:
 		case MODE_GUI_DECKVIEW:
 		case MODE_GUI_SHIPVIEW:
+		case MODE_TRANSFER_SCREEN_ONE:
+		case MODE_TRANSFER_SCREEN_TWO:
 			gui.processGuiInput();
 			gui_processKeyboard ();
 			break;
@@ -78,7 +80,7 @@ void io_processKeyboardState ()
 		case MODE_GAME:
 			gam_processPlayerMovement ();
 		
-			if (gui.keyDown (KEY_ACTION))
+//			if (gui.keyDown (KEY_ACTION))
 				gam_processActionKey ();
 		
 			if (gui.keyDown(KEY_CONSOLE))

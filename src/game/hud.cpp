@@ -1,28 +1,29 @@
-#include <system/startup.h>
-#include <system/util.h>
+#include <gui/guiLanguage.h>
+#include "system/startup.h"
+#include "system/util.h"
 #include "game/hud.h"
 #include "game/score.h"
 
 std::string hudText;
 std::string hudScore;
-double hudTextPosX;
-double hudTextPosY;
-double hudScorePosX;
-double hudScorePosY;
+double      hudTextPosX;
+double      hudTextPosY;
+double      hudScorePosX;
+double      hudScorePosY;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Set the text for the HUD
-void gam_setHudText(const std::string &newText)
+// Set the text for the HUD - gets text from language file
+void gam_setHudText (const std::string &newText)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	hudText = newText;
+	hudText = gui_getString(newText);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render the HUD to the screen
-void gam_renderHud()
+void gam_renderHud ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Rect destination;
@@ -36,21 +37,21 @@ void gam_renderHud()
 			destination.h = textures.at ("hudNew").getHeight ();
 			destination.w = textures.at ("hudNew").getWidth ();
 		}
-		catch ( std::out_of_range outOfRange)
-			{
+		catch (std::out_of_range outOfRange)
+		{
 			return;
-			}
+		}
 	}
 	else
 	{
-		destination.h = textures.at ("hudNew").getHeight() * (static_cast<double>(gameWinHeight) / hiresVirtualHeight);
+		destination.h = textures.at ("hudNew").getHeight () * (static_cast<double>(gameWinHeight) / hiresVirtualHeight);
 		destination.w = gameWinWidth;
 	}
 
-	textures.at("hudNew").render(&destination);
+	textures.at ("hudNew").render (&destination);
 
-	fontClass.use("guiFont");
-	fontClass.render(renderer.renderer, hudTextPosX, hudTextPosY, 0, 0, 0, 255, hudText);
+	fontClass.use ("guiFont");
+	fontClass.render (renderer.renderer, hudTextPosX, hudTextPosY, 0, 0, 0, 255, hudText);
 
-	fontClass.render(renderer.renderer, hudScorePosX, hudScorePosY, 0, 0, 0, 255, sys_getString("%06i", gam_getPrintableScore()));
+	fontClass.render (renderer.renderer, hudScorePosX, hudScorePosY, 0, 0, 0, 255, sys_getString ("%06i", gam_getPrintableScore ()));
 }

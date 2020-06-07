@@ -43,7 +43,14 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("consoleAction", "Invoke the console");
 	gui_addKeyAndText ("gameScreenShot", "Take a screenshot");
 
+	gui_addKeyAndText ("hudTransfer", "Transfer");
+	gui_addKeyAndText ("hudMoving", "Move");
+	gui_addKeyAndText ("hudGameOn", "Game on");
+	gui_addKeyAndText ("hudRecharging", "Recharge");
+	gui_addKeyAndText ("hudLift", "Lift");
+
 	gui_addKeyAndText ("backButton", "Back");
+	gui_addKeyAndText ("nextButton", "Next");
 
 	gui_addKeyAndText ("optionsMenu.videoButton", "Video");
 	gui_addKeyAndText ("optionsMenu.audioButton", "Audio");
@@ -95,9 +102,9 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("databaseScreen.nextButton", "Next");
 
 	gui_addKeyAndText ("guiTransferOne.heading", "Transfer - Current Unit");
-	gui_addKeyAndText ("guiTransferOne.textbox", "This is the unit that you currently control.")
+	gui_addKeyAndText ("guiTransferOne.textbox", "This is the unit that you currently control.");
 
 	gui_addKeyAndText ("guiTransferTwo.heading", "Transfer - Target Unit");
-	gui_addKeyAndText ("guiTransferTwo.textbox", "This is the unit that you wish to control. Prepare to attempt transfer takeover.")
+	gui_addKeyAndText ("guiTransferTwo.textbox", "This is the unit that you wish to control. Prepare to attempt transfer takeover.");
 }
 

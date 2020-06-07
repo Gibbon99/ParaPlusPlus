@@ -79,7 +79,7 @@ extern Uint32 fpsPrint;
 extern Uint32 thinkFPSPrint;
 extern double percentIntoNextFrame;
 extern int    currentMode;
-extern double  pixelsPerMeter;          // From script
+extern double pixelsPerMeter;          // From script
 //
 // Game levers
 //

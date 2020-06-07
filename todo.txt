@@ -1,4 +1,32 @@
 
+TODO
+-------
+Set window ICON
+End screen
+High Score entry screen
+High Score display screen
+Transfer - enemy AI
+Transfer - player control
+Transfer - copy attributes
+Transfer - add to score
+Player - sprite flash for low health or transfer timer running out
+Transfer - timer
+Tutorial screens
+Splash screen on start
+Link scrollbox to briefing on main menu
+Dialog box - Game Sure to quit?
+Pause mode
+Universe background on menu screens?
+Player health check on damage - dead animation
+Droid AI - Flee
+Droid AI - Attack
+Droid AI - Help
+Healing - player over tile Physics
+Healing - sound and score
+Healing - player health increase
+On exit from terminal - restart alert sound
+
+
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
 -DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "
 

@@ -193,6 +193,7 @@ void paraGui::restart ()
 	guiScrollBoxes.clear ();
 	guiCheckBoxes.clear ();
 	guiTextboxes.clear ();
+	guiImages.clear ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -227,7 +228,7 @@ std::string paraGui::int_getString (std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index of a object type from its array
-int paraGui::getIndex (int objectType, const std::string& objectID)
+int paraGui::getIndex (int objectType, const std::string &objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int indexCounter = 0;
@@ -331,6 +332,15 @@ int paraGui::getIndex (int objectType, const std::string& objectID)
 			}
 			break;
 
+		case GUI_OBJECT_IMAGE:
+			for (const auto &itr : guiImages)
+			{
+				if (itr.ID == objectID)
+					return indexCounter;
+
+				indexCounter++;
+			}
+
 		default:
 			return GUI_OBJECT_NOT_FOUND;
 	}
@@ -342,13 +352,14 @@ int paraGui::getIndex (int objectType, const std::string& objectID)
 void paraGui::create (int objectType, std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	__SCREEN_OBJECT     newScreen;
-	__GUI_OBJECT        newButton;
-	__GUI_SLIDER        newSlider;
-	__GUI_OBJECT        newLabel;
-	__GUI_SCROLLBOX     newScrollbox;
-	__GUI_CHECKBOX      newCheckBox;
-	__GUI_OBJECT        newTextbox;
+	__SCREEN_OBJECT newScreen;
+	__GUI_OBJECT    newButton;
+	__GUI_SLIDER    newSlider;
+	__GUI_OBJECT    newLabel;
+	__GUI_SCROLLBOX newScrollbox;
+	__GUI_CHECKBOX  newCheckBox;
+	__GUI_OBJECT    newTextbox;
+	__GUI_OBJECT    newImage;
 
 	if (objectID.empty ())
 	{
@@ -407,9 +418,9 @@ void paraGui::create (int objectType, std::string objectID)
 			newSlider.ID             = objectID;
 			newSlider.canFocus       = true;
 			newSlider.positionCalled = false;
-			newSlider.currentStep = 0;
-			newSlider.numberSteps = 0;
-		
+			newSlider.currentStep    = 0;
+			newSlider.numberSteps    = 0;
+
 			if (guiSliders.empty ())
 			{
 				guiSliders.push_back (newSlider);
@@ -450,66 +461,87 @@ void paraGui::create (int objectType, std::string objectID)
 			break;
 
 		case GUI_OBJECT_SCROLLBOX:
-			newScrollbox.ID = objectID;
-			newScrollbox.canFocus = false;
+			newScrollbox.ID             = objectID;
+			newScrollbox.canFocus       = false;
 			newScrollbox.positionCalled = false;
 
-			if (guiScrollBoxes.empty())
+			if (guiScrollBoxes.empty ())
 			{
-				guiScrollBoxes.push_back(newScrollbox);
+				guiScrollBoxes.push_back (newScrollbox);
 				break;
 			}
 			for (auto scrollboxItr : guiScrollBoxes)
 			{
 				if (scrollboxItr.ID == objectID)
 				{
-					funcOutput(-1, int_getString("Scrollbox [ %s ] already exists.", objectID.c_str()));
+					funcOutput (-1, int_getString ("Scrollbox [ %s ] already exists.", objectID.c_str ()));
 					return;
 				}
 			}
-			guiScrollBoxes.push_back(newScrollbox);
+			guiScrollBoxes.push_back (newScrollbox);
 			break;
 
 		case GUI_OBJECT_CHECKBOX:
-			newCheckBox.ID = objectID;
-			newCheckBox.canFocus = true;
+			newCheckBox.ID             = objectID;
+			newCheckBox.canFocus       = true;
 			newCheckBox.positionCalled = false;
 
-			if (guiCheckBoxes.empty())
+			if (guiCheckBoxes.empty ())
 			{
-				guiCheckBoxes.push_back(newCheckBox);
+				guiCheckBoxes.push_back (newCheckBox);
 				break;
 			}
 			for (auto checkBoxItr : guiCheckBoxes)
 			{
 				if (checkBoxItr.ID == objectID)
 				{
-					funcOutput(-1, int_getString("Checkbox [ %s ] already exists.", objectID.c_str()));
+					funcOutput (-1, int_getString ("Checkbox [ %s ] already exists.", objectID.c_str ()));
 					return;
 				}
 			}
-			guiCheckBoxes.push_back(newCheckBox);
+			guiCheckBoxes.push_back (newCheckBox);
 			break;
 
 		case GUI_OBJECT_TEXTBOX:
-			newTextbox.ID = objectID;
-			newTextbox.canFocus = false;
+			newTextbox.ID             = objectID;
+			newTextbox.canFocus       = false;
 			newTextbox.positionCalled = false;
 
-			if (guiTextboxes.empty())
+			if (guiTextboxes.empty ())
 			{
-				guiTextboxes.push_back(newTextbox);
+				guiTextboxes.push_back (newTextbox);
 				break;
 			}
 			for (auto textboxItr : guiTextboxes)
 			{
 				if (textboxItr.ID == objectID)
 				{
-					funcOutput(-1, int_getString("Textbox [ %s ] already exists.", objectID.c_str()));
+					funcOutput (-1, int_getString ("Textbox [ %s ] already exists.", objectID.c_str ()));
 					return;
 				}
 			}
-			guiTextboxes.push_back(newTextbox);
+			guiTextboxes.push_back (newTextbox);
+			break;
+
+		case GUI_OBJECT_IMAGE:
+			newImage.ID             = objectID;
+			newImage.canFocus       = false;
+			newImage.positionCalled = false;
+
+			if (guiImages.empty ())
+			{
+				guiImages.push_back (newImage);
+				break;
+			}
+			for (auto imageItr : guiImages)
+			{
+				if (imageItr.ID == objectID)
+				{
+					funcOutput (-1, int_getString ("Image [ %s ] already exists.", objectID.c_str ()));
+					return;
+				}
+			}
+			guiImages.push_back (newImage);
 			break;
 
 		default:
@@ -524,7 +556,7 @@ void paraGui::create (int objectType, std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the fade value of the bottom line
-double paraGui::getLineFade(int objectIndex)
+double paraGui::getLineFade (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].lineFade;
@@ -533,7 +565,7 @@ double paraGui::getLineFade(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the fade value of the bottom line
-void paraGui::setLineFade(int objectIndex, double newLineFade)
+void paraGui::setLineFade (int objectIndex, double newLineFade)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScrollBoxes[objectIndex].lineFade = newLineFade;
@@ -542,25 +574,25 @@ void paraGui::setLineFade(int objectIndex, double newLineFade)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the iterator pointing to the reverse entry
-std::vector<std::string>::reverse_iterator paraGui::getREnd(int objectIndex)
+std::vector<std::string>::reverse_iterator paraGui::getREnd (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	return guiScrollBoxes[objectIndex].scrollBoxText.rend();
+	return guiScrollBoxes[objectIndex].scrollBoxText.rend ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the iterator pointing to the last entry
-std::vector<std::string>::reverse_iterator paraGui::getRBegin(int objectIndex)
+std::vector<std::string>::reverse_iterator paraGui::getRBegin (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	return guiScrollBoxes[objectIndex].scrollBoxText.rbegin();
+	return guiScrollBoxes[objectIndex].scrollBoxText.rbegin ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Reset a scrollbox to start
-void paraGui::restartScrollBox(const string &objectID)
+void paraGui::restartScrollBox (const string &objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex;
@@ -573,54 +605,54 @@ void paraGui::restartScrollBox(const string &objectID)
 		funcOutput (-1, int_getString ("Unable to locate object to set scroll speed [ %s ]. Has it been created ?.", objectID.c_str ()));
 		return;
 	}
-	guiScrollBoxes[objectIndex].scrollBoxText.clear();
-	guiScrollBoxes[objectIndex].scrollY = 0.0;
+	guiScrollBoxes[objectIndex].scrollBoxText.clear ();
+	guiScrollBoxes[objectIndex].scrollY         = 0.0;
 	guiScrollBoxes[objectIndex].previousScrollY = -1.0;
-	guiScrollBoxes[objectIndex].currentChar = 0;
+	guiScrollBoxes[objectIndex].currentChar     = 0;
 	guiScrollBoxes[objectIndex].numLinesToPrint = 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the next line of text to show in the scrollbox
-void paraGui::getNextLineOfText(int objectIndex)
+void paraGui::getNextLineOfText (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string fontName;
 	std::string nextLine;
 	std::string nextWord;
 	std::string nextChar;
-	bool foundLine = false;
-	int previousSpace = 0;
-	int lineTextWidth = 0;
+	bool        foundLine     = false;
+	int         previousSpace = 0;
+	int         lineTextWidth = 0;
 
 	foundLine = false;
-	nextLine.clear();
-	nextWord.clear();
-	nextChar.clear();
+	nextLine.clear ();
+	nextWord.clear ();
+	nextChar.clear ();
 	previousSpace = 0;
 
 	fontName = gui.getFontName (GUI_OBJECT_SCROLLBOX, objectIndex);
-	if (fontName.size() == 0)
+	if (fontName.size () == 0)
 	{
 		con_addEvent (EVENT_ACTION_CONSOLE_ADD_CHAR_LINE, sys_getString ("Unable to get fontname for scrollbox [ %i ]", objectIndex));
 		return;
 	}
-	fontClass.use(fontName);
+	fontClass.use (fontName);
 
 	while (!foundLine)
 	{
 		nextChar = guiScrollBoxes[objectIndex].label[guiScrollBoxes[objectIndex].currentChar];
-		switch (nextChar.back())
+		switch (nextChar.back ())
 		{
 			case ' ':
-				lineTextWidth = fontClass.width(nextLine + " " + nextChar + nextWord);
+				lineTextWidth = fontClass.width (nextLine + " " + nextChar + nextWord);
 				if (lineTextWidth < (guiScrollBoxes[objectIndex].boundingBox.x2 - guiScrollBoxes[objectIndex].boundingBox.x1) - guiScrollBoxes[objectIndex].gapSize)
 				{
 					previousSpace = guiScrollBoxes[objectIndex].currentChar;
-					nextLine.append(" ");
-					nextLine.append(nextWord);
-					nextWord.clear();
+					nextLine.append (" ");
+					nextLine.append (nextWord);
+					nextWord.clear ();
 				}
 				else
 				{
@@ -631,21 +663,21 @@ void paraGui::getNextLineOfText(int objectIndex)
 
 			case '!':
 				nextLine += nextWord;
-				nextWord.clear();
+				nextWord.clear ();
 				foundLine = true;
 				guiScrollBoxes[objectIndex].currentChar++;
 				break;
 
 			case '#':
 				nextLine += nextWord;
-				nextWord.clear();
+				nextWord.clear ();
 				foundLine = true;
 				guiScrollBoxes[objectIndex].currentChar = 0;
 				break;
 
 			case '^':
 				nextLine += nextWord;
-				nextWord.clear();
+				nextWord.clear ();
 				foundLine = true;
 				guiScrollBoxes[objectIndex].currentChar++;
 				guiScrollBoxes[objectIndex].scrollDelay = 40;
@@ -656,21 +688,21 @@ void paraGui::getNextLineOfText(int objectIndex)
 				break;
 		}
 		guiScrollBoxes[objectIndex].currentChar++;
-		if (guiScrollBoxes[objectIndex].currentChar > static_cast<int>(guiScrollBoxes[objectIndex].label.size()))
+		if (guiScrollBoxes[objectIndex].currentChar > static_cast<int>(guiScrollBoxes[objectIndex].label.size ()))
 		{
 			nextLine += nextWord;
 			foundLine = true;
 			guiScrollBoxes[objectIndex].currentChar = 0;
 		}
 	}
-	guiScrollBoxes[objectIndex].scrollBoxText.push_back(nextLine);
+	guiScrollBoxes[objectIndex].scrollBoxText.push_back (nextLine);
 	guiScrollBoxes[objectIndex].lineFade = 0.0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the current number of lines to print in a scrollbox
-int paraGui::getNumberPrintLines(int objectIndex)
+int paraGui::getNumberPrintLines (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].numLinesToPrint;
@@ -679,7 +711,7 @@ int paraGui::getNumberPrintLines(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the number of lines to print in a scrollbox
-void paraGui::setNumberPrintLines(int objectIndex, int newNumberLines)
+void paraGui::setNumberPrintLines (int objectIndex, int newNumberLines)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScrollBoxes[objectIndex].numLinesToPrint = newNumberLines;
@@ -688,7 +720,7 @@ void paraGui::setNumberPrintLines(int objectIndex, int newNumberLines)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the current scrollY counter
-double paraGui::getScrollY(int objectIndex)
+double paraGui::getScrollY (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].scrollY;
@@ -697,7 +729,7 @@ double paraGui::getScrollY(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the current scrollY counter
-void paraGui::setScrollY(int objectIndex, double newScrollY)
+void paraGui::setScrollY (int objectIndex, double newScrollY)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScrollBoxes[objectIndex].scrollY = newScrollY;
@@ -706,7 +738,7 @@ void paraGui::setScrollY(int objectIndex, double newScrollY)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the current scrollY counter
-double paraGui::getPreviousScrollY(int objectIndex)
+double paraGui::getPreviousScrollY (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].previousScrollY;
@@ -715,7 +747,7 @@ double paraGui::getPreviousScrollY(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the current scrollY counter
-void paraGui::setPreviousScrollY(int objectIndex, double newScrollY)
+void paraGui::setPreviousScrollY (int objectIndex, double newScrollY)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScrollBoxes[objectIndex].previousScrollY = newScrollY;
@@ -724,7 +756,7 @@ void paraGui::setPreviousScrollY(int objectIndex, double newScrollY)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the current scrollbox delay counter
-double paraGui::getScrollDelay(int objectIndex)
+double paraGui::getScrollDelay (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].scrollDelay;
@@ -733,7 +765,7 @@ double paraGui::getScrollDelay(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the new scrolbox delay counter
-void paraGui::setScrollDelay(int objectIndex, double newScrollDelay)
+void paraGui::setScrollDelay (int objectIndex, double newScrollDelay)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScrollBoxes[objectIndex].scrollDelay = newScrollDelay;
@@ -742,7 +774,7 @@ void paraGui::setScrollDelay(int objectIndex, double newScrollDelay)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the scrolling speed for a scrollbox
-void paraGui::setScrollSpeed(int objectType, const std::string& objectID, double newScrollSpeed)
+void paraGui::setScrollSpeed (int objectType, const std::string &objectID, double newScrollSpeed)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex = 0;
@@ -961,6 +993,30 @@ void paraGui::setPosition (int objectType, std::string objectID, int newRadius, 
 			guiTextboxes[objectIndex].positionCalled = true;
 			break;
 
+		case GUI_OBJECT_IMAGE:
+			guiImages[objectIndex].cornerRadius   = -1;
+
+			if (GUI_COORD_PERCENT == coordType)
+			{
+				tempWidth  = renderWidth * (newWidth / 100.0);
+				tempHeight = renderHeight * (newHeight / 100.0);
+
+				guiImages[objectIndex].boundingBox.x1 = renderWidth * (newPosX / 100.0);
+				guiImages[objectIndex].boundingBox.y1 = renderHeight * (newPosY / 100.0);
+
+				guiImages[objectIndex].boundingBox.x2 = guiImages[objectIndex].boundingBox.x1 + tempWidth;
+				guiImages[objectIndex].boundingBox.y2 = guiImages[objectIndex].boundingBox.y1 + tempHeight;
+			}
+			else
+			{
+				guiImages[objectIndex].boundingBox.x1 = newPosX;
+				guiImages[objectIndex].boundingBox.y1 = newPosY;
+				guiImages[objectIndex].boundingBox.x2 = guiImages[objectIndex].boundingBox.x1 + newWidth;
+				guiImages[objectIndex].boundingBox.y2 = guiImages[objectIndex].boundingBox.y1 + newHeight;
+			}
+			guiImages[objectIndex].positionCalled = true;
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to set position."));
 			break;
@@ -1155,21 +1211,27 @@ void paraGui::setLabel (int objectType, std::string objectID, int newGapSize, in
 			break;
 
 		case GUI_OBJECT_SCROLLBOX:
-			guiScrollBoxes[objectIndex].label = newLabel;
+			guiScrollBoxes[objectIndex].label    = newLabel;
 			guiScrollBoxes[objectIndex].labelPos = newLabelPos;
-			guiScrollBoxes[objectIndex].gapSize = newGapSize;
+			guiScrollBoxes[objectIndex].gapSize  = newGapSize;
 			break;
 
 		case GUI_OBJECT_CHECKBOX:
-			guiCheckBoxes[objectIndex].label = newLabel;
+			guiCheckBoxes[objectIndex].label    = newLabel;
 			guiCheckBoxes[objectIndex].labelPos = newLabelPos;
-			guiCheckBoxes[objectIndex].gapSize = newGapSize;
+			guiCheckBoxes[objectIndex].gapSize  = newGapSize;
 			break;
 
 		case GUI_OBJECT_TEXTBOX:
-			guiTextboxes[objectIndex].label = newLabel;
+			guiTextboxes[objectIndex].label    = newLabel;
 			guiTextboxes[objectIndex].labelPos = newLabelPos;
-			guiTextboxes[objectIndex].gapSize = newGapSize;
+			guiTextboxes[objectIndex].gapSize  = newGapSize;
+			break;
+
+		case GUI_OBJECT_IMAGE:
+			guiImages[objectIndex].label    = newLabel;
+			guiImages[objectIndex].labelPos = newLabelPos;
+			guiImages[objectIndex].gapSize  = newGapSize;
 			break;
 
 		default:
@@ -1262,7 +1324,7 @@ void paraGui::setColorByIndex (int objectType, int objectIndex, int whichColor, 
 					funcOutput (-1, int_getString ("Unknown color type."));
 					break;
 			}
-		break;
+			break;
 
 		case GUI_OBJECT_SLIDER:
 			switch (whichColor)
@@ -1299,7 +1361,7 @@ void paraGui::setColorByIndex (int objectType, int objectIndex, int whichColor, 
 					funcOutput (-1, int_getString ("Unknown color type."));
 					break;
 			}
-		break;
+			break;
 
 		case GUI_OBJECT_LABEL:
 			switch (whichColor)
@@ -1315,7 +1377,7 @@ void paraGui::setColorByIndex (int objectType, int objectIndex, int whichColor, 
 					funcOutput (-1, int_getString ("Unknown color type."));
 					break;
 			}
-		break;
+			break;
 
 		case GUI_OBJECT_SCROLLBOX:
 			switch (whichColor)
@@ -1338,7 +1400,7 @@ void paraGui::setColorByIndex (int objectType, int objectIndex, int whichColor, 
 					funcOutput (-1, int_getString ("Unknown color type."));
 					break;
 			}
-		break;
+			break;
 
 		case GUI_OBJECT_CHECKBOX:
 			switch (whichColor)
@@ -1375,7 +1437,7 @@ void paraGui::setColorByIndex (int objectType, int objectIndex, int whichColor, 
 					funcOutput (-1, int_getString ("Unknown color type."));
 					break;
 			}
-		break;
+			break;
 
 		case GUI_OBJECT_TEXTBOX:
 			switch (whichColor)
@@ -1385,6 +1447,22 @@ void paraGui::setColorByIndex (int objectType, int objectIndex, int whichColor, 
 					guiTextboxes[objectIndex].hasFocusColor.g = green;
 					guiTextboxes[objectIndex].hasFocusColor.b = blue;
 					guiTextboxes[objectIndex].hasFocusColor.a = alpha;
+					break;
+
+				default:
+					funcOutput (-1, int_getString ("Unknown color type."));
+					break;
+			}
+			break;
+
+		case GUI_OBJECT_IMAGE:
+			switch (whichColor)
+			{
+				case GUI_COL_ACTIVE:
+					guiImages[objectIndex].hasFocusColor.r = red;
+					guiImages[objectIndex].hasFocusColor.g = green;
+					guiImages[objectIndex].hasFocusColor.b = blue;
+					guiImages[objectIndex].hasFocusColor.a = alpha;
 					break;
 
 				default:
@@ -1421,19 +1499,23 @@ void paraGui::setColor (int objectType, std::string objectID, int whichColor, in
 				break;
 
 			case GUI_OBJECT_LABEL:
-				numObjects = guiLabels.size();
+				numObjects = guiLabels.size ();
 				break;
 
 			case GUI_OBJECT_SCROLLBOX:
-				numObjects = guiScrollBoxes.size();
+				numObjects = guiScrollBoxes.size ();
 				break;
 
 			case GUI_OBJECT_CHECKBOX:
-				numObjects = guiCheckBoxes.size();
+				numObjects = guiCheckBoxes.size ();
 				break;
 
 			case GUI_OBJECT_TEXTBOX:
-				numObjects = guiTextboxes.size();
+				numObjects = guiTextboxes.size ();
+				break;
+
+			case GUI_OBJECT_IMAGE:
+				numObjects = guiImages.size ();
 				break;
 
 			default:
@@ -1508,6 +1590,10 @@ void paraGui::setReady (int objectType, std::string objectID, bool newState)
 			guiTextboxes[objectIndex].ready = newState;
 			break;
 
+		case GUI_OBJECT_IMAGE:
+			guiImages[objectIndex].ready = newState;
+			break;
+
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to set state."));
 			break;
@@ -1566,13 +1652,13 @@ std::string paraGui::getLabelText (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
 			{
-				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
+				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
 				return "";
 			}
 
 			if (guiLabels[objectIndex].label.size () == 0)
 			{
-				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no label set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Label index [ %i ] - [ %s ] has no label set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
 				return "";
 			}
 
@@ -1585,13 +1671,13 @@ std::string paraGui::getLabelText (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiCheckBoxes.size ())))
 			{
-				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiCheckBoxes.size ())));
+				funcOutput (-1, int_getString ("Checkbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiCheckBoxes.size ())));
 				return "";
 			}
 
 			if (guiCheckBoxes[objectIndex].label.size () == 0)
 			{
-				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no label set.", objectIndex, guiCheckBoxes[objectIndex].label.empty () ? "Unknown" : guiCheckBoxes[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Checkbox index [ %i ] - [ %s ] has no label set.", objectIndex, guiCheckBoxes[objectIndex].label.empty () ? "Unknown" : guiCheckBoxes[objectIndex].label.c_str ()));
 				return "";
 			}
 
@@ -1604,17 +1690,36 @@ std::string paraGui::getLabelText (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiTextboxes.size ())))
 			{
-				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
+				funcOutput (-1, int_getString ("Textbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
 				return "";
 			}
 
 			if (guiTextboxes[objectIndex].label.size () == 0)
 			{
-				funcOutput (-1, int_getString ("Slider index [ %i ] - [ %s ] has no label set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Textbox index [ %i ] - [ %s ] has no label set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiTextboxes[objectIndex].label.c_str ()));
 				return "";
 			}
 
 			return guiTextboxes[objectIndex].label;
+			break;
+
+		case GUI_OBJECT_IMAGE:
+			if (guiImages.size () == 0)
+				return "";
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiImages.size ())))
+			{
+				funcOutput (-1, int_getString ("Image index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiImages.size ())));
+				return "";
+			}
+
+			if (guiImages[objectIndex].label.size () == 0)
+			{
+				funcOutput (-1, int_getString ("Image index [ %i ] - [ %s ] has no label set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiImages[objectIndex].label.c_str ()));
+				return "";
+			}
+
+			return guiImages[objectIndex].label;
 			break;
 
 		default:
@@ -1650,7 +1755,7 @@ int paraGui::getGapSize (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiSliders.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
+				funcOutput (-1, int_getString ("Slider index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiSliders.size ())));
 				return GUI_OBJECT_NOT_FOUND;
 			}
 
@@ -1663,7 +1768,7 @@ int paraGui::getGapSize (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiLabels.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
+				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiLabels.size ())));
 				return GUI_OBJECT_NOT_FOUND;
 			}
 
@@ -1676,7 +1781,7 @@ int paraGui::getGapSize (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiCheckBoxes.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiCheckBoxes.size ())));
+				funcOutput (-1, int_getString ("Checkbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiCheckBoxes.size ())));
 				return GUI_OBJECT_NOT_FOUND;
 			}
 
@@ -1689,12 +1794,26 @@ int paraGui::getGapSize (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiTextboxes.size ())))
 			{
-				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
+				funcOutput (-1, int_getString ("Textbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
 				return GUI_OBJECT_NOT_FOUND;
 			}
 
 			return guiTextboxes[objectIndex].gapSize;
 			break;
+
+		case GUI_OBJECT_IMAGE:
+			if (guiImages.size () == 0)
+				return GUI_OBJECT_NOT_FOUND;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiImages.size ())))
+			{
+				funcOutput (-1, int_getString ("Image index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiImages.size ())));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			return guiImages[objectIndex].gapSize;
+			break;
+
 
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get gap size."));
@@ -2112,7 +2231,7 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 
 			if (!guiTextboxes[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Textbox index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Textbox index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiTextboxes[objectIndex].label.c_str ()));
 				return badColor;
 			}
 
@@ -2120,6 +2239,35 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 			{
 				case GUI_COL_ACTIVE:
 					return guiTextboxes[objectIndex].hasFocusColor;
+					break;
+
+				default:
+					funcOutput (-1, int_getString ("Invalid color type."));
+					return badColor;
+					break;
+			}
+			break;
+
+		case GUI_OBJECT_IMAGE:
+			if (guiImages.size () == 0)
+				return badColor;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiImages.size ())))
+			{
+				funcOutput (-1, int_getString ("Image index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiImages.size ())));
+				return badColor;
+			}
+
+			if (!guiImages[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Image index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiImages[objectIndex].label.empty () ? "Unknown" : guiImages[objectIndex].label.c_str ()));
+				return badColor;
+			}
+
+			switch (whichColor)
+			{
+				case GUI_COL_ACTIVE:
+					return guiImages[objectIndex].hasFocusColor;
 					break;
 
 				default:
@@ -2251,17 +2399,36 @@ __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiTextboxes.size ())))
 			{
-				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
+				funcOutput (-1, int_getString ("Textbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
 				return badBox;
 			}
 
 			if (!guiTextboxes[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Label index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Textbox index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
 				return badBox;
 			}
 
 			return guiTextboxes[objectIndex].boundingBox;
+			break;
+
+		case GUI_OBJECT_IMAGE:
+			if (guiImages.size () == 0)
+				return badBox;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiImages.size ())))
+			{
+				funcOutput (-1, int_getString ("Image index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiImages.size ())));
+				return badBox;
+			}
+
+			if (!guiImages[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Image index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiLabels[objectIndex].label.empty () ? "Unknown" : guiImages[objectIndex].label.c_str ()));
+				return badBox;
+			}
+
+			return guiImages[objectIndex].boundingBox;
 			break;
 
 		default:
@@ -2399,17 +2566,36 @@ bool paraGui::isReady (int objectType, int objectIndex)
 
 			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiTextboxes.size ())))
 			{
-				funcOutput (-1, int_getString ("Label index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
+				funcOutput (-1, int_getString ("Textbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiTextboxes.size ())));
 				return false;
 			}
 
 			if (!guiTextboxes[objectIndex].positionCalled)
 			{
-				funcOutput (-1, int_getString ("Label index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiLabels[objectIndex].label.c_str ()));
+				funcOutput (-1, int_getString ("Textbox index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiTextboxes[objectIndex].label.empty () ? "Unknown" : guiTextboxes[objectIndex].label.c_str ()));
 				return false;
 			}
 
 			return guiTextboxes[objectIndex].ready;
+			break;
+
+		case GUI_OBJECT_IMAGE:
+			if (guiImages.size () == 0)
+				return false;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiImages.size ())))
+			{
+				funcOutput (-1, int_getString ("Image index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiImages.size ())));
+				return false;
+			}
+
+			if (!guiImages[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Image index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiImages[objectIndex].label.empty () ? "Unknown" : guiImages[objectIndex].label.c_str ()));
+				return false;
+			}
+
+			return guiImages[objectIndex].ready;
 			break;
 
 		default:
@@ -2446,9 +2632,9 @@ void paraGui::processMousePosition ()
 {
 	static int previousElement = 0;
 
-	if (guiScreens.size() == 0)     // size() == 0 is faster than .empty()
+	if (guiScreens.size () == 0)     // size() == 0 is faster than .empty()
 		return;
-	
+
 	for (auto index = 0; index < static_cast<int>(guiScreens[currentScreen].objectType.size ()); index++)
 	{
 		if (canBeSelected (guiScreens[currentScreen].objectType[index], 0))
@@ -2506,8 +2692,7 @@ void paraGui::processMovementKeys ()
 
 	//
 	// Use scroll wheel over a focused slider to change value
-	if ((guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject] == GUI_OBJECT_SLIDER) &&
-		(pointInBox (mouseX, mouseY, guiSliders[selectedSlider].boundingBox)))
+	if ((guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject] == GUI_OBJECT_SLIDER) && (pointInBox (mouseX, mouseY, guiSliders[selectedSlider].boundingBox)))
 	{
 		if (keyBinding[KEY_DOWN].active)
 		{
@@ -2516,7 +2701,7 @@ void paraGui::processMovementKeys ()
 		}
 		if (keyBinding[KEY_UP].active)
 		{
-			keyBinding[KEY_UP].active = false;
+			keyBinding[KEY_UP].active    = false;
 			keyBinding[KEY_RIGHT].active = true;
 		}
 	}
@@ -2526,8 +2711,7 @@ void paraGui::processMovementKeys ()
 		keyBinding[KEY_DOWN].active = false;
 		if (guiScreens[currentScreen].selectedObject != static_cast<int>(guiScreens[currentScreen].objectIDIndex.size ()) - 1)    // Don't go past number on screen
 		{
-			while (!canBeSelected (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject + indexCount],
-					guiScreens[currentScreen].selectedObject + indexCount))
+			while (!canBeSelected (guiScreens[currentScreen].objectType[guiScreens[currentScreen].selectedObject + indexCount], guiScreens[currentScreen].selectedObject + indexCount))
 			{
 				indexCount++;
 			}
@@ -2836,7 +3020,7 @@ void paraGui::setKeyDescription ()
 {
 
 	return;
-	
+
 #ifdef WIN_32
 	return;
 	keyBinding[KEY_LEFT].text       = funcGetString ((string1)"gameLeft");
@@ -2881,7 +3065,7 @@ void paraGui::setDefaultKeybindings ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the repeat state for keys
-int paraGui::getRepeatOff()
+int paraGui::getRepeatOff ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return repeatOff;
@@ -2899,7 +3083,7 @@ void paraGui::setRepeatOff (bool newState)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the current scancode for a key setting
-int paraGui::getScancode(int whichKey)
+int paraGui::getScancode (int whichKey)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((whichKey < 0) || (whichKey > KEY_NUMBER_ACTIONS))
@@ -2915,7 +3099,7 @@ void paraGui::update ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return;
-	
+
 	if (repeatOff)
 	{
 		for (auto keyCounter = 0; keyCounter != KEY_NUMBER_ACTIONS; keyCounter++)
@@ -2960,9 +3144,9 @@ int paraGui::getNumElements (int whichSlider)
 std::string paraGui::sliderElementLabel (int whichSlider)
 //-----------------------------------------------------------------------------
 {
-	if (whichSlider > static_cast<int>(guiSliders.size() - 1))
-		sys_shutdownWithError("Invalid index passed to sliderElementLabel");
-	
+	if (whichSlider > static_cast<int>(guiSliders.size () - 1))
+		sys_shutdownWithError ("Invalid index passed to sliderElementLabel");
+
 	return guiSliders[whichSlider].element[guiSliders[whichSlider].currentStep].value;
 }
 
@@ -2990,7 +3174,7 @@ int paraGui::getSelectPosition (int whichSlider)
 //-----------------------------------------------------------------------------
 //
 // Get the value from the current step of a slider
-std::string paraGui::getSliderValue(const std::string& objectID)
+std::string paraGui::getSliderValue (const std::string &objectID)
 //-----------------------------------------------------------------------------
 {
 	int objectIndex = 0;
@@ -3009,7 +3193,7 @@ std::string paraGui::getSliderValue(const std::string& objectID)
 //-----------------------------------------------------------------------------
 //
 // Set the slider to the passed in value
-void paraGui::setSliderValue (const std::string& objectID, const std::string& value)
+void paraGui::setSliderValue (const std::string &objectID, const std::string &value)
 //-----------------------------------------------------------------------------
 {
 	int indexCount = 0;
@@ -3047,7 +3231,7 @@ void paraGui::setSliderValue (const std::string& objectID, const std::string& va
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add an element to a slider
-void paraGui::addNewElement (const std::string& objectID, const std::string& newLabel, const std::string& newValue, int type)
+void paraGui::addNewElement (const std::string &objectID, const std::string &newLabel, const std::string &newValue, int type)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_sliderElement tmpElement;
@@ -3072,7 +3256,7 @@ void paraGui::addNewElement (const std::string& objectID, const std::string& new
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the ticked status of a checkbox
-bool paraGui::getTickedStatus(int objectIndex)
+bool paraGui::getTickedStatus (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiCheckBoxes[objectIndex].checked;
@@ -3081,13 +3265,13 @@ bool paraGui::getTickedStatus(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the ticked status of a checkbox - unset all others in the same group
-void paraGui::setTickedStatus (const std::string& objectID, int whichGroup, bool newValue)
+void paraGui::setTickedStatus (const std::string &objectID, int whichGroup, bool newValue)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex = 0;
 	//
 	// Find the index for this object
-	objectIndex = getIndex (GUI_OBJECT_CHECKBOX, objectID);
+	objectIndex                        = getIndex (GUI_OBJECT_CHECKBOX, objectID);
 	if (-1 == objectIndex)
 	{
 		funcOutput (-1, int_getString ("ERROR: Couldn't find GUI object index [ %s ]", objectID.c_str ()));

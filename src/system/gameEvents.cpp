@@ -6,6 +6,7 @@
 #include <game/bullet.h>
 #include <game/particles.h>
 #include <game/lightMaps.h>
+#include <game/transfer.h>
 #include "../../hdr/system/gameEvents.h"
 #include "../../hdr/classes/paraEvent.h"
 
@@ -158,6 +159,14 @@ void gam_processGameEventQueue ()
 
 				case EVENT_ACTION_ADD_LIGHTMAP:
 					gam_addNewLightmap(b2Vec2(sys_convertToInt(tempEvent->gameText1), sys_convertToInt(tempEvent->gameText2)), sys_convertToInt(tempEvent->gameText3), 0);
+					break;
+
+				case EVENT_ACTION_GO_TRANSFER_MODE:
+					trn_initTransferValues(sys_convertToInt(tempEvent->gameText1));
+					break;
+
+				case EVENT_ACTION_GO_TRANSFER_TWO:
+					trn_initTransferScreenTwo();
 					break;
 			}
 

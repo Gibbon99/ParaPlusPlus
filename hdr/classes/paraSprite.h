@@ -17,6 +17,8 @@ public:
 
 	void setAnimateSpeed (double newSpeed);
 
+	void setCurrentFrame(int newCurrentFrame);
+
 	void setTintColor (Uint8 r, Uint8 g, Uint8 b);
 
 	void create (std::string setTextureKeyname, int setNumFrames, double setAnimateSpeed);

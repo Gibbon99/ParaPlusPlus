@@ -440,7 +440,7 @@ void createControlsMenu ()
 	as_paraGui.setReady (GUI_OBJECT_LABEL, "controlsOptions.heading", true);
 
 	as_paraGui.create (GUI_OBJECT_BUTTON, "controlsMenu.backButton");
-	as_paraGui.create (GUI_OBJECT_BUTTON, "controlsMenu.backButton", "controlsMenu");
+	as_paraGui.addToScreen (GUI_OBJECT_BUTTON, "controlsMenu.backButton", "controlsMenu");
 	as_paraGui.setLabel (GUI_OBJECT_BUTTON, "controlsMenu.backButton", 3, GUI_LABEL_CENTER, gui_getString ("backButton"));
 	as_paraGui.setFontName (GUI_OBJECT_BUTTON, "controlsMenu.backButton", "guiFont");
 	as_paraGui.setPosition (GUI_OBJECT_BUTTON, "controlsMenu.backButton", 8, GUI_COORD_PERCENT, buttonStartX, buttonSpacing * 5, buttonWidth, buttonHeight);
@@ -501,6 +501,12 @@ void createOptionsMenu ()
 {
 	as_paraGui.create (GUI_OBJECT_SCREEN, "optionsMenu");
 
+	as_paraGui.create (GUI_OBJECT_IMAGE, "optionsMenu.backGround");
+	as_paraGui.addToScreen (GUI_OBJECT_IMAGE, "optionsMenu.backGround", "optionsMenu");
+	as_paraGui.setLabel (GUI_OBJECT_IMAGE, "optionsMenu.backGround", 0, GUI_LABEL_CENTER, "universe");
+	as_paraGui.setPosition (GUI_OBJECT_IMAGE, "optionsMenu.backGround", 0, GUI_COORD_ABSOLUTE, 0, 0, 0, 0);
+	as_paraGui.setReady (GUI_OBJECT_IMAGE, "optionsMenu.backGround", true);
+
 	as_paraGui.create (GUI_OBJECT_BUTTON, "optionsMenu.videoButton");
 	as_paraGui.addToScreen (GUI_OBJECT_BUTTON, "optionsMenu.videoButton", "optionsMenu");
 	as_paraGui.setLabel (GUI_OBJECT_BUTTON, "optionsMenu.videoButton", 3, GUI_LABEL_CENTER, gui_getString ("optionsMenu.videoButton"));
@@ -550,6 +556,12 @@ void createMainMenu ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	as_paraGui.create (GUI_OBJECT_SCREEN, "mainMenu");
+
+	as_paraGui.create (GUI_OBJECT_IMAGE, "mainMenu.backGround");
+	as_paraGui.addToScreen (GUI_OBJECT_IMAGE, "mainMenu.backGround", "mainMenu");
+	as_paraGui.setLabel (GUI_OBJECT_IMAGE, "mainMenu.backGround", 0, GUI_LABEL_CENTER, "universe");
+	as_paraGui.setPosition (GUI_OBJECT_IMAGE, "mainMenu.backGround", 0, GUI_COORD_ABSOLUTE, 0, 0, 0, 0);
+	as_paraGui.setReady (GUI_OBJECT_IMAGE, "mainMenu.backGround", true);
 
 	as_paraGui.create (GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
 	as_paraGui.addToScreen (GUI_OBJECT_BUTTON, "mainMenu.startGameButton", "mainMenu");
@@ -664,7 +676,7 @@ void as_createGUI ()
 
 	as_setupIntroScrollBox ();
 
-	as_setupTransferValues ();
+	as_initTransferValues ();
 
 	createMainMenu ();
 	createOptionsMenu ();
@@ -696,5 +708,6 @@ void as_createGUI ()
 	as_paraGui.setColor (GUI_OBJECT_CHECKBOX, "ALL", GUI_COL_ACTIVE_LABEL, 250, 250, 230, 255);
 	as_paraGui.setColor (GUI_OBJECT_CHECKBOX, "ALL", GUI_COL_INACTIVE_LABEL, 150, 150, 130, 255);
 
-	as_paraGui.setColor (GUI_OBJECT_LABEL, "ALL", GUI_COL_ACTIVE, 50, 50, 200, 255);
+	as_paraGui.setColor (GUI_OBJECT_LABEL, "ALL", GUI_COL_ACTIVE, 250, 250, 250, 255);
+	as_paraGui.setColor (GUI_OBJECT_TEXTBOX, "ALL", GUI_COL_ACTIVE, 200, 200, 200, 255);
 }

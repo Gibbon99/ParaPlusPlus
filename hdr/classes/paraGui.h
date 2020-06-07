@@ -136,7 +136,7 @@ struct __GUI_CHECKBOX
 	int            cornerRadius   = 0;
 	int            gapSize        = 0;
 	int            group          = -1;
-	std::string    label;
+	std::string    label;                   // Image KeyName for ImageType
 	std::string    fontName;
 	std::string    action;
 	__PARA_COLOR   hasFocusColor;
@@ -192,7 +192,7 @@ public:
 
 	void setCurrentScreen (int newScreen);
 
-	void setScrollSpeed (int objectType, const std::string& objectID, double newScrollSpeed);
+	void setScrollSpeed (int objectType, const std::string &objectID, double newScrollSpeed);
 
 	void getNextLineOfText (int objectIndex);
 
@@ -204,7 +204,7 @@ public:
 
 	void setScrollY (int objectIndex, double newScrollY);
 
-	void restartScrollBox(const std::string &objectID);
+	void restartScrollBox (const std::string &objectID);
 
 	double getPreviousScrollY (int objectIndex);
 
@@ -214,9 +214,9 @@ public:
 
 	void setPreviousScrollY (int objectIndex, double newScrollY);
 
-	bool getTickedStatus(int objectIndex);
+	bool getTickedStatus (int objectIndex);
 
-	void setTickedStatus (const std::string& objectID, int whichGroup, bool newValue);
+	void setTickedStatus (const std::string &objectID, int whichGroup, bool newValue);
 
 	void setActiveObject (int whichScreen, int objectType, std::string objectID);
 
@@ -230,9 +230,9 @@ public:
 
 	void setLineFade (int objectIndex, double newLineFade);
 
-	void addNewElement (const std::string& objectID, const std::string& newLabel, const std::string& newValue, int type);
+	void addNewElement (const std::string &objectID, const std::string &newLabel, const std::string &newValue, int type);
 
-	void setSliderValue (const std::string& objectID, const std::string& value);
+	void setSliderValue (const std::string &objectID, const std::string &value);
 
 	int getSelectPosition (int whichSlider);
 
@@ -240,7 +240,7 @@ public:
 
 	std::string sliderElementLabel (int whichSlider);
 
-	std::string getSliderValue(const std::string& objectID);
+	std::string getSliderValue (const std::string &objectID);
 
 	int getNumElements (int whichSlider);
 
@@ -254,7 +254,7 @@ public:
 
 	int indexByIndex (int whichObject);
 
-	int getIndex (int objectType, const std::string& objectID);
+	int getIndex (int objectType, const std::string &objectID);
 
 	int getRadius (int objectType, int objectIndex);
 
@@ -285,12 +285,13 @@ public:
 	void processAction ();
 
 	void processGuiInput ();
+
 //
 // Input related functions
 //
 	void setRepeatOff (bool newState);
 
-	int getRepeatOff();
+	int getRepeatOff ();
 
 	void setDefaultKeybindings ();
 
@@ -310,7 +311,7 @@ public:
 
 	void setMouse (int newPosX, int newPosY);
 
-	int getScancode(int whichKey);
+	int getScancode (int whichKey);
 
 	const Uint8 *keyboardState;
 
@@ -333,6 +334,7 @@ private:
 	std::vector<__GUI_SLIDER>    guiSliders;
 	std::vector<__GUI_OBJECT>    guiLabels;
 	std::vector<__GUI_OBJECT>    guiTextboxes;
+	std::vector<__GUI_OBJECT>    guiImages;
 	std::vector<__GUI_SCROLLBOX> guiScrollBoxes;
 	std::vector<__GUI_CHECKBOX>  guiCheckBoxes;
 	funcPtrIntStr                funcOutput;

@@ -49,6 +49,7 @@ void sys_scriptInitScriptFunctions ()
 	paraScriptInstance.addScriptFunction ("void as_handleTerminalMenu()", "as_handleTerminalMenu");
 	paraScriptInstance.addScriptFunction ("void as_handleDatabaseMenu()", "as_handleDatabaseMenu");
 
+	paraScriptInstance.addScriptFunction ("void as_handleTransferScreens()", "as_handleTransferScreens");
 
 	paraScriptInstance.addScriptFunction ("void as_testFunction()", "as_testFunction");
 }

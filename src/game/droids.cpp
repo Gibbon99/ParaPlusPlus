@@ -163,7 +163,7 @@ void gam_renderDroids (std::string levelName)
 			if (droidItr.visibleToPlayer)
 				droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0, static_cast<Uint8>(droidItr.visibleValue));
 
-			droidItr.ai.renderVelocity ();
+//			droidItr.ai.renderVelocity ();
 		}
 	}
 }

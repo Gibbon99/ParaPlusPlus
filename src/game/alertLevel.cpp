@@ -10,40 +10,57 @@ static int          currentAlertLevel = -1;
 
 //------------------------------------------------------------------------------------------------------
 //
-// Change alert level background sound
-void gam_changeAlertLevelSound(int oldAlertLevel, int newAlertLevel)
+// Start the alert level playing - on deck change
+void gam_startAlertLevelSound (int whichAlertLevel)
 //------------------------------------------------------------------------------------------------------
 {
-	switch (oldAlertLevel)
+	switch (whichAlertLevel)
 	{
 		case ALERT_GREEN_TILE:
-			gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP, false, 0, 0, "greenAlert");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 128, 127, "greenAlert");
 			break;
 
 		case ALERT_YELLOW_TILE:
-			gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP, false, 0, 0, "yellowAlert");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 128, 127, "yellowAlert");
 			break;
 
 		case ALERT_RED_TILE:
-			gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP, false, 0, 0, "redlert");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 128, 127, "redAlert");
 			break;
 	}
+}
 
-	switch (newAlertLevel)
+//------------------------------------------------------------------------------------------------------
+//
+// Stop the alert level playing
+void gam_stopAlertLevelSound (int whichAlertLevel)
+//------------------------------------------------------------------------------------------------------
+{
+	switch (whichAlertLevel)
 	{
 		case ALERT_GREEN_TILE:
-			gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 128, 127, "greenAlert");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 0, "greenAlert");
 			break;
 
 		case ALERT_YELLOW_TILE:
-			gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 128, 127, "yellowAlert");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 0, "yellowAlert");
 			break;
 
 		case ALERT_RED_TILE:
-			gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 128, 127, "redAlert");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 0, "redAlert");
 			break;
 	}
+}
 
+//------------------------------------------------------------------------------------------------------
+//
+// Change alert level background sound
+void gam_changeAlertLevelSound (int oldAlertLevel, int newAlertLevel)
+//------------------------------------------------------------------------------------------------------
+{
+	gam_stopAlertLevelSound (oldAlertLevel);
+
+	gam_startAlertLevelSound (newAlertLevel);
 }
 
 //------------------------------------------------------------------------------------------------------
@@ -54,7 +71,7 @@ void gam_setAlertLevel (int newAlertLevel)
 {
 	if (currentAlertLevel != newAlertLevel)
 	{
-		gam_changeAlertLevelSound(currentAlertLevel, newAlertLevel);
+		gam_changeAlertLevelSound (currentAlertLevel, newAlertLevel);
 		currentAlertLevel = newAlertLevel;
 		gam_changeAlertColor (newAlertLevel);
 		gam_renderAlertTiles ();

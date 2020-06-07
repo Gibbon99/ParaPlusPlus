@@ -2,6 +2,7 @@
 #include <gui/guiSideview.h>
 #include <game/audio.h>
 #include <game/player.h>
+#include <game/alertLevel.h>
 #include "game/shipDecks.h"
 #include "system/util.h"
 #include "game/lifts.h"
@@ -373,8 +374,8 @@ void gam_setupLifts ()
 void gam_performLiftAction ()
 //----------------------------------------------------------------------------
 {
-//	evt_pushEvent (0, PARA_EVENT_AUDIO, GAME_EVENT_STOP_AUDIO, 0, 0, "greenAlert"); // TODO: Change to actual alert level string
 	currentTunnel = shipdecks.at (gam_getCurrentDeckName ()).liftClass.getTunnelIndex (playerDroid.liftIndex);
+	gam_stopAlertLevelSound (gam_getCurrentAlertLevel());
 
 	sys_setNewMode (MODE_GUI_LIFTVIEW, true);
 }

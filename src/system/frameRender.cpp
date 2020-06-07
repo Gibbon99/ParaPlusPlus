@@ -52,8 +52,8 @@ void sys_renderFrame (double interpolation)
 	}
 
 	int halfScreen = hiresVirtualWidth / 2;
-	int frameWidth = databaseSprite.getFrameWidth();
-	int halfPoint = (halfScreen - frameWidth) / 2;
+	int frameWidth = databaseSprite.getFrameWidth ();
+	int halfPoint  = (halfScreen - frameWidth) / 2;
 	int finalPoint = halfPoint + halfScreen;
 
 	switch (currentMode)
@@ -64,7 +64,7 @@ void sys_renderFrame (double interpolation)
 			break;
 
 		case MODE_SHOW_SPLASH:
-			textures.at("splash").render();
+			textures.at ("splash").render ();
 			break;
 
 		case MODE_GUI_MAINMENU:
@@ -77,14 +77,13 @@ void sys_renderFrame (double interpolation)
 
 		case MODE_GUI_DATABASE:
 			gui_renderScrollbox ("databaseScreen.scrollbox", interpolation);
-			playerDroid.sprite.setTintColor(255,255,255);
+			databaseSprite.setTintColor (255, 255, 255);
 			databaseSprite.render (finalPoint, ((((hiresVirtualHeight - (hiresVirtualHeight / 2) - databaseSprite.getFrameHeight ())) / 2) + (textures.at ("hudNew").getHeight ())), 2.0, static_cast<Uint8>(255));
-
 			gui_renderGUI ();
 			break;
 
 		case MODE_GUI_DECKVIEW:
-			gam_renderHealingFrames (gam_getCurrentDeckName());
+			gam_renderHealingFrames (gam_getCurrentDeckName ());
 			gui_renderTerminalDeck ();
 			gui_renderGUI ();
 			break;
@@ -102,30 +101,46 @@ void sys_renderFrame (double interpolation)
 			gui_renderScrollbox ("introScreen.scrollbox", interpolation);
 			break;
 
+		case MODE_TRANSFER_SCREEN_ONE:
+			databaseSprite.render (
+					(hiresVirtualWidth - databaseSprite.getFrameWidth ()) / 2,
+					(((hiresVirtualWidth - databaseSprite.getFrameHeight ()) / 2) + textures.at ("hudNew").getHeight ()) - databaseSprite.getFrameHeight (), 2.0, static_cast<Uint8>(64));
+			gui_renderGUI ();
+			break;
+
+		case MODE_TRANSFER_SCREEN_TWO:
+			databaseSprite.render (
+					(hiresVirtualWidth - databaseSprite.getFrameWidth ()) / 2,
+					(((hiresVirtualWidth - databaseSprite.getFrameHeight ()) / 2) + textures.at ("hudNew").getHeight ()) - databaseSprite.getFrameHeight (), 2.0, static_cast<Uint8>(64));
+			gui_renderGUI ();
+			break;
+
 		case MODE_GAME:
-			gam_renderVisibleScreen(interpolation);
-			gam_renderHealingFrames (gam_getCurrentDeckName());
+			gam_renderVisibleScreen (interpolation);
+			gam_renderHealingFrames (gam_getCurrentDeckName ());
 			gam_renderDoorFrames ();
 
-			playerDroid.sprite.setTintColor(255,255,255);
+			if (playerDroid.inTransferMode)
+				playerDroid.sprite.setTintColor (0, 0, 255);
+			else
+				playerDroid.sprite.setTintColor (255, 255, 255);
 			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2, 1.0, static_cast<Uint8>(255));
 
-			gam_renderDroids(gam_getCurrentDeckName());
+			gam_renderDroids (gam_getCurrentDeckName ());
 
-			gam_renderLightmaps();
-			gam_renderBullets();
-			gam_renderParticles();
-
+			gam_renderLightmaps ();
+			gam_renderBullets ();
+			gam_renderParticles ();
 
 //			gam_showWayPoints (gam_getCurrentDeckName());
 			if (d_showInfluenceMap)
-				gam_debugInfluenceMap();
+				gam_debugInfluenceMap ();
 
 			if (d_showPhysics)
-				sys_getPhysicsWorld ()->DebugDraw();
+				sys_getPhysicsWorld ()->DebugDraw ();
 
 			if (d_showNodeArrays)
-				gam_AStarDebugNodes(0);
+				gam_AStarDebugNodes (0);
 
 			if (d_showAStarPath)
 				gam_AStarDebugWayPoints (0);
@@ -134,13 +149,13 @@ void sys_renderFrame (double interpolation)
 	}
 
 	if (doScreenEffect)
-		textures.at("screen").render();
+		textures.at ("screen").render ();
 
 	if ((currentMode != MODE_CONSOLE_EDIT) && (currentMode != MODE_CONSOLE_INIT))
 		gam_renderHud ();
 
-	fontClass.use("guiFont");
-	fontClass.render(renderer.renderer, 1, 50, 0, 0, 0, 255, sys_getString ("Game : %i Think : %i FPS : %i intoNextFrame : %f ", gam_gameEventQueueSize(), thinkFPSPrint, fpsPrint, percentIntoNextFrame));
+	fontClass.use ("guiFont");
+//	fontClass.render(renderer.renderer, 1, 550, 200, 200, 200, 255, sys_getString ("Game : %i Think : %i FPS : %i intoNextFrame : %f ", gam_gameEventQueueSize(), thinkFPSPrint, fpsPrint, percentIntoNextFrame));
 
 	sys_completeFrame ();
 }

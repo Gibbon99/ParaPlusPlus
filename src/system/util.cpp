@@ -1,4 +1,8 @@
 #include <game/player.h>
+#include <game/transfer.h>
+#include <game/database.h>
+#include <game/texture.h>
+#include <system/gameEvents.h>
 #include "system/util.h"
 #include "game/game.h"
 
@@ -194,6 +198,35 @@ void sys_setNewMode (int newMode, bool doFade)
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
+			break;
+
+		case MODE_PRE_TRANSFER:
+			break;
+
+		case MODE_TRANSFER_SCREEN_ONE:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
+			break;
+
+		case MODE_TRANSFER_PRE_SCREEN_TWO:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
+
+			gam_addEvent (EVENT_ACTION_GO_TRANSFER_TWO, 0, "");
+			break;
+
+		case MODE_TRANSFER_SCREEN_TWO:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
+			break;
+
+		case MODE_TRANSFER_SELECT_SIDE:
+			break;
+
+		case MODE_TRANSFER_GAME:
 			break;
 
 		default:

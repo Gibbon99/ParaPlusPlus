@@ -1,7 +1,3 @@
-//
-// Created by dberry on 6/5/20.
-//
-
 #include <io/console.h>
 #include <system/util.h>
 #include "gui/guiLabel.h"
@@ -9,7 +5,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a label
-void gui_renderLabel(int whichLabel, bool hasFocus)
+void gui_renderLabel (int whichLabel)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string    fontName;

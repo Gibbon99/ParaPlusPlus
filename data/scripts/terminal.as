@@ -148,6 +148,12 @@ void createTerminalMenu ()
 {
 	as_paraGui.create (GUI_OBJECT_SCREEN, "terminalMenu");
 
+	as_paraGui.create (GUI_OBJECT_IMAGE, "terminalMenu.backGround");
+	as_paraGui.addToScreen (GUI_OBJECT_IMAGE, "terminalMenu.backGround", "terminalMenu");
+	as_paraGui.setLabel (GUI_OBJECT_IMAGE, "terminalMenu.backGround", 0, GUI_LABEL_CENTER, "universe");
+	as_paraGui.setPosition (GUI_OBJECT_IMAGE, "terminalMenu.backGround", 0, GUI_COORD_ABSOLUTE, 0, 0, 0, 0);
+	as_paraGui.setReady (GUI_OBJECT_IMAGE, "terminalMenu.backGround", true);
+
 	as_paraGui.create (GUI_OBJECT_BUTTON, "terminalMenu.databaseButton");
 	as_paraGui.addToScreen (GUI_OBJECT_BUTTON, "terminalMenu.databaseButton", "terminalMenu");
 	as_paraGui.setLabel (GUI_OBJECT_BUTTON, "terminalMenu.databaseButton", 3, GUI_LABEL_CENTER, gui_getString ("terminalMenu.databaseButton"));

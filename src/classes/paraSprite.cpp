@@ -5,6 +5,15 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Set the current frame to render
+void paraSprite::setCurrentFrame(int newCurrentFrame)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	currentFrame = newCurrentFrame;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Return width of a frame
 int paraSprite::getFrameWidth ()
 //----------------------------------------------------------------------------------------------------------------------
@@ -34,7 +43,6 @@ void paraSprite::create(std::string setTextureKeyname, int setNumFrames, double 
 	textureKeyName = std::move(setTextureKeyname);
 }
 
-
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a sprite at the passed in location
@@ -47,7 +55,7 @@ void paraSprite::render (double posX, double posY, double scale, Uint8 alphaMod)
 
 	try
 	{
-		if (nullptr == texturePtr)
+//		if (nullptr == texturePtr)
 		{
 			texturePtr = textures.at(textureKeyName).getTexture();
 			textureItr = textures.find(textureKeyName);
@@ -72,7 +80,7 @@ void paraSprite::render (double posX, double posY, double scale, Uint8 alphaMod)
 
 	catch (std::out_of_range& outOfRange)
 	{
-		std::cout << "Texture not loaded to create sprite." << std::endl;
+		std::cout << "Texture not loaded to render sprite." << std::endl;
 	}
 }
 
@@ -112,10 +120,9 @@ void paraSprite::render (double posX, double posY, double scale, double angle)
 	
 	catch (std::out_of_range& outOfRange)
 	{
-		std::cout << "Texture not loaded to create sprite." << std::endl;
+		std::cout << "Texture not loaded to render sprite." << std::endl;
 	}
 }
-
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -155,6 +162,4 @@ void paraSprite::setTintColor (Uint8 r, Uint8 g, Uint8 b)
 	tintColor.r = r;
 	tintColor.g = g;
 	tintColor.b = b;
-
-	//SDL_SetTextureColorMod (textures.at (paraSprite::textureKeyName).getTexture (), r, g, b);
 }
