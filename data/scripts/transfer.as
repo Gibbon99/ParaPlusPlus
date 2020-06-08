@@ -17,6 +17,7 @@ void as_handleTransferScreens ()
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "guiTransferTwo.nextButton"))
 	{
 		// Change to transfer screen
+		sys_setNewMode(MODE_GUI_TRANSFER_CHOOSE_SIDE, false);
 		return;
 	}
 }
@@ -89,9 +90,33 @@ void as_setupTransferTwo ()
 void as_initTransferValues ()
 //-------------------------------------------------------------------------------------------------------------------
 {
+	int backgroundPadding = 10;
+
 	numberTransferRows   = 12;
 	transferBitmapWidth  = 800;
 	transferBitmapHeight = 600;
+
+	trn_setTransferColor (TRANSFER_COLOR_LEFT, 255, 255, 0, 255);
+	trn_setTransferColor (TRANSFER_COLOR_RIGHT, 0, 255, 255, 255);
+	trn_setTransferColor (TRANSFER_COLOR_BACKGROUND, 127, 80, 25, 255);
+	trn_setTransferColor (TRANSFER_COLOR_BORDER, 0, 0, 0, 255);
+
+	numberTransferRows      = 12;
+	transferRowHeight       = 28;
+	transferRowStartY       = 205.0f;
+	transferRowCellWidth    = 48.0f;
+	transferBorderThickness = 4;
+	transferStatusTabWidth  = transferRowCellWidth / 3;
+	transferStatusTabHeight = transferRowHeight / 2;
+
+	transferSidebarGap    = 40;
+	transferSidebarWidth  = 10;
+	transferLineThickness = 6;
+
+	transferBackgroundStartX = backgroundPadding;
+	transferBackgroundStartY = 85;
+	transferBackgroundWidth  = transferBitmapWidth - (backgroundPadding * 2);
+	transferBackgroundHeight = transferBitmapHeight - (backgroundPadding) - transferBackgroundStartY;
 
 	as_setupTransferOne ();
 	as_setupTransferTwo ();

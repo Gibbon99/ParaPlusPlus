@@ -223,6 +223,12 @@ void sys_setNewMode (int newMode, bool doFade)
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
+		case MODE_GUI_TRANSFER_CHOOSE_SIDE:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
+			break;
+
 		case MODE_TRANSFER_SELECT_SIDE:
 			break;
 

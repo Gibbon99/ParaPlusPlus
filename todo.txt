@@ -16,7 +16,6 @@ Splash screen on start
 Link scrollbox to briefing on main menu
 Dialog box - Game Sure to quit?
 Pause mode
-Universe background on menu screens?
 Player health check on damage - dead animation
 Droid AI - Flee
 Droid AI - Attack
@@ -25,7 +24,10 @@ Healing - player over tile Physics
 Healing - sound and score
 Healing - player health increase
 On exit from terminal - restart alert sound
+Move score to right some more
+Power down level - change tile set, play sound
 
+DONE - Universe background on menu screens?
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
 -DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "

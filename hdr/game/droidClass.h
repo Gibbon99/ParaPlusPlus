@@ -25,6 +25,8 @@ public:
 	int           liftIndex             = 0;
 	int           visibleValue          = 255;
 	int           visibleState          = VISIBLE_STATE_IS_VISIBLE;
+	int           transferTargetDroidIndex;
+	int           transferTargetDroidType;
 	float         weaponDelay;
 	std::string   droidName;
 	b2BodyDef     bodyDef;                      // Used for physics and collisions

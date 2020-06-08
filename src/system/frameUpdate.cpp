@@ -4,6 +4,7 @@
 #include <game/particles.h>
 #include <game/lightMaps.h>
 #include <game/alertLevel.h>
+#include <game/transfer.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
@@ -103,16 +104,14 @@ void sys_processInputEvents ()
 
 				if (evt.key.keysym.sym == SDLK_F2)
 				{
-					sys_setNewMode (MODE_GUI_MAINMENU, true);
-					gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
-					gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+					trn_debugTransferCells(TRANSFER_COLOR_RIGHT);
 				}
 
 				if (evt.key.keysym.sym == SDLK_F3)
 					sys_setNewMode (MODE_CONSOLE_EDIT, true);
 
 				if (evt.key.keysym.sym == SDLK_F4)
-					sys_setNewMode (MODE_GUI_SHIPVIEW, true);
+					trn_setupTransferCellValues ();
 
 
 				if (evt.key.state == SDL_PRESSED)

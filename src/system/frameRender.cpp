@@ -12,6 +12,7 @@
 #include <system/gameEvents.h>
 #include <game/particles.h>
 #include <game/lightMaps.h>
+#include <game/transferRender.h>
 #include "gui/guiRender.h"
 #include "system/frameRender.h"
 #include "io/console.h"
@@ -113,6 +114,10 @@ void sys_renderFrame (double interpolation)
 					(hiresVirtualWidth - databaseSprite.getFrameWidth ()) / 2,
 					(((hiresVirtualWidth - databaseSprite.getFrameHeight ()) / 2) + textures.at ("hudNew").getHeight ()) - databaseSprite.getFrameHeight (), 2.0, static_cast<Uint8>(64));
 			gui_renderGUI ();
+			break;
+
+		case MODE_GUI_TRANSFER_CHOOSE_SIDE:
+			trn_renderTransferGame ();
 			break;
 
 		case MODE_GAME:

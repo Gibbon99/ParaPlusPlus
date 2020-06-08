@@ -9,6 +9,8 @@
 #include <game/lineOfSight.h>
 #include <game/score.h>
 #include <game/transferRender.h>
+#include <game/transfer.h>
+#include <game/transferDroidAI.h>
 #include "game/audio.h"
 #include "gui/guiLanguage.h"
 #include "system/startup.h"
@@ -105,6 +107,21 @@ void sys_scriptInitVariables ()
 
 	paraScriptInstance.addHostVariable ("float transferRowHeight", &transferRowHeight);
 	paraScriptInstance.addHostVariable ("float transferRowStartY", &transferRowStartY);
+	paraScriptInstance.addHostVariable ("float transferRowCellWidth", &transferRowCellWidth);
+
+	paraScriptInstance.addHostVariable ("float transferBackgroundStartX", &transferBackgroundStartX);
+	paraScriptInstance.addHostVariable ("float transferBackgroundStartY", &transferBackgroundStartY);
+	paraScriptInstance.addHostVariable ("float transferBackgroundWidth", &transferBackgroundWidth);
+	paraScriptInstance.addHostVariable ("float transferBackgroundHeight", &transferBackgroundHeight);
+	paraScriptInstance.addHostVariable ("int transferBorderThickness", &transferBorderThickness);
+	paraScriptInstance.addHostVariable ("float transferStatusTabWidth", &transferStatusTabWidth);
+	paraScriptInstance.addHostVariable ("float transferStatusTabHeight", &transferStatusTabHeight);
+	paraScriptInstance.addHostVariable ("float transferSidebarGap", &transferSidebarGap);
+	paraScriptInstance.addHostVariable ("float transferSidebarWidth", &transferSidebarWidth);
+	paraScriptInstance.addHostVariable ("float transferLineThickness", &transferLineThickness);
+	paraScriptInstance.addHostVariable ("int chooseSideTimeOut", &chooseSideTimeOut);
+	paraScriptInstance.addHostVariable ("float chooseSideDelayTime", &chooseSideDelayTime);
+	paraScriptInstance.addHostVariable ("float chooseRowDelayTime", &chooseRowDelayTime);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)
@@ -252,4 +269,5 @@ void sys_scriptInitFunctions ()
 	paraScriptInstance.addHostFunction ("void gam_setTileType()", (functionPtr) &gam_setTileType);
 	paraScriptInstance.addHostFunction ("void gam_loadShipDeck (string &in)", (functionPtr) &gam_loadShipDeck);
 	paraScriptInstance.addHostFunction ("void gam_changeToDeck (string &in, int whichLift)", (functionPtr) &gam_changeToDeck);
+	paraScriptInstance.addHostFunction ("void trn_setTransferColor (int whichSide, float red, float green, float blue, float alpha)", (functionPtr) &trn_setTransferColor);
 }

@@ -1,15 +1,99 @@
-#include <game/transferRender.h>
-#include <classes/paraRandom.h>
-#include <system/util.h>
-#include <game/alertLevel.h>
-#include <game/audio.h>
-#include <game/player.h>
-#include <game/database.h>
-#include <game/texture.h>
+#include "game/transferRender.h"
+#include "classes/paraRandom.h"
+#include "system/util.h"
+#include "game/alertLevel.h"
+#include "game/audio.h"
+#include "game/player.h"
+#include "game/database.h"
+#include "game/texture.h"
+#include "game/transferDroidAI.h"
 #include "game/transfer.h"
 
 paraRandom transferRandom;
-int transferTargetDroidIndex;
+int        chooseSideTimeOut;  // From script
+float      chooseSideDelayTime; // From script
+
+//---------------------------------------------------------------------------------------------------------------------
+//
+// Print out the types of cells
+void trn_debugTransferCells (int whichSide)
+//---------------------------------------------------------------------------------------------------------------------
+{
+	for (auto cellItr : transferRows)
+	{
+		if (whichSide == TRANSFER_COLOR_LEFT)
+			std::cout << trn_getRowName (cellItr.leftSideType) << std::endl;
+		else
+			std::cout << trn_getRowName (cellItr.rightSideType) << std::endl;
+	}
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
+// Process active circuits time
+void trn_processCircuits (float tickTime)
+//---------------------------------------------------------------------------------------------------------------------
+{
+	int rowCount = 0;
+
+	for (auto &transferRowIndex : transferRows)
+	{
+		if (transferRowIndex.rightSideActive)
+		{
+			transferRowIndex.rightSideActiveCounter -= 0.2f * tickTime;
+			if (transferRowIndex.rightSideActiveCounter < 0.0f)
+			{
+				transferRowIndex.rightSideActiveCounter = 1.0f;
+				transferRowIndex.rightSideActive        = false;
+			}
+
+//					printf ("transferRowIndex.rightSideActiveAlphaCount [ %f ] Color [ %f ]\n", transferRowIndex.rightSideActiveAlphaCount, transferRowIndex.rightSideActiveAlphaColor);
+
+//					transferRowIndex.rightSideActiveAlphaCount -= 2.5f * tickTime;
+//					if (transferRowIndex.rightSideActiveAlphaCount < 0.0f)
+			{
+				transferRowIndex.rightSideActiveAlphaCount     = 1.0f;
+				transferRowIndex.rightSideActiveAlphaColor -= 0.6f * tickTime;
+				if (transferRowIndex.rightSideActiveAlphaColor < 0.0f)
+					transferRowIndex.rightSideActiveAlphaColor = 1.0f;
+			}
+		}
+
+		if (transferRowIndex.leftSideActive)
+		{
+			transferRowIndex.leftSideActiveCounter -= 20.0f * tickTime;
+			if (transferRowIndex.leftSideActiveCounter < 0.0f)
+			{
+				transferRowIndex.leftSideActiveCounter = 1.0f;
+				transferRowIndex.leftSideActive        = false;
+			}
+
+			transferRowIndex.leftSideActiveAlphaCount -= 2.5f * tickTime;
+			if (transferRowIndex.leftSideActiveAlphaCount < 0.0f)
+			{
+				transferRowIndex.leftSideActiveAlphaCount     = 1.0f;
+				transferRowIndex.leftSideActiveAlphaColor -= 0.1f;
+				if (transferRowIndex.leftSideActiveAlphaColor < 0.0f)
+					transferRowIndex.leftSideActiveAlphaColor = 1.0f;
+			}
+		}
+		rowCount++;
+	}
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
+// Return true if a transfer mistake is made
+bool trn_makeTransferMistake (int whichDroidLevel)
+//---------------------------------------------------------------------------------------------------------------------
+{
+	int mistakeLevel = 0;
+
+	mistakeLevel = transferRandom.get (0, 25);
+	mistakeLevel -= whichDroidLevel;
+
+	return mistakeLevel > 0;
+}
 
 //--------------------------------------------------------
 //
@@ -29,25 +113,16 @@ void trn_setupTransferCellValues ()
 {
 	int  i          = 0;
 	int  randNum    = 0;
-	int  randEffect = 0;     // Will the circuit be reversed or repeater
-	bool validCircuit;
 
+	//
+	// Left side
+	//
 	for (i = 0; i != numberTransferRows; i++)
 	{
-//
-// Left side
-//
 		randNum = transferRandom.get (0, TRANSFER_ROW_FULL_LINE_3 - 1);
-		randNum = randNum + 1;
 
 		if (randNum > TRANSFER_ROW_FULL_LINE_3)
-		{
-			printf ("Randnum is larger than row type\n");
-			exit (-1);
-		}
-
-		if (TRANSFER_ROW_ONE_INTO_TWO_MIDDLE == randNum)
-			printf ("Got one into two middle\n");
+			sys_shutdownWithError (sys_getString ("Transfer cell setup : Randnum is larger than row type."));
 
 		if ((i == 0) || (i == numberTransferRows - 1))  // Can't have split on first or last slot
 		{
@@ -85,16 +160,12 @@ void trn_setupTransferCellValues ()
 			transferRows[i].leftSideType = randNum;
 		}
 	}
-//
-// Right side
-//
-
+	//
+	// Right side
+	//
 	for (i = 0; i != numberTransferRows; i++)
 	{
-//			as_transSetDefaultValues (i);
-
 		randNum = transferRandom.get (0, TRANSFER_ROW_FULL_LINE_3);
-		randNum = randNum + 1;
 
 		if ((i == 0) || (i == numberTransferRows - 1))  // Can't have split on first or last slot
 		{
@@ -117,7 +188,7 @@ void trn_setupTransferCellValues ()
 		}
 		else if (TRANSFER_ROW_TWO_INTO_ONE_MIDDLE == randNum)
 		{
-			if (trn_isCircuitSplit (transferRows[i].rightSideType))
+			if (trn_isCircuitSplit (transferRows[i - 1].rightSideType))
 				transferRows[i].rightSideType = TRANSFER_ROW_FULL_LINE;
 			else
 			{
@@ -137,20 +208,20 @@ void trn_setupTransferCellValues ()
 //-------------------------------------------------------------------------------------------------------------------
 //
 // Get ready for the second transfer screen
-void trn_initTransferScreenTwo()
+void trn_initTransferScreenTwo ()
 //-------------------------------------------------------------------------------------------------------------------
 {
-	std::string    newFileName;
-	std::string    newKeyName;
+	std::string newFileName;
+	std::string newKeyName;
 
-	newKeyName = "db_droid";
-	newFileName = dataBaseEntry[g_shipDeckItr->second.droid[transferTargetDroidIndex].droidType].dbImageFileName + ".bmp";
+	newKeyName  = "db_droid";
+	newFileName = dataBaseEntry[g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].droidType].dbImageFileName + ".bmp";
 	gam_loadTexture (newFileName, newKeyName);
 
-	databaseSprite.setCurrentFrame(0);
-	databaseSprite.setTintColor(64,64,64);
+	databaseSprite.setCurrentFrame (0);
+	databaseSprite.setTintColor (64, 64, 64);
 
-	sys_setNewMode(MODE_TRANSFER_SCREEN_TWO, true);
+	sys_setNewMode (MODE_TRANSFER_SCREEN_TWO, true);
 }
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -206,21 +277,28 @@ void trn_initTransferValues (int transferTargetIndex)
 	transferColorRightActive.b = 0;
 	transferColorRightActive.a = 255;
 
-	transferTargetDroidIndex = transferTargetIndex;
+	droidBlockPos  = -1;
+	playerBlockPos = -1;
+
+	playerDroid.transferTargetDroidIndex = transferTargetIndex;
+	playerDroid.transferTargetDroidType  = g_shipDeckItr->second.droid[transferTargetIndex].droidType;
+
+	numDroidTokens  = dataBaseEntry[g_shipDeckItr->second.droid[transferTargetIndex].droidType].tokenCount;
+	numPlayerTokens = dataBaseEntry[playerDroid.droidType].tokenCount;
 
 	trn_setupTransferCellValues ();
 
-	gam_stopAlertLevelSound (gam_getCurrentAlertLevel());
+	gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 127, "transferMove");
 	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "guiTransferOne"));
 	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "guiTransferOne.nextButton");
 	gui.setState (KEY_ACTION, false, 0);
 
-	newKeyName = "db_droid";
+	newKeyName  = "db_droid";
 	newFileName = dataBaseEntry[playerDroid.droidType].dbImageFileName + ".bmp";
 	gam_loadTexture (newFileName, newKeyName);
 	databaseSprite.setCurrentFrame (0);
 	databaseSprite.setTintColor (64, 64, 64);
 
-	sys_setNewMode(MODE_TRANSFER_SCREEN_ONE, true);
+	sys_setNewMode (MODE_TRANSFER_SCREEN_ONE, true);
 }
