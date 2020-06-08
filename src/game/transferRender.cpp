@@ -116,10 +116,15 @@ void trn_renderRowBar (float startX, float middleY, Uint8 red, Uint8 green, Uint
 {
 	middleY++;
 
-	filledBoxRGBA (renderer.renderer, startX, middleY - transferRowHeight, startX + (BLOCK_WIDTH * 1.5), (middleY - 1) + transferRowHeight, red, green, blue, alpha);
+	filledBoxRGBA (renderer.renderer, startX,
+			middleY - transferRowHeight,
+			startX + (BLOCK_WIDTH * 1.5),
+			(middleY - 1) + transferRowHeight + 4, red, green, blue, alpha);
 
 	rectangleRGBA (renderer.renderer, startX,
-	               middleY - transferRowHeight, startX + (BLOCK_WIDTH * 1.5), (middleY - 1) + transferRowHeight + transferBorderThickness, transferColorBorder.r, transferColorBorder.g, transferColorBorder.b, transferColorBorder.a);
+	               (middleY - transferRowHeight),
+	               startX + (BLOCK_WIDTH * 1.5) + 1,
+	               (middleY - 1) + transferRowHeight + transferLineThickness + 1, transferColorBorder.r, transferColorBorder.g, transferColorBorder.b, transferColorBorder.a);
 }
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -294,7 +299,7 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 			               lineStartY + transferRowHeight,
 			               (leftLineStartX + (lineLength / 2)) + (BLOCK_WIDTH * 1.5), (lineStartY + transferRowHeight) + transferLineThickness, transferColorBorder.r, transferColorBorder.g, transferColorBorder.b, transferColorBorder.a);
 
-			trn_renderRowBar (leftLineStartX + (lineLength / 2), lineStartY, 0, 0, 0, 255);
+			trn_renderRowBar (leftLineStartX + (lineLength / 2), lineStartY, 255, 255, 0, 255);
 			trn_renderToken (TOKEN_DIRECTION_LEFT, leftLineStartX + (lineLength * 0.25f), tokenStartY, 255, 255, 0, 255);
 			break;
 
@@ -315,7 +320,7 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 			// Middle line
 			filledBoxRGBA (renderer.renderer, leftLineStartX, lineStartY, leftLineStartX + (lineLength * 0.5f), lineStartY + transferLineThickness, transferColorBorder.r, transferColorBorder.g, transferColorBorder.b, transferColorBorder.a);
 
-			trn_renderRowBar (leftLineStartX + (lineLength * 0.5f), lineStartY, 0, 0, 0, 255);
+			trn_renderRowBar (leftLineStartX + (lineLength * 0.5f), lineStartY, 255, 255, 0, 255);
 
 			filledBoxRGBA (renderer.renderer, leftLineStartX,
 			               lineStartY - transferRowHeight,
@@ -469,7 +474,7 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 			filledBoxRGBA (renderer.renderer, rightLineStartX,
 			               lineStartY + transferRowHeight,
 			               rightLineStartX - (lineLength / 2), (lineStartY + transferRowHeight) + transferLineThickness, transferColorBorder.r, transferColorBorder.g, transferColorBorder.b, transferColorBorder.a);
-			trn_renderRowBar (rightLineStartX - (lineLength / 2), lineStartY, 0, 0, 0, 255);
+			trn_renderRowBar (rightLineStartX - (lineLength / 2), lineStartY, 0, 255, 255, 255);
 			trn_renderToken (TOKEN_DIRECTION_RIGHT, rightLineStartX - (lineLength * 0.25f), tokenStartY, 0, 255, 255, 255);
 			break;
 
@@ -546,7 +551,7 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 			               rightLineStartX - (lineLength * 0.25f), (lineStartY + transferRowHeight) + transferLineThickness, transferColorBorder.r, transferColorBorder.g, transferColorBorder.b, transferColorBorder.a);
 			trn_renderToken (TOKEN_DIRECTION_RIGHT, rightLineStartX - (lineLength * 0.25f) - transferBorderThickness, tokenStartY + transferRowHeight, 0, 255, 255, 255);
 
-			trn_renderRowBar (rightLineStartX - (lineLength * 0.5f), lineStartY, 0, 0, 0, 255);
+			trn_renderRowBar (rightLineStartX - (lineLength * 0.5f), lineStartY, 0, 255, 255, 255);
 
 			break;
 
@@ -555,7 +560,6 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 			break;
 	}
 }
-
 
 //-------------------------------------------------------------------------------------------------------------------
 //
