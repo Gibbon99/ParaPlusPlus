@@ -5,6 +5,7 @@
 #include <game/player.h>
 #include <game/lifts.h>
 #include <system/util.h>
+#include <game/transfer.h>
 #include "io/keyboard.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -51,6 +52,10 @@ void io_processKeyboardState ()
 		case MODE_TRANSFER_SCREEN_TWO:
 			gui.processGuiInput();
 			gui_processKeyboard ();
+			break;
+
+		case MODE_TRANSFER_CHOOSE_SIDE:
+			trn_handleTransferChooseSide ();
 			break;
 
 		case MODE_GUI_LIFTVIEW:

@@ -106,5 +106,8 @@ void as_setEnglishText ()
 
 	gui_addKeyAndText ("guiTransferTwo.heading", "Transfer - Target Unit");
 	gui_addKeyAndText ("guiTransferTwo.textbox", "This is the unit that you wish to control. Prepare to attempt transfer takeover.");
+
+	gui_addKeyAndText ("selectSide", "Select side :");
+	gui_addKeyAndText ("transferFinish", "Finish :");
 }
 

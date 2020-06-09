@@ -8,7 +8,7 @@ void as_handleTransferScreens ()
 	{
 		// Change to second transfer screen
 
-		sys_setNewMode(MODE_TRANSFER_PRE_SCREEN_TWO, false);
+		sys_setNewMode (MODE_TRANSFER_PRE_SCREEN_TWO, false);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "guiTransferTwo"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "guiTransferTwo.nextButton");
 		return;
@@ -17,7 +17,7 @@ void as_handleTransferScreens ()
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "guiTransferTwo.nextButton"))
 	{
 		// Change to transfer screen
-		sys_setNewMode(MODE_GUI_TRANSFER_CHOOSE_SIDE, false);
+		sys_setNewMode (MODE_PRE_TRANSFER_CHOOSE_SIDE, false);
 		return;
 	}
 }
@@ -91,6 +91,14 @@ void as_initTransferValues ()
 //-------------------------------------------------------------------------------------------------------------------
 {
 	int backgroundPadding = 10;
+
+	chooseRowDelayTime  = 0.2f;
+	chooseSideDelayTime = 0.03f;
+	chooseSideTimeOut   = 7;
+	activeRowCounter    = 0.01f;
+
+	transferDelayTime = 0.03f;
+	transferTimeOut   = 67;
 
 	numberTransferRows   = 12;
 	transferBitmapWidth  = 800;

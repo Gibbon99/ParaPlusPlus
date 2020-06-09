@@ -124,6 +124,23 @@ void paraAudio::stopAllChannels ()
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
+// Returns true if current sound is playing
+bool paraAudio::isPlaying(std::string keyName)
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	for (auto audioItr : activeSounds)
+	{
+		if (keyName == audioItr.keyName)
+		{
+			if (Mix_Playing(audioItr.whichChannel == 1))
+				return true;
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
 // Return the current master volume level - to be saved in config file
 int paraAudio::getMasterVolume ()
 //-----------------------------------------------------------------------------------------------------------------------

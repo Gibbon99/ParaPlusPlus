@@ -161,12 +161,15 @@ void gam_processGameEventQueue ()
 					gam_addNewLightmap(b2Vec2(sys_convertToInt(tempEvent->gameText1), sys_convertToInt(tempEvent->gameText2)), sys_convertToInt(tempEvent->gameText3), 0);
 					break;
 
-				case EVENT_ACTION_GO_TRANSFER_MODE:
+				case EVENT_ACTION_INIT_TRANSFER_MODE:
 					trn_initTransferValues(sys_convertToInt(tempEvent->gameText1));
 					break;
 
-				case EVENT_ACTION_GO_TRANSFER_TWO:
+				case EVENT_ACTION_INIT_TRANSFER_TWO:
 					trn_initTransferScreenTwo();
+					break;
+
+				case EVENT_ACTION_TRANSFER_TWO:
 					break;
 			}
 

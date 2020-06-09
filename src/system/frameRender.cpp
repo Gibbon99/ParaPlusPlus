@@ -116,8 +116,12 @@ void sys_renderFrame (double interpolation)
 			gui_renderGUI ();
 			break;
 
-		case MODE_GUI_TRANSFER_CHOOSE_SIDE:
+		case MODE_TRANSFER_CHOOSE_SIDE:
 			trn_renderTransferGame ();
+			break;
+
+		case MODE_TRANSFER_GAME:
+			trn_renderTransferGame();
 			break;
 
 		case MODE_GAME:

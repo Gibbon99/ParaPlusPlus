@@ -18,6 +18,7 @@
 #include "system/frameUpdate.h"
 #include "game/doors.h"
 #include "game/score.h"
+#include "game/transferGame.h"
 
 SDL_Event evt;
 
@@ -196,6 +197,30 @@ void sys_gameTickRun ()
 		case MODE_GUI_DATABASE:
 			gui_scrollScrollBox ("databaseScreen.scrollbox");
 			databaseSprite.animate ();
+			break;
+
+		case MODE_TRANSFER_PRE_SCREEN_TWO:
+			break;
+
+		case MODE_TRANSFER_SCREEN_ONE:
+		case MODE_TRANSFER_SCREEN_TWO:
+//			trn_checkTransferScreenSounds();
+			break;
+
+		case MODE_PRE_TRANSFER_CHOOSE_SIDE:
+			trn_prepareTransferCountDown ();
+			break;
+
+		case MODE_TRANSFER_CHOOSE_SIDE:
+			trn_processTransferCountDown();
+			break;
+
+		case MODE_PRE_TRANSFER_GAME:
+			trn_prepareTransferGame();
+			break;
+
+		case MODE_TRANSFER_GAME:
+			trn_processTransferGame();
 			break;
 	}
 }

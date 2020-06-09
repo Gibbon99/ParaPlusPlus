@@ -24,10 +24,11 @@ Healing - player over tile Physics
 Healing - sound and score
 Healing - player health increase
 On exit from terminal - restart alert sound
-Move score to right some more
 Power down level - change tile set, play sound
+Start Game button not set on startup
 
 DONE - Universe background on menu screens?
+DONE - Move score to right some more
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
 -DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "

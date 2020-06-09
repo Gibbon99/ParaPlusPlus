@@ -1,4 +1,6 @@
 #include <gui/guiLanguage.h>
+#include <game/transfer.h>
+#include <game/transferGame.h>
 #include "system/startup.h"
 #include "system/util.h"
 #include "game/hud.h"
@@ -17,7 +19,14 @@ double      hudScorePosY;
 void gam_setHudText (const std::string &newText)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	hudText = gui_getString(newText);
+	if (currentMode == MODE_TRANSFER_CHOOSE_SIDE)
+		hudText = trn_getCountdown ();
+
+	else if (currentMode == MODE_TRANSFER_GAME)
+		hudText = trn_getTransferCountdown();
+
+	else
+		hudText = gui_getString(newText);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

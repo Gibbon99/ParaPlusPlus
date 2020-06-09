@@ -11,6 +11,7 @@
 #include <game/transferRender.h>
 #include <game/transfer.h>
 #include <game/transferDroidAI.h>
+#include <game/transferGame.h>
 #include "game/audio.h"
 #include "gui/guiLanguage.h"
 #include "system/startup.h"
@@ -122,6 +123,9 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("int chooseSideTimeOut", &chooseSideTimeOut);
 	paraScriptInstance.addHostVariable ("float chooseSideDelayTime", &chooseSideDelayTime);
 	paraScriptInstance.addHostVariable ("float chooseRowDelayTime", &chooseRowDelayTime);
+	paraScriptInstance.addHostVariable ("float activeRowCounter", &activeRowCounter);
+	paraScriptInstance.addHostVariable ("int transferTimeOut", &transferTimeOut);
+	paraScriptInstance.addHostVariable ("float transferDelayTime", &transferDelayTime);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)
