@@ -8,6 +8,10 @@
 #include <game/bullet.h>
 #include <system/gameEvents.h>
 #include <game/lightMaps.h>
+#include <game/tiles.h>
+#include <game/texture.h>
+#include <game/audio.h>
+#include <game/score.h>
 #include "game/shipDecks.h"
 #include "game/doors.h"
 #include "game/terminal.h"
@@ -17,6 +21,7 @@
 int                                                    tileSize;
 int                                                    numTileAcrossInTexture = 8;
 int                                                    numTilesDownInTexture  = 8;
+int                                                    powerdownLevelScore;
 b2Vec2                                                 drawOffset;
 std::string                                            currentDeckName;
 SDL_Rect                                               viewportRect;
@@ -484,6 +489,11 @@ std::string gam_returnLevelNameFromDeck (int deckNumber)
 void gam_changeToDeck (const std::string &deckName, int whichLift)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	std::string tempFilename;
+	std::string tempTiles;
+
+	tempTiles = "tiles";
+
 	gam_clearGameEvents ();
 	//
 	// Clear out droid physics before changing level name
@@ -493,26 +503,36 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	currentDeckNumber = gam_getCurrentDeckIndex ();
 	g_shipDeckItr     = shipdecks.find (currentDeckName);
 
+	gam_setTileType (g_shipDeckItr->second.deckIsDead);     // Set which tileset to use, normal or dark for dead level
+	textures.at ("tiles").destroy ();                     // Free previous texture
+	tempFilename = tileFilename;
+	gam_loadTexture (tempFilename, tempTiles);        // Needs to be called directly. Putting it in the event queue doesn't happen until after the deck texture is created
+
+	// Textures
 	gam_removeAllLightmaps ();
 	gam_locateAlertTiles ();
 	gam_createDeckTexture (deckName);
 	gam_renderAlertTiles ();
 
+	// Physicss
 	sys_setupEnemyPhysics (deckName);
-
 	sys_setupSolidWalls (deckName);
 	gam_doorTriggerSetup (deckName);
 	gam_findTerminalPositions (deckName);
 	gam_findLiftPositions (deckName);
+
+	// Bullets
 	gam_initBulletArray ();
 
 	playerDroid.previousWorldPosInPixels = {-1, -1};
 	playerDroid.worldPosInPixels         = gam_getLiftWorldPosition (whichLift, deckName);
 	sys_setPlayerPhysicsPosition (playerDroid.worldPosInPixels);
 
+	// AI
 	gam_createInfluenceMap ();
 
-	gam_startAlertLevelSound (gam_getCurrentAlertLevel());
+	// Sounds
+	gam_startAlertLevelSound (gam_getCurrentAlertLevel ());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -549,11 +569,11 @@ void gam_renderVisibleScreen (double interpolation)
 }
 
 
-//--------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------
 //
 // Render the waypoint segments
 void gam_showWayPoints (const std::string levelName)
-//--------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------
 {
 	int          indexCount;
 	b2Vec2       lineStart;
@@ -601,4 +621,45 @@ void gam_showWayPoints (const std::string levelName)
 
 		indexCount++;
 	}
+}
+
+//-------------------------------------------------------------------------------------------------------------------------
+//
+// All droids on this deck are dead - set deck to dead
+void gam_setDeckIsDead ()
+//-------------------------------------------------------------------------------------------------------------------------
+{
+	std::string tempFilename;
+	std::string tempTiles;
+
+	tempTiles = "tiles";        // Tileset keyName - needs to be a string to pass to function
+
+	if (!g_shipDeckItr->second.deckIsDead)
+	{
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "levelShutdown");
+		gam_setTileType (true);
+		textures.at ("tiles").destroy ();
+		tempFilename = tileFilename;
+		gam_loadTexture (tempFilename, tempTiles);
+		gam_modifyScore (powerdownLevelScore);
+		gam_createDeckTexture (gam_getCurrentDeckName ());      // Recreate the deck texture with new tileset
+		g_shipDeckItr->second.deckIsDead = true;
+		gam_addEvent(EVENT_ACTION_GAME_CHECK_DECK_CLEAR, 2, "");    // Check all decks
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------------------
+//
+// Check if all the levels are dead - Game Won
+void gam_checkAllLevels()
+//-------------------------------------------------------------------------------------------------------------------------
+{
+	for (auto deckItr : shipdecks)
+	{
+		if (!deckItr.second.deckIsDead)
+			return;     // One still got droids on it
+	}
+	//
+	// All the decks are clear
+	gam_addEvent(EVENT_ACTION_GAME_WON, 3, "");
 }

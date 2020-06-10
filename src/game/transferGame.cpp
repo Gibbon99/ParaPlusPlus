@@ -1,3 +1,5 @@
+#include <game/player.h>
+#include <game/database.h>
 #include "game/hud.h"
 #include "system/util.h"
 #include "gui/guiLanguage.h"
@@ -81,13 +83,58 @@ void trn_processTransferGame ()
 		if (transferTimeoutCountdown < 0)
 		{
 			transferTimeoutCountdown = transferTimeOut;
-			sys_setNewMode (MODE_PRE_TRANSFER_GAME, false);
+			trn_transferIntoDroid();
+			sys_setNewMode(MODE_GAME, true);
+//			sys_setNewMode (MODE_PRE_TRANSFER_GAME, false);
 		}
 	}
 
 	trn_processTransferDroidAI ();
 	trn_processPlayerActions();
 	trn_processCircuits ();
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
+// Transfer deadlock - start again
+void trn_transferDeadlock()
+//---------------------------------------------------------------------------------------------------------------------
+{
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
+// Lost the transfer - back to 001
+void trn_transferLostGame()
+//---------------------------------------------------------------------------------------------------------------------
+{
+	gam_setupPlayerDroid ();        // reset back to 001
+	playerDroid.currentHealth = dataBaseEntry[playerDroid.droidType].maxHealth / 4;   // Not in a good way
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
+// Lost the transfer - burnt out - game over
+void trn_transferBurntOut()
+//---------------------------------------------------------------------------------------------------------------------
+{
+	playerDroid.velocity = {0,0};
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
+// Transfer into the droid
+void trn_transferIntoDroid()
+//---------------------------------------------------------------------------------------------------------------------
+{
+	playerDroid.droidType = playerDroid.transferTargetDroidType;
+	playerDroid.currentHealth = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth;
+	playerDroid.velocity = {0,0};
+	playerDroid.droidName = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].droidName;
+	playerDroid.sprite = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].sprite;
+	g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth = -10;
+	gam_damageToDroid(playerDroid.transferTargetDroidIndex, PHYSIC_DAMAGE_BULLET, -1);
 }
 
 //---------------------------------------------------------------------------------------------------------------------

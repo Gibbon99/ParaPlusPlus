@@ -51,7 +51,7 @@ void paraConsole::addTempLine(const _consoleLine &newTempLine)
 {
 	while (isDrawing)  // Wait until any drawing operation is completed
 	{
-		cout << "Cant add while drawing in operation" << endl;  // TODO - Remove after testing
+		// cout << "Cant add while drawing in operation" << endl;
 	}
 
 	if (paraConsole::consoleText.size() < CONSOLE_MEM_SIZE)

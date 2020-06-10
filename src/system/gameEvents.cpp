@@ -7,6 +7,7 @@
 #include <game/particles.h>
 #include <game/lightMaps.h>
 #include <game/transfer.h>
+#include <game/alertLevel.h>
 #include "../../hdr/system/gameEvents.h"
 #include "../../hdr/classes/paraEvent.h"
 
@@ -72,6 +73,11 @@ void gam_processGameEventQueue ()
 {
 	paraEventGame     *tempEvent;
 	static PARA_Mutex *gameMutex = nullptr;
+
+	//
+	// Don't process any game events until fade is finished
+	if (renderer.currentFadeState != FADE_STATE_NONE)
+		return;
 
 	while (!gameEvents.empty ())     // events in the queue to process
 //	if (!gameEvents.empty ())     // events in the queue to process
@@ -167,6 +173,18 @@ void gam_processGameEventQueue ()
 
 				case EVENT_ACTION_INIT_TRANSFER_TWO:
 					trn_initTransferScreenTwo();
+					break;
+
+				case EVENT_ACTION_GAME_CHECK_DECK_CLEAR:
+					gam_checkAllLevels();
+					break;
+
+				case EVENT_ACTION_AUDIO_START_BACKGROUND:
+					gam_startAlertLevelSound (gam_getCurrentAlertLevel ());
+					break;
+
+				case EVENT_ACTION_GAME_WON:
+
 					break;
 
 				case EVENT_ACTION_TRANSFER_TWO:

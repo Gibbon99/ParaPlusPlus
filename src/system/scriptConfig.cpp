@@ -126,6 +126,7 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("float activeRowCounter", &activeRowCounter);
 	paraScriptInstance.addHostVariable ("int transferTimeOut", &transferTimeOut);
 	paraScriptInstance.addHostVariable ("float transferDelayTime", &transferDelayTime);
+	paraScriptInstance.addHostVariable ("int powerdownLevelScore", &powerdownLevelScore);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)
@@ -187,6 +188,8 @@ void sys_scriptInitFunctions ()
 	r = paraScriptInstance.scriptEngine->RegisterObjectBehaviour ("paraAudio", asBEHAVE_RELEASE, "void f()", asMETHOD(paraAudio, ReleaseRef), asCALL_THISCALL);
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraAudio", "bool load(string keyName, string fileName)", asMETHOD(paraAudio, load), asCALL_THISCALL);
+	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraAudio", "int play (string keyName, bool loop, int distance, int pan)", asMETHOD(paraAudio, play), asCALL_THISCALL);
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraAudio", "void deviceInfo()", asMETHOD(paraAudio, deviceInfo), asCALL_THISCALL);
 	assert(r >= 0);

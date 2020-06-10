@@ -163,6 +163,9 @@ void sys_setNewMode (int newMode, bool doFade)
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
+
+			gui.setCurrentScreen(gui.getIndex(GUI_OBJECT_SCREEN, "mainMenu"));
+			gui.setActiveObject(gui.getCurrentScreen(), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
 			break;
 
 		case MODE_GUI_INTROSCROLL:

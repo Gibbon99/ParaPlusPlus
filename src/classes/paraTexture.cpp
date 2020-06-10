@@ -73,6 +73,18 @@ void paraTexture::setFileName(std::string newFilename)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Destroy this texture
+void paraTexture::destroy()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	SDL_DestroyTexture(texture);
+	SDL_FreeSurface(surface);
+	texture = nullptr;
+	surface = nullptr;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Load a bitmap from a memory pointer - create a texture from the surface
 bool paraTexture::load (std::string newFileName, std::string newKeyName)
 //----------------------------------------------------------------------------------------------------------------------

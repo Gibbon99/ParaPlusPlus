@@ -164,7 +164,7 @@ static int sys_startInit(void *ptr)
 
 	gam_initAudio ();
 
-	gam_setTileType ();
+	gam_setTileType (false);
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, tileFilename+"|tiles| ");
 //
 // Textures are done from the same thread as window creation - put on the Game Event queue

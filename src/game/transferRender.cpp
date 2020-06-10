@@ -3,6 +3,7 @@
 #include <game/transferDroidAI.h>
 #include <game/player.h>
 #include <game/transferPlayer.h>
+#include <classes/paraRandom.h>
 #include "game/transferRender.h"
 
 #define filledBoxRGBA boxRGBA
@@ -34,6 +35,8 @@ PARA_Color transferColorBorder;
 PARA_Color transferColorLeftActive;
 PARA_Color transferColorRightActive;
 PARA_Color transferColorBackground;
+
+paraRandom  colorRandom;
 
 //-------------------------------------------------------------------------------------------------------------------
 //
@@ -635,9 +638,16 @@ void trn_renderTransferGame ()
 		{
 			rowColor = transferColorLeft;
 		}
-		else
+		else if (transferIndex.currentColor == TRANSFER_COLOR_RIGHT)
 		{
 			rowColor = transferColorRight;
+		}
+		else
+		{
+			rowColor.r = colorRandom.get(0, 254);
+			rowColor.g = colorRandom.get(0, 254);
+			rowColor.b = colorRandom.get(0, 254);
+			rowColor.a = 255;
 		}
 
 		filledBoxRGBA (renderer.renderer,

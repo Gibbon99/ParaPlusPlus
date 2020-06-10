@@ -6,6 +6,8 @@
 #include <game/particles.h>
 #include <game/pathFind.h>
 #include <game/lineOfSight.h>
+#include <game/tiles.h>
+#include <game/texture.h>
 #include "game/droids.h"
 #include "game/score.h"
 
@@ -358,11 +360,10 @@ void gam_removeDroids()
 			gam_modifyScore(dataBaseEntry[droidItr.droidType].score);
 		}
 	}
-
 	//
 	// See if the deck is empty
 	if (g_shipDeckItr->second.numEnemiesAlive == 0)
 	{
-		// TODO - Change tile set to empty - play sound - add score
+		gam_setDeckIsDead();
 	}
 }

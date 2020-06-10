@@ -129,6 +129,7 @@ struct _deckStruct
 	//
 	int                        deckNumber;         // Use this to reference by a number
 	int                        numEnemiesAlive;
+	bool                       deckIsDead = false;
 	std::vector<_liftBasic>    lifts;
 	paraLift                   liftClass;
 	std::vector<_basicHealing> healing;
@@ -142,6 +143,7 @@ extern SDL_Rect                                               viewportRect;
 extern int                                                    tileSize;
 extern std::unordered_map<std::string, _deckStruct>           shipdecks;
 extern int                                                    currentDeckNumber;
+extern int                                                    powerdownLevelScore;
 extern bool                                                   d_showInfluenceMap;
 extern std::unordered_map<std::string, _deckStruct>::iterator g_shipDeckItr;
 
@@ -182,3 +184,12 @@ void gam_debugInfluenceMap ();
 
 // Render the waypoint segments
 void gam_showWayPoints (const std::string levelName);
+
+// Create the texture to represent the current deck level
+void gam_createDeckTexture (std::string deckName);
+
+// All droids on this deck are dead - set deck to dead
+void gam_setDeckIsDead ();
+
+// Check if all the levels are dead - Game Won
+void gam_checkAllLevels();

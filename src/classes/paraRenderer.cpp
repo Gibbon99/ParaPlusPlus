@@ -112,6 +112,8 @@ Uint32 paraRenderer::createRendererFlags (int rendererIndex)
 void paraRenderer::create (int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, bool useVSync, const std::string &windowTitle)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	SDL_Surface     *iconSurface;
+
 	int rendererFlags = 0;
 
 	if (nullptr != window)
@@ -142,6 +144,11 @@ void paraRenderer::create (int newWinWidth, int newWinHeight, int winFlags, int 
 	currentFadeState = FADE_STATE_NONE;
 	currentFadeAlpha = 255;
 	fadeAmount       = 10.0;
+
+	iconSurface = SDL_LoadBMP("data/icon.bmp");
+	if (iconSurface != nullptr)
+		SDL_SetWindowIcon(window, iconSurface);
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------

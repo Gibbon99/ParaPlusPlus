@@ -130,6 +130,9 @@ void sys_setupPlayerPhysics ()
 	if (!physicsStarted)
 		sys_shutdownWithError ("Attempting to configure player droid physics, but engine not started.");
 
+	if (playerDroid.body != nullptr)    // Physics already setup
+		return;
+
 	playerDroid.bodyDef.type = b2_dynamicBody;
 	playerDroid.bodyDef.position.Set (2, 3);
 	playerDroid.bodyDef.angle = 0;
@@ -260,7 +263,6 @@ void gam_clearDroidPhysics(std::string levelName)
 		if (droidItr.body != nullptr)
 		{
 			droidItr.body->GetWorld()->DestroyBody(droidItr.body);
-			//			sys_getPhysicsWorld()->DestroyBody(droidItr.body);
 			droidItr.body = nullptr;
 		}
 	}
@@ -277,6 +279,9 @@ void sys_setupEnemyPhysics (std::string levelName)
 	
 	if (!physicsStarted)
 		sys_shutdownWithError (sys_getString ("Attempting to setup droid physics with no engine."));
+
+	if (g_shipDeckItr->second.deckIsDead)   // No droids alive
+		return;
 
 	if (g_shipDeckItr->second.droidPhysicsCreated)
 	{
@@ -312,12 +317,5 @@ void sys_setupEnemyPhysics (std::string levelName)
 			droidItr.body->CreateFixture (&droidItr.fixtureDef);
 		}
 	}
-
-
-	for (auto droidItr : shipdecks.at(levelName).droid)
-	{
-		std::cout << "[ " << droidItr.ai.getArrayIndex() << " ] Position : " << droidItr.body->GetPosition().x << " " << droidItr.body->GetPosition().y << std::endl;
-	}
-	
 	g_shipDeckItr->second.droidPhysicsCreated = true;
 }

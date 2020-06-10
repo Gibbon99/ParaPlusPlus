@@ -34,10 +34,12 @@ int filterEvents (void *userData, SDL_Event *event)
 void io_processKeyboardState ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-//	gui.keyboardState = SDL_GetKeyboardState (nullptr);
-//	gui.update();
+	//
+	// Don't process any key events until fade is finished and screen is ready
+	if (renderer.currentFadeState != FADE_STATE_NONE)
+		return;
 
-//io_mapJoyToInput();
+//io_mapJoyToInput();       // TODO uncomment and calibrate
 
 	io_mapMouseToInput ();
 
@@ -52,6 +54,10 @@ void io_processKeyboardState ()
 		case MODE_TRANSFER_SCREEN_TWO:
 			gui.processGuiInput();
 			gui_processKeyboard ();
+			break;
+
+		case MODE_GUI_INTROSCROLL:
+			gui_processKeyboard();
 			break;
 
 		case MODE_TRANSFER_CHOOSE_SIDE:

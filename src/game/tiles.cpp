@@ -8,10 +8,13 @@ std::string tileColor;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the passed in tile style
-void gam_setTileType ()
+void gam_setTileType (bool useDarkTiles)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	tileFilename = tileStyle + "_" + tileColor + ".bmp";
+	if (!useDarkTiles)
+		tileFilename = tileStyle + "_" + tileColor + ".bmp";
+	else
+		tileFilename = tileStyle + "_" + "dark" + ".bmp";
 }
 
 //----------------------------------------------------------------------------------------------------------------------

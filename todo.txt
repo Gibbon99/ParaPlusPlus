@@ -1,19 +1,17 @@
 
 TODO
 -------
-Set window ICON
-End screen
+End screen - Dead
+End Screen - Win
 High Score entry screen
 High Score display screen
 Transfer - enemy AI
-Transfer - player control
-Transfer - copy attributes
 Transfer - add to score
+Transfer - work out winner
 Player - sprite flash for low health or transfer timer running out
 Transfer - timer
 Tutorial screens
 Splash screen on start
-Link scrollbox to briefing on main menu
 Dialog box - Game Sure to quit?
 Pause mode
 Player health check on damage - dead animation
@@ -23,12 +21,24 @@ Droid AI - Help
 Healing - player over tile Physics
 Healing - sound and score
 Healing - player health increase
-On exit from terminal - restart alert sound
-Power down level - change tile set, play sound
-Start Game button not set on startup
+Yellow alert showing green lightmap on deck change
 
-DONE - Universe background on menu screens?
+DONE - Universe background on menu screens
 DONE - Move score to right some more
+DONE - Transfer - player control
+DONE - Dead level is not redrawing level with new tile set
+DONE - Power down level - change tile set, play sound
+DONE - Transfer - copy attributes
+DONE - Changing from dead to alive deck uses dead tile set
+DONE - Set window ICON
+DONE - Start Game button not set on startup
+DONE - Deckview hud text not found
+DONE - Link scrollbox to briefing on main menu
+DONE - On exit from terminal - restart alert sound
+
+
+
+
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
 -DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "

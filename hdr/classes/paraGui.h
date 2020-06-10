@@ -108,7 +108,7 @@ struct __GUI_SCROLLBOX
 	int                      gapSize;
 	int                      cornerRadius = 0;
 	int                      coordType;
-	int                      currentChar;
+	int                      currentChar = 0;
 	int                      numLinesToPrint;
 	double                   lineFade;
 	double                   scrollDelay  = 0.2;

@@ -114,6 +114,8 @@ void sys_processInputEvents ()
 				if (evt.key.keysym.sym == SDLK_F4)
 					trn_setupTransferCellValues ();
 
+				if (evt.key.keysym.sym == SDLK_F5)
+					sys_setNewMode(MODE_GUI_INTROSCROLL, true);
 
 				if (evt.key.state == SDL_PRESSED)
 				{

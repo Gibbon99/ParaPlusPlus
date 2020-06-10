@@ -36,7 +36,7 @@ void gam_loadTexture (std::string &fileName, std::string &keyName)
 		auto textureItr = textures.find (keyName);
 		if (textureItr != textures.end ())
 		{
-			SDL_DestroyTexture (textureItr->second.getTexture ());
+			textureItr->second.destroy();
 			textures.erase (textureItr);
 		}
 

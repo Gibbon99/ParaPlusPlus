@@ -48,6 +48,7 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("hudGameOn", "Game on");
 	gui_addKeyAndText ("hudRecharging", "Recharge");
 	gui_addKeyAndText ("hudLift", "Lift");
+	gui_addKeyAndText ("hudBriefing", "Briefing");
 
 	gui_addKeyAndText ("backButton", "Back");
 	gui_addKeyAndText ("nextButton", "Next");

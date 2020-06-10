@@ -187,6 +187,19 @@ void trn_processCircuits ()
 			rightSideCount++;
 	}
 
+	//
+	// Get current row type - compare against other legit row types, and then set color to dispute
+	// Return false for something like two_into_one_top
+	//
+	for (auto &transferRowIndex : transferRows)
+	{
+		if (((transferRowIndex.leftSideActive) || (transferRowIndex.leftSideActiveIsOn)) &&
+		(((transferRowIndex.rightSideActive) || transferRowIndex.rightSideActiveIsOn)))
+		{
+			transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
+		}
+	}
+
 	if (leftSideCount > rightSideCount)
 	{
 		transferColorStatusCell = transferColorLeft;

@@ -11,8 +11,8 @@ void as_handleMainMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.startGameButton"))
 	{
-		gam_changeToDeck ("Mid cargo", 0);
-		gam_setHudText ("Game on");
+		gam_changeToDeck ("Shuttle bay", 0);
+		gam_setHudText ("hudGameOn");
 		sys_setNewMode (MODE_PRE_GAME, false);
 		return;
 	}
@@ -23,6 +23,13 @@ void as_handleMainMenu ()
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "optionsMenu"));
 		// Set active object
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "optionsMenu.backButton");
+		return;
+	}
+
+	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.briefingButton"))
+	{
+		gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "scrollBeeps");
+		sys_setNewMode (MODE_GUI_INTROSCROLL, true);
 		return;
 	}
 
@@ -41,7 +48,7 @@ void as_handleOptionsMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.videoButton"))
 	{
-		gam_setHudText (gui_getString ("optionsMenu.videoButton"));
+		gam_setHudText ("optionsMenu.videoButton");
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "videoOptions"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "videoOptions.backButton");
 		return;
@@ -49,7 +56,7 @@ void as_handleOptionsMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.audioButton"))
 	{
-		gam_setHudText (gui_getString ("optionsMenu.audioButton"));
+		gam_setHudText ("optionsMenu.audioButton");
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "audioOptions"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "audioOptions.backButton");
 		return;
@@ -57,7 +64,7 @@ void as_handleOptionsMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.controlsButton"))
 	{
-		gam_setHudText (gui_getString ("optionsMenu.controlsButton"));
+		gam_setHudText ("optionsMenu.controlsButton");
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "controlsMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "controlsMenu.backButton");
 		return;
@@ -65,7 +72,7 @@ void as_handleOptionsMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "optionsMenu.gameButton"))
 	{
-		gam_setHudText (gui_getString ("optionsMenu.gameButton"));
+		gam_setHudText ("optionsMenu.gameButton");
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "gameMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "gameMenu.backButton");
 		return;
@@ -671,6 +678,7 @@ void as_createGUI ()
 	yellowAlertLevel        = 300;
 	updateScoreDelay        = 0.5f;
 	distanceForDoorSoundMax = 10.0f;   // In meters
+	powerdownLevelScore     = 1000;
 
 	as_setSideviewColors ();
 

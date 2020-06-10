@@ -23,6 +23,8 @@ public:
 
 	bool load (std::string newFileName, std::string newKeyName);
 
+	void destroy();
+
 	void render ();
 
 	void render (SDL_Rect *destination);

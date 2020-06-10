@@ -72,11 +72,6 @@ void gam_setupPlayerDroid ()
 	playerDroid.ai.setAcceleration (dataBaseEntry[0].accelerate);
 	playerDroid.ai.setMaxSpeed (dataBaseEntry[0].maxSpeed);
 
-	testCircle.droidType = 0;
-	testCircle.droidName = "001";
-	testCircle.sprite.create (playerDroid.droidName, 9, 0.3);
-	testCircle.worldPosInPixels = {0, 0};
-
 	sys_setupPlayerPhysics ();
 }
 

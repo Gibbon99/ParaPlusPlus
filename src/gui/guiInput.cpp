@@ -1,4 +1,5 @@
 #include <io/keyboard.h>
+#include <game/audio.h>
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -37,7 +38,12 @@ void gui_processKeyboard()
 	if (gui.keyDown(KEY_ACTION))
 	{
 
-		std::cout << "ACTION key" << std::endl;
-
+		switch (currentMode)
+		{
+			case MODE_GUI_INTROSCROLL:
+				gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP, false, 0, 0, "scrollBeeps");
+				sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
+				break;
+		}
 	}
 }

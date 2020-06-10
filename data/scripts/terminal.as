@@ -6,7 +6,7 @@ void as_handleDeckviewScreen()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "deckviewScreen.backButton"))
 	{
-		gam_setHudText(gui_getString ("terminalMenu.terminalText"));
+		gam_setHudText("terminalMenu.terminalText");
 		sys_setNewMode (MODE_GUI_TERMINAL, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.deckviewButton");
@@ -22,7 +22,7 @@ void as_handleShipviewScreen()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "shipviewScreen.backButton"))
 	{
-		gam_setHudText(gui_getString ("terminalMenu.terminalText"));
+		gam_setHudText("terminalMenu.terminalText");
 		sys_setNewMode (MODE_GUI_TERMINAL, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.shipviewButton");
@@ -38,7 +38,7 @@ void as_handleTerminalMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "terminalMenu.databaseButton"))
 	{
-		gam_setHudText(gui_getString ("terminalMenu.databaseButton"));
+		gam_setHudText("terminalMenu.databaseButton");
 		gam_prepareDatabaseScreen(0);
 		as_paraGui.restartScrollBox("databaseScreen.scrollbox");
 		sys_setNewMode(MODE_GUI_DATABASE, true);
@@ -49,7 +49,7 @@ void as_handleTerminalMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "terminalMenu.deckviewButton"))
 	{
-		gam_setHudText(gui_getString ("terminalMenu.deckviewButton"));
+		gam_setHudText("terminalMenu.deckviewButton");
 		sys_setNewMode(MODE_GUI_DECKVIEW, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "deckviewScreen"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "deckviewScreen.backButton");
@@ -58,7 +58,7 @@ void as_handleTerminalMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "terminalMenu.shipviewButton"))
 	{
-		gam_setHudText(gui_getString ("terminalMenu.shipviewButton"));
+		gam_setHudText("terminalMenu.shipviewButton");
 		sys_setNewMode(MODE_GUI_SHIPVIEW, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "shipviewScreen"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "shipviewScreen.backButton");
@@ -69,6 +69,7 @@ void as_handleTerminalMenu ()
 	{
 		//
 		// Change mode back to game
+		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_AUDIO_START_BACKGROUND, 0, "");
 		sys_setNewMode(MODE_GAME, true);
 		return;
 	}
@@ -82,7 +83,7 @@ void as_handleDatabaseMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "databaseScreen.backButton"))
 	{
-		gam_setHudText(gui_getString ("terminalMenu.terminalText"));
+		gam_setHudText("terminalMenu.terminalText");
 		sys_setNewMode (MODE_GUI_TERMINAL, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.databaseButton");

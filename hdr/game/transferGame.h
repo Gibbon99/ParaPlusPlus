@@ -37,3 +37,6 @@ std::string trn_getTransferCountdown ();
 
 // Place a token onto a circuit
 void trn_placeToken (int rowIndex, int whichSide, int whichDroid);
+
+// Transfer into the droid
+void trn_transferIntoDroid();
