@@ -1,4 +1,5 @@
 #include <system/util.h>
+#include <game/hud.h>
 #include "gui/guiWonScreen.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -7,5 +8,7 @@
 void gui_prepareWonScreen()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	gam_setHudText ("wonGameOver");
+
 	sys_setNewMode (MODE_GUI_WON_SCREEN, true);
 }

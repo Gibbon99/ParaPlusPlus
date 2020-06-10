@@ -10,6 +10,7 @@
 #include <game/player.h>
 #include <game/lifts.h>
 #include <classes/paraLightmap.h>
+#include <gui/guiHighScore.h>
 #include "../../hdr/system/startup.h"
 #include "../../hdr/system/scriptEngine.h"
 #include "../../hdr/system/scriptConfig.h"
@@ -131,6 +132,8 @@ void sys_startSystems ()
 	setupBulletLightmapColors();
 
 	sys_setNewMode (MODE_CONSOLE_INIT, false);
+
+	gui_readHighScore();
 
 	SDL_Thread *initThread;
 

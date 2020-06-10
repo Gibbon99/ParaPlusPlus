@@ -284,6 +284,16 @@ void sys_setNewMode (int newMode, bool doFade)
 			currentMode = newMode;
 			break;
 
+		case MODE_GUI_PRE_HIGHSCORE_SCREEN:
+			currentMode = newMode;
+			break;
+
+		case MODE_GUI_HIGHSCORE_SCREEN:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
+			break;
+
 		default:
 			sys_shutdownWithError ("Attempting to set an unknown mode.");
 			break;

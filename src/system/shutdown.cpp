@@ -1,6 +1,7 @@
-#include <system/util.h>
-#include <system/physics.h>
-#include <game/particles.h>
+#include "system/util.h"
+#include "system/physics.h"
+#include "game/particles.h"
+#include "gui/guiHighScore.h"
 #include "../../hdr/system/shutdown.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -10,6 +11,8 @@ void sys_closeSystems()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	io_saveConfigValues();
+
+	gui_writeHighScore();;
 
 	gam_clearEmitters();
 	sys_freePhysicsEngine ();

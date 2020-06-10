@@ -3,7 +3,6 @@ TODO
 -------
 
 High Score entry screen
-High Score display screen
 Transfer - enemy AI
 Transfer - add to score
 Transfer - work out winner
@@ -45,8 +44,8 @@ DONE - Change animation speed based on health
 DONE - Do damage from hitting explosion
 DONE - End screen - Dead
 DONE - End Screen - Win
-
-
+>Commit
+DONE - High Score display screen - load and save score to file
 
 
 

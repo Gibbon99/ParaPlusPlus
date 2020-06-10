@@ -10,6 +10,7 @@
 #include <game/alertLevel.h>
 #include <game/game.h>
 #include <gui/guiWonScreen.h>
+#include <gui/guiHighScore.h>
 #include "../../hdr/system/gameEvents.h"
 #include "../../hdr/classes/paraEvent.h"
 
@@ -189,6 +190,10 @@ void gam_processGameEventQueue ()
 
 				case EVENT_ACTION_GAME_WON:
 					gui_prepareWonScreen();
+					break;
+
+				case EVENT_ACTION_PRE_HIGHSCORE:
+					gui_prepareHighScoreScreen();
 					break;
 
 				case EVENT_ACTION_GAME_OVER:

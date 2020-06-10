@@ -1,4 +1,5 @@
 #include <gui/guiLostScreen.h>
+#include <gui/guiHighScore.h>
 #include "gui/guiScrollbox.h"
 #include "system/startup.h"
 #include "game/shipDecks.h"
@@ -111,6 +112,10 @@ void sys_renderFrame (double interpolation)
 
 		case MODE_GUI_WON_SCREEN:
 			gui_renderScrollbox ("wonScreen.scrollbox", interpolation);
+			break;
+
+		case MODE_GUI_HIGHSCORE_SCREEN:
+			gui_renderHighScoreScreen();
 			break;
 
 		case MODE_TRANSFER_SCREEN_ONE:

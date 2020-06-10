@@ -7,6 +7,7 @@
 #include <game/transfer.h>
 #include <game/pauseMode.h>
 #include <gui/guiLostScreen.h>
+#include <gui/guiHighScore.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
@@ -118,7 +119,8 @@ void sys_processInputEvents ()
 
 				if (evt.key.keysym.sym == SDLK_F5)
 				{
-					sys_setNewMode (MODE_GUI_WON_SCREEN, true);
+//					sys_setNewMode (MODE_GUI_WON_SCREEN, true);
+					gam_addEvent (EVENT_ACTION_PRE_HIGHSCORE, 0, "");
 				}
 
 				if (evt.key.state == SDL_PRESSED)

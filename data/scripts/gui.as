@@ -1,7 +1,7 @@
-int buttonWidth   = 40;
-int buttonHeight  = 10;
-int buttonSpacing = 16;
-int buttonStartX  = 10;
+int buttonWidth          = 40;
+int buttonHeight         = 10;
+int buttonSpacing        = 16;
+int buttonStartX         = 10;
 int scrollBoxBorderWidth = 10;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -661,7 +661,7 @@ void as_setupWinScreenScrollBox ()
 void as_setupIntroScrollBox ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	
+
 
 	as_paraGui.create (GUI_OBJECT_SCREEN, "introScreen");
 
@@ -715,6 +715,7 @@ void as_createGUI ()
 	alertLevelVolume        = 190;  // Higher is softer - 1 is full loud
 	staticAnimationDelay    = 0.8f;
 	lostScreenShowTime      = 250;  // 10 seconds
+	tableSpacingY           = 40;
 
 	as_setSideviewColors ();
 

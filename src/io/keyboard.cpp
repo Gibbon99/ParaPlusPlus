@@ -67,6 +67,7 @@ void io_processKeyboardState ()
 
 		case MODE_GUI_INTROSCROLL:
 		case MODE_GUI_WON_SCREEN:
+		case MODE_GUI_HIGHSCORE_SCREEN:
 			gui_processKeyboard ();
 			break;
 

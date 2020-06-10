@@ -15,6 +15,7 @@
 #include <game/game.h>
 #include <game/alertLevel.h>
 #include <gui/guiLostScreen.h>
+#include <gui/guiHighScore.h>
 #include "game/audio.h"
 #include "gui/guiLanguage.h"
 #include "system/startup.h"
@@ -139,6 +140,7 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("int alertLevelVolume", &alertLevelVolume);
 	paraScriptInstance.addHostVariable ("float staticAnimationDelay", &staticAnimationDelay);
 	paraScriptInstance.addHostVariable ("int lostScreenShowTime", &lostScreenShowTime);
+	paraScriptInstance.addHostVariable ("float tableSpacingY", &tableSpacingY);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)

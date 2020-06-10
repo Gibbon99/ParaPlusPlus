@@ -14,3 +14,6 @@ void gam_processScore ();
 
 // Return the current score
 int gam_getPrintableScore ();
+
+// Return the actual score - used for game over
+int gam_getCurrentScore();

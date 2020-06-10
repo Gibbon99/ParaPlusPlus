@@ -1,3 +1,5 @@
+#include <gui/guiHighScore.h>
+#include <game/score.h>
 #include "game/shipDecks.h"
 #include "game/game.h"
 
@@ -18,5 +20,7 @@ void gam_startNewGame()
 void gam_processGameOver()
 //-------------------------------------------------------------------------------------------------------------
 {
+	gui_insertNewScore(gam_getCurrentScore());
+
 	std::cout << " Game Over " << std::endl;
 }
