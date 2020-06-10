@@ -5,7 +5,7 @@
 void as_loadAudioResources()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "collosion1.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "collision1.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "console1.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "console2.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "doorOpen.wav");

@@ -6,6 +6,7 @@
 #include <game/alertLevel.h>
 #include <game/transfer.h>
 #include <game/pauseMode.h>
+#include <gui/guiLostScreen.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
@@ -116,7 +117,9 @@ void sys_processInputEvents ()
 					trn_setupTransferCellValues ();
 
 				if (evt.key.keysym.sym == SDLK_F5)
-					sys_setNewMode(MODE_GUI_INTROSCROLL, true);
+				{
+					sys_setNewMode (MODE_GUI_WON_SCREEN, true);
+				}
 
 				if (evt.key.state == SDL_PRESSED)
 				{
@@ -205,6 +208,10 @@ void sys_gameTickRun ()
 			gui_scrollScrollBox ("introScreen.scrollbox");
 			break;
 
+		case MODE_GUI_WON_SCREEN:
+			gui_scrollScrollBox ("wonScreen.scrollbox");
+			break;
+
 		case MODE_GUI_TERMINAL:
 			break;
 
@@ -235,6 +242,14 @@ void sys_gameTickRun ()
 
 		case MODE_TRANSFER_GAME:
 			trn_processTransferGame();
+			break;
+
+		case MODE_END_PRE_LOST_SCREEN:
+			gui_preRenderLostScreen();
+			break;
+
+		case MODE_END_LOST_SCREEN:
+			gui_processLostScreen();
 			break;
 	}
 }

@@ -9,6 +9,7 @@
 #include <game/transfer.h>
 #include <game/alertLevel.h>
 #include <game/game.h>
+#include <gui/guiWonScreen.h>
 #include "../../hdr/system/gameEvents.h"
 #include "../../hdr/classes/paraEvent.h"
 
@@ -99,6 +100,9 @@ void gam_processGameEventQueue ()
 
 		if (tempEvent->counter > 0)  // If not 0 - re-add to the queue with the reduced count
 		{
+
+			std::cout << "Game queue - readd event counter : " << tempEvent->counter << " Queue size : " << gameEvents.size() << std::endl;
+
 			tempEvent->counter--;
 			gam_addEvent (tempEvent->action, tempEvent->counter, tempEvent->gameText1+"|"+tempEvent->gameText2+"|"+tempEvent->gameText3);
 
@@ -184,14 +188,16 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_GAME_WON:
-
+					gui_prepareWonScreen();
 					break;
 
 				case EVENT_ACTION_GAME_OVER:
 					gam_processGameOver();
 					break;
 
-				case EVENT_ACTION_TRANSFER_TWO:
+				case EVENT_ACTION_END_LOST_SCREEN:
+					audio.stopAllChannels();
+					sys_setNewMode (MODE_GUI_MAINMENU, true);
 					break;
 			}
 

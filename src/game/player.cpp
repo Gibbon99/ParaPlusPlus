@@ -6,6 +6,7 @@
 #include <game/lifts.h>
 #include <system/gameEvents.h>
 #include <game/alertLevel.h>
+#include <game/game.h>
 #include "game/player.h"
 
 #include "game/bullet.h"
@@ -306,22 +307,30 @@ void gam_damageToPlayer (int damageSource, int sourceDroid)
 	switch (damageSource)
 	{
 		case PHYSIC_DAMAGE_BUMP:
-			playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bounceDamage;
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 100, 127, "collision1");
 
-
+			if (g_shipDeckItr->second.droid[sourceDroid].currentMode == DROID_MODE_EXPLODING)
+				playerDroid.currentHealth -= explosionDamage;
+			else
+				playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bounceDamage;
 			break;
 
 		case PHYSIC_DAMAGE_BULLET:
-
+#ifdef MY_DEBUG
 			std::cout << "Player hit by bullet" << std::endl;
+#endif
 
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "damage");
 			playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bulletDamage;
 			break;
 
 		case PHYSIC_DAMAGE_EXPLOSION:
 			break;
 	}
-	std::cout << "player health now : " << playerDroid.currentHealth << std::endl;
+
+#ifdef MY_DEBUG
+	std::cout << "player health now : " << playerDroid.currentHealth << std::endl;  // TODO - Remove
+#endif
 
 	gam_checkPlayerHealth();
 }

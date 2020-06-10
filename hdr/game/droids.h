@@ -4,25 +4,26 @@
 #include "droidClass.h"
 
 
-extern droidClass  testDroid;
+extern droidClass testDroid;
+extern float      explosionAnimationSpeed;
 
 // Create the droids for the level and init values
 void gam_initDroids (std::string levelName);
 
 // Animate the droid sprites
-void gam_animateDroids();
+void gam_animateDroids ();
 
 // Render the droids on the current level
-void gam_renderDroids(std::string levelName);
+void gam_renderDroids (std::string levelName);
 
 // Test the aStar with a single droid
-void createTestDroid();
+void createTestDroid ();
 
 // Render the test droid
-void renderTestDroid();
+void renderTestDroid ();
 
 // Process the AI for each droid
-void gam_processAI();
+void gam_processAI ();
 
 // Process damage to a droid
 //
@@ -33,4 +34,4 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid);
 void gam_processCollision (int droidA);
 
 // Check for any droids that need to be removed - died last tick
-void gam_removeDroids();
+void gam_removeDroids ();

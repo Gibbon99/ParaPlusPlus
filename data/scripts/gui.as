@@ -2,6 +2,7 @@ int buttonWidth   = 40;
 int buttonHeight  = 10;
 int buttonSpacing = 16;
 int buttonStartX  = 10;
+int scrollBoxBorderWidth = 10;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -637,11 +638,30 @@ void as_setSideviewColors ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Setup the values for the won screen scrollbox
+void as_setupWinScreenScrollBox ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	as_paraGui.create (GUI_OBJECT_SCREEN, "wonScreen");
+
+	as_paraGui.create (GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox");
+	as_paraGui.addToScreen (GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", "wonScreen");
+	as_paraGui.setLabel (GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", 4, GUI_LABEL_CENTER, gui_getString ("scrollBoxWonText"));
+	as_paraGui.setFontName (GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", "introFont");
+	as_paraGui.setPosition (GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", 8, GUI_COORD_ABSOLUTE, scrollBoxBorderWidth, 100, hiresVirtualWidth - scrollBoxBorderWidth, hiresVirtualHeight - scrollBoxBorderWidth - 100);
+	as_paraGui.setColor (GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", GUI_COL_ACTIVE, 100, 100, 15, 100);
+	as_paraGui.setColor (GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", GUI_COL_ACTIVE_LABEL, 20, 150, 100, 240);
+	as_paraGui.setScrollSpeed (GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", 60.0);
+	as_paraGui.setReady (GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", true);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Setup the values for the intro scrollbox
 void as_setupIntroScrollBox ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int introScrollBoxBorderWidth = 10;
+	
 
 	as_paraGui.create (GUI_OBJECT_SCREEN, "introScreen");
 
@@ -649,7 +669,7 @@ void as_setupIntroScrollBox ()
 	as_paraGui.addToScreen (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", "introScreen");
 	as_paraGui.setLabel (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 4, GUI_LABEL_CENTER, gui_getString ("scrollBoxIntroText"));
 	as_paraGui.setFontName (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", "introFont");
-	as_paraGui.setPosition (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 8, GUI_COORD_ABSOLUTE, introScrollBoxBorderWidth, 100, hiresVirtualWidth - introScrollBoxBorderWidth, hiresVirtualHeight - introScrollBoxBorderWidth - 100);
+	as_paraGui.setPosition (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 8, GUI_COORD_ABSOLUTE, scrollBoxBorderWidth, 100, hiresVirtualWidth - scrollBoxBorderWidth, hiresVirtualHeight - scrollBoxBorderWidth - 100);
 	as_paraGui.setColor (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", GUI_COL_ACTIVE, 100, 100, 15, 100);
 	as_paraGui.setColor (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", GUI_COL_ACTIVE_LABEL, 20, 150, 100, 240);
 	as_paraGui.setScrollSpeed (GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 60.0);
@@ -690,10 +710,16 @@ void as_createGUI ()
 	powerdownLevelScore     = 1000;
 	healingDelayCounter     = 0.8f;
 	healingAmountPerTick    = 2;
+	explosionAnimationSpeed = 1.5f;
+	explosionDamage         = 2;
+	alertLevelVolume        = 190;  // Higher is softer - 1 is full loud
+	staticAnimationDelay    = 0.8f;
+	lostScreenShowTime      = 250;  // 10 seconds
 
 	as_setSideviewColors ();
 
 	as_setupIntroScrollBox ();
+	as_setupWinScreenScrollBox ();
 
 	as_initTransferValues ();
 

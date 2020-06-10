@@ -2,6 +2,8 @@
 
 #include "main.h"
 
+extern int alertLevelVolume;
+
 // Locate all the alert level tiles and store their location
 void gam_locateAlertTiles ();
 

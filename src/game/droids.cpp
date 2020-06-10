@@ -6,10 +6,12 @@
 #include <game/particles.h>
 #include <game/pathFind.h>
 #include <game/lineOfSight.h>
-#include <game/tiles.h>
 #include <game/texture.h>
+#include <game/game.h>
 #include "game/droids.h"
 #include "game/score.h"
+
+float explosionAnimationSpeed;
 
 //-------------------------------------------------------------------------------------------------------------
 //
@@ -242,6 +244,25 @@ void gam_processCollision (int droidA)
 
 //-------------------------------------------------------------------------------------------------------------
 //
+// Droid has lost all health - explode and remove
+void gam_explodeDroid(int droidIndex)
+//-------------------------------------------------------------------------------------------------------------
+{
+	g_shipDeckItr->second.droid[droidIndex].velocity = {0,0};
+	g_shipDeckItr->second.droid[droidIndex].currentMode = DROID_MODE_EXPLODING;
+	g_shipDeckItr->second.droid[droidIndex].sprite.create("explosion", 25, explosionAnimationSpeed);
+	g_shipDeckItr->second.droid[droidIndex].sprite.setAnimateSpeed(explosionAnimationSpeed);      // Set for explosion animation
+
+	if (g_shipDeckItr->second.droid[droidIndex].droidType < 10)
+		gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode1");
+	else
+		gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
+
+	gam_addEmitter(sys_convertToMeters(g_shipDeckItr->second.droid[droidIndex].worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
 // Process damage to a droid
 //
 // damageSource can be either a bullet, explosion or a collision with player or another droid
@@ -257,23 +278,39 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 	switch (damageSource)
 	{
 		case PHYSIC_DAMAGE_BUMP:
+			if (g_shipDeckItr->second.droid[targetDroid].currentMode == DROID_MODE_EXPLODING)
+			{
+				if (sourceDroid != -1)  // Another droid has run into explosion
+				{
+					g_shipDeckItr->second.droid[sourceDroid].currentHealth -= explosionDamage;
+					gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 64, 127, "damage");
+				}
+				return;
+			}
 
 			if (sourceDroid == -1)  // Hit from player
 			{
 				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bounceDamage;
-				// Damage to player droid
+				gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 100, 127, "collision1");
+				//
+				// Damage to player droid - bump and explosion damage done in this routine
 				gam_damageToPlayer (PHYSIC_DAMAGE_BUMP, targetDroid);
 			}
-//			else
-//				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bounceDamage;
+			//
+			// See if droid is dead - set explosion sprite and change mode
+			if (g_shipDeckItr->second.droid[targetDroid].currentHealth < 0)
+			{
+				gam_explodeDroid(targetDroid);
+				return;
+			}
 
-			g_shipDeckItr->second.droid[targetDroid].currentHealth < 0 ? 0 : g_shipDeckItr->second.droid[targetDroid].currentHealth;
+//			g_shipDeckItr->second.droid[targetDroid].currentHealth < 0 ? 0 : g_shipDeckItr->second.droid[targetDroid].currentHealth;
 			break;
 
 		case PHYSIC_DAMAGE_BULLET:
 
 			g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid (sourceDroid);
-//			g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 40);
+//			g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 40);   // TODO - Put this back in
 
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "damage");
 
@@ -288,16 +325,8 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 				// See if droid is dead - set explosion sprite and change mode
 				if (g_shipDeckItr->second.droid[targetDroid].currentHealth < 0)
 				{
-					g_shipDeckItr->second.droid[targetDroid].velocity = {0,0};
-					g_shipDeckItr->second.droid[targetDroid].currentMode = DROID_MODE_EXPLODING;
-					g_shipDeckItr->second.droid[targetDroid].sprite.create("explosion", 25, 1.4f);
-					g_shipDeckItr->second.droid[targetDroid].sprite.setAnimateSpeed(1.4f);      // Set for explosion animation
-
-					if (g_shipDeckItr->second.droid[targetDroid].droidType < 10)
-						gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "explode1");
-					else
-						gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "explode2");
-					gam_addEmitter(sys_convertToMeters(g_shipDeckItr->second.droid[targetDroid].worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+					gam_explodeDroid(targetDroid);
+					return;
 				}
 			}
 			else        // Droid shot this bullet
@@ -307,6 +336,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 
 				if (targetDroid != -1)  // Not the player hit by a bullet
 				{
+					gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "damage");
 					g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].bulletDamage;
 				}
 				else

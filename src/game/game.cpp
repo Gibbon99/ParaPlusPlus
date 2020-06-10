@@ -1,6 +1,8 @@
 #include "game/shipDecks.h"
 #include "game/game.h"
 
+int explosionDamage;
+
 //-------------------------------------------------------------------------------------------------------------
 //
 // Start a new game

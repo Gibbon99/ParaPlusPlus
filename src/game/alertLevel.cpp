@@ -7,6 +7,7 @@
 
 std::vector<b2Vec2> tileLocationsInPixels;
 static int          currentAlertLevel = -1;
+int                 alertLevelVolume;
 
 //------------------------------------------------------------------------------------------------------
 //
@@ -17,15 +18,15 @@ void gam_startAlertLevelSound (int whichAlertLevel)
 	switch (whichAlertLevel)
 	{
 		case ALERT_GREEN_TILE:
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 128, 127, "greenAlert");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, alertLevelVolume, 127, "greenAlert");
 			break;
 
 		case ALERT_YELLOW_TILE:
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 128, 127, "yellowAlert");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, alertLevelVolume, 127, "yellowAlert");
 			break;
 
 		case ALERT_RED_TILE:
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 128, 127, "redAlert");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, alertLevelVolume, 127, "redAlert");
 			break;
 	}
 }

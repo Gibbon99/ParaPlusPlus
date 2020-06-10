@@ -12,6 +12,9 @@
 #include <game/transfer.h>
 #include <game/transferDroidAI.h>
 #include <game/transferGame.h>
+#include <game/game.h>
+#include <game/alertLevel.h>
+#include <gui/guiLostScreen.h>
 #include "game/audio.h"
 #include "gui/guiLanguage.h"
 #include "system/startup.h"
@@ -131,6 +134,11 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("int powerdownLevelScore", &powerdownLevelScore);
 	paraScriptInstance.addHostVariable ("float healingDelayCounter", &healingDelayCounter);
 	paraScriptInstance.addHostVariable ("int healingAmountPerTick", &healingAmountPerTick);
+	paraScriptInstance.addHostVariable ("float explosionAnimationSpeed", &explosionAnimationSpeed);
+	paraScriptInstance.addHostVariable ("int explosionDamage", &explosionDamage);
+	paraScriptInstance.addHostVariable ("int alertLevelVolume", &alertLevelVolume);
+	paraScriptInstance.addHostVariable ("float staticAnimationDelay", &staticAnimationDelay);
+	paraScriptInstance.addHostVariable ("int lostScreenShowTime", &lostScreenShowTime);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)

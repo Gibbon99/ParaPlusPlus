@@ -1,3 +1,4 @@
+#include <gui/guiLostScreen.h>
 #include "gui/guiScrollbox.h"
 #include "system/startup.h"
 #include "game/shipDecks.h"
@@ -108,6 +109,10 @@ void sys_renderFrame (double interpolation)
 			gui_renderScrollbox ("introScreen.scrollbox", interpolation);
 			break;
 
+		case MODE_GUI_WON_SCREEN:
+			gui_renderScrollbox ("wonScreen.scrollbox", interpolation);
+			break;
+
 		case MODE_TRANSFER_SCREEN_ONE:
 			databaseSprite.render (
 					(hiresVirtualWidth - databaseSprite.getFrameWidth ()) / 2,
@@ -160,6 +165,10 @@ void sys_renderFrame (double interpolation)
 			if (d_showAStarPath)
 				gam_AStarDebugWayPoints (0);
 
+			break;
+
+		case MODE_END_LOST_SCREEN:
+			gui_renderLostScreen();
 			break;
 	}
 

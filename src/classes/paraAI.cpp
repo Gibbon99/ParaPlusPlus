@@ -5,6 +5,7 @@
 #include <game/pathFind.h>
 #include <classes/paraLOS.h>
 #include <classes/paraRandom.h>
+#include <game/database.h>
 #include "classes/paraAI.h"
 
 // #define DEBUG_AI 1
@@ -439,12 +440,8 @@ void paraAI::swapWaypointDirection ()
 void paraAI::getNextAStarDestination ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	int   nearestWayPointIndex = 0;
-	int   newIndex             = 0;
-	float shortestDistance     = 1000;
-	float currentDistance;
-
 	aStarWaypointIndex--;
+
 	if (aStarWaypointIndex < 0)    // Reached the AStar destination
 	{
 #ifdef DEBUG_AI
@@ -466,6 +463,7 @@ void paraAI::getNextAStarDestination ()
 
 				// Clear heal mode
 				modifyScore (AI_MODE_HEAL, -100);  // Reset to zero - should be fully healed
+				g_shipDeckItr->second.droid[arrayIndex].currentHealth = dataBaseEntry[arrayIndex].maxHealth;    // Need another way of doing this
 #ifdef DEBUG_AI
 				std::cout << "[ " << arrayIndex << " ]" << " Finished HEAL mode. Health score is now " << ai[AI_MODE_HEAL] << std::endl;
 #endif

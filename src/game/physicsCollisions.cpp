@@ -388,7 +388,6 @@ void contactListener::BeginContact (b2Contact *contact)
 				{
 					// int targetDroid, int damageSource, int sourceDroid,
 					gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_A->dataValue, PHYSIC_DAMAGE_BUMP, -1));
-					// TODO - do damage to player
 				}
 			}
 			else
