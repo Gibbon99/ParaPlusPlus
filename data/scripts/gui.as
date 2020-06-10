@@ -26,6 +26,15 @@ void as_handleMainMenu ()
 		return;
 	}
 
+	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.tutorialButton"))
+	{
+		gam_setHudText ("hudTutorial");
+		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "scrTutorial"));
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "scrTutorial.buttonTutMoveNext");
+		sys_setNewMode (MODE_GUI_TUT_TRANSFER_START, true);
+		return;
+	}
+
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.briefingButton"))
 	{
 		gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "scrollBeeps");
@@ -697,6 +706,8 @@ void as_createGUI ()
 	createTerminalMenu ();
 	createDeckViewScreen ();
 	createShipViewScreen ();
+
+	createTutorialScreens ();
 
 	as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
 	as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGame");

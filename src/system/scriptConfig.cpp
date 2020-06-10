@@ -54,6 +54,8 @@ void sys_scriptInitScriptFunctions ()
 
 	paraScriptInstance.addScriptFunction ("void as_handleTransferScreens()", "as_handleTransferScreens");
 
+	paraScriptInstance.addScriptFunction ("void as_handleTutorialElements ()", "as_handleTutorialElements");
+
 	paraScriptInstance.addScriptFunction ("void as_testFunction()", "as_testFunction");
 }
 

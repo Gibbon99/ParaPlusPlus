@@ -73,6 +73,15 @@ void sys_renderFrame (double interpolation)
 			gui_renderGUI ();
 			break;
 
+		case MODE_GUI_TUT_TRANSFER_START:
+		case MODE_GUI_TUT_TRANSFER_GAME:
+		case MODE_GUI_TUT_LIFTS:
+		case MODE_GUI_TUT_TERMINALS:
+		case MODE_GUI_TUT_HEALING:
+		case MODE_GUI_TUT_TIPS:
+			gui_renderGUI ();
+			break;
+
 		case MODE_GUI_DATABASE:
 			gui_renderScrollbox ("databaseScreen.scrollbox", interpolation);
 			databaseSprite.setTintColor (255, 255, 255);

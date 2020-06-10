@@ -45,6 +45,13 @@ void io_processKeyboardState ()
 
 	switch (currentMode)
 	{
+		case MODE_GUI_TUT_TRANSFER_START:
+		case MODE_GUI_TUT_TRANSFER_GAME:
+		case MODE_GUI_TUT_LIFTS:
+		case MODE_GUI_TUT_TERMINALS:
+		case MODE_GUI_TUT_HEALING:
+		case MODE_GUI_TUT_TIPS:
+
 		case MODE_GUI_MAINMENU:
 		case MODE_GUI_TERMINAL:
 		case MODE_GUI_DATABASE:
@@ -52,12 +59,12 @@ void io_processKeyboardState ()
 		case MODE_GUI_SHIPVIEW:
 		case MODE_TRANSFER_SCREEN_ONE:
 		case MODE_TRANSFER_SCREEN_TWO:
-			gui.processGuiInput();
+			gui.processGuiInput ();
 			gui_processKeyboard ();
 			break;
 
 		case MODE_GUI_INTROSCROLL:
-			gui_processKeyboard();
+			gui_processKeyboard ();
 			break;
 
 		case MODE_TRANSFER_CHOOSE_SIDE:
@@ -65,23 +72,22 @@ void io_processKeyboardState ()
 			break;
 
 		case MODE_GUI_LIFTVIEW:
-//			gui.process();
 			if (gui.keyDown (KEY_UP))
 			{
 				gam_moveLift (1);
-				gui.setState(KEY_UP, false, 0);
+				gui.setState (KEY_UP, false, 0);
 			}
 
 			if (gui.keyDown (KEY_DOWN))
 			{
 				gam_moveLift (2);
-				gui.setState(KEY_DOWN, false, 0);
+				gui.setState (KEY_DOWN, false, 0);
 			}
 
 			if (gui.keyDown ((KEY_ACTION)))
 			{
 				gam_moveLift (3);
-				gui.setState(KEY_ACTION, false, 0);
+				gui.setState (KEY_ACTION, false, 0);
 			}
 			break;
 
@@ -90,23 +96,21 @@ void io_processKeyboardState ()
 
 		case MODE_GAME:
 			gam_processPlayerMovement ();
-		
-//			if (gui.keyDown (KEY_ACTION))
-				gam_processActionKey ();
-		
-			if (gui.keyDown(KEY_CONSOLE))
+			gam_processActionKey ();
+
+			if (gui.keyDown (KEY_CONSOLE))
 			{
 				sys_setNewMode (MODE_CONSOLE_EDIT, true);
-				gui.setState(KEY_CONSOLE, false, 0);
+				gui.setState (KEY_CONSOLE, false, 0);
 			}
 			break;
 
 		case MODE_CONSOLE_EDIT:
-		if (gui.keyDown(KEY_CONSOLE))
-		{
-			sys_setNewMode (MODE_GAME, true);
-			gui.setState (KEY_CONSOLE, false, 0);
-		}
+			if (gui.keyDown (KEY_CONSOLE))
+			{
+				sys_setNewMode (MODE_GAME, true);
+				gui.setState (KEY_CONSOLE, false, 0);
+			}
 		default:
 			break;
 	}
@@ -125,7 +129,7 @@ void io_setKeyboardState (SDL_Scancode keycode, int action, bool repeatPress)
 			if (keycode == gui.getScancode (i))
 			{
 //				if ((repeatPress == false) && (gui.getRepeatOff () == true))
-					gui.setState (i, true, 0);
+				gui.setState (i, true, 0);
 //				else
 //					gui.setState (i, false, 0);
 			}

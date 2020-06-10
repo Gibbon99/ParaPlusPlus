@@ -175,6 +175,18 @@ void sys_setNewMode (int newMode, bool doFade)
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
+		case MODE_GUI_TUT_TRANSFER_START:
+		case MODE_GUI_TUT_TRANSFER_GAME:
+		case MODE_GUI_TUT_LIFTS:
+		case MODE_GUI_TUT_TERMINALS:
+		case MODE_GUI_TUT_HEALING:
+		case MODE_GUI_TUT_TIPS:
+			gui.setRepeatOff (true);
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
+			break;
+
 		case MODE_GUI_TERMINAL:
 			gui.setRepeatOff (true);
 			currentMode = newMode;

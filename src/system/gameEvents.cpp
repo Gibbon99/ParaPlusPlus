@@ -80,7 +80,6 @@ void gam_processGameEventQueue ()
 		return;
 
 	while (!gameEvents.empty ())     // events in the queue to process
-//	if (!gameEvents.empty ())     // events in the queue to process
 	{
 
 #ifdef MY_DEBUG

@@ -36,6 +36,35 @@ void trn_debugTransferCells (int whichSide)
 
 //---------------------------------------------------------------------------------------------------------------------
 //
+// Return true if the passed in circuits makes contact with the middle
+bool trn_contactingCircuit(int circuitType)
+//---------------------------------------------------------------------------------------------------------------------
+{
+	switch (circuitType)
+	{
+		case TRANSFER_ROW_FULL_LINE:
+		case TRANSFER_ROW_FULL_LINE_1:
+		case TRANSFER_ROW_FULL_LINE_2:
+		case TRANSFER_ROW_FULL_LINE_3:
+		case TRANSFER_ROW_REPEAT_HALF:
+		case TRANSFER_ROW_REPEAT_QUARTER:
+			return true;
+			break;
+
+		case TRANSFER_ROW_ONE_INTO_TWO_BOTTOM:
+		case TRANSFER_ROW_ONE_INTO_TWO_TOP:
+		case TRANSFER_ROW_TWO_INTO_ONE_MIDDLE:
+			return true;
+			break;
+
+		default:
+			return false;
+			break;
+	}
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
 // Process active circuits time
 void trn_processCircuits ()
 //---------------------------------------------------------------------------------------------------------------------
@@ -68,6 +97,11 @@ void trn_processCircuits ()
 				case TRANSFER_ROW_REPEAT_HALF:
 				case TRANSFER_ROW_REPEAT_QUARTER:
 					transferRowIndex.currentColor = TRANSFER_COLOR_RIGHT;
+					if ((transferRowIndex.leftSideActive) || (transferRowIndex.leftSideActiveIsOn))
+					{
+						if (trn_contactingCircuit(transferRowIndex.leftSideType))
+							transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
+					}
 					break;
 
 				case TRANSFER_ROW_REVERSE_HALF:
@@ -81,6 +115,11 @@ void trn_processCircuits ()
 					if ((transferRowIndex.rightSideActive) && (transferRows[transferRowIndex.index + 2].rightSideActive))
 					{
 						transferRows[transferRowIndex.index + 1].currentColor = TRANSFER_COLOR_RIGHT;
+						if ((transferRows[transferRowIndex.index + 1].leftSideActive) || (transferRows[transferRowIndex.index + 1].leftSideActiveIsOn))
+						{
+							if (trn_contactingCircuit(transferRows[transferRowIndex.index - 1].leftSideType))
+								transferRows[transferRowIndex.index + 1].currentColor = TRANSFER_COLOR_DISPUTE;
+						}
 					}
 					break;
 
@@ -88,6 +127,11 @@ void trn_processCircuits ()
 					if ((transferRowIndex.rightSideActive) && (transferRows[transferRowIndex.index - 2].rightSideActive))
 					{
 						transferRows[transferRowIndex.index - 1].currentColor = TRANSFER_COLOR_RIGHT;
+						if ((transferRows[transferRowIndex.index - 1].leftSideActive) || (transferRows[transferRowIndex.index - 1].leftSideActiveIsOn))
+						{
+							if (trn_contactingCircuit(transferRows[transferRowIndex.index - 1].leftSideType))
+								transferRows[transferRowIndex.index - 1].currentColor = TRANSFER_COLOR_DISPUTE;
+						}
 					}
 					break;
 
@@ -95,6 +139,11 @@ void trn_processCircuits ()
 					if (transferRows[transferRowIndex.index + 1].rightSideActive)
 					{
 						transferRowIndex.currentColor = TRANSFER_COLOR_RIGHT;
+						if ((transferRowIndex.leftSideActive) || (transferRowIndex.leftSideActiveIsOn))
+						{
+							if (trn_contactingCircuit(transferRowIndex.leftSideType))
+								transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
+						}
 					}
 					break;
 
@@ -102,6 +151,11 @@ void trn_processCircuits ()
 					if (transferRows[transferRowIndex.index - 1].rightSideActive)
 					{
 						transferRowIndex.currentColor = TRANSFER_COLOR_RIGHT;
+						if ((transferRowIndex.leftSideActive) || (transferRowIndex.leftSideActiveIsOn))
+						{
+							if (trn_contactingCircuit(transferRowIndex.leftSideType))
+								transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
+						}
 					}
 					break;
 
@@ -137,6 +191,11 @@ void trn_processCircuits ()
 				case TRANSFER_ROW_REPEAT_HALF:
 				case TRANSFER_ROW_REPEAT_QUARTER:
 					transferRowIndex.currentColor = TRANSFER_COLOR_LEFT;
+					if ((transferRowIndex.rightSideActive) || (transferRowIndex.rightSideActiveIsOn))
+					{
+						if (trn_contactingCircuit(transferRowIndex.rightSideType))
+							transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
+					}
 					break;
 
 				case TRANSFER_ROW_REVERSE_HALF:
@@ -150,6 +209,11 @@ void trn_processCircuits ()
 					if ((transferRowIndex.leftSideActive) && (transferRows[transferRowIndex.index + 2].leftSideActive))
 					{
 						transferRows[transferRowIndex.index + 1].currentColor = TRANSFER_COLOR_LEFT;
+						if ((transferRows[transferRowIndex.index + 1].rightSideActive) || (transferRows[transferRowIndex.index + 1].rightSideActiveIsOn))
+						{
+							if (trn_contactingCircuit(transferRows[transferRowIndex.index + 1].rightSideType))
+								transferRows[transferRowIndex.index + 1].currentColor = TRANSFER_COLOR_DISPUTE;
+						}
 					}
 					break;
 
@@ -157,6 +221,11 @@ void trn_processCircuits ()
 					if ((transferRowIndex.leftSideActive) && (transferRows[transferRowIndex.index - 2].leftSideActive))
 					{
 						transferRows[transferRowIndex.index - 1].currentColor = TRANSFER_COLOR_LEFT;
+						if ((transferRows[transferRowIndex.index - 1].rightSideActive) || (transferRows[transferRowIndex.index - 1].rightSideActiveIsOn))
+						{
+							if (trn_contactingCircuit(transferRows[transferRowIndex.index - 1].rightSideType))
+								transferRows[transferRowIndex.index - 1].currentColor = TRANSFER_COLOR_DISPUTE;
+						}
 					}
 					break;
 
@@ -164,6 +233,11 @@ void trn_processCircuits ()
 					if (transferRows[transferRowIndex.index + 1].leftSideActive)
 					{
 						transferRowIndex.currentColor = TRANSFER_COLOR_LEFT;
+						if ((transferRowIndex.rightSideActive) || (transferRowIndex.rightSideActiveIsOn))
+						{
+							if (trn_contactingCircuit(transferRowIndex.rightSideType))
+								transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
+						}
 					}
 					break;
 
@@ -171,6 +245,11 @@ void trn_processCircuits ()
 					if (transferRows[transferRowIndex.index - 1].leftSideActive)
 					{
 						transferRowIndex.currentColor = TRANSFER_COLOR_LEFT;
+						if ((transferRowIndex.rightSideActive) || (transferRowIndex.rightSideActiveIsOn))
+						{
+							if (trn_contactingCircuit(transferRowIndex.rightSideType))
+								transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
+						}
 					}
 					break;
 
@@ -185,19 +264,6 @@ void trn_processCircuits ()
 			leftSideCount++;
 		else
 			rightSideCount++;
-	}
-
-	//
-	// Get current row type - compare against other legit row types, and then set color to dispute
-	// Return false for something like two_into_one_top
-	//
-	for (auto &transferRowIndex : transferRows)
-	{
-		if (((transferRowIndex.leftSideActive) || (transferRowIndex.leftSideActiveIsOn)) &&
-		(((transferRowIndex.rightSideActive) || transferRowIndex.rightSideActiveIsOn)))
-		{
-			transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
-		}
 	}
 
 	if (leftSideCount > rightSideCount)
@@ -231,21 +297,21 @@ bool trn_makeTransferMistake (int whichDroidLevel)
 	return mistakeLevel > 0;
 }
 
-//--------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 //
 // Helper function - return true if circuit is a split type
 bool trn_isCircuitSplit (int whichType)
-//--------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 {
 	return (whichType == TRANSFER_ROW_TWO_INTO_ONE_MIDDLE) || (whichType == TRANSFER_ROW_ONE_INTO_TWO_MIDDLE) || (whichType == TRANSFER_ROW_TWO_INTO_ONE_BOTTOM) || (whichType == TRANSFER_ROW_TWO_INTO_ONE_TOP) ||
 	       (whichType == TRANSFER_ROW_ONE_INTO_TWO_TOP) || (whichType == TRANSFER_ROW_ONE_INTO_TWO_BOTTOM);
 }
 
-//------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 //
 // Called to setup the transfer cell values
 void trn_setupTransferCellValues ()
-//------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 {
 	int i       = 0;
 	int randNum = 0;

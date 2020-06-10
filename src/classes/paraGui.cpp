@@ -1001,8 +1001,8 @@ void paraGui::setPosition (int objectType, std::string objectID, int newRadius, 
 				tempWidth  = renderWidth * (newWidth / 100.0);
 				tempHeight = renderHeight * (newHeight / 100.0);
 
-				guiImages[objectIndex].boundingBox.x1 = renderWidth * (newPosX / 100.0);
-				guiImages[objectIndex].boundingBox.y1 = renderHeight * (newPosY / 100.0);
+				guiImages[objectIndex].boundingBox.x1 = (renderWidth * (newPosX / 100.0)) - (newWidth / 2);
+				guiImages[objectIndex].boundingBox.y1 = (renderHeight * (newPosY / 100.0)) - (newHeight / 2);
 
 				guiImages[objectIndex].boundingBox.x2 = guiImages[objectIndex].boundingBox.x1 + tempWidth;
 				guiImages[objectIndex].boundingBox.y2 = guiImages[objectIndex].boundingBox.y1 + tempHeight;

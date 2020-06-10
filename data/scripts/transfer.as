@@ -97,7 +97,7 @@ void as_initTransferValues ()
 	chooseSideTimeOut   = 7;
 	activeRowCounter    = 0.01f;
 
-	transferDelayTime = 0.03f;
+	transferDelayTime = 0.01f;
 	transferTimeOut   = 67;
 
 	numberTransferRows   = 12;

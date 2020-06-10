@@ -25,17 +25,25 @@ void gui_renderImage (int whichObject)
 		return;
 	}
 
-	renderPosition.x = bb.x1;
-	renderPosition.y = bb.y1;
-	renderPosition.w = textures.at(gui.getLabelText (GUI_OBJECT_IMAGE, whichObject)).getWidth();
-	renderPosition.h = textures.at(gui.getLabelText (GUI_OBJECT_IMAGE, whichObject)).getHeight();
-
-	color = gui.getColor (GUI_OBJECT_IMAGE, whichObject, GUI_COL_ACTIVE);
-	if ((color.r == -1) || (color.g == -1) || (color.b == -1) || (color.a == -1))
+	try
 	{
-		con_addEvent (EVENT_ACTION_CONSOLE_ADD_CHAR_LINE, sys_getString ("Unable to get colors for image [ %i ]", whichObject));
-		return;
+		renderPosition.x = bb.x1;
+		renderPosition.y = bb.y1;
+		renderPosition.w = textures.at (gui.getLabelText (GUI_OBJECT_IMAGE, whichObject)).getWidth ();
+		renderPosition.h = textures.at (gui.getLabelText (GUI_OBJECT_IMAGE, whichObject)).getHeight ();
+
+		color = gui.getColor (GUI_OBJECT_IMAGE, whichObject, GUI_COL_ACTIVE);
+		if ((color.r == -1) || (color.g == -1) || (color.b == -1) || (color.a == -1))
+		{
+			con_addEvent (EVENT_ACTION_CONSOLE_ADD_CHAR_LINE, sys_getString ("Unable to get colors for image [ %i ]", whichObject));
+			return;
+		}
+
+		textures.at (gui.getLabelText (GUI_OBJECT_IMAGE, whichObject)).render (&renderPosition);
 	}
 
-	textures.at (gui.getLabelText (GUI_OBJECT_IMAGE, whichObject)).render (&renderPosition);
+	catch (std::out_of_range &OutOfRange)
+	{
+		con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Unable to locate GUI image [ %s ] ", gui.getLabelText(GUI_OBJECT_IMAGE, whichObject).c_str()));
+	}
 }
