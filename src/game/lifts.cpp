@@ -202,6 +202,7 @@ void gam_clearLifts ()
 	{
 		if (liftItr.userData != nullptr)
 			delete (liftItr.userData);
+
 		if (liftItr.body != nullptr)
 			sys_getPhysicsWorld ()->DestroyBody (liftItr.body);
 	}
@@ -376,6 +377,7 @@ void gam_performLiftAction ()
 {
 	currentTunnel = shipdecks.at (gam_getCurrentDeckName ()).liftClass.getTunnelIndex (playerDroid.liftIndex);
 	gam_stopAlertLevelSound (gam_getCurrentAlertLevel());
+	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "lowEnergy");
 
 	sys_setNewMode (MODE_GUI_LIFTVIEW, true);
 }

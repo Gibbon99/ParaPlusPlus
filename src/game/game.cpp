@@ -9,3 +9,12 @@ void gam_startNewGame()
 {
 	sys_setupEnemyPhysics (gam_getCurrentDeckName());
 }
+
+//-------------------------------------------------------------------------------------------------------------
+//
+// Process game over event
+void gam_processGameOver()
+//-------------------------------------------------------------------------------------------------------------
+{
+	std::cout << " Game Over " << std::endl;
+}

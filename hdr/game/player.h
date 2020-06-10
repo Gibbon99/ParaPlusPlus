@@ -22,3 +22,10 @@ void gam_moveTestCircle ();
 
 // Recharge player weapon
 void gam_weaponRechargePlayer ();
+
+// Damage to player droid
+void gam_damageToPlayer (int damageSource, int sourceDroid);
+
+// Check the players health, and set low health for animation
+void gam_checkPlayerHealth();
+

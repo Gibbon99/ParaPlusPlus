@@ -68,9 +68,10 @@ void gam_setupPlayerDroid ()
 {
 	playerDroid.droidType = 0;
 	playerDroid.droidName = "001";
-	playerDroid.sprite.create (playerDroid.droidName, 9, 0.3);
+	playerDroid.sprite.create (playerDroid.droidName, 9, 1.0);
 	playerDroid.ai.setAcceleration (dataBaseEntry[0].accelerate);
 	playerDroid.ai.setMaxSpeed (dataBaseEntry[0].maxSpeed);
+	playerDroid.currentHealth = dataBaseEntry[0].maxHealth;
 
 	sys_setupPlayerPhysics ();
 }
@@ -186,7 +187,7 @@ void gam_processActionKey ()
 	if (playerDroid.inTransferMode)
 		gam_setHudText ("hudTransfer");
 
-	if (gui.keyDown(KEY_ACTION))
+	if (gui.keyDown (KEY_ACTION))
 	{
 		//
 		// Actions when no movements are down
@@ -210,7 +211,7 @@ void gam_processActionKey ()
 				{
 					gui.setState (KEY_ACTION, false, 0);
 					gam_setHudText ("terminalMenu.terminalText");
-					gam_stopAlertLevelSound (gam_getCurrentAlertLevel());
+					gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
 					sys_setNewMode (MODE_GUI_TERMINAL, true);
 					gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
 					gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.backButton");
@@ -243,4 +244,73 @@ void gam_processActionKey ()
 			}
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+//
+// Check the players health, and set low health for animation
+void gam_checkPlayerHealth()
+//-----------------------------------------------------------------------------------------------------------------
+{
+	float dangerHealthLevel;
+	static bool lowEnergySoundPlaying = false;
+
+	//
+	// Process player health and animation
+	if (playerDroid.currentHealth < 0)
+	{
+		gam_addEvent (EVENT_ACTION_GAME_OVER, 2, "");
+//		return;
+	}
+
+	dangerHealthLevel = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
+
+	if (playerDroid.currentHealth < static_cast<int>(dangerHealthLevel))
+	{
+		std::cout << "Danger health level : " << dangerHealthLevel << std::endl;
+		playerDroid.sprite.setLowHealth (true);
+		if (!lowEnergySoundPlaying)
+		{
+			lowEnergySoundPlaying = true;
+			gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "lowEnergy");
+		}
+	}
+	else
+	{
+		playerDroid.sprite.setLowHealth (false);
+		if (lowEnergySoundPlaying)
+		{
+			lowEnergySoundPlaying = false;
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "lowEnergy");
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+//
+// Damage to player droid
+void gam_damageToPlayer (int damageSource, int sourceDroid)
+//-----------------------------------------------------------------------------------------------------------------
+{
+	switch (damageSource)
+	{
+		case PHYSIC_DAMAGE_BUMP:
+			playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bounceDamage;
+
+
+			break;
+
+		case PHYSIC_DAMAGE_BULLET:
+
+			std::cout << "Player hit by bullet" << std::endl;
+
+			playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bulletDamage;
+			break;
+
+		case PHYSIC_DAMAGE_EXPLOSION:
+			break;
+	}
+	std::cout << "player health now : " << playerDroid.currentHealth << std::endl;
+
+	gam_checkPlayerHealth();
 }

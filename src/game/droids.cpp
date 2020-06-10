@@ -260,7 +260,8 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 			if (sourceDroid == -1)  // Hit from player
 			{
 				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bounceDamage;
-				playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].bounceDamage;
+				// Damage to player droid
+				gam_damageToPlayer (PHYSIC_DAMAGE_BUMP, targetDroid);
 			}
 //			else
 //				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bounceDamage;
@@ -310,9 +311,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 				{
 					//
 					// Player hit by bullet
-					playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].bulletDamage;
-
-					std::cout << "Player hit by bullet" << std::endl;
+					gam_damageToPlayer (PHYSIC_DAMAGE_BULLET, targetDroid);
 				}
 			}
 			break;

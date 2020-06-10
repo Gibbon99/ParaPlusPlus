@@ -520,6 +520,7 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	gam_doorTriggerSetup (deckName);
 	gam_findTerminalPositions (deckName);
 	gam_findLiftPositions (deckName);
+	gam_findHealingTilesPhysics (deckName);
 
 	// Bullets
 	gam_initBulletArray ();
@@ -533,6 +534,7 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 
 	// Sounds
 	gam_startAlertLevelSound (gam_getCurrentAlertLevel ());
+	gam_checkPlayerHealth();    // See if low energy sound needs to restart
 }
 
 //----------------------------------------------------------------------------------------------------------------------

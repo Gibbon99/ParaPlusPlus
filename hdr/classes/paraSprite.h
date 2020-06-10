@@ -17,7 +17,7 @@ public:
 
 	void setAnimateSpeed (double newSpeed);
 
-	void setCurrentFrame(int newCurrentFrame);
+	void setCurrentFrame (int newCurrentFrame);
 
 	void setTintColor (Uint8 r, Uint8 g, Uint8 b);
 
@@ -25,18 +25,24 @@ public:
 
 	int getFrameWidth ();
 
-	int getFrameHeight();
+	int getFrameHeight ();
+
+	void setLowHealth (bool newState);
+
+	void animateLowHealth();
 
 private:
 	int         numFrames      = -1;
 	int         currentFrame   = -1;
 	int         frameWidth     = -1;
 	int         frameHeight    = -1;
+	bool        lowHealth      = false;
 	double      animateSpeed   = -1.0;
 	double      animateCounter = -1.0;
 	std::string textureKeyName = "";
-	PARA_Texture    *texturePtr = nullptr;
-	PARA_Color tintColor;
+	PARA_Texture *texturePtr   = nullptr;
+	PARA_Color   tintColor;
+	PARA_Color   lowHealthColor;
 };
 
 

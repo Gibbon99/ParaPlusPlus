@@ -10,6 +10,9 @@ extern int    healingAmountPerTick;
 // Store in vector for this deck for animation
 void gam_findHealingTiles (std::string deckName);
 
+// Find out where on the map the healing tiles are and create a physic sensor for the current level
+void gam_findHealingTilesPhysics (std::string deckName);
+
 // Render current door frames onto map
 void gam_renderHealingFrames (const string &deckName);
 
@@ -18,3 +21,6 @@ void gam_animateHealing (const std::string &deckName);
 
 // Check if the player is over a healing tile
 void gam_processHealingTile ();
+
+// Clear out memory and free bodies
+void gam_clearHealing ();
