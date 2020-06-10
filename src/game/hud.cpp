@@ -15,7 +15,7 @@ double      hudScorePosY;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Set the text for the HUD - gets text from language file
+// Set the text for the HUD - gets text from language file - pass in key for language lookup
 void gam_setHudText (const std::string &newText)
 //----------------------------------------------------------------------------------------------------------------------
 {

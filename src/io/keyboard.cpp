@@ -6,6 +6,7 @@
 #include <game/lifts.h>
 #include <system/util.h>
 #include <game/transfer.h>
+#include <game/pauseMode.h>
 #include "io/keyboard.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -41,7 +42,7 @@ void io_processKeyboardState ()
 
 //io_mapJoyToInput();       // TODO uncomment and calibrate
 
-	io_mapMouseToInput ();
+
 
 	switch (currentMode)
 	{
@@ -59,6 +60,7 @@ void io_processKeyboardState ()
 		case MODE_GUI_SHIPVIEW:
 		case MODE_TRANSFER_SCREEN_ONE:
 		case MODE_TRANSFER_SCREEN_TWO:
+			io_mapMouseToInput ();
 			gui.processGuiInput ();
 			gui_processKeyboard ();
 			break;
@@ -95,13 +97,30 @@ void io_processKeyboardState ()
 			break;
 
 		case MODE_GAME:
-			gam_processPlayerMovement ();
-			gam_processActionKey ();
-
-			if (gui.keyDown (KEY_CONSOLE))
+			if (!gam_pauseModeOn())
 			{
-				sys_setNewMode (MODE_CONSOLE_EDIT, true);
-				gui.setState (KEY_CONSOLE, false, 0);
+				gam_processPlayerMovement ();
+				gam_processActionKey ();
+
+				if (gui.keyDown (KEY_CONSOLE))
+				{
+					sys_setNewMode (MODE_CONSOLE_EDIT, true);
+					gui.setState (KEY_CONSOLE, false, 0);
+				}
+
+				if (gui.keyDown(KEY_PAUSE))
+				{
+					gam_changePauseMode (MODE_GAME_PAUSE_ON);
+					gui.setState(KEY_PAUSE, false, 0);
+				}
+			}
+			else
+			{
+				if (gui.keyDown(KEY_PAUSE))
+				{
+					gam_changePauseMode (MODE_GAME_PAUSE_OFF);
+					gui.setState(KEY_PAUSE, false, 0);
+				}
 			}
 			break;
 

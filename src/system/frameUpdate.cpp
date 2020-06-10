@@ -5,6 +5,7 @@
 #include <game/lightMaps.h>
 #include <game/alertLevel.h>
 #include <game/transfer.h>
+#include <game/pauseMode.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
@@ -159,24 +160,34 @@ void sys_gameTickRun ()
 			break;
 
 		case MODE_GAME:
-			sys_processPhysics (TICKS_PER_SECOND);
-			gam_animateHealing (gam_getCurrentDeckName ());
-			playerDroid.sprite.animate ();
-			gam_weaponRechargePlayer ();
-			gam_animateDroids();
-			gam_doorCheckTriggerAreas ();
-			gam_doorProcessActions ();
-			gam_animateParticles();
-			gam_removeDeadEmitters();
-			gam_animateLightmaps();
-			gam_processBullets ();
+			if (!gam_pauseModeOn())
+			{
+				sys_processPhysics (TICKS_PER_SECOND);
+				gam_animateHealing (gam_getCurrentDeckName ());
+				playerDroid.sprite.animate ();
+				gam_weaponRechargePlayer ();
+				gam_animateDroids();
+				gam_doorCheckTriggerAreas ();
+				gam_doorProcessActions ();
+				gam_animateParticles();
+				gam_removeDeadEmitters();
+				gam_animateLightmaps();
+				gam_processBullets ();
 
-			gam_populateInfluenceMap(playerDroid.worldPosInPixels);
+				gam_populateInfluenceMap(playerDroid.worldPosInPixels);
 
-			gam_processAI();
+				gam_processAI();
 
-			gam_removeDroids();
-			gam_processScore();
+				gam_removeDroids();
+				gam_processScore();
+			}
+			else
+			{
+				gam_animateDroids();
+				gam_animateLightmaps();
+				gam_animateHealing (gam_getCurrentDeckName ());
+				playerDroid.sprite.animate ();
+			}
 
 			break;
 

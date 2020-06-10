@@ -66,6 +66,7 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("hudLift", "Lift");
 	gui_addKeyAndText ("hudBriefing", "Briefing");
 	gui_addKeyAndText ("hudTutorial", "Tutorial");
+	gui_addKeyAndText ("hudPauseMode", "Paused");
 
 	gui_addKeyAndText ("backButton", "Back");
 	gui_addKeyAndText ("nextButton", "Next");

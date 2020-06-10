@@ -13,7 +13,6 @@ Player - sprite flash for low health or transfer timer running out
 Transfer - timer
 Splash screen on start
 Dialog box - Game Sure to quit?
-Pause mode
 Player health check on damage - dead animation
 Droid AI - Flee
 Droid AI - Attack
@@ -22,6 +21,7 @@ Healing - player over tile Physics
 Healing - sound and score
 Healing - player health increase
 Yellow alert showing green lightmap on deck change
+Fix sideview overlap on hold level
 
 
 DONE - Universe background on menu screens
@@ -37,7 +37,7 @@ DONE - Deckview hud text not found
 DONE - Link scrollbox to briefing on main menu
 DONE - On exit from terminal - restart alert sound
 DONE - Tutorial screens
-
+DONE - Pause mode
 
 
 
