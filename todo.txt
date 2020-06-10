@@ -18,7 +18,6 @@ Droid AI - Attack
 Droid AI - Help
 Yellow alert showing green lightmap on deck change
 Fix sideview overlap on hold level
-Change animation speed based on health
 Do damage from hitting explosion
 
 
@@ -40,7 +39,7 @@ DONE - Healing - player over tile Physics
 DONE - Healing - sound and score
 DONE - Healing - player health increase
 DONE - Player - sprite flash for low health or transfer timer running out
-
+DONE - Change animation speed based on health
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
 -DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "

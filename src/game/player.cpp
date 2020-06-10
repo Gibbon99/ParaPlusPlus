@@ -253,6 +253,7 @@ void gam_checkPlayerHealth()
 //-----------------------------------------------------------------------------------------------------------------
 {
 	float dangerHealthLevel;
+	float newAnimationSpeed;
 	static bool lowEnergySoundPlaying = false;
 
 	//
@@ -260,7 +261,7 @@ void gam_checkPlayerHealth()
 	if (playerDroid.currentHealth < 0)
 	{
 		gam_addEvent (EVENT_ACTION_GAME_OVER, 2, "");
-//		return;
+//		return;     // TODO Remove comment to avoid dropthrough
 	}
 
 	dangerHealthLevel = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
@@ -284,6 +285,16 @@ void gam_checkPlayerHealth()
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "lowEnergy");
 		}
 	}
+	//
+	// Work out the player droid animation speed based on health
+	newAnimationSpeed = static_cast<float>(playerDroid.currentHealth) / static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth);
+	if (newAnimationSpeed < 0.0f)
+		newAnimationSpeed = 0.1f;
+
+	if (newAnimationSpeed > 1.0f)
+		newAnimationSpeed = 1.0f;
+
+	playerDroid.sprite.setAnimateSpeed(newAnimationSpeed);
 }
 
 //-----------------------------------------------------------------------------------------------------------------

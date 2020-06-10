@@ -127,7 +127,7 @@ void gam_initDroids (std::string levelName)
 
 		tempDroid.currentMode = DROID_MODE_NORMAL;
 
-		tempDroid.sprite.create (tempDroid.droidName, 9, 0.3);
+		tempDroid.sprite.create (tempDroid.droidName, 9, 1.0);
 
 		shipdecks.at (levelName).droid.push_back (tempDroid);
 
@@ -249,6 +249,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
 	float newHealthPercent;
+	float newAnimationSpeed;
 
 	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_NORMAL)
 		return;
@@ -290,6 +291,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 					g_shipDeckItr->second.droid[targetDroid].velocity = {0,0};
 					g_shipDeckItr->second.droid[targetDroid].currentMode = DROID_MODE_EXPLODING;
 					g_shipDeckItr->second.droid[targetDroid].sprite.create("explosion", 25, 1.4f);
+					g_shipDeckItr->second.droid[targetDroid].sprite.setAnimateSpeed(1.4f);      // Set for explosion animation
 
 					if (g_shipDeckItr->second.droid[targetDroid].droidType < 10)
 						gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "explode1");
@@ -325,6 +327,20 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 
 	shipdecks.at (gam_getCurrentDeckName ()).droid[targetDroid].ai.setHealthPercent (newHealthPercent);
 	shipdecks.at (gam_getCurrentDeckName ()).droid[targetDroid].ai.checkHealth ();
+
+	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_EXPLODING)
+	{
+		//
+		// Work out the droid animation speed based on health
+		newAnimationSpeed     = static_cast<float>(g_shipDeckItr->second.droid[targetDroid].currentHealth) / static_cast<float>(dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].maxHealth);
+		if (newAnimationSpeed < 0.0f)
+			newAnimationSpeed = 0.1f;
+
+		if (newAnimationSpeed > 1.0f)
+			newAnimationSpeed = 1.0f;
+
+		g_shipDeckItr->second.droid[targetDroid].sprite.setAnimateSpeed (newAnimationSpeed);
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
