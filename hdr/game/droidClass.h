@@ -12,7 +12,7 @@ extern float collisionCount;
 class droidClass
 {
 public:
-
+	bool          overHealingTile       = false;
 	bool          overTerminalTile      = false;
 	bool          inTransferMode        = false;
 	bool          overLiftTile          = false;

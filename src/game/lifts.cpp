@@ -7,7 +7,7 @@
 #include "system/util.h"
 #include "game/lifts.h"
 
-std::vector<__liftSensor> lifts;
+std::vector<__tileSensor> lifts;
 int                       currentTunnel;
 
 struct __TUNNEL_LINKS
@@ -239,7 +239,7 @@ void gam_createLiftSensor (unsigned long whichLift, int index)
 void gam_findLiftPositions (const std::string &levelName)
 //---------------------------------------------------------
 {
-	__liftSensor tempLift;
+	__tileSensor tempLift;
 
 	int countX      = 0;
 	int countY      = 0;

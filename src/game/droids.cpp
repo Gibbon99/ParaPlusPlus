@@ -258,7 +258,10 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 		case PHYSIC_DAMAGE_BUMP:
 
 			if (sourceDroid == -1)  // Hit from player
+			{
 				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bounceDamage;
+				playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].bounceDamage;
+			}
 //			else
 //				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bounceDamage;
 

@@ -2,7 +2,7 @@
 #include <game/lifts.h>
 #include "game/terminal.h"
 
-std::vector<__liftSensor> terminals;
+std::vector<__tileSensor> terminals;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -47,7 +47,7 @@ void gam_clearTerminals ()
 void gam_findTerminalPositions (const std::string &levelName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	__liftSensor tempTerminal;
+	__tileSensor tempTerminal;
 
 	int countX        = 0;
 	int countY        = 0;

@@ -37,7 +37,7 @@ void as_handleMainMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.briefingButton"))
 	{
-		gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "scrollBeeps");
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "scrollBeeps");
 		sys_setNewMode (MODE_GUI_INTROSCROLL, true);
 		return;
 	}
@@ -688,6 +688,8 @@ void as_createGUI ()
 	updateScoreDelay        = 0.5f;
 	distanceForDoorSoundMax = 10.0f;   // In meters
 	powerdownLevelScore     = 1000;
+	healingDelayCounter     = 0.8f;
+	healingAmountPerTick    = 2;
 
 	as_setSideviewColors ();
 

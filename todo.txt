@@ -17,11 +17,9 @@ Player health check on damage - dead animation
 Droid AI - Flee
 Droid AI - Attack
 Droid AI - Help
-Healing - player over tile Physics
-Healing - sound and score
-Healing - player health increase
 Yellow alert showing green lightmap on deck change
 Fix sideview overlap on hold level
+Change animation speed based on health
 
 
 DONE - Universe background on menu screens
@@ -38,6 +36,9 @@ DONE - Link scrollbox to briefing on main menu
 DONE - On exit from terminal - restart alert sound
 DONE - Tutorial screens
 DONE - Pause mode
+DONE - Healing - player over tile Physics
+DONE - Healing - sound and score
+DONE - Healing - player health increase
 
 
 

@@ -1,22 +1,29 @@
+#include "game/score.h"
+#include "game/database.h"
+#include "game/audio.h"
+#include "game/player.h"
+#include "game/lifts.h"
 #include "game/shipDecks.h"
 #include "system/util.h"
 #include "game/healing.h"
 
 double healingAnimSpeed;
+float  healingDelayCounter;
+int    healingAmountPerTick;
 
-// TODO - Create healing physics and play sound when player over them
+std::vector<__tileSensor> healingTiles;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render current healing frames onto map
-void gam_renderHealingFrames (const std::string& deckName)
+void gam_renderHealingFrames (const std::string &deckName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	PARA_Texture    *tempTexture;
+	PARA_Texture *tempTexture;
 
-	tempTexture = SDL_GetRenderTarget(renderer.renderer);
+	tempTexture = SDL_GetRenderTarget (renderer.renderer);
 
-	SDL_SetRenderTarget(renderer.renderer, gam_getPlayfieldTexture());
+	SDL_SetRenderTarget (renderer.renderer, gam_getPlayfieldTexture ());
 
 	// TODO : Put in try / catch
 
@@ -28,13 +35,13 @@ void gam_renderHealingFrames (const std::string& deckName)
 		}
 	}
 
-	SDL_SetRenderTarget(renderer.renderer, tempTexture);
+	SDL_SetRenderTarget (renderer.renderer, tempTexture);
 }
 
 // ----------------------------------------------------------------------------
 //
 // Animate healing tiles on current level
-void gam_animateHealing (const std::string& deckName)
+void gam_animateHealing (const std::string &deckName)
 // ----------------------------------------------------------------------------
 {
 	if (!shipdecks.at (deckName).healing.empty ())
@@ -55,6 +62,27 @@ void gam_animateHealing (const std::string& deckName)
 	}
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Create a lift sensor
+void gam_createHealingSensor (unsigned long whichHealingTile, int index)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	healingTiles[whichHealingTile].bodyDef.type = b2_staticBody;
+	healingTiles[whichHealingTile].bodyDef.position.Set (healingTiles[whichHealingTile].worldPosition.x / pixelsPerMeter, healingTiles[whichHealingTile].worldPosition.y / pixelsPerMeter);
+	healingTiles[whichHealingTile].body = sys_getPhysicsWorld ()->CreateBody (&healingTiles[whichHealingTile].bodyDef);
+
+	healingTiles[whichHealingTile].userData            = new _userData;
+	healingTiles[whichHealingTile].userData->userType  = PHYSIC_TYPE_HEALING;
+	healingTiles[whichHealingTile].userData->dataValue = (int) index;
+	healingTiles[whichHealingTile].body->SetUserData (healingTiles[whichHealingTile].userData);
+
+	healingTiles[whichHealingTile].shape.SetAsBox ((healingTiles[whichHealingTile].height) / pixelsPerMeter, (healingTiles[whichHealingTile].width) / pixelsPerMeter);
+	healingTiles[whichHealingTile].fixtureDef.shape    = &healingTiles[whichHealingTile].shape;
+	healingTiles[whichHealingTile].fixtureDef.isSensor = true;
+	healingTiles[whichHealingTile].body->CreateFixture (&healingTiles[whichHealingTile].fixtureDef);
+}
+
 //--------------------------------------------------------------------------------------------------------------------------
 //
 // Find out where on the map the healing tiles are
@@ -67,6 +95,7 @@ void gam_findHealingTiles (std::string deckName)
 	int           countX, countY;
 	int           countHealing;
 	_basicHealing tempHealing{};
+	__tileSensor  tempHealingPhysics;
 
 	for (index = 0; index < shipdecks.at (deckName).levelDimensions.x * shipdecks.at (deckName).levelDimensions.y; index++)
 	{
@@ -106,6 +135,16 @@ void gam_findHealingTiles (std::string deckName)
 				shipdecks.at (deckName).healing[countHealing].worldPosInMeters.x = (countX * tileSize) / pixelsPerMeter;
 				shipdecks.at (deckName).healing[countHealing].worldPosInMeters.y = (countY * tileSize) / pixelsPerMeter;
 
+				tempHealingPhysics.worldPosition.x = (countX * tileSize) + (tileSize * 0.5f);
+				tempHealingPhysics.worldPosition.y = (countY * tileSize) + (tileSize * 0.5f);
+
+				tempHealingPhysics.width  = tileSize / 8;
+				tempHealingPhysics.height = tileSize / 8;
+
+				healingTiles.push_back (tempHealingPhysics);
+
+				gam_createHealingSensor (healingTiles.size () - 1, countHealing);
+
 				countHealing++;
 				break;
 
@@ -123,4 +162,28 @@ void gam_findHealingTiles (std::string deckName)
 	}
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Check if the player is over a healing tile
+void gam_processHealingTile ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	static float healingDelay = 1.0f;
 
+	if (!playerDroid.overHealingTile)
+		return;
+
+	healingDelay -= 1.0f * healingDelayCounter;
+	if (healingDelay < 0.0f)
+	{
+		healingDelay = 1.0f;
+		playerDroid.currentHealth += 1;
+		gam_modifyScore (-1);
+		if (playerDroid.currentHealth > dataBaseEntry[playerDroid.droidType].maxHealth)
+		{
+			playerDroid.currentHealth = dataBaseEntry[playerDroid.droidType].maxHealth;
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
+			playerDroid.overHealingTile = false;
+		}
+	}
+}

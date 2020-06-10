@@ -180,6 +180,7 @@ void sys_gameTickRun ()
 
 				gam_removeDroids();
 				gam_processScore();
+				gam_processHealingTile();
 			}
 			else
 			{

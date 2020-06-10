@@ -4,6 +4,7 @@
 #include <game/player.h>
 #include <system/gameEvents.h>
 #include <game/particles.h>
+#include <game/audio.h>
 #include "game/physicsCollisions.h"
 
 #include "game/bullet.h"
@@ -259,6 +260,15 @@ void contactListener::BeginContact (b2Contact *contact)
 			}
 			break;
 
+		case PHYSIC_TYPE_HEALING:
+			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
+			{
+				playerDroid.overHealingTile = true;
+				gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "energyHeal");
+				return;
+			}
+			break;
+
 		case PHYSIC_TYPE_PLAYER:
 			if (!playerDroid.inTransferMode)
 			{
@@ -362,6 +372,15 @@ void contactListener::BeginContact (b2Contact *contact)
 			}
 			break;
 
+		case PHYSIC_TYPE_HEALING:
+			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
+			{
+				playerDroid.overHealingTile = true;
+				gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "energyHeal");
+				return;
+			}
+			break;
+
 		case PHYSIC_TYPE_PLAYER:
 			if (!playerDroid.inTransferMode)
 			{
@@ -421,6 +440,15 @@ void contactListener::EndContact (b2Contact *contact)
 				return;
 			}
 			break;
+
+		case PHYSIC_TYPE_HEALING:
+			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
+			{
+				playerDroid.overHealingTile = false;
+				gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
+				return;
+			}
+			break;
 	}
 
 	switch (bodyUserData_B->userType)
@@ -438,6 +466,15 @@ void contactListener::EndContact (b2Contact *contact)
 			{
 				playerDroid.overLiftTile = false;
 				playerDroid.liftIndex    = -1;
+				return;
+			}
+			break;
+
+		case PHYSIC_TYPE_HEALING:
+			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
+			{
+				playerDroid.overHealingTile = false;
+				gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
 				return;
 			}
 			break;

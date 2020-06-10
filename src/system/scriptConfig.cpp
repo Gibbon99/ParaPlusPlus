@@ -129,6 +129,8 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("int transferTimeOut", &transferTimeOut);
 	paraScriptInstance.addHostVariable ("float transferDelayTime", &transferDelayTime);
 	paraScriptInstance.addHostVariable ("int powerdownLevelScore", &powerdownLevelScore);
+	paraScriptInstance.addHostVariable ("float healingDelayCounter", &healingDelayCounter);
+	paraScriptInstance.addHostVariable ("int healingAmountPerTick", &healingAmountPerTick);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)

@@ -6,7 +6,7 @@
 #include <box2d/b2_body.h>
 #include <system/physics.h>
 
-struct __liftSensor
+struct __tileSensor
 {
 	float          width;
 	float          height;
