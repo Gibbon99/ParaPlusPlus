@@ -97,8 +97,8 @@ void as_initTransferValues ()
 	chooseSideTimeOut   = 7;
 	activeRowCounter    = 0.01f;
 
-	transferDelayTime = 0.01f;
-	transferTimeOut   = 67;
+	transferDelayTime = 0.1f;
+	transferTimeOut   = 40;
 
 	numberTransferRows   = 12;
 	transferBitmapWidth  = 800;

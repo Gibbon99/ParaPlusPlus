@@ -1,10 +1,18 @@
 
+BUGS
+--------
+
+BUG - When alert level is higher than green, and deck goes black, alert draws as green
+
+FIXED - BUG - End of transfer game - transfer back into same droid again.
+
+
 TODO
 -------
 
-High Score entry screen
+High Score entry screen - Drop ??
+
 Transfer - enemy AI
-Transfer - add to score
 Transfer - work out winner
 Transfer - Right side reversers in wrong color
 Transfer - timer
@@ -46,10 +54,11 @@ DONE - End screen - Dead
 DONE - End Screen - Win
 >Commit
 DONE - High Score display screen - load and save score to file
-
-
-
-
+>Commit
+DONE - Transfer - add to score
+DONE - Disrupter weapon
+DONE - Droid weapon firing rate and recharge
+DONE - Droid takeover countdown
 
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
@@ -83,9 +92,9 @@ Controls
 - Calibrate joystick
 
 Game
-- Tile color - slider
-- Tile style - slider
-- Language - slider
+DONE - Tile color - slider
+DONE - Tile style - slider
+DONE - Language - slider
 
 - image
 DONE - scrollBox

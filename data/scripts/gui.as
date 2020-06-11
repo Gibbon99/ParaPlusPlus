@@ -684,38 +684,42 @@ void as_createGUI ()
 {
 	as_setLanguageStrings ();
 
-	baseGameSpeed           = 1.0;
-	sideviewDrawScale       = 1.2;
-	healingAnimSpeed        = 0.3;
-	pixelsPerMeter          = 12.0;        // 12 pixels is 1 meter
-	playerFriction          = 0.7;
-	gravity                 = 100.0;
-	doorAnimSpeed           = 1.0f;
-	numAStarPaths           = 8;
-	collisionLimit          = 3;
-	collisionCount          = 6.0;
-	bulletDensity           = 0.1f;
-	bulletFriction          = 0.01f;
-	bulletAnimationSpeed    = 0.5f;
-	bulletMoveSpeed         = 0.5f;
-	hudTextPosX             = 15;
-	hudTextPosY             = 27;
-	hudScorePosX            = 620;
-	hudScorePosY            = 27;
-	visibleFadeValue        = 30;
-	redAlertLevel           = 500;
-	yellowAlertLevel        = 300;
-	updateScoreDelay        = 0.5f;
-	distanceForDoorSoundMax = 10.0f;   // In meters
-	powerdownLevelScore     = 1000;
-	healingDelayCounter     = 0.8f;
-	healingAmountPerTick    = 2;
-	explosionAnimationSpeed = 1.5f;
-	explosionDamage         = 2;
-	alertLevelVolume        = 190;  // Higher is softer - 1 is full loud
-	staticAnimationDelay    = 0.8f;
-	lostScreenShowTime      = 250;  // 10 seconds
-	tableSpacingY           = 40;
+	baseGameSpeed            = 1.0;
+	sideviewDrawScale        = 1.2;
+	healingAnimSpeed         = 0.3;
+	pixelsPerMeter           = 12.0;        // 12 pixels is 1 meter
+	playerFriction           = 0.7;
+	gravity                  = 100.0;
+	doorAnimSpeed            = 1.0f;
+	numAStarPaths            = 8;
+	collisionLimit           = 3;
+	collisionCount           = 6.0;
+	bulletDensity            = 0.1f;
+	bulletFriction           = 0.01f;
+	bulletAnimationSpeed     = 0.5f;
+	bulletMoveSpeed          = 0.5f;
+	hudTextPosX              = 15;
+	hudTextPosY              = 27;
+	hudScorePosX             = 620;
+	hudScorePosY             = 27;
+	visibleFadeValue         = 30;
+	redAlertLevel            = 500;
+	yellowAlertLevel         = 300;
+	updateScoreDelay         = 0.5f;
+	distanceForDoorSoundMax  = 10.0f;   // In meters
+	powerdownLevelScore      = 1000;
+	healingDelayCounter      = 0.8f;
+	healingAmountPerTick     = 2;
+	explosionAnimationSpeed  = 1.5f;
+	explosionDamage          = 2;
+	alertLevelVolume         = 190;  // Higher is softer - 1 is full loud
+	staticAnimationDelay     = 0.8f;
+	lostScreenShowTime       = 250;  // 10 seconds
+	tableSpacingY            = 40;
+	disrupterFadeAmount      = 20;
+	influenceTimelimit       = 1000;
+	influenceTimeLeftWarning = 250;
+	influenceTimelimtDelay   = 0.2f;
 
 	as_setSideviewColors ();
 

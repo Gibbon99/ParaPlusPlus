@@ -83,6 +83,7 @@ void trn_processTransferGame ()
 		if (transferTimeoutCountdown < 0)
 		{
 			transferTimeoutCountdown = transferTimeOut;
+			playerDroid.inTransferMode = false;
 			trn_transferIntoDroid();
 			sys_setNewMode(MODE_GAME, true);
 //			sys_setNewMode (MODE_PRE_TRANSFER_GAME, false);
@@ -128,11 +129,14 @@ void trn_transferBurntOut()
 void trn_transferIntoDroid()
 //---------------------------------------------------------------------------------------------------------------------
 {
+	gam_setInfluenceTimelimit (playerDroid.transferTargetDroidType);
 	playerDroid.droidType = playerDroid.transferTargetDroidType;
 	playerDroid.currentHealth = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth;
 	playerDroid.velocity = {0,0};
 	playerDroid.droidName = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].droidName;
 	playerDroid.sprite = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].sprite;
+	//
+	// Destroy the droid
 	g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth = -10;
 	gam_damageToDroid(playerDroid.transferTargetDroidIndex, PHYSIC_DAMAGE_BULLET, -1);
 }

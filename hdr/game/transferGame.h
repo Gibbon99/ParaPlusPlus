@@ -40,3 +40,6 @@ void trn_placeToken (int rowIndex, int whichSide, int whichDroid);
 
 // Transfer into the droid
 void trn_transferIntoDroid();
+
+// Lost the transfer - back to 001
+void trn_transferLostGame();

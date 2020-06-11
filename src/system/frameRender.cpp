@@ -147,8 +147,13 @@ void sys_renderFrame (double interpolation)
 
 			if (playerDroid.inTransferMode)
 				playerDroid.sprite.setTintColor (0, 0, 255);
+
+			else if (playerDroid.lowInfluenceTimeleft)
+				playerDroid.sprite.setTintColor (static_cast<Uint8>(playerDroid.influenceFade), static_cast<Uint8>(playerDroid.influenceFade), 255);
+
 			else
 				playerDroid.sprite.setTintColor (255, 255, 255);
+
 			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2, 1.0, static_cast<Uint8>(255));
 
 			gam_renderDroids (gam_getCurrentDeckName ());

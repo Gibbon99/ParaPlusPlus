@@ -646,7 +646,7 @@ void gam_setDeckIsDead ()
 		gam_modifyScore (powerdownLevelScore);
 		gam_createDeckTexture (gam_getCurrentDeckName ());      // Recreate the deck texture with new tileset
 		g_shipDeckItr->second.deckIsDead = true;
-		gam_addEvent(EVENT_ACTION_GAME_CHECK_DECK_CLEAR, 2, "");    // Check all decks
+		gam_addEvent(EVENT_ACTION_GAME_CHECK_DECK_CLEAR, 20, "");    // Check all decks
 	}
 }
 
@@ -663,5 +663,5 @@ void gam_checkAllLevels()
 	}
 	//
 	// All the decks are clear
-	gam_addEvent(EVENT_ACTION_GAME_WON, 3, "");
+	gam_addEvent(EVENT_ACTION_GAME_WON, 20, "");
 }

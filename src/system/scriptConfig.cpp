@@ -141,6 +141,9 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("float staticAnimationDelay", &staticAnimationDelay);
 	paraScriptInstance.addHostVariable ("int lostScreenShowTime", &lostScreenShowTime);
 	paraScriptInstance.addHostVariable ("float tableSpacingY", &tableSpacingY);
+	paraScriptInstance.addHostVariable ("float influenceTimelimit", &influenceTimelimit);
+	paraScriptInstance.addHostVariable ("float influenceTimelimtDelay", &influenceTimelimtDelay);
+	paraScriptInstance.addHostVariable ("float influenceTimeLeftWarning", &influenceTimeLeftWarning);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)

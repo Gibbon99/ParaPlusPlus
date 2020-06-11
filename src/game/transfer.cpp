@@ -439,6 +439,11 @@ void trn_initTransferValues (int transferTargetIndex)
 	std::string    newFileName;
 	std::string    newKeyName;
 
+	if ((g_shipDeckItr->second.droid[transferTargetIndex].currentMode == DROID_MODE_FOR_REMOVAL) ||
+			(g_shipDeckItr->second.droid[transferTargetIndex].currentMode == DROID_MODE_EXPLODING) ||
+			(g_shipDeckItr->second.droid[transferTargetIndex].currentMode == DROID_MODE_DEAD))
+		return;
+
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferStage1");
 
 	if (transferRows.empty ())
@@ -595,6 +600,8 @@ void trn_processTransferCountDown ()
 void trn_prepareTransferGame ()
 //---------------------------------------------------------------------------------------------------------------------
 {
+
+
 	transferTimeoutCountdown = transferTimeOut;
 	sys_setNewMode (MODE_TRANSFER_GAME, false);
 }
@@ -614,6 +621,33 @@ std::string trn_getCountdown ()
 void trn_prepareTransferCountDown ()
 //---------------------------------------------------------------------------------------------------------------------
 {
+	int i = 0;
+
+	for (auto &transferItr : transferRows)
+	{
+		transferItr.leftSideActiveCounter     = 0.0f;
+		transferItr.rightSideActiveCounter    = 0.0f;
+		transferItr.leftSideType              = TRANSFER_ROW_REVERSE_QUARTER;
+		transferItr.rightSideType             = TRANSFER_ROW_REVERSE_QUARTER;
+		transferItr.leftSideActive            = false;
+		transferItr.rightSideActive           = false;
+		transferItr.rightSideActiveIsOn       = false;
+		transferItr.leftSideActiveIsOn        = false;
+		transferItr.rightSideActiveAlphaColor = 255.0f;
+		transferItr.rightSideActiveAlphaCount = 0.0f;
+		transferItr.leftSideActiveAlphaColor  = 255.0f;
+		transferItr.leftSideActiveAlphaCount  = 0.0f;
+
+		if (i % 2 == 0)
+			transferItr.currentColor = TRANSFER_COLOR_LEFT;
+		else
+			transferItr.currentColor = TRANSFER_COLOR_RIGHT;
+
+		i++;
+	}
+
+	trn_setupTransferCellValues ();
+
 	sideTimeoutCountdown = chooseSideTimeOut;
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 0, "transferStage2");
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferStart");

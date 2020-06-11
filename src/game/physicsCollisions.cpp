@@ -274,9 +274,7 @@ void contactListener::BeginContact (b2Contact *contact)
 			{
 				if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
 				{
-					// int targetDroid, int damageSource, int sourceDroid,
 					gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BUMP, -1));
-					// TODO - do damage to player
 				}
 			}
 			else

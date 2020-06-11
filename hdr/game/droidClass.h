@@ -18,6 +18,8 @@ public:
 	bool          overLiftTile          = false;
 	bool          visibleToPlayer       = true;
 	bool          weaponCanFire         = true;
+	bool          lowInfluenceTimeleft  = false;
+	bool          influenceFadeFlag     = false;
 	int           index;                      // Used in physics callback
 	int           currentMode;                // What is the droid doing; transfer, healing, terminal etc
 	int           droidType;
@@ -28,6 +30,8 @@ public:
 	int           transferTargetDroidIndex;
 	int           transferTargetDroidType;
 	float         weaponDelay;
+	float         influenceTimeLeft;
+	float         influenceFade;
 	std::string   droidName;
 	b2BodyDef     bodyDef;                      // Used for physics and collisions
 	b2CircleShape shape;

@@ -5,6 +5,7 @@
 #include <system/util.h>
 #include <game/particles.h>
 #include <game/lightMaps.h>
+#include <sdl2_gfx/SDL2_gfxPrimitives.h>
 #include "game/bullet.h"
 
 //#define DEBUG_BULLET 1
@@ -35,8 +36,23 @@ auto getAngle (b2Vec2 sourcePos, b2Vec2 destPos) -> float
 
 //---------------------------------------------------------------------------------------------------------------
 //
+// Do damage from disrupter fire
+void gam_doDisrupterDamage (int sourceDroid)
+//---------------------------------------------------------------------------------------------------------------
+{
+	for (auto &droidItr : g_shipDeckItr->second.droid)
+	{
+		if ((droidItr.visibleToPlayer) && (droidItr.currentMode == DROID_MODE_NORMAL) && (!dataBaseEntry[droidItr.droidType].disrupterImmune))
+		{
+			gam_damageToDroid (droidItr.userData->dataValue, PHYSIC_DAMAGE_BULLET, sourceDroid);
+		}
+	}
+}
+
+//---------------------------------------------------------------------------------------------------------------
+//
 // Create a new bullet - called from game event
-paraBullet createBullet (int bulletSourceIndex, Uint32 bulletID)
+paraBullet gam_createBullet (int bulletSourceIndex, Uint32 bulletID)
 //---------------------------------------------------------------------------------------------------------------
 {
 	paraBullet tempBullet;
@@ -52,7 +68,10 @@ paraBullet createBullet (int bulletSourceIndex, Uint32 bulletID)
 
 	if (-1 == bulletSourceIndex)        // Bullet from player
 	{
-		bulletType          = dataBaseEntry[playerDroid.droidType].bulletType;
+		bulletType     = dataBaseEntry[playerDroid.droidType].bulletType;
+		if (!dataBaseEntry[playerDroid.droidType].canShoot)
+			bulletType = BULLET_TYPE_NORMAL;
+
 		newVelocity         = playerDroid.velocity;
 		newWorldPosInMeters = sys_convertToMeters (playerDroid.worldPosInPixels);
 		//
@@ -65,26 +84,25 @@ paraBullet createBullet (int bulletSourceIndex, Uint32 bulletID)
 	}
 	else
 	{
-		bulletType = dataBaseEntry[shipdecks.at(gam_getCurrentDeckName()).droid[bulletSourceIndex].droidType].bulletType;
-		
-		if (g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid() == -1)
+		bulletType = dataBaseEntry[shipdecks.at (gam_getCurrentDeckName ()).droid[bulletSourceIndex].droidType].bulletType;
+
+		if (g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid () == -1)
 		{
 			// Aim at player position
-			newVelocity = shipdecks.at(gam_getCurrentDeckName()).droid[bulletSourceIndex].worldPosInPixels - playerDroid.worldPosInPixels;
+			newVelocity = shipdecks.at (gam_getCurrentDeckName ()).droid[bulletSourceIndex].worldPosInPixels - playerDroid.worldPosInPixels;
 		}
 		else
 		{
 			// Aim at other droid
-			newVelocity = shipdecks.at(gam_getCurrentDeckName()).droid[bulletSourceIndex].worldPosInPixels - 
-				g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid()].worldPosInPixels;
+			newVelocity = shipdecks.at (gam_getCurrentDeckName ()).droid[bulletSourceIndex].worldPosInPixels - g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid ()].worldPosInPixels;
 		}
-		
+
 		newWorldPosInMeters = sys_convertToMeters (shipdecks.at (gam_getCurrentDeckName ()).droid[bulletSourceIndex].worldPosInPixels);
 		//
 		// Set its direction
 		tempBullet.velocity = newVelocity;
 		tempBullet.velocity.Normalize ();
-		tempBullet.velocity.operator *= (bulletMoveSpeed);
+		tempBullet.velocity.operator*= (bulletMoveSpeed);
 	}
 
 	if (bulletType != BULLET_TYPE_DISRUPTER)
@@ -100,7 +118,7 @@ paraBullet createBullet (int bulletSourceIndex, Uint32 bulletID)
 
 		tempBullet.bodyDef.type = b2_dynamicBody;
 		tempBullet.bodyDef.position.Set (tempBullet.worldPosInMeters.x, tempBullet.worldPosInMeters.y);
-		tempBullet.bodyDef.angle = 0;
+		tempBullet.bodyDef.angle  = 0;
 		tempBullet.bodyDef.bullet = true;
 		tempBullet.body           = sys_getPhysicsWorld ()->CreateBody (&tempBullet.bodyDef);
 		if (tempBullet.body == nullptr)
@@ -112,9 +130,9 @@ paraBullet createBullet (int bulletSourceIndex, Uint32 bulletID)
 		else
 			tempBullet.userData->userType = PHYSIC_TYPE_BULLET_ENEMY;
 
-		tempBullet.userData->ID = bulletID;
-		tempBullet.userData->dataValue = bulletSourceIndex;
-		tempBullet.userData->wallIndexValue = -1;
+		tempBullet.userData->ID              = bulletID;
+		tempBullet.userData->dataValue       = bulletSourceIndex;
+		tempBullet.userData->wallIndexValue  = -1;
 		tempBullet.userData->ignoreCollision = false;
 		tempBullet.body->SetUserData (tempBullet.userData);
 
@@ -128,29 +146,29 @@ paraBullet createBullet (int bulletSourceIndex, Uint32 bulletID)
 		case BULLET_TYPE_NORMAL:
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser");
 			tempBullet.sprite.create ("bullet_001", 8, bulletAnimationSpeed);
-			tempBullet.shape.SetAsBox(6.0f / pixelsPerMeter, 6.0f / pixelsPerMeter);
+			tempBullet.shape.SetAsBox (6.0f / pixelsPerMeter, 6.0f / pixelsPerMeter);
 			tempBullet.fixtureDef.shape = &tempBullet.shape;
 			break;
 
 		case BULLET_TYPE_SINGLE:
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser");
 			tempBullet.sprite.create ("bullet_476", 8, bulletAnimationSpeed);
-			tempBullet.shape.SetAsBox(9.0f / pixelsPerMeter, 3.0f / pixelsPerMeter);
+			tempBullet.shape.SetAsBox (9.0f / pixelsPerMeter, 3.0f / pixelsPerMeter);
 			tempBullet.fixtureDef.shape = &tempBullet.shape;
 			break;
 
 		case BULLET_TYPE_DOUBLE:
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "laser");
 			tempBullet.sprite.create ("bullet_821", 8, bulletAnimationSpeed);
-			tempBullet.shape.SetAsBox(12.0f / pixelsPerMeter, 6.0f / pixelsPerMeter);
+			tempBullet.shape.SetAsBox (12.0f / pixelsPerMeter, 6.0f / pixelsPerMeter);
 			tempBullet.fixtureDef.shape = &tempBullet.shape;
 			break;
 
 		case BULLET_TYPE_DISRUPTER:
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "disrupter");
-			tempBullet.disrupterFadeAmount = disrupterFadeAmount / numDisrupterFrames;
-			tempBullet.disrupterFade       = disrupterFadeAmount;
-			// TODO - Disrupter damage
+			tempBullet.disrupterFadeAmount = disrupterFadeAmount;
+			tempBullet.disrupterFade       = 250;
+			gam_doDisrupterDamage (bulletSourceIndex);
 			break;
 
 		default:
@@ -178,7 +196,7 @@ paraBullet createBullet (int bulletSourceIndex, Uint32 bulletID)
 
 	tempBullet.type  = bulletType;
 	tempBullet.inUse = true;
-	tempBullet.ID = bulletID;
+	tempBullet.ID    = bulletID;
 
 	return tempBullet;
 }
@@ -186,37 +204,37 @@ paraBullet createBullet (int bulletSourceIndex, Uint32 bulletID)
 //---------------------------------------------------------------------------------------------------------------
 //
 // Preallocate the bullet array - clear out on level change
-void gam_initBulletArray()
+void gam_initBulletArray ()
 //---------------------------------------------------------------------------------------------------------------
 {
-	paraBullet  tempBullet;
+	paraBullet tempBullet;
 
-	if (bullets.size() > 0)
+	if (bullets.size () > 0)
 	{
 		for (auto &bulletItr : bullets)
 		{
 			bulletItr.inUse = false;
-			bulletItr.ID = 0;
+			bulletItr.ID    = 0;
 		}
 	}
 
 	for (auto i = 0; i != MAX_NUM_BULLETS; i++)
 	{
 		tempBullet.inUse = false;
-		tempBullet.ID = 0;
-		bullets.push_back(tempBullet);
+		tempBullet.ID    = 0;
+		bullets.push_back (tempBullet);
 	}
 }
 
 //---------------------------------------------------------------------------------------------------------------
 //
 // Return the index of a bullet using its ID
-int gam_getArrayIndex(Uint32 bulletID)
+int gam_getArrayIndex (Uint32 bulletID)
 //---------------------------------------------------------------------------------------------------------------
 {
 	int indexCounter = 0;
 
-	for (const auto& bulletItr : bullets)
+	for (const auto &bulletItr : bullets)
 	{
 		if (bulletItr.ID == bulletID)
 			return indexCounter;
@@ -224,7 +242,7 @@ int gam_getArrayIndex(Uint32 bulletID)
 		indexCounter++;
 	}
 
-	sys_shutdownWithError(sys_getString("Unable to locate bullet index by ID [ %i ]", bulletID));
+	sys_shutdownWithError (sys_getString ("Unable to locate bullet index by ID [ %i ]", bulletID));
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -233,16 +251,16 @@ int gam_getArrayIndex(Uint32 bulletID)
 void gam_addBullet (int bulletSourceIndex)
 //---------------------------------------------------------------------------------------------------------------
 {
-	int indexCounter = 0;
+	int    indexCounter = 0;
 	Uint32 bulletID;
 
-	bulletID = SDL_GetTicks();
+	bulletID = SDL_GetTicks ();
 
 	for (auto &bulletItr : bullets)
 	{
 		if (!bulletItr.inUse)
 		{
-			bulletItr = createBullet(bulletSourceIndex, bulletID);
+			bulletItr = gam_createBullet (bulletSourceIndex, bulletID);
 			if (bulletSourceIndex < 0)  // Player bullet
 			{
 				gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_TRAIL, bulletID);
@@ -266,18 +284,18 @@ void gam_removeBullet (Uint32 bulletID)
 {
 	int bulletIndex = -1;
 
-	bulletIndex = gam_getArrayIndex(bulletID);
+	bulletIndex = gam_getArrayIndex (bulletID);
 #ifdef DEBUG_BULLET
 	std::cout << "Remove a bullet : " << bulletID << " with position in array : " << bulletIndex << std::endl;
 #endif
 
 	try
 	{
-		bullets.at(bulletIndex).inUse = false;
-		
+		bullets.at (bulletIndex).inUse = false;
+
 		if (bullets.at (bulletIndex).body != nullptr)
 		{
-			bullets.at(bulletIndex).body->GetWorld()->DestroyBody(bullets.at(bulletIndex).body);
+			bullets.at (bulletIndex).body->GetWorld ()->DestroyBody (bullets.at (bulletIndex).body);
 			bullets.at (bulletIndex).body = nullptr;
 		}
 
@@ -287,11 +305,11 @@ void gam_removeBullet (Uint32 bulletID)
 			bullets.at (bulletIndex).userData = nullptr;
 		}
 
-		bullets.at(bulletIndex).velocity = { 0,0 };
-		bullets.at(bulletIndex).inUse = false;
+		bullets.at (bulletIndex).velocity = {0, 0};
+		bullets.at (bulletIndex).inUse    = false;
 
-		gam_removeEmitter(bulletID);
-		gam_removeLightmap(bulletID);
+		gam_removeEmitter (bulletID);
+		gam_removeLightmap (bulletID);
 	}
 
 	catch (const std::out_of_range &outOfRange)
@@ -315,8 +333,16 @@ void gam_processBullets ()
 				bulletItr.velocity.Normalize ();
 				bulletItr.velocity.operator*= (bulletMoveSpeed);
 				bulletItr.body->ApplyLinearImpulseToCenter (bulletItr.velocity, true);
+				bulletItr.sprite.animate ();
 			}
-			bulletItr.sprite.animate ();
+			else
+			{
+				bulletItr.disrupterFade -= bulletItr.disrupterFadeAmount;
+				if (bulletItr.disrupterFade < 0)
+				{
+					gam_removeBullet (bulletItr.ID);
+				}
+			}
 		}
 	}
 }
@@ -327,19 +353,22 @@ void gam_processBullets ()
 void gam_renderBullets ()
 //---------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 tempPosition;
-	SDL_Rect    destination;
+	b2Vec2   tempPosition;
 
 	for (auto &bulletItr : bullets)
 	{
-		if (bulletItr.type != BULLET_TYPE_DISRUPTER)
+		if (bulletItr.inUse)
 		{
-			if (bulletItr.inUse)
+			if (bulletItr.type != BULLET_TYPE_DISRUPTER)
 			{
 				bulletItr.worldPosInMeters = bulletItr.body->GetPosition ();
 				tempPosition = sys_convertToPixels (bulletItr.worldPosInMeters);
 				tempPosition = sys_worldToScreen (tempPosition, SPRITE_SIZE);
 				bulletItr.sprite.render (tempPosition.x, tempPosition.y, 1.0f, bulletItr.angle);
+			}
+			else
+			{
+				boxRGBA (renderer.renderer, 0, 0, hiresVirtualWidth, hiresVirtualHeight, 255, 255, 255, static_cast<Uint8>(bulletItr.disrupterFade));
 			}
 		}
 	}
@@ -348,20 +377,19 @@ void gam_renderBullets ()
 //---------------------------------------------------------------------------------------------------------------
 //
 // Debug bullets
-void gam_debugBullets()
+void gam_debugBullets ()
 //---------------------------------------------------------------------------------------------------------------
 {
 	int activeCounter = 0;
 
-	for (const auto& bulletItr : bullets)
+	for (const auto &bulletItr : bullets)
 	{
 		if (bulletItr.inUse)
 		{
-			con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Index [ %i ] inUse [ %i ] Velocity [ %3.3f %3.3f ]", bulletItr.userData->dataValue, bulletItr.inUse,
-				bulletItr.velocity.x, bulletItr.velocity.y));
+			con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("Index [ %i ] inUse [ %i ] Velocity [ %3.3f %3.3f ]", bulletItr.userData->dataValue, bulletItr.inUse, bulletItr.velocity.x, bulletItr.velocity.y));
 			activeCounter++;
 		}
 	}
 
-	con_addEvent(EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString("Bullet array size [ %i ] - number active [ %i ]", bullets.size(), activeCounter));
+	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("Bullet array size [ %i ] - number active [ %i ]", bullets.size (), activeCounter));
 }

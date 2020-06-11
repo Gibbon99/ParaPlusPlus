@@ -1,20 +1,23 @@
 #include <game/database.h>
 #include <game/hud.h>
-#include <gui/guiLanguage.h>
 #include <system/util.h>
 #include <game/audio.h>
 #include <game/lifts.h>
 #include <system/gameEvents.h>
 #include <game/alertLevel.h>
 #include <game/game.h>
+#include <game/transferGame.h>
+#include <game/particles.h>
 #include "game/player.h"
 
 #include "game/bullet.h"
 
 droidClass playerDroid;
 double     playerFriction;      // From script
+float      influenceTimelimit;
+float      influenceTimelimtDelay;
+float      influenceTimeLeftWarning;
 
-droidClass    testCircle;
 static double angleCounter = 1.0;
 int           radius       = 40;
 
@@ -35,8 +38,8 @@ void gam_moveTestCircle ()
 			angle = 0;
 	}
 
-	testCircle.worldPosInPixels.x = (gameWinWidth / 2) + (radius * cos (angle * (3.14 / 180)));
-	testCircle.worldPosInPixels.y = (gameWinHeight / 2) + (radius * sin (angle * (3.14 / 180)));
+//	testCircle.worldPosInPixels.x = (gameWinWidth / 2) + (radius * cos (angle * (3.14 / 180)));
+//	testCircle.worldPosInPixels.y = (gameWinHeight / 2) + (radius * sin (angle * (3.14 / 180)));
 }
 
 //-----------------------------------------------------------------------------
@@ -250,11 +253,11 @@ void gam_processActionKey ()
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Check the players health, and set low health for animation
-void gam_checkPlayerHealth()
+void gam_checkPlayerHealth ()
 //-----------------------------------------------------------------------------------------------------------------
 {
-	float dangerHealthLevel;
-	float newAnimationSpeed;
+	float       dangerHealthLevel;
+	float       newAnimationSpeed;
 	static bool lowEnergySoundPlaying = false;
 
 	//
@@ -265,7 +268,7 @@ void gam_checkPlayerHealth()
 //		return;     // TODO Remove comment to avoid dropthrough
 	}
 
-	dangerHealthLevel = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
+	dangerHealthLevel     = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
 
 	if (playerDroid.currentHealth < static_cast<int>(dangerHealthLevel))
 	{
@@ -274,7 +277,7 @@ void gam_checkPlayerHealth()
 		if (!lowEnergySoundPlaying)
 		{
 			lowEnergySoundPlaying = true;
-			gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "lowEnergy");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "lowEnergy");
 		}
 	}
 	else
@@ -288,14 +291,14 @@ void gam_checkPlayerHealth()
 	}
 	//
 	// Work out the player droid animation speed based on health
-	newAnimationSpeed = static_cast<float>(playerDroid.currentHealth) / static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth);
+	newAnimationSpeed     = static_cast<float>(playerDroid.currentHealth) / static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth);
 	if (newAnimationSpeed < 0.0f)
 		newAnimationSpeed = 0.1f;
 
 	if (newAnimationSpeed > 1.0f)
 		newAnimationSpeed = 1.0f;
 
-	playerDroid.sprite.setAnimateSpeed(newAnimationSpeed);
+	playerDroid.sprite.setAnimateSpeed (newAnimationSpeed);
 }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -332,5 +335,67 @@ void gam_damageToPlayer (int damageSource, int sourceDroid)
 	std::cout << "player health now : " << playerDroid.currentHealth << std::endl;  // TODO - Remove
 #endif
 
-	gam_checkPlayerHealth();
+	gam_checkPlayerHealth ();
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+//
+// Set the influence time limit - based on droid class
+void gam_setInfluenceTimelimit (int targetDroidClass)
+//-----------------------------------------------------------------------------------------------------------------
+{
+	playerDroid.influenceTimeLeft    = influenceTimelimit - (static_cast<float>(targetDroidClass) * 2);
+	playerDroid.lowInfluenceTimeleft = false;
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+//
+// Process how long a droid can be controlled for
+void gam_processInfluenceTime ()
+//-----------------------------------------------------------------------------------------------------------------
+{
+	if (playerDroid.droidType == 0)
+		return;
+
+	if (playerDroid.influenceFadeFlag)
+	{
+		playerDroid.influenceFade -= 10;
+		if (playerDroid.influenceFade < 50)
+		{
+			playerDroid.influenceFade = 50;
+			playerDroid.influenceFadeFlag = !playerDroid.influenceFadeFlag;
+		}
+	}
+	else
+	{
+		playerDroid.influenceFade += 10;
+		if (playerDroid.influenceFade > 254)
+		{
+			playerDroid.influenceFade = 254;
+			playerDroid.influenceFadeFlag = !playerDroid.influenceFadeFlag;
+		}
+	}
+
+	playerDroid.influenceTimeLeft -= 1.0f * influenceTimelimtDelay;
+
+	if (playerDroid.influenceTimeLeft < influenceTimeLeftWarning)
+		playerDroid.lowInfluenceTimeleft = true;
+
+	if (playerDroid.influenceTimeLeft < 0.0f)
+	{
+		playerDroid.velocity = {0,0};
+		gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
+		gam_addEmitter(sys_convertToMeters(playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+		gam_addEmitter(sys_convertToMeters(playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+		trn_transferLostGame();
+
+#ifdef MY_DEBUG
+		std::cout << "Influence time is up." << std::endl;
+#endif
+	}
+
+#ifdef MY_DEBUG
+	if (playerDroid.lowInfluenceTimeleft)
+		std::cout << "Influence time is about to run out" << std::endl;
+#endif
 }

@@ -128,6 +128,8 @@ void gam_initDroids (std::string levelName)
 		tempDroid.ai.setMaxSpeed (dataBaseEntry[tempDroid.droidType].maxSpeed);
 
 		tempDroid.currentMode = DROID_MODE_NORMAL;
+		tempDroid.weaponCanFire = true;
+		tempDroid.weaponDelay = 1.0f;
 
 		tempDroid.sprite.create (tempDroid.droidName, 9, 1.0);
 
@@ -194,6 +196,25 @@ void gam_animateDroids ()
 	}
 }
 
+//-----------------------------------------------------------------------------
+//
+// Recharge a droids weapon fire rate
+void gam_weaponRechargeDroid(droidClass whichDroid)
+//-----------------------------------------------------------------------------
+{
+	if (!whichDroid.weaponCanFire)
+	{
+		if (dataBaseEntry[whichDroid.droidType].canShoot)
+			whichDroid.weaponDelay -= 1.0f * dataBaseEntry[whichDroid.droidType].rechargeTime;
+
+		if (whichDroid.weaponDelay < 0.0)
+		{
+			whichDroid.weaponDelay = 1.0f;
+			whichDroid.weaponCanFire = true;
+		}
+	}
+}
+
 //-------------------------------------------------------------------------------------------------------------
 //
 // Process the AI for each droid
@@ -204,6 +225,8 @@ void gam_processAI ()
 	{
 		if (droidItr.currentMode == DROID_MODE_NORMAL)
 		{
+			gam_weaponRechargeDroid(droidItr);
+
 			droidItr.ai.process (droidItr.body->GetPosition ());
 			droidItr.body->ApplyForce (droidItr.ai.getVelocity (), droidItr.body->GetWorldCenter (), true);
 			//

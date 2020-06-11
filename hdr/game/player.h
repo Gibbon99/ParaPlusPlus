@@ -5,8 +5,10 @@
 
 extern droidClass playerDroid;
 extern double     playerFriction;      // From script
+extern float      influenceTimelimit;
+extern float      influenceTimelimtDelay;
+extern float      influenceTimeLeftWarning;
 
-extern droidClass testCircle;
 
 // Setup the player droid - run once
 void gam_setupPlayerDroid ();
@@ -27,5 +29,10 @@ void gam_weaponRechargePlayer ();
 void gam_damageToPlayer (int damageSource, int sourceDroid);
 
 // Check the players health, and set low health for animation
-void gam_checkPlayerHealth();
+void gam_checkPlayerHealth ();
 
+// Set the influence time limit - based on droid class
+void gam_setInfluenceTimelimit (int targetDroidClass);
+
+// Process how long a droid can be controlled for
+void gam_processInfluenceTime ();
