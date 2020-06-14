@@ -92,7 +92,7 @@ void sys_renderFrame (double interpolation)
 			break;
 
 		case MODE_GUI_DECKVIEW:
-			gam_renderHealingFrames (gam_getCurrentDeckName ());
+			gam_renderHealingFrames ();
 			gui_renderTerminalDeck ();
 			gui_renderGUI ();
 			break;
@@ -142,7 +142,7 @@ void sys_renderFrame (double interpolation)
 
 		case MODE_GAME:
 			gam_renderVisibleScreen (interpolation);
-			gam_renderHealingFrames (gam_getCurrentDeckName ());
+			gam_renderHealingFrames ();
 			gam_renderDoorFrames ();
 
 			if (playerDroid.inTransferMode)
@@ -174,6 +174,9 @@ void sys_renderFrame (double interpolation)
 
 			if (d_showAStarPath)
 				gam_AStarDebugWayPoints (0);
+
+			if (gui.getCurrentDialogbox() != NO_DIALOG_BOX)
+				gui_renderActiveDialogbox ();
 
 			break;
 

@@ -697,7 +697,7 @@ void as_createGUI ()
 	bulletDensity            = 0.1f;
 	bulletFriction           = 0.01f;
 	bulletAnimationSpeed     = 0.5f;
-	bulletMoveSpeed          = 0.5f;
+	bulletMoveSpeed          = 0.3f;
 	hudTextPosX              = 15;
 	hudTextPosY              = 27;
 	hudScorePosX             = 620;
@@ -725,7 +725,7 @@ void as_createGUI ()
 
 	as_setupIntroScrollBox ();
 	as_setupWinScreenScrollBox ();
-
+	as_createQuitGameDialogbox ();
 	as_initTransferValues ();
 
 	createMainMenu ();
@@ -762,4 +762,8 @@ void as_createGUI ()
 
 	as_paraGui.setColor (GUI_OBJECT_LABEL, "ALL", GUI_COL_ACTIVE, 250, 250, 250, 255);
 	as_paraGui.setColor (GUI_OBJECT_TEXTBOX, "ALL", GUI_COL_ACTIVE, 200, 200, 200, 255);
+
+	as_paraGui.setColor (GUI_OBJECT_DIALOGBOX, "ALL", GUI_COL_ACTIVE, 250, 250, 250, 240);
+	as_paraGui.setColor (GUI_OBJECT_DIALOGBOX, "ALL", GUI_COL_ACTIVE_LABEL, 251, 78, 18, 254);
+	as_paraGui.setColor (GUI_OBJECT_TEXTBOX, "quitGameDialogbox.text", GUI_COL_ACTIVE, 251, 78, 18, 254);
 }

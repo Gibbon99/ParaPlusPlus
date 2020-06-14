@@ -60,6 +60,8 @@ void sys_scriptInitScriptFunctions ()
 
 	paraScriptInstance.addScriptFunction ("void as_handleTutorialElements ()", "as_handleTutorialElements");
 
+	paraScriptInstance.addScriptFunction ("void as_handleDialogBoxes ()", "as_handleDialogBoxes");
+
 	paraScriptInstance.addScriptFunction ("void as_testFunction()", "as_testFunction");
 }
 
@@ -232,8 +234,9 @@ void sys_scriptInitFunctions ()
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void setPosition (int objectType, string objectID, int newRadius, int coordType, double newPosX, double newPosY, double newWidth, double newHeight)", asMETHOD(paraGui, setPosition), asCALL_THISCALL);
 	assert(r >= 0);
-	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void addToScreen (int objectType, string objectID, string screenID)", asMETHOD(paraGui, addToScreen), asCALL_THISCALL);
+	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void addToDialogbox (int objectType, string objectID, string screenID)", asMETHOD(paraGui, addToDialogbox), asCALL_THISCALL);
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void setColor (int objectType, string objectID, int whichColor, int red, int green, int blue, int alpha)", asMETHOD(paraGui, setColor), asCALL_THISCALL);
 	assert(r >= 0);
@@ -245,13 +248,21 @@ void sys_scriptInitFunctions ()
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "int getCurrentScreen()", asMETHOD(paraGui, getCurrentScreen), asCALL_THISCALL);
 	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "int getCurrentDialogbox()", asMETHOD(paraGui, getCurrentDialogbox), asCALL_THISCALL);
+	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void setCurrentScreen (int newScreen)", asMETHOD(paraGui, setCurrentScreen), asCALL_THISCALL);
+	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void setCurrentDialogbox (int newScreen)", asMETHOD(paraGui, setCurrentDialogbox), asCALL_THISCALL);
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "int getIndex (int objectType, string &in objectID)", asMETHOD(paraGui, getIndex), asCALL_THISCALL);
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "int getActiveObjectIndex()", asMETHOD(paraGui, getActiveObjectIndex), asCALL_THISCALL);
 	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "int getActiveObjectIndexDialogbox()", asMETHOD(paraGui, getActiveObjectIndexDialogbox), asCALL_THISCALL);
+	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void setActiveObject (int whichScreen, int objectType, string objectID)", asMETHOD(paraGui, setActiveObject), asCALL_THISCALL);
+	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void setActiveObjectDialogbox (int whichScreen, int objectType, string objectID)", asMETHOD(paraGui, setActiveObjectDialogbox), asCALL_THISCALL);
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void addNewElement ( string &in, string &in, string &in, int type)", asMETHOD(paraGui, addNewElement), asCALL_THISCALL);
 	assert(r >= 0);
@@ -266,10 +277,8 @@ void sys_scriptInitFunctions ()
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void restartScrollBox(string &in)", asMETHOD(paraGui, restartScrollBox), asCALL_THISCALL);
 	assert(r >= 0);
 
-
 	r = paraScriptInstance.scriptEngine->RegisterGlobalProperty ("paraGui as_paraGui", &gui);
 	assert(r >= 0);
-
 
 	paraScriptInstance.addHostFunction ("void sys_printConInt (string &in, int param)", (functionPtr) &sys_scriptPrintInt);
 

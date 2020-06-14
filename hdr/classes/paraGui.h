@@ -6,7 +6,7 @@
 #include <wrapper.h>
 #include "../../data/scripts/enum.h"
 
-// #define DEBUG_GUI_SETUP 1
+#define DEBUG_GUI_SETUP 1
 
 typedef void (*funcPtrIntStr) (int, std::string);
 
@@ -38,17 +38,33 @@ struct __SCREEN_OBJECT
 	std::vector<int> objectType;        // Which object array
 };
 
+struct __GUI_DIALOGBOX
+{
+	bool             ready          = false;
+	bool             positionCalled = false;
+	int              selectedObject;    // Whats currently active on this screen
+	std::string      ID;                // Name of this screen
+	std::vector<int> objectIDIndex;     // Index into object array
+	std::vector<int> objectType;        // Which object array
+	std::string      label;
+	std::string      fontName;
+	int              cornerRadius;
+	int              gapSize;
+	__PARA_COLOR     hasFocusColor;
+	__PARA_COLOR     labelFocusColor;
+	__BOUNDING_BOX   boundingBox;
+};
+
 struct __GUI_OBJECT
 {
-	bool ready                  = false;
-	bool canFocus               = false;
-	bool positionCalled         = false;
-
+	bool           ready          = false;
+	bool           canFocus       = false;
+	bool           positionCalled = false;
 	std::string    ID;
-	int            screenID     = -1;  // Which screen does this object belong to
+	int            screenID       = -1;  // Which screen does this object belong to
 	int            labelPos;
-	int            cornerRadius = 0;
-	int            gapSize      = 0;
+	int            cornerRadius   = 0;
+	int            gapSize        = 0;
 	std::string    label;
 	std::string    fontName;
 	std::string    action;
@@ -108,7 +124,7 @@ struct __GUI_SCROLLBOX
 	int                      gapSize;
 	int                      cornerRadius = 0;
 	int                      coordType;
-	int                      currentChar = 0;
+	int                      currentChar  = 0;
 	int                      numLinesToPrint;
 	double                   lineFade;
 	double                   scrollDelay  = 0.2;
@@ -158,7 +174,7 @@ public:
 
 	void ReleaseRef ();
 
-	void init (funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, std::string newFileName);
+	void init (funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, int newRenderWidthGame, int newRenderHeightGame, std::string newFileName);
 
 	std::string int_getString (std::string format, ...);
 
@@ -286,9 +302,40 @@ public:
 
 	void processGuiInput ();
 
-//
-// Input related functions
-//
+	//
+	// Dialogbox routines
+	//
+	int getActiveObjectIndexDialogbox ();
+
+	int getCurrentDialogbox ();
+
+	void setActiveObjectDialogbox (int whichDialogbox, int objectType, std::string objectID);
+
+	void setCurrentDialogbox (int newDialogbox);
+
+	int indexByIndexDialogbox (int whichObject);
+
+	int typeByIndexDialogbox (int whichObject);
+
+	int selectedObjectDialogbox ();
+
+	int numElementsDialogbox ();
+
+	void addToDialogbox (int objectType, std::string objectID, std::string dialogboxID);
+
+	void setActiveDialogbox (std::string objectID);
+
+	void processMousePositionDialogbox ();
+
+	void processMovementKeysDialogbox ();
+
+	void setRenderDimensionsGameMode(int width, int height);
+
+	void processActionDialogbox ();
+
+	//
+	// Input related functions
+	//
 	void setRepeatOff (bool newState);
 
 	int getRepeatOff ();
@@ -325,11 +372,15 @@ private:
 	__KeyBindings                keyBinding[KEY_NUMBER_ACTIONS];
 	std::string                  fileName;
 	funcStrIn                    funcGetString;
-	bool                         repeatOff     = true;
-	int                          currentScreen = 0;
-	double                       renderWidth   = 0;
-	double                       renderHeight  = 0;
+	bool                         repeatOff        = true;
+	int                          currentScreen    = 0;
+	int                          currentDialogbox = NO_DIALOG_BOX;
+	double                       renderWidth      = 0;
+	double                       renderHeight     = 0;
+	int                          renderWidthGame  = 0;
+	int                          renderHeightGame = 0;
 	std::vector<__SCREEN_OBJECT> guiScreens;    // ** Add new vectors to restart() for .clear() when adding a new element
+	std::vector<__GUI_DIALOGBOX> guiDialogBoxes;
 	std::vector<__GUI_OBJECT>    guiButtons;
 	std::vector<__GUI_SLIDER>    guiSliders;
 	std::vector<__GUI_OBJECT>    guiLabels;

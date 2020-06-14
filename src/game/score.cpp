@@ -30,8 +30,11 @@ void gam_processScore()
 	if (updateScoreCounter > 1.0f)
 	{
 		updateScoreCounter = 0.0f;
-		currentScore--;
-		printableScore++;
+		if (currentScore > 0)
+		{
+			currentScore--;
+			printableScore++;
+		}
 
 		if (gam_getCurrentAlertLevel() == ALERT_YELLOW_TILE)
 			gam_modifyScore(5);

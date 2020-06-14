@@ -8,6 +8,7 @@
 #include <game/pauseMode.h>
 #include <gui/guiLostScreen.h>
 #include <gui/guiHighScore.h>
+#include <gui/guiInput.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
@@ -106,16 +107,8 @@ void sys_processInputEvents ()
 				if (evt.key.keysym.sym == SDLK_F1)
 					sys_setNewMode (MODE_SHOW_SPLASH, true);
 
-				if (evt.key.keysym.sym == SDLK_F2)
-				{
-					trn_debugTransferCells(TRANSFER_COLOR_RIGHT);
-				}
-
 				if (evt.key.keysym.sym == SDLK_F3)
 					sys_setNewMode (MODE_CONSOLE_EDIT, true);
-
-				if (evt.key.keysym.sym == SDLK_F4)
-					trn_setupTransferCellValues ();
 
 				if (evt.key.keysym.sym == SDLK_F5)
 				{
@@ -143,7 +136,6 @@ void sys_processInputEvents ()
 				break;
 		}
 	}
-	io_processKeyboardState ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -155,7 +147,12 @@ void sys_gameTickRun ()
 	if (renderer.currentFadeState != FADE_STATE_NONE)
 		renderer.updateFade ();
 
-	io_checkFileWatcher ();	
+	io_checkFileWatcher ();
+
+	sys_processInputEvents();
+	gam_processGameEventQueue();
+
+	io_processKeyboardState ();
 
 	switch (currentMode)
 	{
@@ -165,10 +162,16 @@ void sys_gameTickRun ()
 			break;
 
 		case MODE_GAME:
+			if (gui.getCurrentDialogbox() != NO_DIALOG_BOX)
+			{
+				gui.processGuiInput();
+				return;
+			}
+
 			if (!gam_pauseModeOn())
 			{
 				sys_processPhysics (TICKS_PER_SECOND);
-				gam_animateHealing (gam_getCurrentDeckName ());
+				gam_animateHealing ();
 				playerDroid.sprite.animate ();
 				gam_weaponRechargePlayer ();
 				gam_animateDroids();
@@ -192,14 +195,14 @@ void sys_gameTickRun ()
 			{
 				gam_animateDroids();
 				gam_animateLightmaps();
-				gam_animateHealing (gam_getCurrentDeckName ());
+				gam_animateHealing ();
 				playerDroid.sprite.animate ();
 			}
 
 			break;
 
 		case MODE_GUI_DECKVIEW:
-			gam_animateHealing (gam_getCurrentDeckName ());
+			gam_animateHealing ();
 			break;
 
 		case MODE_GUI_SHIPVIEW:

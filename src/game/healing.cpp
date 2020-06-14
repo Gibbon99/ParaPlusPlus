@@ -16,7 +16,7 @@ std::vector<__tileSensor> healingTiles;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render current healing frames onto map
-void gam_renderHealingFrames (const std::string &deckName)
+void gam_renderHealingFrames ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Texture *tempTexture;
@@ -27,7 +27,7 @@ void gam_renderHealingFrames (const std::string &deckName)
 
 	// TODO : Put in try / catch
 
-	for (const auto &healingItr : shipdecks.at (deckName).healing)
+	for (const auto &healingItr : g_shipDeckItr->second.healing)
 	{
 		if (sys_visibleOnScreen (healingItr.worldPosInPixels, tileSize))
 		{
@@ -41,12 +41,12 @@ void gam_renderHealingFrames (const std::string &deckName)
 // ----------------------------------------------------------------------------
 //
 // Animate healing tiles on current level
-void gam_animateHealing (const std::string &deckName)
+void gam_animateHealing ()
 // ----------------------------------------------------------------------------
 {
-	if (!shipdecks.at (deckName).healing.empty ())
+	if (!g_shipDeckItr->second.healing.empty ())
 	{
-		for (auto &healingItr: shipdecks.at (deckName).healing)
+		for (auto &healingItr: g_shipDeckItr->second.healing)
 		{
 			healingItr.frameDelay -= 1.0 * healingAnimSpeed;
 			if (healingItr.frameDelay < 0.0f)
@@ -56,7 +56,7 @@ void gam_animateHealing (const std::string &deckName)
 				if (healingItr.currentFrame > HEALING_TILE + 3)
 					healingItr.currentFrame = HEALING_TILE;
 
-				shipdecks.at (deckName).tiles[healingItr.pos] = healingItr.currentFrame;
+				g_shipDeckItr->second.tiles[healingItr.pos] = healingItr.currentFrame;
 			}
 		}
 	}
@@ -103,7 +103,7 @@ void gam_createHealingSensor (unsigned long whichHealingTile, int index)
 //--------------------------------------------------------------------------------------------------------------------------
 //
 // Find out where on the map the healing tiles are and create a physic sensor for the current level
-void gam_findHealingTilesPhysics (std::string deckName)
+void gam_findHealingTilesPhysics ()
 // --------------------------------------------------------------------------------------------------------------------------
 {
 	int           index;
@@ -120,9 +120,9 @@ void gam_findHealingTilesPhysics (std::string deckName)
 	countHealing = 0;
 	countX       = 0;
 	countY       = 0;
-	for (index   = 0; index < (int) shipdecks.at (deckName).levelDimensions.x * (int) shipdecks.at (deckName).levelDimensions.y; index++)
+	for (index   = 0; index < (int) g_shipDeckItr->second.levelDimensions.x * (int) g_shipDeckItr->second.levelDimensions.y; index++)
 	{
-		currentTile = shipdecks.at (deckName).tiles[((countY * ((int) shipdecks.at (deckName).levelDimensions.x)) + countX)];
+		currentTile = g_shipDeckItr->second.tiles[((countY * ((int) g_shipDeckItr->second.levelDimensions.x)) + countX)];
 
 		switch (currentTile)
 		{
@@ -149,7 +149,7 @@ void gam_findHealingTilesPhysics (std::string deckName)
 
 		countX++;
 
-		if (countX == (int) shipdecks.at (deckName).levelDimensions.x)
+		if (countX == (int) g_shipDeckItr->second.levelDimensions.x)
 		{
 			countX = 0;
 			countY++;

@@ -179,7 +179,7 @@ static int sys_startInit(void *ptr)
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName+"|guiFont28|"+to_string(28));
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, introFontFileName+"|introFont|"+to_string(introFontSize));
 
-	gui.init (con_addEvent, reinterpret_cast<funcStrIn>(gui_getString), windowWidth, windowHeight, "keybinding.para");
+	gui.init (con_addEvent, reinterpret_cast<funcStrIn>(gui_getString), windowWidth, windowHeight, gameWinWidth, gameWinHeight, "keybinding.para");
 	gui_loadSideViewData ("sideview.dat");
 	paraScriptInstance.run ("as_createGUI", "");
 //	audio.load("start1", "start1.wav");

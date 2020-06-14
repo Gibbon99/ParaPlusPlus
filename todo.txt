@@ -3,9 +3,8 @@ BUGS
 --------
 
 BUG - When alert level is higher than green, and deck goes black, alert draws as green
-
-FIXED - BUG - End of transfer game - transfer back into same droid again.
-
+BUG - Background sound can stop playing
+BUG - Door sounds are not right
 
 TODO
 -------
@@ -17,16 +16,19 @@ Transfer - work out winner
 Transfer - Right side reversers in wrong color
 Transfer - timer
 Splash screen on start
-Dialog box - Game Sure to quit?
 Player health check on damage - dead animation
-Droid AI - Flee
 Droid AI - Attack
 Droid AI - Help
 Yellow alert showing green lightmap on deck change
-Fix sideview overlap on hold level
+Fix sideview overlap on hold level - deck 3 not being highlighted now
 Low health sound for player not carried across deck change
 Check bottom edge of animated tiles in graphics
 Use Audio pause?
+Fix up player location on deck view in terminal
+Random waypoint direction for droid init - better spacing
+Droid reverse direction on collision
+Calibrate joystick
+Check the ratio maths for detecting mouse in bb range
 
 
 DONE - Universe background on menu screens
@@ -59,6 +61,13 @@ DONE - Transfer - add to score
 DONE - Disrupter weapon
 DONE - Droid weapon firing rate and recharge
 DONE - Droid takeover countdown
+>Commit
+DONE - Droid AI - Flee
+FIXED - BUG - Score is increasing by itself
+DONE - Dialog box - Game Sure to quit?
+>Commit
+
+
 
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address

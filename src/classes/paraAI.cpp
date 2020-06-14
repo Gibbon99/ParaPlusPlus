@@ -6,6 +6,7 @@
 #include <classes/paraLOS.h>
 #include <classes/paraRandom.h>
 #include <game/database.h>
+#include <game/bullet.h>
 #include "classes/paraAI.h"
 
 // #define DEBUG_AI 1
@@ -69,7 +70,7 @@ void paraAI::initAI ()
 	currentAIMode = AI_MODE_NUMBER;     // Will set to AI_MODE_PATROL when checking scores first run
 	patrolAction  = NORMAL_PATROL;
 	ai[AI_MODE_PATROL] = 50;
-	ai[AI_MODE_HEAL]   = 0;
+//	ai[AI_MODE_HEAL]   = 0;
 	wayPointDirection = WAYPOINT_DOWN;
 	currentSpeed      = 0;
 	aiActionCounter   = 0.0;
@@ -344,6 +345,15 @@ int paraAI::getAStarIndex ()
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
+// Set the current aStar value
+void paraAI::setAStarIndex (int newIndex)
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	aStarIndex = newIndex;
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
 // Get the array index
 int paraAI::getArrayIndex()
 //-----------------------------------------------------------------------------------------------------------------------
@@ -392,6 +402,8 @@ std::string paraAI::getPatrolAction ()
 void paraAI::setTargetDroid (int newTargetDroid)
 //-----------------------------------------------------------------------------------------------------------------------
 {
+	std::cout << " Changing target droid to : " << newTargetDroid << " for droid : " << arrayIndex << std::endl;
+
 	targetDroid = newTargetDroid;
 }
 
@@ -406,17 +418,17 @@ void paraAI::getWaypointDestination ()
 		case WAYPOINT_DOWN:
 			wayPointIndex--;
 			if (wayPointIndex < 0)
-				wayPointIndex = static_cast<int>(shipdecks.at (gam_getCurrentDeckName ()).wayPoints.size () - 1);
+				wayPointIndex = static_cast<int>(g_shipDeckItr->second.wayPoints.size () - 1);
 			break;
 
 		case WAYPOINT_UP:
 			wayPointIndex++;
-			if (wayPointIndex > static_cast<int>(shipdecks.at (gam_getCurrentDeckName ()).wayPoints.size () - 1))
+			if (wayPointIndex > static_cast<int>(g_shipDeckItr->second.wayPoints.size () - 1))
 				wayPointIndex = 0;
 			break;
 	}
 
-	destinationCoordsInMeters = sys_convertToMeters (shipdecks.at (gam_getCurrentDeckName ()).wayPoints[wayPointIndex]);
+	destinationCoordsInMeters = sys_convertToMeters (g_shipDeckItr->second.wayPoints[wayPointIndex]);
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -467,6 +479,22 @@ void paraAI::getNextAStarDestination ()
 #ifdef DEBUG_AI
 				std::cout << "[ " << arrayIndex << " ]" << " Finished HEAL mode. Health score is now " << ai[AI_MODE_HEAL] << std::endl;
 #endif
+				break;
+
+			case AI_MODE_FLEE:
+				currentAIMode   = AI_MODE_NUMBER;     // Set to something not AI_MODE_PATROL, otherwise the match stops the change happening
+				patrolAction    = FIND_WAYPOINT;
+				currentVelocity = {0, 0};
+				//
+				// Clear the path for reuse
+				gam_AStarRemovePath (aStarIndex);
+				aStarIndex           = -1;
+				aStarWaypointIndex   = 0;
+				haveAStarDestination = false;
+
+				// Clear flee mode
+				modifyScore (AI_MODE_FLEE, -100);  // Reset to zero - should be fully healed
+
 				break;
 
 			case AI_MODE_PATROL:
@@ -535,6 +563,16 @@ void paraAI::heal ()
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
+// Run the flee action
+void paraAI::flee ()
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	if (-1 != aStarIndex)
+		followAStar ();
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
 // Set the index into the vector array for this droid
 void paraAI::setArrayIndex (int newIndex)
 //-----------------------------------------------------------------------------------------------------------------------
@@ -569,9 +607,33 @@ void paraAI::changeModeTo (int newAIMode)
 			break;
 
 		case AI_MODE_ATTACK:
+			if (!dataBaseEntry[g_shipDeckItr->second.droid[arrayIndex].droidType].canShoot)
+			{
+				modifyScore(AI_MODE_ATTACK, -100);
+				modifyScore(AI_MODE_FLEE, 40);
+				return;
+			}
 			break;
 
 		case AI_MODE_FLEE:
+			haveAStarDestination = false;
+			tileDestination = findFleeTile();
+			if (tileDestination.x < 0)  // Can't find somewhere to flee to
+			{
+				modifyScore(AI_MODE_FLEE, -100);
+				return;
+			}
+			localWorldPosInPixels = sys_convertToPixels(worldPositionInMeters);
+			aStarIndex = gam_requestNewPath(b2Vec2{localWorldPosInPixels.x / tileSize, localWorldPosInPixels.y / tileSize}, tileDestination, arrayIndex, gam_getCurrentDeckName ());
+			if (PATH_TOO_SHORT == aStarIndex)
+			{
+				modifyScore(AI_MODE_FLEE, -80);
+#ifdef DEBUG_AI
+				std:cout << "[ " << arrayIndex << " ]" << " Too close to flee destination to get a path. Set patrolAction to FIND_WAYPOINT" << std::endl;
+#endif
+				patrolAction = FIND_WAYPOINT;
+				checkScores();
+			}
 			break;
 
 		case AI_MODE_HEAL:
@@ -647,14 +709,14 @@ b2Vec2 paraAI::findHealingTile ()
 	float  currentDistance;
 	b2Vec2 healingDestination;
 
-	if (shipdecks.at (gam_getCurrentDeckName ()).healing.empty ())
+	if (g_shipDeckItr->second.healing.empty ())
 	{
 		healingDestination.x = -1;
 		healingDestination.y = -1;
 		return healingDestination;
 	}
 
-	for (auto healItr : shipdecks.at (gam_getCurrentDeckName ()).healing)
+	for (auto healItr : g_shipDeckItr->second.healing)
 	{
 		currentDistance = b2Distance (worldPositionInMeters, healItr.worldPosInMeters);
 		if (currentDistance > 2.0)      // Needs to be far enough away to create a aStar path
@@ -667,6 +729,85 @@ b2Vec2 paraAI::findHealingTile ()
 		}
 	}
 	return healingDestination;
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
+// Can this tile be used as a flee tile
+bool paraAI::isFleeTile(int tileIndex)
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	int whichTile = g_shipDeckItr->second.tiles[tileIndex];
+
+	if (whichTile > NO_PASS_TILE)
+		return true;
+	else
+		return false;
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
+// Find a tile furthest away from the player and move to it
+b2Vec2 paraAI::findFleeTile()
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	b2Vec2 destPositionInTiles;
+	bool haveFoundFleeTile = false;
+	bool onLeftSide = false;
+	int coordY;
+	int coordX;
+
+	int halfwayPoint = hiresVirtualWidth / 2;
+
+	if (playerDroid.worldPosInPixels.x > halfwayPoint)  // Try away from player position
+	{
+		coordX = 0;             // Start looking from left side of ship
+		onLeftSide = true;
+	}
+	else
+	{
+		coordX     = g_shipDeckItr->second.levelDimensions.x;       // Start looking from right side of ship
+		onLeftSide = false;
+	}
+
+	destPositionInTiles = sys_convertToPixels(worldPositionInMeters);
+	destPositionInTiles = sys_convertToTiles(destPositionInTiles);
+
+	coordY = destPositionInTiles.y;
+
+	while (!haveFoundFleeTile)
+	{
+		if (onLeftSide)
+			coordX++;
+		else
+			coordX--;
+
+		if (isFleeTile((coordY * g_shipDeckItr->second.levelDimensions.x) + coordX))
+		{
+			destPositionInTiles.x = coordX;
+			destPositionInTiles.y = coordY;
+			return destPositionInTiles;
+		}
+
+		if (onLeftSide)
+		{
+			if (coordX >= static_cast<int>(g_shipDeckItr->second.levelDimensions.x))
+			{
+				destPositionInTiles.x = -1;
+				destPositionInTiles.y = -1;
+				return destPositionInTiles;
+			}
+		}
+		else
+		{
+			if (coordX <= 0)
+			{
+				destPositionInTiles.x = -1;
+				destPositionInTiles.y = -1;
+				return destPositionInTiles;
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -711,9 +852,11 @@ void paraAI::process (b2Vec2 newWorldPosInMeters)
 			break;
 
 		case AI_MODE_ATTACK:
+			attack ();
 			break;
 
 		case AI_MODE_FLEE:
+			flee ();
 			break;
 
 		case AI_MODE_HEAL:
@@ -731,7 +874,7 @@ void paraAI::process (b2Vec2 newWorldPosInMeters)
 void paraAI::showValues ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto droidItr : shipdecks.at (gam_getCurrentDeckName ()).droid)
+	for (auto droidItr : g_shipDeckItr->second.droid)
 	{
 		con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%i %i %i %i %i %i %s - %s aStar %i ", droidItr.index, droidItr.ai.ai[0], droidItr.ai.ai[1], droidItr.ai.ai[2], droidItr.ai.ai[3], droidItr.ai.ai[4], getString (droidItr.ai.getCurrentMode ()).c_str (),
 		                                                            droidItr.ai.getCurrentMode () == AI_MODE_PATROL ? droidItr.ai.getPatrolAction ().c_str () : " ", droidItr.ai.getAStarIndex ()));
@@ -762,4 +905,103 @@ int paraAI::getHealScore ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	return ai[AI_MODE_HEAL];
+}
+
+float desiredAttackDistance = 6;    // meters
+float paddingSize = 2;
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
+// If droid can not see target for period of time - then stop attack and disregard target
+void paraAI::processLOSTimeout()
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	static float LOSTimeoutDelay = 1.0f;
+
+	if (g_shipDeckItr->second.droid[arrayIndex].visibleToPlayer)
+	{
+		LOSTimeoutDelay = 1.0f;
+		LOSTimeoutCounter = LOSTimeoutDelayValue;
+		return;
+	}
+
+	LOSTimeoutDelay -= 1.0f * 0.4f;
+	if (LOSTimeoutDelay < 0.0)
+	{
+		LOSTimeoutDelay = 1.0f;
+		LOSTimeoutCounter--;
+		if (LOSTimeoutCounter < 0)
+		{
+			LOSTimeoutCounter = LOSTimeoutDelayValue;
+			targetDroid = -2;
+			modifyScore(AI_MODE_ATTACK, -60);
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
+// Start attacking the target
+void paraAI::attack()
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	float currentDistance;
+	b2Vec2 directionVector;
+
+	//
+	// Stop attack if loss of target for period of time
+	processLOSTimeout();
+	//
+	// Stop having a target if the droid is not in a normal state
+	if (targetDroid != -1)
+	{
+		if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_NORMAL)
+			targetDroid = NO_ATTACK_TARGET;
+	}
+
+	if (targetDroid == NO_ATTACK_TARGET)
+		return;
+
+	if (targetDroid == -1)      // Get distance and direction to the player
+	{
+		currentDistance = b2Distance (sys_convertToMeters (playerDroid.worldPosInPixels), sys_convertToMeters (g_shipDeckItr->second.droid[arrayIndex].worldPosInPixels));
+		directionVector = sys_convertToMeters (playerDroid.worldPosInPixels) - sys_convertToMeters (g_shipDeckItr->second.droid[arrayIndex].worldPosInPixels);
+	}
+	else        // Get distance and direction to the other droid
+	{
+		currentDistance = b2Distance (sys_convertToMeters(g_shipDeckItr->second.droid[targetDroid].worldPosInPixels), sys_convertToMeters (g_shipDeckItr->second.droid[arrayIndex].worldPosInPixels));
+		directionVector = sys_convertToMeters (g_shipDeckItr->second.droid[targetDroid].worldPosInPixels) - sys_convertToMeters (g_shipDeckItr->second.droid[arrayIndex].worldPosInPixels);
+	}
+
+	if ((currentDistance > desiredAttackDistance) &&
+	(currentDistance < desiredAttackDistance + paddingSize))
+	{
+		currentVelocity.SetZero();
+		if (dataBaseEntry[g_shipDeckItr->second.droid[arrayIndex].droidType].canShoot)
+		{
+			if (targetDroid != NO_ATTACK_TARGET)
+			{
+				if (g_shipDeckItr->second.droid[arrayIndex].weaponCanFire)
+					gam_addBullet (arrayIndex);
+			}
+		}
+		return;
+	}
+
+	if (currentDistance > desiredAttackDistance)    // Droid is too far away - move closer
+	{
+		directionVector.Normalize();
+
+		directionVector *= currentSpeed;
+		currentVelocity = directionVector;
+		return;
+	}
+
+	if (currentDistance < desiredAttackDistance)
+	{
+		directionVector = -directionVector;
+		directionVector *= currentSpeed;
+		currentVelocity = directionVector;
+		return;
+	}
 }

@@ -517,16 +517,16 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	// Physicss
 	sys_setupEnemyPhysics (deckName);
 	sys_setupSolidWalls (deckName);
-	gam_doorTriggerSetup (deckName);
+	gam_doorTriggerSetup ();
 	gam_findTerminalPositions (deckName);
 	gam_findLiftPositions (deckName);
-	gam_findHealingTilesPhysics (deckName);
+	gam_findHealingTilesPhysics ();
 
 	// Bullets
 	gam_initBulletArray ();
 
 	playerDroid.previousWorldPosInPixels = {-1, -1};
-	playerDroid.worldPosInPixels         = gam_getLiftWorldPosition (whichLift, deckName);
+	playerDroid.worldPosInPixels         = gam_getLiftWorldPosition (whichLift);
 	sys_setPlayerPhysicsPosition (playerDroid.worldPosInPixels);
 
 	// AI

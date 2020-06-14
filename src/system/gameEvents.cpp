@@ -101,9 +101,6 @@ void gam_processGameEventQueue ()
 
 		if (tempEvent->counter > 0)  // If not 0 - re-add to the queue with the reduced count
 		{
-
-			std::cout << "Game queue - readd event counter : " << tempEvent->counter << " Queue size : " << gameEvents.size() << std::endl;
-
 			tempEvent->counter--;
 			gam_addEvent (tempEvent->action, tempEvent->counter, tempEvent->gameText1+"|"+tempEvent->gameText2+"|"+tempEvent->gameText3);
 

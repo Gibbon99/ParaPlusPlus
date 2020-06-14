@@ -240,7 +240,6 @@ void gam_processActionKey ()
 						return;
 
 					gam_addBullet (-1);
-					playerDroid.weaponCanFire = false;
 					gui.setState (KEY_ACTION, false, 0);
 					gam_setHudText ("hudRecharging");
 					return;
@@ -272,7 +271,6 @@ void gam_checkPlayerHealth ()
 
 	if (playerDroid.currentHealth < static_cast<int>(dangerHealthLevel))
 	{
-		std::cout << "Danger health level : " << dangerHealthLevel << std::endl;
 		playerDroid.sprite.setLowHealth (true);
 		if (!lowEnergySoundPlaying)
 		{
@@ -332,7 +330,7 @@ void gam_damageToPlayer (int damageSource, int sourceDroid)
 	}
 
 #ifdef MY_DEBUG
-	std::cout << "player health now : " << playerDroid.currentHealth << std::endl;  // TODO - Remove
+//	std::cout << "player health now : " << playerDroid.currentHealth << std::endl;  // TODO - Remove
 #endif
 
 	gam_checkPlayerHealth ();

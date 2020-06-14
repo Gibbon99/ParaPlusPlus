@@ -164,6 +164,7 @@ void sys_setNewMode (int newMode, bool doFade)
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 
+			audio.stopAllChannels();
 			gui.setCurrentScreen(gui.getIndex(GUI_OBJECT_SCREEN, "mainMenu"));
 			gui.setActiveObject(gui.getCurrentScreen(), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
 			break;

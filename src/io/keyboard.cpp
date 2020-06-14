@@ -11,26 +11,6 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Callback for filtering events
-int filterEvents (void *userData, SDL_Event *event)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	static int dropCount = 0;
-
-	if (event->type == SDL_KEYDOWN)
-	{
-		dropCount++;
-		if (dropCount > 5)
-		{
-			dropCount = 0;
-			return 1;
-		}
-		return 0;
-	}
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
 // Process the keyboard state and populate the keybindings array
 void io_processKeyboardState ()
 //----------------------------------------------------------------------------------------------------------------------
@@ -41,8 +21,6 @@ void io_processKeyboardState ()
 		return;
 
 //io_mapJoyToInput();       // TODO uncomment and calibrate
-
-
 
 	switch (currentMode)
 	{
@@ -99,30 +77,44 @@ void io_processKeyboardState ()
 			break;
 
 		case MODE_GAME:
-			if (!gam_pauseModeOn())
+			if (gui.getCurrentDialogbox() == NO_DIALOG_BOX)
 			{
-				gam_processPlayerMovement ();
-				gam_processActionKey ();
-
-				if (gui.keyDown (KEY_CONSOLE))
+				if (!gam_pauseModeOn ())
 				{
-					sys_setNewMode (MODE_CONSOLE_EDIT, true);
-					gui.setState (KEY_CONSOLE, false, 0);
+					gam_processPlayerMovement ();
+					gam_processActionKey ();
+
+					if (gui.keyDown (KEY_CONSOLE))
+					{
+						sys_setNewMode (MODE_CONSOLE_EDIT, true);
+						gui.setState (KEY_CONSOLE, false, 0);
+					}
+
+					if (gui.keyDown (KEY_PAUSE))
+					{
+						gam_changePauseMode (MODE_GAME_PAUSE_ON);
+						gui.setState (KEY_PAUSE, false, 0);
+					}
+
+					if (gui.keyDown (KEY_ESCAPE))
+					{
+						gui.setState (KEY_ESCAPE, false, 0);
+						gui.setCurrentDialogbox (gui.getIndex (GUI_OBJECT_DIALOGBOX, "quitGameDialogbox"));
+						gui.setActiveObjectDialogbox (gui.getCurrentDialogbox (), GUI_OBJECT_BUTTON, "quitGameDialogbox.denyButton");
+					}
 				}
-
-				if (gui.keyDown(KEY_PAUSE))
+				else
 				{
-					gam_changePauseMode (MODE_GAME_PAUSE_ON);
-					gui.setState(KEY_PAUSE, false, 0);
+					if (gui.keyDown (KEY_PAUSE))
+					{
+						gam_changePauseMode (MODE_GAME_PAUSE_OFF);
+						gui.setState (KEY_PAUSE, false, 0);
+					}
 				}
 			}
-			else
+			else    // Only read dialogbox keyboard
 			{
-				if (gui.keyDown(KEY_PAUSE))
-				{
-					gam_changePauseMode (MODE_GAME_PAUSE_OFF);
-					gui.setState(KEY_PAUSE, false, 0);
-				}
+
 			}
 			break;
 
@@ -149,10 +141,7 @@ void io_setKeyboardState (SDL_Scancode keycode, int action, bool repeatPress)
 		{
 			if (keycode == gui.getScancode (i))
 			{
-//				if ((repeatPress == false) && (gui.getRepeatOff () == true))
 				gui.setState (i, true, 0);
-//				else
-//					gui.setState (i, false, 0);
 			}
 		}
 	}

@@ -52,10 +52,12 @@ public:
 
 	int getAStarIndex ();
 
-	int getArrayIndex();
+	void setAStarIndex (int newIndex);
 
-	int getTargetDroid();
-	
+	int getArrayIndex ();
+
+	int getTargetDroid ();
+
 	void sanityCheck ();
 
 	std::string getString (int whichMode);
@@ -108,6 +110,16 @@ public:
 
 	b2Vec2 findHealingTile ();
 
+	b2Vec2 findFleeTile ();
+
+	void flee ();
+
+	void attack ();
+
+	void processLOSTimeout();
+
+	bool isFleeTile (int tileIndex);
+
 private:
 	int       arrayIndex{};
 	bool      haveAStarDestination{};
@@ -118,12 +130,14 @@ private:
 	float     currentSpeed{};
 	float     healthPercent{};
 	float     aiActionCounter{};
+	float     LOSTimeoutCounter;
+	float     LOSTimeoutDelayValue      = 35.0f;
 	b2Vec2    currentVelocity           = {0, 0};
 	int       wayPointIndex             = 0;
 	int       wayPointDirection         = 0;
 	int       currentAIMode             = 0;
 	int       patrolAction              = 0;
-	int       targetDroid{};
+	int       targetDroid               = -2;   // Target nobody yet
 	float     wayPointDistanceInMeters  = 0.0f;
 	b2Vec2    destinationCoordsInMeters = {0, 0};
 	b2Vec2    worldPositionInMeters     = {0, 0};

@@ -232,9 +232,14 @@ void gui_renderSideView ()
 	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
 	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
 
-	textures.at ("planet").render ();
-
-//	roundedBoxRGBA (renderer.renderer, 0, boundaryBottomY, renderer.renderWidth (), renderer.renderWidth (), 0, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	try
+	{
+		textures.at ("planet").render ();
+	}
+	catch (std::out_of_range &outOfRange)
+	{
+		std::cout << "Can not find texture [ planet ] to render." << std::endl;
+	}
 
 	gui_renderStarfield ();
 
@@ -312,12 +317,14 @@ void gui_renderSideView ()
 		}
 	}
 
-	/*
+
 	//
 	// Redraw the level and tunnel that overlap
 	if ((currentTunnel != 3) || (currentTunnel != 6))
 	{
 		count = 13;
+		gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
+		count = 3;
 		gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
 	}
 	else
@@ -329,7 +336,7 @@ void gui_renderSideView ()
 			gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
 		}
 	}
-*/
+
 	//
 	// fill in engine part
 	gui_sideviewDrawRect (sideviewLevels[7].x1, sideviewLevels[7].y1, sideviewLevels[7].x2, sideviewLevels[7].y2, sideviewColors[SIDEVIEW_ENGINE_COLOR].color);

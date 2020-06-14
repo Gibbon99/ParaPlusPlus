@@ -76,33 +76,37 @@ paraBullet gam_createBullet (int bulletSourceIndex, Uint32 bulletID)
 		newWorldPosInMeters = sys_convertToMeters (playerDroid.worldPosInPixels);
 		//
 		// Set its direction
-		tempBullet.velocity = newVelocity;
-		tempBullet.velocity.Normalize ();
-		tempVelocity = tempBullet.velocity;
+		tempVelocity = newVelocity;
+		tempVelocity.Normalize();
 		tempVelocity *= 50.0f;
+		tempBullet.velocity = tempVelocity;
+
 		tempBullet.worldDestInMeters = tempVelocity + sys_convertToMeters (playerDroid.worldPosInPixels);
 	}
-	else
+	else        // Bullet from Droid
 	{
-		bulletType = dataBaseEntry[shipdecks.at (gam_getCurrentDeckName ()).droid[bulletSourceIndex].droidType].bulletType;
+		bulletType = dataBaseEntry[g_shipDeckItr->second.droid[bulletSourceIndex].droidType].bulletType;
 
 		if (g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid () == -1)
 		{
 			// Aim at player position
-			newVelocity = shipdecks.at (gam_getCurrentDeckName ()).droid[bulletSourceIndex].worldPosInPixels - playerDroid.worldPosInPixels;
+			newVelocity = playerDroid.worldPosInPixels - g_shipDeckItr->second.droid[bulletSourceIndex].worldPosInPixels;
+			tempBullet.worldDestInMeters = sys_convertToMeters(playerDroid.worldPosInPixels);
 		}
 		else
 		{
 			// Aim at other droid
-			newVelocity = shipdecks.at (gam_getCurrentDeckName ()).droid[bulletSourceIndex].worldPosInPixels - g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid ()].worldPosInPixels;
+			newVelocity = g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid ()].worldPosInPixels - g_shipDeckItr->second.droid[bulletSourceIndex].worldPosInPixels;
+			tempBullet.worldDestInMeters = sys_convertToMeters(g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid ()].worldPosInPixels);
 		}
 
-		newWorldPosInMeters = sys_convertToMeters (shipdecks.at (gam_getCurrentDeckName ()).droid[bulletSourceIndex].worldPosInPixels);
+		newWorldPosInMeters = sys_convertToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].worldPosInPixels);
 		//
 		// Set its direction
-		tempBullet.velocity = newVelocity;
-		tempBullet.velocity.Normalize ();
-		tempBullet.velocity.operator*= (bulletMoveSpeed);
+		tempVelocity = newVelocity;
+		tempVelocity.Normalize();
+		tempVelocity *= bulletMoveSpeed;
+		tempBullet.velocity = tempVelocity;
 	}
 
 	if (bulletType != BULLET_TYPE_DISRUPTER)
@@ -165,7 +169,7 @@ paraBullet gam_createBullet (int bulletSourceIndex, Uint32 bulletID)
 			break;
 
 		case BULLET_TYPE_DISRUPTER:
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "disrupter");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "disruptor");
 			tempBullet.disrupterFadeAmount = disrupterFadeAmount;
 			tempBullet.disrupterFade       = 250;
 			gam_doDisrupterDamage (bulletSourceIndex);
@@ -253,6 +257,11 @@ void gam_addBullet (int bulletSourceIndex)
 {
 	int    indexCounter = 0;
 	Uint32 bulletID;
+
+	if (bulletSourceIndex == -1)
+		playerDroid.weaponCanFire = false;
+	else
+		g_shipDeckItr->second.droid[bulletSourceIndex].weaponCanFire = false;
 
 	bulletID = SDL_GetTicks ();
 

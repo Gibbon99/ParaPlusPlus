@@ -3,9 +3,9 @@
 #include "../main.h"
 
 // Variables to start everything
-extern int gameWinWidth;
-extern int gameWinHeight;
-extern int windowWidth;
+extern int         gameWinWidth;
+extern int         gameWinHeight;
+extern int         windowWidth;
 extern int         windowHeight;
 extern int         hiresVirtualWidth;
 extern int         hiresVirtualHeight;
@@ -36,4 +36,4 @@ extern std::string activeBackingTexture;
 void sys_startSystems ();
 
 // Start to load and prepare everything else
-static int sys_startInit(void *ptr);
+static int sys_startInit (void *ptr);

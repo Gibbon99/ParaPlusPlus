@@ -1,10 +1,12 @@
 #include <cstdarg>
 #include <physfs.h>
 #include <iostream>
+#include <utility>
 #include <game/audio.h>
 #include <io/console.h>
 #include <system/util.h>
 #include "classes/paraGui.h"
+
 
 void paraGui::AddRef ()
 {
@@ -14,6 +16,15 @@ void paraGui::AddRef ()
 void paraGui::ReleaseRef ()
 {
 
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the index of the current action object from the current dialogbox
+int paraGui::getActiveObjectIndexDialogbox ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return guiDialogBoxes[currentDialogbox].objectIDIndex[guiDialogBoxes[currentDialogbox].selectedObject];
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -31,6 +42,15 @@ int paraGui::getActiveObjectIndex ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Return the currently active dialogbox
+int paraGui::getCurrentDialogbox ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return currentDialogbox;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Return the currently active screen
 int paraGui::getCurrentScreen ()
 //----------------------------------------------------------------------------------------------------------------------
@@ -40,11 +60,40 @@ int paraGui::getCurrentScreen ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Set a new active object for a dialogbox
+void paraGui::setActiveObjectDialogbox (int whichDialogbox, int objectType, std::string objectID)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int indexCount = 0;
+
+	if (guiDialogBoxes.empty ())
+		return;
+
+	for (auto indexItr : guiDialogBoxes[whichDialogbox].objectIDIndex)
+	{
+		switch (guiDialogBoxes[whichDialogbox].objectType[indexCount])
+		{
+			case GUI_OBJECT_BUTTON:
+				if (guiButtons[guiDialogBoxes[whichDialogbox].objectIDIndex[indexCount]].ID == objectID)
+				{
+					guiDialogBoxes[whichDialogbox].selectedObject = indexCount;
+				}
+				break;
+		}
+		indexCount++;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Set a new active object
 void paraGui::setActiveObject (int whichScreen, int objectType, std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int indexCount = 0;
+
+	if (guiScrollBoxes.empty ())
+		return;
 
 	for (auto indexItr : guiScreens[whichScreen].objectIDIndex)
 	{
@@ -81,6 +130,15 @@ void paraGui::setActiveObject (int whichScreen, int objectType, std::string obje
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Set a new dialog box
+void paraGui::setCurrentDialogbox (int newDialogbox)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	currentDialogbox = newDialogbox;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Change to a new GUI screen
 void paraGui::setCurrentScreen (int newScreen)
 //----------------------------------------------------------------------------------------------------------------------
@@ -90,6 +148,15 @@ void paraGui::setCurrentScreen (int newScreen)
 #ifdef MY_GUI_DEBUG
 	std::cout << "Setting currentScreen to : " << currentScreen << std::endl;
 #endif
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the index of the object Index
+int paraGui::indexByIndexDialogbox (int whichObject)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return guiDialogBoxes[currentDialogbox].objectIDIndex[whichObject];
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -104,10 +171,28 @@ int paraGui::indexByIndex (int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index into the objectType array by index
+int paraGui::typeByIndexDialogbox (int whichObject)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return guiDialogBoxes[currentDialogbox].objectType[whichObject];
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the index into the objectType array by index
 int paraGui::typeByIndex (int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScreens[currentScreen].objectType[whichObject];
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the currently selected object on the current dialobox
+int paraGui::selectedObjectDialogbox ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return guiDialogBoxes[currentDialogbox].selectedObject;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -121,11 +206,31 @@ int paraGui::selectedObject ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Return how many elements are on the currently active dialobox
+int paraGui::numElementsDialogbox ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return guiDialogBoxes[currentDialogbox].objectIDIndex.size ();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Return how many elements are on the currently active screen
 int paraGui::numElements ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScreens[currentScreen].objectIDIndex.size ();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Set the dimensions of the screen the GUI is rendering to when in game mode
+// Dialogboxes rendered in Gamemode are on lower resolution screen
+void paraGui::setRenderDimensionsGameMode (int width, int height)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	renderWidthGame  = width;
+	renderHeightGame = height;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -144,6 +249,28 @@ void paraGui::setRenderDimensions (int width, int height)
 bool paraGui::pointInBox (int x, int y, __BOUNDING_BOX checkBox)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	float ratioX;
+	float ratioY;
+	float tempX;
+	float tempY;
+
+	ratioX = static_cast<float>(gameWinWidth) / static_cast<float>(windowWidth);
+	ratioY = static_cast<float>(gameWinHeight) / static_cast<float>(windowHeight);
+
+	if (gui.getCurrentDialogbox () != NO_DIALOG_BOX)
+	{
+		checkBox.x1 *= ratioX;
+		checkBox.y1 *= ratioY;
+		checkBox.x2 *= ratioX;
+		checkBox.y2 *= ratioY;
+
+		tempX = static_cast<float>(x) * ratioX;
+		tempY = static_cast<float>(y) * ratioY;
+
+		x = static_cast<int>(tempX);
+		y = static_cast<int>(tempY);
+	}
+
 	if (x < checkBox.x1)
 		return false;
 	if (y < checkBox.y1)
@@ -168,15 +295,16 @@ void paraGui::setOutputFunction (funcPtrIntStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Init the GUI system
-void paraGui::init (funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, std::string newFileName)
+void paraGui::init (funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, int newRenderWidthGame, int newRenderHeightGame, std::string newFileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	setOutputFunction (outputFunction);
 	setRenderDimensions (newRenderWidth, newRenderHeight);
+	setRenderDimensionsGameMode (newRenderWidthGame, newRenderHeightGame);
 
 	funcOutput    = outputFunction;
 	funcGetString = getStringFunc;
-	fileName      = newFileName;
+	fileName      = std::move (newFileName);
 	load ();
 }
 
@@ -187,6 +315,7 @@ void paraGui::restart ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScreens.clear ();
+	guiDialogBoxes.clear ();
 	guiButtons.clear ();
 	guiSliders.clear ();
 	guiLabels.clear ();
@@ -252,6 +381,25 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 					return indexCounter;
 				}
 
+
+				indexCounter++;
+			}
+			return GUI_OBJECT_NOT_FOUND;
+			break;
+
+		case GUI_OBJECT_DIALOGBOX:
+			for (const auto &itr : guiDialogBoxes)
+			{
+#ifdef MY_GUI_DEBUG
+				std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ]" << std::endl;
+#endif
+				if (itr.ID == objectID)
+				{
+#ifdef MY_GUI_DEBUG
+					std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ] - FOUND" << std::endl;
+#endif
+					return indexCounter;
+				}
 
 				indexCounter++;
 			}
@@ -353,6 +501,7 @@ void paraGui::create (int objectType, std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	__SCREEN_OBJECT newScreen;
+	__GUI_DIALOGBOX newDialogbox;
 	__GUI_OBJECT    newButton;
 	__GUI_SLIDER    newSlider;
 	__GUI_OBJECT    newLabel;
@@ -390,6 +539,29 @@ void paraGui::create (int objectType, std::string objectID)
 			//
 			// Now add it
 			guiScreens.push_back (newScreen);
+			break;
+
+		case GUI_OBJECT_DIALOGBOX:
+			newDialogbox.ID             = objectID;
+			newDialogbox.selectedObject = 0;
+			if (guiDialogBoxes.empty ())
+			{
+				guiDialogBoxes.push_back (newDialogbox);
+				return;
+			}
+			//
+			// Check it doesn't already exist
+			for (auto dialogboxItr : guiDialogBoxes)
+			{
+				if (dialogboxItr.ID == objectID)
+				{
+					funcOutput (-1, int_getString ("Dialogbox [ %s ] already exists.", objectID.c_str ()));
+					return;
+				}
+			}
+			//
+			// Now add it
+			guiDialogBoxes.push_back (newDialogbox);
 			break;
 
 		case GUI_OBJECT_BUTTON:
@@ -793,6 +965,38 @@ void paraGui::setScrollSpeed (int objectType, const std::string &objectID, doubl
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Add an object to a dialogbox
+void paraGui::addToDialogbox (int objectType, std::string objectID, std::string dialogboxID)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int dialogboxIndex = 0;
+	int objectIndex    = 0;
+	//
+	// Find the index for the dialogbox to have the object added to
+	dialogboxIndex = getIndex (GUI_OBJECT_DIALOGBOX, dialogboxID);
+	if (GUI_OBJECT_NOT_FOUND == dialogboxIndex)
+	{
+		funcOutput (-1, int_getString ("Unable to locate dialogbox [ %s ]. Had it been created ?.", dialogboxID.c_str ()));
+		return;
+	}
+
+	objectIndex = getIndex (objectType, objectID);
+	if (GUI_OBJECT_NOT_FOUND == objectIndex)
+	{
+		funcOutput (-1, int_getString ("Unable to locate object to add to dialogbox [ %s ]. Has it been created ?.", objectID.c_str ()));
+		return;
+	}
+
+	guiDialogBoxes[dialogboxIndex].objectIDIndex.push_back (objectIndex);
+	guiDialogBoxes[dialogboxIndex].objectType.push_back (objectType);
+
+#ifdef DEBUG_GUI_SETUP
+	funcOutput (-1, int_getString ("Added Object [ %s ] to Dialogbox [ %s ]", objectID.c_str (), dialogboxID.c_str ()));
+#endif
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Add an object to a screen
 void paraGui::addToScreen (int objectType, std::string objectID, std::string screenID)
 //----------------------------------------------------------------------------------------------------------------------
@@ -849,6 +1053,30 @@ void paraGui::setPosition (int objectType, std::string objectID, int newRadius, 
 
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			guiDialogBoxes[objectIndex].cornerRadius   = newRadius;
+
+			if (GUI_COORD_PERCENT == coordType)
+			{
+				tempWidth  = renderWidth * (newWidth / 100.0);
+				tempHeight = renderHeight * (newHeight / 100.0);
+
+				guiDialogBoxes[objectIndex].boundingBox.x1 = renderWidthGame * (newPosX / 100.0);
+				guiDialogBoxes[objectIndex].boundingBox.y1 = renderHeightGame * (newPosY / 100.0);
+
+				guiDialogBoxes[objectIndex].boundingBox.x2 = guiDialogBoxes[objectIndex].boundingBox.x1 + tempWidth;
+				guiDialogBoxes[objectIndex].boundingBox.y2 = guiDialogBoxes[objectIndex].boundingBox.y1 + tempHeight;
+			}
+			else
+			{
+				guiDialogBoxes[objectIndex].boundingBox.x1 = newPosX;
+				guiDialogBoxes[objectIndex].boundingBox.y1 = newPosY;
+				guiDialogBoxes[objectIndex].boundingBox.x2 = guiDialogBoxes[objectIndex].boundingBox.x1 + newWidth;
+				guiDialogBoxes[objectIndex].boundingBox.y2 = guiDialogBoxes[objectIndex].boundingBox.y1 + newHeight;
+			}
+			guiDialogBoxes[objectIndex].positionCalled = true;
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			guiButtons[objectIndex].cornerRadius   = newRadius;
 
@@ -1031,6 +1259,19 @@ std::string paraGui::getFontName (int objectType, int objectIndex)
 {
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			if (guiDialogBoxes.size () == 0)
+				return "";
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiDialogBoxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiDialogBoxes.size ())));
+				return "";
+			}
+
+			return guiDialogBoxes[objectIndex].fontName;
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			if (guiButtons.size () == 0)
 				return "";
@@ -1133,6 +1374,10 @@ void paraGui::setFontName (int objectType, std::string objectID, std::string new
 
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			guiDialogBoxes[objectIndex].fontName = std::move (newFontName);
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			guiButtons[objectIndex].fontName = std::move (newFontName);
 			break;
@@ -1192,6 +1437,11 @@ void paraGui::setLabel (int objectType, std::string objectID, int newGapSize, in
 
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			guiDialogBoxes[objectIndex].label   = newLabel;
+			guiDialogBoxes[objectIndex].gapSize = newGapSize;
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			guiButtons[objectIndex].label    = newLabel;
 			guiButtons[objectIndex].labelPos = newLabelPos;
@@ -1289,6 +1539,25 @@ void paraGui::setColorByIndex (int objectType, int objectIndex, int whichColor, 
 {
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			switch (whichColor)
+			{
+				case GUI_COL_ACTIVE:
+					guiDialogBoxes[objectIndex].hasFocusColor.r = red;
+					guiDialogBoxes[objectIndex].hasFocusColor.g = green;
+					guiDialogBoxes[objectIndex].hasFocusColor.b = blue;
+					guiDialogBoxes[objectIndex].hasFocusColor.a = alpha;
+					break;
+
+				case GUI_COL_ACTIVE_LABEL:
+					guiDialogBoxes[objectIndex].labelFocusColor.r = red;
+					guiDialogBoxes[objectIndex].labelFocusColor.g = green;
+					guiDialogBoxes[objectIndex].labelFocusColor.b = blue;
+					guiDialogBoxes[objectIndex].labelFocusColor.a = alpha;
+					break;
+			}
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			switch (whichColor)
 			{
@@ -1490,6 +1759,10 @@ void paraGui::setColor (int objectType, std::string objectID, int whichColor, in
 	{
 		switch (objectType)
 		{
+			case GUI_OBJECT_DIALOGBOX:
+				numObjects = guiDialogBoxes.size ();
+				break;
+
 			case GUI_OBJECT_BUTTON:
 				numObjects = guiButtons.size ();
 				break;
@@ -1566,6 +1839,10 @@ void paraGui::setReady (int objectType, std::string objectID, bool newState)
 
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			guiDialogBoxes[objectIndex].ready = newState;
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			guiButtons[objectIndex].ready = newState;
 			break;
@@ -1608,6 +1885,25 @@ std::string paraGui::getLabelText (int objectType, int objectIndex)
 {
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			if (guiDialogBoxes.size () == 0)
+				return "";
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiDialogBoxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Dialogbox index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiDialogBoxes.size ())));
+				return "";
+			}
+
+			if (guiDialogBoxes[objectIndex].label.size () == 0)
+			{
+				funcOutput (-1, int_getString ("Dialogbox index [ %i ] - [ %s ] has no label set.", objectIndex, guiDialogBoxes[objectIndex].label.empty () ? "Unknown" : guiDialogBoxes[objectIndex].label.c_str ()));
+				return "";
+			}
+
+			return guiDialogBoxes[objectIndex].label;
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			if (guiButtons.size () == 0)
 				return "";
@@ -1736,6 +2032,19 @@ int paraGui::getGapSize (int objectType, int objectIndex)
 {
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			if (guiDialogBoxes.size () == 0)
+				return GUI_OBJECT_NOT_FOUND;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiDialogBoxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiDialogBoxes.size ())));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			return guiDialogBoxes[objectIndex].gapSize;
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			if (guiButtons.size () == 0)
 				return GUI_OBJECT_NOT_FOUND;
@@ -1938,6 +2247,25 @@ int paraGui::getRadius (int objectType, int objectIndex)
 {
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			if (guiDialogBoxes.size () == 0)
+				return GUI_OBJECT_NOT_FOUND;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiDialogBoxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiDialogBoxes.size ())));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			if (!guiDialogBoxes[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiDialogBoxes[objectIndex].label.empty () ? "Unknown" : guiDialogBoxes[objectIndex].label.c_str ()));
+				return GUI_OBJECT_NOT_FOUND;
+			}
+
+			return guiDialogBoxes[objectIndex].cornerRadius;
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			if (guiButtons.size () == 0)
 				return GUI_OBJECT_NOT_FOUND;
@@ -2028,13 +2356,46 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 {
 	__PARA_COLOR badColor;
 
-	badColor.r = -1;
-	badColor.g = -1;
-	badColor.b = -1;
-	badColor.a = -1;
+	badColor.r = PARA_GUI_CODES::GUI_OBJECT_NOT_FOUND;
+	badColor.g = PARA_GUI_CODES::GUI_OBJECT_NOT_FOUND;
+	badColor.b = PARA_GUI_CODES::GUI_OBJECT_NOT_FOUND;
+	badColor.a = PARA_GUI_CODES::GUI_OBJECT_NOT_FOUND;
 
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			if (guiDialogBoxes.size () == 0)
+				return badColor;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiDialogBoxes.size ())))
+			{
+				funcOutput (-1, int_getString ("guiDialogBoxes index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiDialogBoxes.size ())));
+				return badColor;
+			}
+
+			if (!guiDialogBoxes[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("guiDialogBoxes index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiDialogBoxes[objectIndex].label.empty () ? "Unknown" : guiDialogBoxes[objectIndex].label.c_str ()));
+				return badColor;
+			}
+
+			switch (whichColor)
+			{
+				case GUI_COL_ACTIVE:
+					return guiDialogBoxes[objectIndex].hasFocusColor;
+					break;
+
+				case GUI_COL_ACTIVE_LABEL:
+					return guiDialogBoxes[objectIndex].labelFocusColor;
+					break;
+
+				default:
+					funcOutput (-1, int_getString ("Invalid color type."));
+					return badColor;
+					break;
+			}
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			if (guiButtons.size () == 0)
 				return badColor;
@@ -2291,13 +2652,32 @@ __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 {
 	__BOUNDING_BOX badBox{};
 
-	badBox.x1 = -1;
-	badBox.y1 = -1;
-	badBox.x2 = -1;
-	badBox.y2 = -1;
+	badBox.x1 = GUI_OBJECT_NOT_FOUND;
+	badBox.y1 = GUI_OBJECT_NOT_FOUND;
+	badBox.x2 = GUI_OBJECT_NOT_FOUND;
+	badBox.y2 = GUI_OBJECT_NOT_FOUND;
 
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			if (guiDialogBoxes.size () == 0)
+				return badBox;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiDialogBoxes.size ())))
+			{
+				funcOutput (-1, int_getString ("guiDialogBoxes index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiDialogBoxes.size ())));
+				return badBox;
+			}
+
+			if (!guiDialogBoxes[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("guiDialogBoxes index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiDialogBoxes[objectIndex].label.empty () ? "Unknown" : guiDialogBoxes[objectIndex].label.c_str ()));
+				return badBox;
+			}
+
+			return guiDialogBoxes[objectIndex].boundingBox;
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			if (guiButtons.size () == 0)
 				return badBox;
@@ -2439,6 +2819,29 @@ __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Find the object on the current dialogbox and make it active
+void paraGui::setActiveDialogbox (std::string objectID)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	unsigned long indexCount = 0;
+
+	for (indexCount = 0; indexCount != guiDialogBoxes[currentDialogbox].objectIDIndex.size (); indexCount++)
+	{
+		switch (guiDialogBoxes[currentDialogbox].objectType[indexCount])
+		{
+			case GUI_OBJECT_BUTTON:
+				if (guiButtons[guiDialogBoxes[currentDialogbox].objectIDIndex[indexCount]].ID == objectID)
+				{
+					guiDialogBoxes[currentDialogbox].selectedObject = (int) indexCount;
+					return;
+				}
+				break;
+		}
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Find the object on the current screen and make it active
 void paraGui::setActive (std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
@@ -2484,6 +2887,25 @@ bool paraGui::isReady (int objectType, int objectIndex)
 {
 	switch (objectType)
 	{
+		case GUI_OBJECT_DIALOGBOX:
+			if (guiDialogBoxes.size () == 0)
+				return false;
+
+			if ((objectIndex < 0) || (objectIndex > static_cast<int>(guiDialogBoxes.size ())))
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] is out of range. Between [ 0 ] and [ %i ].", static_cast<int>(guiDialogBoxes.size ())));
+				return false;
+			}
+
+			if (!guiDialogBoxes[objectIndex].positionCalled)
+			{
+				funcOutput (-1, int_getString ("Button index [ %i ] - [ %s ] has no coordinates set.", objectIndex, guiDialogBoxes[objectIndex].label.empty () ? "Unknown" : guiDialogBoxes[objectIndex].label.c_str ()));
+				return false;
+			}
+
+			return guiDialogBoxes[objectIndex].ready;
+			break;
+
 		case GUI_OBJECT_BUTTON:
 			if (guiButtons.size () == 0)
 				return false;
@@ -2599,7 +3021,7 @@ bool paraGui::isReady (int objectType, int objectIndex)
 			break;
 
 		default:
-			funcOutput (-1, int_getString ("Invalid object type. Unable to set state."));
+			funcOutput (-1, int_getString ("Unknown object type. Unable to get ready state."));
 			return false;
 			break;
 	}
@@ -2621,6 +3043,39 @@ bool paraGui::canBeSelected (int objectType, int whichObject)
 
 		default:
 			return false;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Check if the mouse is inside an elements bounding box on a dialogbox - active it if so
+void paraGui::processMousePositionDialogbox ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	static int previousElement = 0;
+
+	if (guiDialogBoxes.size () == 0)
+		return;
+
+	for (auto index = 0; index < static_cast<int>(guiDialogBoxes[currentDialogbox].objectType.size ()); index++)
+	{
+		if (canBeSelected (guiDialogBoxes[currentDialogbox].objectType[index], 0))
+		{
+			switch (guiDialogBoxes[currentDialogbox].objectType[index])
+			{
+				case GUI_OBJECT_BUTTON:
+					if (pointInBox (mouseX, mouseY, guiButtons[guiDialogBoxes[currentDialogbox].objectIDIndex[index]].boundingBox))
+					{
+						guiDialogBoxes[currentDialogbox].selectedObject = index;
+						if (previousElement != index)
+						{
+							gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
+							previousElement = index;
+						}
+					}
+					break;
+			}
+		}
 	}
 }
 
@@ -2677,6 +3132,84 @@ void paraGui::processMousePosition ()
 					}
 					break;
 			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Check movement actions
+void paraGui::processMovementKeysDialogbox ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int indexCount     = 1;
+	int selectedSlider = guiDialogBoxes[currentDialogbox].objectIDIndex[guiDialogBoxes[currentDialogbox].selectedObject];
+
+	if (keyBinding[KEY_RIGHT].active)
+	{
+		keyBinding[KEY_DOWN].active = false;
+		if (guiDialogBoxes[currentDialogbox].selectedObject != static_cast<int>(guiDialogBoxes[currentDialogbox].objectIDIndex.size ()) - 1)    // Don't go past number on dialogbox
+		{
+			while (!canBeSelected (guiDialogBoxes[currentDialogbox].objectType[guiDialogBoxes[currentDialogbox].selectedObject + indexCount], guiDialogBoxes[currentDialogbox].selectedObject + indexCount))
+			{
+				indexCount++;
+			}
+
+			guiDialogBoxes[currentDialogbox].selectedObject += indexCount;
+			if (indexCount > static_cast<int>(guiDialogBoxes[currentDialogbox].objectIDIndex.size ()))
+			{
+				indexCount = static_cast<int>(guiDialogBoxes[currentDialogbox].objectIDIndex.size ());
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
+			}
+			else
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
+		}
+		else
+		{
+			// play bad sound
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
+		}
+	}
+
+	if (keyBinding[KEY_LEFT].active)
+	{
+		keyBinding[KEY_UP].active = false;
+		indexCount = 1;
+		if (guiDialogBoxes[currentDialogbox].selectedObject > 0)
+		{
+			while (!canBeSelected (guiDialogBoxes[currentDialogbox].objectType[guiDialogBoxes[currentDialogbox].selectedObject - indexCount], 0))
+			{
+				indexCount++;
+				if ((guiDialogBoxes[currentDialogbox].selectedObject - indexCount) < 0)        // Stop out of bounds
+				{
+					gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
+					return;
+				}
+			}
+
+			if (guiDialogBoxes[currentDialogbox].selectedObject - indexCount == 0)
+			{
+				guiDialogBoxes[currentDialogbox].selectedObject = 0;
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
+				return;
+			}
+
+			if (guiDialogBoxes[currentDialogbox].selectedObject - indexCount < 0)
+			{
+				guiDialogBoxes[currentDialogbox].selectedObject = 0;
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
+				return;
+			}
+
+			guiDialogBoxes[currentDialogbox].selectedObject -= indexCount;
+			// Play good sound
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
+			if (guiDialogBoxes[currentDialogbox].selectedObject < 0)
+				guiDialogBoxes[currentDialogbox].selectedObject = 0;
+		}
+		else if (guiDialogBoxes[currentDialogbox].selectedObject == 0)
+		{
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 		}
 	}
 }
@@ -2821,6 +3354,42 @@ void paraGui::processMovementKeys ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Process action key for current dialog
+void paraGui::processActionDialogbox ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	int currentElement;
+
+	if (keyBinding[KEY_ACTION].active)
+	{
+		keyBinding[KEY_ACTION].active = false;
+
+		currentElement = guiDialogBoxes[currentDialogbox].objectIDIndex[guiDialogBoxes[currentDialogbox].selectedObject];
+		//
+		// Play good sound
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
+
+		switch (guiDialogBoxes[currentDialogbox].objectType[guiDialogBoxes[currentDialogbox].selectedObject])
+		{
+			case GUI_OBJECT_BUTTON:
+				if (actionSource == KEY_ACTION_MOUSE)
+				{
+					if (pointInBox (mouseX, mouseY, guiButtons[currentElement].boundingBox))
+					{
+						paraScriptInstance.run (guiButtons[guiDialogBoxes[currentDialogbox].objectIDIndex[guiDialogBoxes[currentDialogbox].selectedObject]].action, "");
+					}
+				}
+				else
+				{
+					paraScriptInstance.run (guiButtons[guiDialogBoxes[currentDialogbox].objectIDIndex[guiDialogBoxes[currentDialogbox].selectedObject]].action, "");
+				}
+				break;
+		}
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Process any actions keys
 void paraGui::processAction ()
 //----------------------------------------------------------------------------------------------------------------------
@@ -2830,7 +3399,9 @@ void paraGui::processAction ()
 	if (keyBinding[KEY_ACTION].active)
 	{
 		keyBinding[KEY_ACTION].active = false;
+
 		currentElement = guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject];
+
 		// Play good sound
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 
@@ -3298,7 +3869,17 @@ void paraGui::setTickedStatus (const std::string &objectID, int whichGroup, bool
 void paraGui::processGuiInput ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	processMousePosition ();
-	processMovementKeys ();
-	processAction ();
+	if (currentDialogbox == NO_DIALOG_BOX)
+	{
+		processMousePosition ();
+		processMovementKeys ();
+		processAction ();
+	}
+	else
+	{
+		processMousePositionDialogbox ();
+		processMovementKeysDialogbox ();
+		processActionDialogbox();
+	}
+
 }

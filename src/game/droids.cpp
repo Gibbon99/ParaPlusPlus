@@ -8,6 +8,7 @@
 #include <game/lineOfSight.h>
 #include <game/texture.h>
 #include <game/game.h>
+#include <sdl2_gfx/SDL2_gfxPrimitives.h>
 #include "game/droids.h"
 #include "game/score.h"
 
@@ -112,7 +113,7 @@ void gam_initDroids (std::string levelName)
 	shipdecks.at (levelName).numEnemiesAlive = shipdecks.at (levelName).numDroids;
 	for (auto &droidItr : shipdecks.at (levelName).droidTypes)
 	{
-		tempDroid.ai.initAI();
+		tempDroid.ai.initAI ();
 		tempDroid.ai.setArrayIndex (droidIndex);
 		tempDroid.droidType          = droidItr;
 		tempDroid.currentHealth      = dataBaseEntry[tempDroid.droidType].maxHealth;
@@ -127,9 +128,9 @@ void gam_initDroids (std::string levelName)
 		tempDroid.ai.setAcceleration (dataBaseEntry[tempDroid.droidType].accelerate);
 		tempDroid.ai.setMaxSpeed (dataBaseEntry[tempDroid.droidType].maxSpeed);
 
-		tempDroid.currentMode = DROID_MODE_NORMAL;
+		tempDroid.currentMode   = DROID_MODE_NORMAL;
 		tempDroid.weaponCanFire = true;
-		tempDroid.weaponDelay = 1.0f;
+		tempDroid.weaponDelay   = 1.0f;
 
 		tempDroid.sprite.create (tempDroid.droidName, 9, 1.0);
 
@@ -150,8 +151,7 @@ void gam_renderDroids (std::string levelName)
 
 	for (auto droidItr : g_shipDeckItr->second.droid)
 	{
-		if ((droidItr.currentMode == DROID_MODE_EXPLODING) ||
-		    (droidItr.currentMode == DROID_MODE_NORMAL) )
+		if ((droidItr.currentMode == DROID_MODE_EXPLODING) || (droidItr.currentMode == DROID_MODE_NORMAL))
 		{
 			worldPosInMeters = droidItr.body->GetPosition ();
 			droidItr.worldPosInPixels.x = worldPosInMeters.x * pixelsPerMeter;
@@ -164,12 +164,14 @@ void gam_renderDroids (std::string levelName)
 			if (droidItr.currentMode == DROID_MODE_NORMAL)
 				droidItr.sprite.setTintColor (0, 0, 0);     // Draw in black color
 			else
-				droidItr.sprite.setTintColor(255,255,255);  // Full color for explosion
+				droidItr.sprite.setTintColor (255, 255, 255);  // Full color for explosion
 
 			if (droidItr.visibleToPlayer)
 				droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0, static_cast<Uint8>(droidItr.visibleValue));
 
-//			droidItr.ai.renderVelocity ();
+			droidItr.ai.renderVelocity ();
+
+			gam_debugShowTarget (droidItr);
 		}
 	}
 }
@@ -192,25 +194,23 @@ void gam_animateDroids ()
 			droidItr.currentMode = DROID_MODE_FOR_REMOVAL;
 		}
 
-		gam_checkLOS(droidItr);
+		gam_checkLOS (droidItr);
 	}
 }
 
 //-----------------------------------------------------------------------------
 //
 // Recharge a droids weapon fire rate
-void gam_weaponRechargeDroid(droidClass whichDroid)
+void gam_weaponRechargeDroid (droidClass *whichDroid)
 //-----------------------------------------------------------------------------
 {
-	if (!whichDroid.weaponCanFire)
+	if (!whichDroid->weaponCanFire)
 	{
-		if (dataBaseEntry[whichDroid.droidType].canShoot)
-			whichDroid.weaponDelay -= 1.0f * dataBaseEntry[whichDroid.droidType].rechargeTime;
-
-		if (whichDroid.weaponDelay < 0.0)
+		whichDroid->weaponDelay -= 1.0f * 0.02f; //dataBaseEntry[whichDroid.droidType].rechargeTime;
+		if (whichDroid->weaponDelay < 0.0)
 		{
-			whichDroid.weaponDelay = 1.0f;
-			whichDroid.weaponCanFire = true;
+			whichDroid->weaponDelay   = 1.0f;
+			whichDroid->weaponCanFire = true;
 		}
 	}
 }
@@ -225,7 +225,8 @@ void gam_processAI ()
 	{
 		if (droidItr.currentMode == DROID_MODE_NORMAL)
 		{
-			gam_weaponRechargeDroid(droidItr);
+			if (dataBaseEntry[droidItr.droidType].canShoot)
+				gam_weaponRechargeDroid (&droidItr);
 
 			droidItr.ai.process (droidItr.body->GetPosition ());
 			droidItr.body->ApplyForce (droidItr.ai.getVelocity (), droidItr.body->GetWorldCenter (), true);
@@ -268,20 +269,20 @@ void gam_processCollision (int droidA)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Droid has lost all health - explode and remove
-void gam_explodeDroid(int droidIndex)
+void gam_explodeDroid (int droidIndex)
 //-------------------------------------------------------------------------------------------------------------
 {
-	g_shipDeckItr->second.droid[droidIndex].velocity = {0,0};
+	g_shipDeckItr->second.droid[droidIndex].velocity    = {0, 0};
 	g_shipDeckItr->second.droid[droidIndex].currentMode = DROID_MODE_EXPLODING;
-	g_shipDeckItr->second.droid[droidIndex].sprite.create("explosion", 25, explosionAnimationSpeed);
-	g_shipDeckItr->second.droid[droidIndex].sprite.setAnimateSpeed(explosionAnimationSpeed);      // Set for explosion animation
+	g_shipDeckItr->second.droid[droidIndex].sprite.create ("explosion", 25, explosionAnimationSpeed);
+	g_shipDeckItr->second.droid[droidIndex].sprite.setAnimateSpeed (explosionAnimationSpeed);      // Set for explosion animation
 
 	if (g_shipDeckItr->second.droid[droidIndex].droidType < 10)
-		gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode1");
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode1");
 	else
-		gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
 
-	gam_addEmitter(sys_convertToMeters(g_shipDeckItr->second.droid[droidIndex].worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+	gam_addEmitter (sys_convertToMeters (g_shipDeckItr->second.droid[droidIndex].worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -298,6 +299,8 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_NORMAL)
 		return;
 
+	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 64, 127, "damage");
+
 	switch (damageSource)
 	{
 		case PHYSIC_DAMAGE_BUMP:
@@ -306,85 +309,91 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 				if (sourceDroid != -1)  // Another droid has run into explosion
 				{
 					g_shipDeckItr->second.droid[sourceDroid].currentHealth -= explosionDamage;
-					gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 64, 127, "damage");
+				}
+				else
+				{
+					gam_damageToPlayer (PHYSIC_DAMAGE_EXPLOSION, targetDroid);
 				}
 				return;
 			}
 
 			if (sourceDroid == -1)  // Hit from player
 			{
+				g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 10);
+				g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid(sourceDroid);
 				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bounceDamage;
-				gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 100, 127, "collision1");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 100, 127, "collision1");
 				//
 				// Damage to player droid - bump and explosion damage done in this routine
 				gam_damageToPlayer (PHYSIC_DAMAGE_BUMP, targetDroid);
 			}
-			//
-			// See if droid is dead - set explosion sprite and change mode
-			if (g_shipDeckItr->second.droid[targetDroid].currentHealth < 0)
-			{
-				gam_explodeDroid(targetDroid);
-				return;
-			}
-
-//			g_shipDeckItr->second.droid[targetDroid].currentHealth < 0 ? 0 : g_shipDeckItr->second.droid[targetDroid].currentHealth;
 			break;
 
 		case PHYSIC_DAMAGE_BULLET:
+			//
+			// Set the target to the bullets source
+			if (dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].canShoot)
+			{
+				g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid (sourceDroid);
+				g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 40);
+			}
+			else    // or Flee if can not shoot back
+			{
+				g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_FLEE, 30);
+			}
 
-			g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid (sourceDroid);
-//			g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 40);   // TODO - Put this back in
-
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "damage");
-
-			if (-1 == sourceDroid)      // Player shot this bullet
+			if (sourceDroid == -1)      // Player shot this bullet
 			{
 				if (dataBaseEntry[playerDroid.droidType].canShoot)
 					g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bulletDamage;
 				else
 					g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[0].bulletDamage;
-
-				//
-				// See if droid is dead - set explosion sprite and change mode
-				if (g_shipDeckItr->second.droid[targetDroid].currentHealth < 0)
-				{
-					gam_explodeDroid(targetDroid);
-					return;
-				}
 			}
 			else        // Droid shot this bullet
 			{
-				if (sourceDroid == targetDroid)
-					return;
-
 				if (targetDroid != -1)  // Not the player hit by a bullet
 				{
-					gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "damage");
-					g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].bulletDamage;
+					g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bulletDamage;
 				}
-				else
+				else    // Player hit by droid bullet
 				{
-					//
-					// Player hit by bullet
-					gam_damageToPlayer (PHYSIC_DAMAGE_BULLET, targetDroid);
+					gam_damageToPlayer (PHYSIC_DAMAGE_BULLET, sourceDroid);
 				}
 			}
 			break;
 	}
 
-	newHealthPercent = static_cast<float>(shipdecks.at (gam_getCurrentDeckName ()).droid[targetDroid].currentHealth) / static_cast<float>(dataBaseEntry[shipdecks.at (gam_getCurrentDeckName ()).droid[targetDroid].droidType].maxHealth);
+	//
+	// See if droid is dead - set explosion sprite and change mode
+	if (g_shipDeckItr->second.droid[targetDroid].currentHealth < 0)
+	{
+		if (sourceDroid != -1)
+		{
+			g_shipDeckItr->second.droid[sourceDroid].ai.setTargetDroid (NO_ATTACK_TARGET);
+			g_shipDeckItr->second.droid[sourceDroid].ai.modifyScore (AI_MODE_ATTACK, -60);
+		}
+
+		gam_explodeDroid (targetDroid);
+		return;
+	}
+
+	//
+	// Do AI to see if Droid needs to heal
+	//
+	newHealthPercent = static_cast<float>(g_shipDeckItr->second.droid[targetDroid].currentHealth) / static_cast<float>(dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].maxHealth);
 	newHealthPercent *= 100.0;
 
 	newHealthPercent = newHealthPercent > 100 ? 100 : newHealthPercent;
 	newHealthPercent = newHealthPercent < 0 ? 0 : newHealthPercent;
 
-	shipdecks.at (gam_getCurrentDeckName ()).droid[targetDroid].ai.setHealthPercent (newHealthPercent);
-	shipdecks.at (gam_getCurrentDeckName ()).droid[targetDroid].ai.checkHealth ();
+	g_shipDeckItr->second.droid[targetDroid].ai.setHealthPercent (newHealthPercent);
+	g_shipDeckItr->second.droid[targetDroid].ai.checkHealth ();
 
+	//
+	// Work out the droid animation speed based on health
+	//
 	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_EXPLODING)
 	{
-		//
-		// Work out the droid animation speed based on health
 		newAnimationSpeed     = static_cast<float>(g_shipDeckItr->second.droid[targetDroid].currentHealth) / static_cast<float>(dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].maxHealth);
 		if (newAnimationSpeed < 0.0f)
 			newAnimationSpeed = 0.1f;
@@ -399,19 +408,32 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Check for any droids that need to be removed - died last tick
-void gam_removeDroids()
+void gam_removeDroids ()
 //-------------------------------------------------------------------------------------------------------------
 {
 	for (auto &droidItr : g_shipDeckItr->second.droid)
 	{
 		if (droidItr.currentMode == DROID_MODE_FOR_REMOVAL)
 		{
+			//
+			// Remove this dead droid from any that may be targeting it
+			for (auto &removeTargetItr : g_shipDeckItr->second.droid)
+			{
+				if (removeTargetItr.ai.getTargetDroid () == droidItr.index)
+				{
+					std::cout << "Removing dead droid : " << droidItr.index << " as target for : " << removeTargetItr.index << std::endl;
+
+					removeTargetItr.ai.setTargetDroid (NO_ATTACK_TARGET);
+					removeTargetItr.ai.modifyScore (AI_MODE_ATTACK, -55);
+				}
+			}
+
 			g_shipDeckItr->second.numEnemiesAlive--;
 
 			droidItr.currentMode = DROID_MODE_DEAD;
 			//
 			// Remove physics
-			droidItr.body->GetWorld()->DestroyBody(droidItr.body);
+			droidItr.body->GetWorld ()->DestroyBody (droidItr.body);
 			droidItr.body = nullptr;
 			//
 			// Free memory
@@ -419,22 +441,52 @@ void gam_removeDroids()
 			droidItr.userData = nullptr;
 			//
 			// Remove any path it may have been following
-			gam_removeWhichDroidPath(droidItr.ai.getArrayIndex());
+			gam_removeWhichDroidPath (droidItr.ai.getArrayIndex ());
 
 			if (droidItr.aStarIndex > -1)
 			{
- 				std::cout << "Removing aStar path from removed droid : " << droidItr.aStarIndex << std::endl;
+				std::cout << "Removing aStar path from removed droid : " << droidItr.aStarIndex << std::endl;
 				gam_AStarRemovePath (droidItr.aStarIndex);
 			}
 			//
 			// add to score
-			gam_modifyScore(dataBaseEntry[droidItr.droidType].score);
+			gam_modifyScore (dataBaseEntry[droidItr.droidType].score);
+
+			droidItr.currentMode = DROID_MODE_DEAD;
 		}
 	}
 	//
 	// See if the deck is empty
 	if (g_shipDeckItr->second.numEnemiesAlive == 0)
 	{
-		gam_setDeckIsDead();
+		gam_setDeckIsDead ();
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
+// Show the current droids attack target
+void gam_debugShowTarget (droidClass whichDroid)
+//-------------------------------------------------------------------------------------------------------------
+{
+	b2Vec2 startPos;
+	b2Vec2 endPos;
+
+	if (dataBaseEntry[whichDroid.droidType].canShoot)
+	{
+		if (whichDroid.ai.getTargetDroid() != NO_ATTACK_TARGET)
+		{
+			startPos = whichDroid.worldPosInPixels;
+
+			if (whichDroid.ai.getTargetDroid () == -1)
+				endPos = playerDroid.worldPosInPixels;
+			else
+				endPos = g_shipDeckItr->second.droid[whichDroid.ai.getTargetDroid ()].worldPosInPixels;
+
+			startPos = sys_worldToScreen (startPos, 100);
+			endPos   = sys_worldToScreen (endPos, 100);
+
+			thickLineRGBA (renderer.renderer, static_cast<Sint16>(startPos.x), static_cast<Sint16>(startPos.y), static_cast<Sint16>(endPos.x), static_cast<Sint16>(endPos.y), 2, 255, 0, 0, 255);
+		}
 	}
 }

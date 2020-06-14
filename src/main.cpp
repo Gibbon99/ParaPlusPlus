@@ -71,14 +71,10 @@ int main (int argc, char *argv[])
 		maxNumUpdateLoops    = 0;
 
 		timeLag += (currentTime - previousTime);
-
-		sys_processInputEvents();
-
 		
 		while (timeLag >= msPerUpdate && maxNumUpdateLoops < MAX_FRAMESKIP)
 		{
 			sys_gameTickRun ();
-			gam_processGameEventQueue();
 			timeLag -= msPerUpdate;
 			thinkFPS++;
 			maxNumUpdateLoops++;

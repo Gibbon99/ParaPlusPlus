@@ -65,7 +65,7 @@ extern double doorAnimSpeed;
 extern std::vector<_doorTrigger> doorTriggers;
 
 // Find the doors for this level and prepare a sensor object
-void gam_doorTriggerSetup (const std::string deckName);
+void gam_doorTriggerSetup ();
 
 // Process all the doors that are currently inUse
 void gam_doorProcessActions ();

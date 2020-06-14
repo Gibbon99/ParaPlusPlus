@@ -194,7 +194,7 @@ void gam_doorProcessActions ()
 						break;
 
 				}    // end of switch statement
-				shipdecks.at (gam_getCurrentDeckName ()).tiles[doorTriggers[i].tileIndex] = doorTriggers[i].currentFrame;
+				g_shipDeckItr->second.tiles[doorTriggers[i].tileIndex] = doorTriggers[i].currentFrame;
 				gam_changeDoorFilters (doorTriggers[i].currentFrame, i);
 			}    // end of nextFrame test
 		}    // end of inUse is true test
@@ -242,7 +242,7 @@ void gam_doorProcessActions ()
 						doorTriggers[i].currentFrame = DOOR_UP_CLOSING_2;
 						break;
 				}
-				shipdecks.at (gam_getCurrentDeckName ()).tiles[doorTriggers[i].tileIndex] = doorTriggers[i].currentFrame;
+				g_shipDeckItr->second.tiles[doorTriggers[i].tileIndex] = doorTriggers[i].currentFrame;
 				gam_changeDoorFilters (doorTriggers[i].currentFrame, i);
 			}
 		}
@@ -317,7 +317,7 @@ void gam_clearAllDoors ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Find the doors for this deck and prepare a sensor object
-void gam_doorTriggerSetup (const std::string deckName)
+void gam_doorTriggerSetup ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int i           = 0;
@@ -335,9 +335,9 @@ void gam_doorTriggerSetup (const std::string deckName)
 
 	sourceX = 0.0f;
 	sourceY = 0.0f;
-	for (i  = 0; i != shipdecks.at (deckName).levelDimensions.x * shipdecks.at (deckName).levelDimensions.y; i++)
+	for (i  = 0; i != g_shipDeckItr->second.levelDimensions.x * g_shipDeckItr->second.levelDimensions.y; i++)
 	{
-		currentTile = shipdecks.at (deckName).tiles[i];
+		currentTile = g_shipDeckItr->second.tiles[i];
 		if (currentTile < 0)
 		{
 			sys_shutdownWithError (sys_getString ("Tile in doorTriggerSetup is invalid - Tile [ %i ]", i));
@@ -437,7 +437,7 @@ void gam_doorTriggerSetup (const std::string deckName)
 				break;
 		}
 		sourceX++;
-		if (sourceX == (int) shipdecks.at (deckName).levelDimensions.x)
+		if (sourceX == (int) g_shipDeckItr->second.levelDimensions.x)
 		{
 			sourceX = 0;
 			sourceY++;

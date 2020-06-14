@@ -135,5 +135,10 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("lostGameOver", "Game over");
 	gui_addKeyAndText ("wonGameOver", "Game won");
 	gui_addKeyAndText ("highScore", "High Scores");
+
+	gui_addKeyAndText ("quitGameDialogbox", "Cancel transmission.");
+	gui_addKeyAndText ("quitGameDialogbox.text", "Do you wish to cancel this transmission and return to the menu ?");
+	gui_addKeyAndText ("quitGameDialogbox.confirmButton", "Confirm");
+	gui_addKeyAndText ("quitGameDialogbox.denyButton", "Deny");
 }
 

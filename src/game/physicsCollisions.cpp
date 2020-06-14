@@ -188,21 +188,36 @@ void contactListener::BeginContact (b2Contact *contact)
 
 	switch (bodyUserData_A->userType)
 	{
-		case PHYSIC_TYPE_WALL:
-		{
-			if ((bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY) || (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_PLAYER))
+		case PHYSIC_TYPE_BULLET_ENEMY:
+			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
 			{
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_B->ID)].worldPosInMeters;
-				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
+				// Target, source
+				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", -1, PHYSIC_DAMAGE_BULLET, bodyUserData_A->dataValue));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
 				return;
 			}
-		}
+
+			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
+			{
+				if (bodyUserData_A->dataValue == bodyUserData_B->dataValue)
+					return;
+
+				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BULLET, bodyUserData_A->dataValue));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
+				return;
+			}
+
+			if (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_PLAYER)
+			{
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
+				renderPosition = bullets[gam_getArrayIndex (bodyUserData_A->ID)].worldPosInMeters;
+				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
+				return;
+			}
 			break;
 
 		case PHYSIC_TYPE_BULLET_PLAYER:
-		{
 			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
 			{
 				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BULLET, bodyUserData_A->dataValue));
@@ -212,26 +227,16 @@ void contactListener::BeginContact (b2Contact *contact)
 
 			if (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY)
 			{
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_B->ID)].worldPosInMeters;
+				renderPosition = bullets[gam_getArrayIndex (bodyUserData_A->ID)].worldPosInMeters;
 				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
 				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
 				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
 				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
 				return;
 			}
-
-			if (bodyUserData_B->userType == PHYSIC_TYPE_WALL)
-			{
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_A->ID)].worldPosInMeters;
-				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
-				return;
-			}
-		}
 			break;
 
-
+		case PHYSIC_TYPE_WALL:
 		case PHYSIC_TYPE_DOOR_BULLET:
 			if ((bodyUserData_B->userType == PHYSIC_TYPE_BULLET_PLAYER) || (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY))
 			{
@@ -264,7 +269,7 @@ void contactListener::BeginContact (b2Contact *contact)
 			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
 			{
 				playerDroid.overHealingTile = true;
-				gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "energyHeal");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "energyHeal");
 				return;
 			}
 			break;
@@ -275,6 +280,7 @@ void contactListener::BeginContact (b2Contact *contact)
 				if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
 				{
 					gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BUMP, -1));
+					return;
 				}
 			}
 			else
@@ -282,6 +288,7 @@ void contactListener::BeginContact (b2Contact *contact)
 				if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
 				{
 					gam_addEvent (EVENT_ACTION_INIT_TRANSFER_MODE, 0, sys_getString ("%i|", bodyUserData_B->dataValue));
+					return;
 				}
 			}
 			break;
@@ -302,17 +309,33 @@ void contactListener::BeginContact (b2Contact *contact)
 	//--------------------------------------------------------
 	switch (bodyUserData_B->userType)
 	{
-		case PHYSIC_TYPE_WALL:
-		{
-			if ((bodyUserData_A->userType == PHYSIC_TYPE_BULLET_ENEMY) || (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_PLAYER))
+		case PHYSIC_TYPE_BULLET_ENEMY:
+			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
 			{
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_A->ID)].worldPosInMeters;
-				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
+				// Target, source
+				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", -1, PHYSIC_DAMAGE_BULLET, bodyUserData_B->dataValue));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
 				return;
 			}
-		}
+
+			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
+			{
+				if (bodyUserData_B->dataValue == bodyUserData_A->dataValue)
+					return;
+
+				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_A->dataValue, PHYSIC_DAMAGE_BULLET, bodyUserData_B->dataValue));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
+				return;
+			}
+
+			if (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_PLAYER)
+			{
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
+				renderPosition = bullets[gam_getArrayIndex (bodyUserData_B->ID)].worldPosInMeters;
+				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
+				return;
+			}
 			break;
 
 		case PHYSIC_TYPE_BULLET_PLAYER:
@@ -333,15 +356,10 @@ void contactListener::BeginContact (b2Contact *contact)
 				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
 				return;
 			}
-
-			if (bodyUserData_A->userType == PHYSIC_TYPE_WALL)
-			{
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
-				return;
-			}
 		}
 			break;
 
+		case PHYSIC_TYPE_WALL:
 		case PHYSIC_TYPE_DOOR_BULLET:
 			if ((bodyUserData_A->userType == PHYSIC_TYPE_BULLET_PLAYER) || (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_ENEMY))
 			{
@@ -374,7 +392,7 @@ void contactListener::BeginContact (b2Contact *contact)
 			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
 			{
 				playerDroid.overHealingTile = true;
-				gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "energyHeal");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "energyHeal");
 				return;
 			}
 			break;
@@ -442,7 +460,7 @@ void contactListener::EndContact (b2Contact *contact)
 			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
 			{
 				playerDroid.overHealingTile = false;
-				gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
 				return;
 			}
 			break;
@@ -471,7 +489,7 @@ void contactListener::EndContact (b2Contact *contact)
 			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
 			{
 				playerDroid.overHealingTile = false;
-				gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
 				return;
 			}
 			break;

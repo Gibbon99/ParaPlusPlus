@@ -22,6 +22,12 @@ void gui_renderButton (int whichButton, bool hasFocus)
 	PARA_Surface      *tempSurface  = nullptr;
 	PARA_Texture      *tempTexture  = nullptr;
 
+	float ratioX;
+	float ratioY;
+
+	ratioX = static_cast<float>(gameWinWidth) / static_cast<float>(windowWidth);
+	ratioY = static_cast<float>(gameWinHeight) / static_cast<float>(windowHeight);
+
 	//
 	// Check to see if it's ready to use or not
 	if (!gui.isReady (GUI_OBJECT_BUTTON, whichButton))
@@ -75,7 +81,10 @@ void gui_renderButton (int whichButton, bool hasFocus)
 	}
 	//
 	// Render the button
-	roundedBoxRGBA (renderer.renderer, bb.x1, bb.y1, bb.x2, bb.y2, cornerRadius, color.r, color.g, color.b, color.a);
+	if (gui.getCurrentDialogbox() == NO_DIALOG_BOX )
+		roundedBoxRGBA (renderer.renderer, bb.x1, bb.y1, bb.x2, bb.y2, cornerRadius, color.r, color.g, color.b, color.a);
+	else
+		roundedBoxRGBA (renderer.renderer, bb.x1 * ratioX, bb.y1 * ratioY, bb.x2 * ratioX, bb.y2 * ratioY, cornerRadius, color.r, color.g, color.b, color.a);
 
 	//
 	// Now render the text label
@@ -138,6 +147,13 @@ void gui_renderButton (int whichButton, bool hasFocus)
 		}
 	}
 
+	if (gui.getCurrentDialogbox() == NO_DIALOG_BOX )
+		fontClass.render(renderer.renderer, textPosX, textPosY, color.r, color.g, color.b, color.a, gui.getLabelText (GUI_OBJECT_BUTTON, whichButton));
+	else
+		fontClass.render(renderer.renderer, textPosX, textPosY, color.r, color.g, color.b, color.a, gui.getLabelText (GUI_OBJECT_BUTTON, whichButton));
+
+
+	/*
 	fontClass.setColor(color.r, color.g, color.b, color.a);
 	tempSurface = fontClass.write(textPosX, textPosY, gui.getLabelText (GUI_OBJECT_BUTTON, whichButton));
 	if (nullptr == tempSurface)
@@ -153,4 +169,5 @@ void gui_renderButton (int whichButton, bool hasFocus)
 	}
 	SDL_RenderCopyF (renderer.renderer, tempTexture, nullptr, &fontClass.pos);
 	SDL_DestroyTexture (tempTexture);
+	*/
 }

@@ -254,9 +254,9 @@ void gam_findLiftPositions (const std::string &levelName)
 	if (!lifts.empty ())
 		gam_clearLifts ();
 
-	for (int index = 0; index < shipdecks.at (levelName).levelDimensions.x * shipdecks.at (levelName).levelDimensions.y; index++)
+	for (int index = 0; index < g_shipDeckItr->second.levelDimensions.x * g_shipDeckItr->second.levelDimensions.y; index++)
 	{
-		currentTile = shipdecks.at (levelName).tiles[((countY * (shipdecks.at (levelName).levelDimensions.x)) + countX)];
+		currentTile = g_shipDeckItr->second.tiles[((countY * (g_shipDeckItr->second.levelDimensions.x)) + countX)];
 
 		if (LIFT_TILE == currentTile)
 		{
@@ -286,7 +286,7 @@ void gam_findLiftPositions (const std::string &levelName)
 // ----------------------------------------------------------------------------
 //
 // Position the player on the requested lift on the new level
-b2Vec2 gam_getLiftWorldPosition (int whichLift, std::string whichLevel)
+b2Vec2 gam_getLiftWorldPosition (int whichLift)
 // ----------------------------------------------------------------------------
 {
 	int    whichTile, countY, countX, liftCounter;
@@ -296,11 +296,11 @@ b2Vec2 gam_getLiftWorldPosition (int whichLift, std::string whichLevel)
 	b2Vec2 returnPosition;
 
 	liftCounter = 0;
-	for (countY = 0; countY != shipdecks.at (whichLevel).levelDimensions.y; countY++)
+	for (countY = 0; countY != g_shipDeckItr->second.levelDimensions.y; countY++)
 	{
-		for (countX = 0; countX != shipdecks.at (whichLevel).levelDimensions.x; countX++)
+		for (countX = 0; countX != g_shipDeckItr->second.levelDimensions.x; countX++)
 		{
-			whichTile = shipdecks.at (whichLevel).tiles[(countY * shipdecks.at (whichLevel).levelDimensions.x) + countX];
+			whichTile = g_shipDeckItr->second.tiles[(countY * g_shipDeckItr->second.levelDimensions.x) + countX];
 
 			if (LIFT_TILE == whichTile)
 			{
@@ -325,7 +325,7 @@ b2Vec2 gam_getLiftWorldPosition (int whichLift, std::string whichLevel)
 			}
 		}
 	}
-	sys_shutdownWithError (sys_getString ("Unable to find lift tile on level [ %s ]", whichLevel.c_str ()));
+	sys_shutdownWithError (sys_getString ("Unable to find lift tile on level [ %s ]", g_shipDeckItr->second.levelName));
 	return returnPosition;
 }
 

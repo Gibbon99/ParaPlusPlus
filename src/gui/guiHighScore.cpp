@@ -110,7 +110,7 @@ void gui_insertNewScore(int newScore)
 	// Handle new highest score - shuffle other scores down
 	if (newScore > highScores[highScores.size()])
 	{
-		for (scoreIndex = 0; scoreIndex < highScores.size() - 1; scoreIndex++)
+		for (scoreIndex = 0; scoreIndex < static_cast<int>(highScores.size() - 1); scoreIndex++)
 		{
 			highScores[scoreIndex] = highScores[scoreIndex + 1];
 		}

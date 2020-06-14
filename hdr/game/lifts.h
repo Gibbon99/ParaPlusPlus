@@ -21,7 +21,7 @@ struct __tileSensor
 extern int currentTunnel;
 
 // Position the player on the requested lift on the new level
-b2Vec2 gam_getLiftWorldPosition (int whichLift, std::string whichLevel);
+b2Vec2 gam_getLiftWorldPosition (int whichLift);
 
 // Setup lifts
 void gam_setupLifts ();

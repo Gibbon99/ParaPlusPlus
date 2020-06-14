@@ -825,6 +825,11 @@ void gam_removeWhichDroidPath(int newWhichDroid)
 	{
 		if (pathItr.whichDroid == newWhichDroid)
 		{
+
+			std::cout << "Removing aStar for droid : " << newWhichDroid << " path index : " << g_shipDeckItr->second.droid[newWhichDroid].ai.getAStarIndex() << std::endl;
+
+			gam_AStarRemovePath(g_shipDeckItr->second.droid[newWhichDroid].ai.getAStarIndex());
+			g_shipDeckItr->second.droid[newWhichDroid].ai.setAStarIndex(-1);
 			pathItr.inUse = false;
 		}
 	}
