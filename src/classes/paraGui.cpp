@@ -264,11 +264,15 @@ bool paraGui::pointInBox (int x, int y, __BOUNDING_BOX checkBox)
 		checkBox.x2 *= ratioX;
 		checkBox.y2 *= ratioY;
 
+		std::cout << "X1 : " << checkBox.x1 << " Y1 : " << checkBox.y1 << std::endl;
+		std::cout << "Mx : " << x << " My : " << y << std::endl;
+
 		tempX = static_cast<float>(x) * ratioX;
 		tempY = static_cast<float>(y) * ratioY;
 
 		x = static_cast<int>(tempX);
 		y = static_cast<int>(tempY);
+
 	}
 
 	if (x < checkBox.x1)

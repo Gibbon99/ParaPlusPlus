@@ -18,6 +18,119 @@ std::vector<__TRANSFER_ROW> transferRows;
 
 //---------------------------------------------------------------------------------------------------------------------
 //
+// Deadlock the transfer - wait for sound to finish
+void trn_processDeadlock()
+//---------------------------------------------------------------------------------------------------------------------
+{
+	if (audio.isPlaying("transferdeadlock"))
+		return;
+
+	trn_initTransferValues (playerDroid.transferTargetDroidIndex);
+
+//	trn_prepareTransferGame ();
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
+// Check if all the circuits have timed out
+bool trn_checkForActiveCircuits ()
+//---------------------------------------------------------------------------------------------------------------------
+{
+	trn_processCircuits ();
+
+	for (auto transferItr : transferRows)
+	{
+		if ((transferItr.rightSideActive) || (transferItr.leftSideActive))
+		{
+			return false;   // A Circuit is still counting down
+		}
+	}
+	return true;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
+// Handle the end of transfer game
+void trn_processEndOfTransferGame ()
+//---------------------------------------------------------------------------------------------------------------------
+{
+	bool okToProceed = false;
+	int  playerCount = 0;
+
+	//
+	// Wait for circuits to stop being active
+	//
+	for (auto &transferItr : transferRows)
+	{
+//		transferItr.leftSideActiveIsOn = false;
+//		transferItr.rightSideActiveIsOn = false;
+	}
+
+	while (!okToProceed)
+	{
+		okToProceed = trn_checkForActiveCircuits ();
+	}
+	//
+	// count for player side
+	//
+	for (auto transferItr : transferRows)
+	{
+		if (transferPlayerWhichSide == TRANSFER_COLOR_LEFT)
+		{
+			if (transferItr.currentColor == TRANSFER_COLOR_LEFT)
+			{
+				playerCount++;
+			}
+		}
+	}
+	//
+	// If less and player is 001 - explode
+	//
+	if ((playerDroid.droidType == 0) && (playerCount < static_cast<int>(transferRows.size ()) / 2))
+	{
+		playerDroid.inTransferMode = false;
+		playerDroid.currentHealth = -1;
+		gam_checkPlayerHealth ();
+		sys_setNewMode (MODE_GAME, false);
+		gam_setHudText ("burntout");
+		return;
+	}
+	//
+	// If less and player is > 001 - drop health, back to game
+	//
+	if ((playerDroid.droidType > 0) && (playerCount < static_cast<int>(transferRows.size ()) / 2))
+	{
+		playerDroid.inTransferMode = false;
+		g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth = -1;
+		playerDroid.droidType                                                           = 0;
+		trn_transferIntoDroid();    // Drop back to 001 stats and sprite
+		gam_setHudText ("transferFailed");
+		sys_setNewMode(MODE_GAME, true);
+		return;
+	}
+	//
+	// If the same - then deadlock
+	//
+	if (playerCount == static_cast<int>(transferRows.size() / 2))
+	{
+		gam_setHudText("deadlock");
+		gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferdeadlock");
+		sys_setNewMode(MODE_TRANSFER_DEADLOCK, false);
+		return;
+	}
+	//
+	// if more, do transfer
+	// explode other droid - do score - call damageToDroid ?
+	// back to game
+	//
+	playerDroid.inTransferMode = false;
+	trn_transferIntoDroid ();
+	sys_setNewMode (MODE_GAME, true);
+	gam_setHudText ("transferred");
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
 // Place a token onto a circuit
 void trn_placeToken (int rowIndex, int whichSide, int whichDroid)
 //---------------------------------------------------------------------------------------------------------------------
@@ -67,6 +180,15 @@ std::string trn_getTransferCountdown ()
 
 //---------------------------------------------------------------------------------------------------------------------
 //
+// Process the end of the transfer game
+void trn_processTransferGameEnd()
+//---------------------------------------------------------------------------------------------------------------------
+{
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
 // Play the transfer game - mode MODE_TRANSFER_GAME
 void trn_processTransferGame ()
 //---------------------------------------------------------------------------------------------------------------------
@@ -83,22 +205,19 @@ void trn_processTransferGame ()
 		if (transferTimeoutCountdown < 0)
 		{
 			transferTimeoutCountdown = transferTimeOut;
-			playerDroid.inTransferMode = false;
-			trn_transferIntoDroid();
-			sys_setNewMode(MODE_GAME, true);
-//			sys_setNewMode (MODE_PRE_TRANSFER_GAME, false);
+			trn_processEndOfTransferGame ();
 		}
 	}
 
 	trn_processTransferDroidAI ();
-	trn_processPlayerActions();
+	trn_processPlayerActions ();
 	trn_processCircuits ();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Transfer deadlock - start again
-void trn_transferDeadlock()
+void trn_transferDeadlock ()
 //---------------------------------------------------------------------------------------------------------------------
 {
 
@@ -107,7 +226,7 @@ void trn_transferDeadlock()
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Lost the transfer - back to 001
-void trn_transferLostGame()
+void trn_transferLostGame ()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	gam_setupPlayerDroid ();        // reset back to 001
@@ -116,46 +235,29 @@ void trn_transferLostGame()
 
 //---------------------------------------------------------------------------------------------------------------------
 //
-// Lost the transfer - burnt out - game over
-void trn_transferBurntOut()
-//---------------------------------------------------------------------------------------------------------------------
-{
-	playerDroid.velocity = {0,0};
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-//
 // Transfer into the droid
-void trn_transferIntoDroid()
+void trn_transferIntoDroid ()
 //---------------------------------------------------------------------------------------------------------------------
 {
-	gam_setInfluenceTimelimit (playerDroid.transferTargetDroidType);
-	playerDroid.droidType = playerDroid.transferTargetDroidType;
-	playerDroid.currentHealth = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth;
-	playerDroid.velocity = {0,0};
-	playerDroid.droidName = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].droidName;
-	playerDroid.sprite = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].sprite;
-	//
-	// Destroy the droid
-	g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth = -10;
-	gam_damageToDroid(playerDroid.transferTargetDroidIndex, PHYSIC_DAMAGE_BULLET, -1);
-}
+	playerDroid.velocity      = {0, 0};
 
-//---------------------------------------------------------------------------------------------------------------------
-//
-// Handle the end of transfer game
-void trn_processEndOfTransferGame ()
-//---------------------------------------------------------------------------------------------------------------------
-{
-	//
-	// Wait for circuits to stop being active
-
-	// count for player side
-
-	// if less and player is 001 - explode
-	// if less and player is > 001 - drop health, back to game
-
-	// if more, do transfer
-	// explode other droid - do score - call damageToDroid ?
-	// back to game
+	if (playerDroid.transferTargetDroidType > 0)
+	{
+		gam_setInfluenceTimelimit (playerDroid.transferTargetDroidType);
+		playerDroid.droidType     = playerDroid.transferTargetDroidType;
+		playerDroid.currentHealth = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth;
+		playerDroid.droidName     = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].droidName;
+		playerDroid.sprite        = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].sprite;
+		//
+		// Destroy the droid
+		g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth = -10;
+		gam_damageToDroid (playerDroid.transferTargetDroidIndex, PHYSIC_DAMAGE_BULLET, -1);
+	}
+	else
+	{
+		// Drop back to 001
+		gam_setupPlayerDroid ();
+		playerDroid.currentHealth = dataBaseEntry[0].maxHealth / 4;
+		gam_checkPlayerHealth();    // Set animation speed
+	}
 }

@@ -9,6 +9,7 @@
 #include <game/texture.h>
 #include <game/game.h>
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
+#include <classes/paraRandom.h>
 #include "game/droids.h"
 #include "game/score.h"
 
@@ -101,8 +102,11 @@ void gam_initDroids (std::string levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
 	int        wayPointStartIndex = 0;
+	int wayPointSpacing = 0;
 	int        droidIndex         = 0;
+	int        whichDirection;
 	droidClass tempDroid;
+	paraRandom randomDirection;
 
 	if (!shipdecks.at (levelName).droid.empty ())
 	{
@@ -110,18 +114,28 @@ void gam_initDroids (std::string levelName)
 		shipdecks.at (levelName).droid.resize (0);
 	}
 
+	wayPointSpacing = shipdecks.at (levelName).numWaypoints / shipdecks.at (levelName).droidTypes.size() - 1;
+
 	shipdecks.at (levelName).numEnemiesAlive = shipdecks.at (levelName).numDroids;
 	for (auto &droidItr : shipdecks.at (levelName).droidTypes)
 	{
 		tempDroid.ai.initAI ();
 		tempDroid.ai.setArrayIndex (droidIndex);
-		tempDroid.droidType          = droidItr;
-		tempDroid.currentHealth      = dataBaseEntry[tempDroid.droidType].maxHealth;
+		tempDroid.droidType     = droidItr;
+		tempDroid.currentHealth = dataBaseEntry[tempDroid.droidType].maxHealth;
+
+		wayPointStartIndex = 0;
+		whichDirection = randomDirection.get(0, 10);
+		if (whichDirection < 5)
+			tempDroid.ai.setWaypointDirection (WAYPOINT_UP);
+		else
+			tempDroid.ai.setWaypointDirection (WAYPOINT_DOWN);
+
 		tempDroid.worldPosInPixels.x = shipdecks.at (levelName).wayPoints[wayPointStartIndex].x;
 		tempDroid.worldPosInPixels.y = shipdecks.at (levelName).wayPoints[wayPointStartIndex++].y;
 		tempDroid.ai.setWaypointIndex (wayPointStartIndex);
-		if (wayPointStartIndex > shipdecks.at (levelName).numWaypoints)
-			shipdecks.at (levelName).numWaypoints = 0;
+
+		wayPointStartIndex += wayPointSpacing;
 
 		tempDroid.droidName = gam_getDroidName (tempDroid.droidType);
 
@@ -151,27 +165,30 @@ void gam_renderDroids (std::string levelName)
 
 	for (auto droidItr : g_shipDeckItr->second.droid)
 	{
-		if ((droidItr.currentMode == DROID_MODE_EXPLODING) || (droidItr.currentMode == DROID_MODE_NORMAL))
+		if (droidItr.body != nullptr)
 		{
-			worldPosInMeters = droidItr.body->GetPosition ();
-			droidItr.worldPosInPixels.x = worldPosInMeters.x * pixelsPerMeter;
-			droidItr.worldPosInPixels.y = worldPosInMeters.y * pixelsPerMeter;
+			if ((droidItr.currentMode == DROID_MODE_EXPLODING) || (droidItr.currentMode == DROID_MODE_NORMAL))
+			{
+				worldPosInMeters = droidItr.body->GetPosition ();
+				droidItr.worldPosInPixels.x = worldPosInMeters.x * pixelsPerMeter;
+				droidItr.worldPosInPixels.y = worldPosInMeters.y * pixelsPerMeter;
 
-			droidScreenPosition.x = droidItr.worldPosInPixels.x;
-			droidScreenPosition.y = droidItr.worldPosInPixels.y;
+				droidScreenPosition.x = droidItr.worldPosInPixels.x;
+				droidScreenPosition.y = droidItr.worldPosInPixels.y;
 
-			droidScreenPosition = sys_worldToScreen (droidScreenPosition, 24);
-			if (droidItr.currentMode == DROID_MODE_NORMAL)
-				droidItr.sprite.setTintColor (0, 0, 0);     // Draw in black color
-			else
-				droidItr.sprite.setTintColor (255, 255, 255);  // Full color for explosion
+				droidScreenPosition = sys_worldToScreen (droidScreenPosition, 24);
+				if (droidItr.currentMode == DROID_MODE_NORMAL)
+					droidItr.sprite.setTintColor (0, 0, 0);     // Draw in black color
+				else
+					droidItr.sprite.setTintColor (255, 255, 255);  // Full color for explosion
 
-			if (droidItr.visibleToPlayer)
-				droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0, static_cast<Uint8>(droidItr.visibleValue));
+				if (droidItr.visibleToPlayer)
+					droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0, static_cast<Uint8>(droidItr.visibleValue));
 
-			droidItr.ai.renderVelocity ();
+				droidItr.ai.renderVelocity ();
 
-			gam_debugShowTarget (droidItr);
+				gam_debugShowTarget (droidItr);
+			}
 		}
 	}
 }
@@ -228,6 +245,9 @@ void gam_processAI ()
 			if (dataBaseEntry[droidItr.droidType].canShoot)
 				gam_weaponRechargeDroid (&droidItr);
 
+			if (nullptr == droidItr.body)
+				break;
+
 			droidItr.ai.process (droidItr.body->GetPosition ());
 			droidItr.body->ApplyForce (droidItr.ai.getVelocity (), droidItr.body->GetWorldCenter (), true);
 			//
@@ -257,6 +277,7 @@ void gam_processCollision (int droidA)
 		if (g_shipDeckItr->second.droid[droidA].userData->ignoreCollision)
 			return;
 
+		g_shipDeckItr->second.droid[droidA].ai.swapWaypointDirection ();
 		g_shipDeckItr->second.droid[droidA].collisionCounter++;
 		if (g_shipDeckItr->second.droid[droidA].collisionCounter > collisionLimit)
 		{
@@ -320,7 +341,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 			if (sourceDroid == -1)  // Hit from player
 			{
 				g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 10);
-				g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid(sourceDroid);
+				g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid (sourceDroid);
 				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bounceDamage;
 				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 100, 127, "collision1");
 				//
@@ -474,7 +495,7 @@ void gam_debugShowTarget (droidClass whichDroid)
 
 	if (dataBaseEntry[whichDroid.droidType].canShoot)
 	{
-		if (whichDroid.ai.getTargetDroid() != NO_ATTACK_TARGET)
+		if (whichDroid.ai.getTargetDroid () != NO_ATTACK_TARGET)
 		{
 			startPos = whichDroid.worldPosInPixels;
 

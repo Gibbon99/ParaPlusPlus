@@ -46,7 +46,7 @@ void sys_processPhysics (double tickTime)
 	playerDroid.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);           // Change to pixels
 	playerDroid.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
 
-	if (g_shipDeckItr->second.droidPhysicsCreated)
+	if ((g_shipDeckItr->second.droidPhysicsCreated) || (g_shipDeckItr->second.deckIsDead))
 	{
 		for (auto &droidItr : g_shipDeckItr->second.droid)
 		{
@@ -276,12 +276,15 @@ void sys_setupEnemyPhysics (std::string levelName)
 //-------------------------------------------------------------------
 {
 	std::cout << "Setting up enemy physics for level : " << levelName << std::endl;
-	
+
 	if (!physicsStarted)
 		sys_shutdownWithError (sys_getString ("Attempting to setup droid physics with no engine."));
 
 	if (g_shipDeckItr->second.deckIsDead)   // No droids alive
+	{
+		std::cout << "Level is dead - no physics to create." << std::endl;
 		return;
+	}
 
 	if (g_shipDeckItr->second.droidPhysicsCreated)
 	{
@@ -302,7 +305,7 @@ void sys_setupEnemyPhysics (std::string levelName)
 			droidItr.userData->userType        = PHYSIC_TYPE_ENEMY;
 			droidItr.userData->dataValue	   = droidItr.ai.getArrayIndex();
 			droidItr.userData->wallIndexValue  = -1;
-			droidItr.userData->ignoreCollision = false;
+			droidItr.userData->ignoreCollision = true;
 			droidItr.body->SetUserData (droidItr.userData);
 
 			droidItr.shape.m_radius = static_cast<float>((SPRITE_SIZE * 0.5) / pixelsPerMeter);

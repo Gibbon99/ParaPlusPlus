@@ -197,6 +197,10 @@ void gam_processGameEventQueue ()
 					gam_processGameOver();
 					break;
 
+				case MODE_END_PRE_LOST_SCREEN:
+					sys_setNewMode(MODE_END_LOST_SCREEN, true);
+					break;
+
 				case EVENT_ACTION_END_LOST_SCREEN:
 					audio.stopAllChannels();
 					sys_setNewMode (MODE_GUI_MAINMENU, true);

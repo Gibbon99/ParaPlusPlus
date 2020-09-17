@@ -167,13 +167,12 @@ void paraAI::patrol ()
 					aiActionCounter = 0.0;
 				return;
 			}
+			lookAheadVelocity *= LOOK_AHEAD_DISTANCE;
 			//
 			// Change direction if going to run into player
-			lookAheadVelocity *= LOOK_AHEAD_DISTANCE;
-			if (nullptr == playerDroidFixture)
-				playerDroidFixture   = playerDroid.body->GetFixtureList ();    // Only have one fixture per body
+			droidFixture = playerDroid.body->GetFixtureList ();    // Only have one fixture per body
 
-			if (playerDroidFixture->TestPoint (lookAheadVelocity + worldPositionInMeters))
+			if (droidFixture->TestPoint (lookAheadVelocity + worldPositionInMeters))
 			{
 				currentSpeed    = 0.0;
 				currentVelocity = {0.0, 0.0};
@@ -181,6 +180,28 @@ void paraAI::patrol ()
 				aiActionCounter = 3.0;
 				return;
 			}
+
+			//
+			// Change direction if going to run into another droid
+			for (auto &droidItr : g_shipDeckItr->second.droid)
+			{
+				if (droidItr.index != arrayIndex)       // don't check self
+				{
+					if (droidItr.body != nullptr)       // still got a valid physics body
+					{
+						droidFixture = droidItr.body->GetFixtureList (); // Only have one fixture
+
+						if (droidFixture->TestPoint (lookAheadVelocity + worldPositionInMeters))
+						{
+							currentSpeed = 0.0f;
+							currentVelocity.SetZero ();
+							swapWaypointDirection ();
+						}
+					}
+				}
+
+			}
+
 			break;
 
 		case FIND_WAYPOINT:
@@ -429,6 +450,15 @@ void paraAI::getWaypointDestination ()
 	}
 
 	destinationCoordsInMeters = sys_convertToMeters (g_shipDeckItr->second.wayPoints[wayPointIndex]);
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
+// Set the waypoint direction for a droid to move in
+void paraAI::setWaypointDirection(int newDirection)
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	wayPointDirection = newDirection;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------

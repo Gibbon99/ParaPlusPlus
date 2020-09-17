@@ -36,7 +36,7 @@ public:
 	b2BodyDef     bodyDef;                      // Used for physics and collisions
 	b2CircleShape shape;
 	b2FixtureDef  fixtureDef;
-	b2Body        *body;
+	b2Body        *body = nullptr;
 	_userData     *userData             = nullptr;
 	b2Vec2        worldPosInPixels;
 	b2Vec2        previousWorldPosInPixels;

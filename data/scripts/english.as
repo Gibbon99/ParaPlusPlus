@@ -129,6 +129,10 @@ void as_setEnglishText ()
 
 	gui_addKeyAndText ("selectSide", "Select side :");
 	gui_addKeyAndText ("transferFinish", "Finish :");
+	gui_addKeyAndText ("burntout", "Burnt out");
+	gui_addKeyAndText ("transferFailed", "Transfer failed");
+	gui_addKeyAndText ("transferred", "Transferred");
+	gui_addKeyAndText ("deadlock", "Deadlocked");
 
 	gui_addKeyAndText ("lostTransmission", "TRANSMISSION");
 	gui_addKeyAndText ("lostTerminated", "TERMINATED");

@@ -1,5 +1,7 @@
 #include <gui/guiLostScreen.h>
 #include <gui/guiHighScore.h>
+#include <system/gameEvents.h>
+#include <system/util.h>
 #include "gui/guiScrollbox.h"
 #include "system/startup.h"
 #include "game/shipDecks.h"
@@ -140,6 +142,18 @@ void sys_renderFrame (double interpolation)
 			trn_renderTransferGame();
 			break;
 
+		case MODE_TRANSFER_DEADLOCK:
+			trn_renderTransferGame();
+			break;
+
+		case MODE_GAME_OVER:
+			gam_renderVisibleScreen (interpolation);
+			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2, 1.0, static_cast<Uint8>(255));
+
+			gam_renderDroids (gam_getCurrentDeckName ());
+			gam_renderParticles ();
+			break;
+
 		case MODE_GAME:
 			gam_renderVisibleScreen (interpolation);
 			gam_renderHealingFrames ();
@@ -192,7 +206,7 @@ void sys_renderFrame (double interpolation)
 		gam_renderHud ();
 
 	fontClass.use ("guiFont");
-//	fontClass.render(renderer.renderer, 1, 550, 200, 200, 200, 255, sys_getString ("Game : %i Think : %i FPS : %i intoNextFrame : %f ", gam_gameEventQueueSize(), thinkFPSPrint, fpsPrint, percentIntoNextFrame));
+	fontClass.render(renderer.renderer, 1, 550, 200, 200, 200, 255, sys_getString ("Game : %i Think : %i FPS : %i intoNextFrame : %f ", gam_gameEventQueueSize(), thinkFPSPrint, fpsPrint, percentIntoNextFrame));
 
 	sys_completeFrame ();
 }

@@ -56,6 +56,10 @@ public:
 
 	void setMasterVolume (int volume);
 
+	void pauseAllChannels ();
+
+	void resumeAllChannels ();
+
 	void deviceInfo ();
 
 //	bool pause (std::string keyName);

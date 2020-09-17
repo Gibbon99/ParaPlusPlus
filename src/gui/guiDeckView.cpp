@@ -5,19 +5,21 @@
 #include <system/util.h>
 #include "gui/guiDeckView.h"
 
+double      tileScaleX;
+double      tileScaleY;
 
 //-----------------------------------------------------------------------------
 //
 // Draw the player indicator on the deckview map
-void gui_renderPlayerLocation (float smallTleSize)
+void gui_renderPlayerLocation ()
 //-----------------------------------------------------------------------------
 {
 	// TODO - get scaling of position right
 
 	int tileLocationX, tileLocationY;
 
-	tileLocationX = playerDroid.previousWorldPosInPixels.x * smallTleSize;
-	tileLocationY = playerDroid.previousWorldPosInPixels.y * smallTleSize;
+	tileLocationX = playerDroid.previousWorldPosInPixels.x * tileScaleX;
+	tileLocationY = playerDroid.previousWorldPosInPixels.y * tileScaleY;
 
 //	tileLocationX *= smallTleSize;
 //	tileLocationY *= smallTleSize;
@@ -36,26 +38,30 @@ void gui_renderPlayerLocation (float smallTleSize)
 void gui_renderTerminalDeck ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	double      tileScale;
-	std::string levelNameCache;
 	Uint32      format;
 	int         width;
 	int         height;
-	SDL_Rect    destRect;
-	SDL_Rect    sourceRect;
 	double      deckViewTextPosX;
 	double      deckViewTextPosY;
+	SDL_Rect    destRect;
+	SDL_Rect    sourceRect;
+//	std::string levelNameCache;
 
 	SDL_QueryTexture (gam_getPlayfieldTexture (), &format, nullptr, &width, &height);
 	if (width > hiresVirtualWidth)
 	{
-		tileScale = static_cast<double>(hiresVirtualWidth) / static_cast<double>(width);
+		tileScaleX = static_cast<double>(hiresVirtualWidth) / static_cast<double>(width);
 	}
 	else
-		tileScale = 1.0;
+		tileScaleX = 1.0;
 
-	double finalWidth  = static_cast<double>(width) * tileScale;
-	double finalHeight = static_cast<double>(height) * tileScale;
+	if (height > hiresVirtualHeight)
+		tileScaleY = hiresVirtualHeight / static_cast<double>(height);
+	else
+		tileScaleY = 1.0;
+
+	double finalWidth  = static_cast<double>(width) * tileScaleX;
+	double finalHeight = static_cast<double>(height) * tileScaleY;
 
 	destRect.x = static_cast<int>((hiresVirtualWidth - finalWidth)) / 2;
 	destRect.y = static_cast<int>((hiresVirtualHeight - finalHeight)) / 2;
@@ -75,5 +81,5 @@ void gui_renderTerminalDeck ()
 	deckViewTextPosY = renderer.renderHeight () - (fontClass.height ());
 	fontClass.render (renderer.renderer, deckViewTextPosX, deckViewTextPosY, 255, 255, 255, 255, sys_getString ("Deck [ %s ]", gam_returnLevelNameFromDeck (currentDeckNumber).c_str ()));
 
-	gui_renderPlayerLocation (tileScale);
+	gui_renderPlayerLocation ();
 }

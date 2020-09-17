@@ -25,9 +25,9 @@ public:
 
 	void render ();
 
-	int getType();
+	int getType ();
 
-	void setColor(int newColorType);
+	void setColor (int newColorType);
 
 private:
 
@@ -42,10 +42,9 @@ private:
 	float  colorIndexChangeSpeed = 0.0f;
 	float  colorIndexCounter     = 0.0f;
 	Uint32 bulletLink            = 0;
-//	b2Vec2 worldPosInMeters;
 	b2Vec2 worldPosInPixels;
-	PARA_Texture    *textureCache = nullptr;
-	PARA_Color color;
+	PARA_Texture *textureCache   = nullptr;
+	PARA_Color   color;
 };
 
 // Populate the table holding the bullet lightmap colors

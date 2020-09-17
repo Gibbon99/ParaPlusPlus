@@ -12,7 +12,7 @@ void as_handleMainMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.startGameButton"))
 	{
-		gam_changeToDeck ("Shuttle bay", 0);
+		gam_changeToDeck ("Staterooms", 0);
 		gam_setHudText ("hudGameOn");
 		sys_setNewMode (MODE_PRE_GAME, false);
 		return;
@@ -714,7 +714,7 @@ void as_createGUI ()
 	explosionDamage          = 2;
 	alertLevelVolume         = 190;  // Higher is softer - 1 is full loud
 	staticAnimationDelay     = 0.8f;
-	lostScreenShowTime       = 250;  // 10 seconds
+	lostScreenShowTime       = 120;  // 10 seconds
 	tableSpacingY            = 40;
 	disrupterFadeAmount      = 20;
 	influenceTimelimit       = 1000;

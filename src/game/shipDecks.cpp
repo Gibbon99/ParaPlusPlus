@@ -408,10 +408,13 @@ void gam_renderSingleTile (int destX, int destY, int tileIndex)
 	{
 		previousTileIndex = tileIndex;
 
-		sourceRect.x = (tileIndex % numTileAcrossInTexture) * tileSize;
+		sourceRect.x = static_cast<float>((tileIndex % numTileAcrossInTexture)) * tileSize;
 		sourceRect.y = (tileIndex / numTilesDownInTexture) * tileSize;
 		sourceRect.w = tileSize;
-		sourceRect.h = tileSize;
+		sourceRect.h = tileSize; // - 1;
+
+//		sourceRect.y += 1;
+//		sourceRect.h -= 1;
 	}
 
 	destRect.x = destX;
@@ -514,7 +517,7 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 	gam_createDeckTexture (deckName);
 	gam_renderAlertTiles ();
 
-	// Physicss
+	// Physics
 	sys_setupEnemyPhysics (deckName);
 	sys_setupSolidWalls (deckName);
 	gam_doorTriggerSetup ();

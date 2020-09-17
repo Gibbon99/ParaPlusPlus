@@ -5,13 +5,15 @@ BUGS
 BUG - When alert level is higher than green, and deck goes black, alert draws as green
 BUG - Background sound can stop playing
 BUG - Door sounds are not right
+BUG - changing level and then back with active bullet - can't find bullet index
+
 
 TODO
 -------
 
 High Score entry screen - Drop ??
 
-Transfer - enemy AI
+Transfer - enemy AI - do based on priority of circuit types
 Transfer - work out winner
 Transfer - Right side reversers in wrong color
 Transfer - timer
@@ -20,15 +22,11 @@ Player health check on damage - dead animation
 Droid AI - Attack
 Droid AI - Help
 Yellow alert showing green lightmap on deck change
-Fix sideview overlap on hold level - deck 3 not being highlighted now
-Low health sound for player not carried across deck change
 Check bottom edge of animated tiles in graphics
-Use Audio pause?
 Fix up player location on deck view in terminal
-Random waypoint direction for droid init - better spacing
-Droid reverse direction on collision
 Calibrate joystick
-Check the ratio maths for detecting mouse in bb range
+Stop sounds before showing end static screen
+
 
 
 DONE - Universe background on menu screens
@@ -66,6 +64,15 @@ DONE - Droid AI - Flee
 FIXED - BUG - Score is increasing by itself
 DONE - Dialog box - Game Sure to quit?
 >Commit
+DONE - Droids change direction before a head on collision
+DONE - Low health sound for player not carried across deck change
+DONE - Droid reverse direction on collision
+DONE - Random waypoint direction for droid init - better spacing
+DONE - Entering terminal top button is not set
+DONE - Check the ratio maths for detecting mouse in bb range
+FIXED - BUG - Return to dead level, physics goes wild
+DONE - Use Audio pause? - added to audioClass
+DONE - Fix sideview overlap on hold level - deck 3 not being highlighted now
 
 
 

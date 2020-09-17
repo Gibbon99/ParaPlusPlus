@@ -76,6 +76,7 @@ void gam_setupPlayerDroid ()
 	playerDroid.ai.setAcceleration (dataBaseEntry[0].accelerate);
 	playerDroid.ai.setMaxSpeed (dataBaseEntry[0].maxSpeed);
 	playerDroid.currentHealth = dataBaseEntry[0].maxHealth;
+	playerDroid.currentMode = DROID_MODE_NORMAL;
 
 	sys_setupPlayerPhysics ();
 }
@@ -218,7 +219,7 @@ void gam_processActionKey ()
 					gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
 					sys_setNewMode (MODE_GUI_TERMINAL, true);
 					gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
-					gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.backButton");
+					gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.databaseButton");
 					return;
 				}
 			}
@@ -263,8 +264,9 @@ void gam_checkPlayerHealth ()
 	// Process player health and animation
 	if (playerDroid.currentHealth < 0)
 	{
-		gam_addEvent (EVENT_ACTION_GAME_OVER, 2, "");
-//		return;     // TODO Remove comment to avoid dropthrough
+		if (currentMode != MODE_GAME_OVER)
+			gam_addEvent (EVENT_ACTION_GAME_OVER, 20, "");
+		return;     // TODO Remove comment to avoid dropthrough
 	}
 
 	dangerHealthLevel     = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
@@ -272,7 +274,7 @@ void gam_checkPlayerHealth ()
 	if (playerDroid.currentHealth < static_cast<int>(dangerHealthLevel))
 	{
 		playerDroid.sprite.setLowHealth (true);
-		if (!lowEnergySoundPlaying)
+		if (!audio.isPlaying("lowEnergy"))
 		{
 			lowEnergySoundPlaying = true;
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "lowEnergy");
@@ -281,7 +283,7 @@ void gam_checkPlayerHealth ()
 	else
 	{
 		playerDroid.sprite.setLowHealth (false);
-		if (lowEnergySoundPlaying)
+		if (audio.isPlaying("lowEnergy"))
 		{
 			lowEnergySoundPlaying = false;
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "lowEnergy");

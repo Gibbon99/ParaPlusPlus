@@ -192,7 +192,7 @@ bool gui_loadSideViewData (std::string sideviewFileName)
 		}
 
 		SDL_RWread (fp, (void *) &buf, sizeof (sideviewLevels[count].y2), 1);
-		temp = (float) (buf[0] - 100.0f) * sideviewDrawScale;
+		temp = static_cast<float>((buf[0]) - 100.0f) * sideviewDrawScale;
 		sideviewLevels[count].y2 = temp;
 	}
 	SDL_RWclose (fp);
@@ -215,20 +215,20 @@ void gui_renderSideView ()
 	int           toLifts = 0;
 	float         x1;
 	float         y1;
-	__PARA_COLOR  tempAlert;
 	double        sideViewTextPosX;
 	double        sideViewTextPosY;
 	Uint8         r, g, b, a;
 	SDL_BlendMode tempMode;
+	__PARA_COLOR  tempAlert;
 
 	fontClass.use ("guiFont");
 
 	sideViewTextPosX = 5;
 	sideViewTextPosY = renderer.renderHeight () - (fontClass.height ());
-
 	//
 	// SDL2_gfx changes the blend mode and draw color
 	// as part of its rendering - remember so we can change it back
+	//
 	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
 	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
 
@@ -245,6 +245,7 @@ void gui_renderSideView ()
 
 	//
 	// Draw hold level
+	//
 	count = 0;
 	x1    = sideviewLevels[count].x2;
 	y1    = sideviewLevels[count].y2;
@@ -253,6 +254,7 @@ void gui_renderSideView ()
 
 	//
 	// Draw all the decks in normal color
+	//
 	for (count = 1; count != MAX_LEVELS - lifts; count++)
 	{
 		gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
@@ -261,10 +263,11 @@ void gui_renderSideView ()
 
 	//
 	// Highlite the current deck in use for lift mode
+	//
 	if (currentMode == MODE_GUI_LIFTVIEW)
 	{
 		//
-		// highlite current level
+		// Highlite current level
 		if (0 == currentDeckNumber)
 		{
 			gui_sideviewDrawRect (sideviewLevels[currentDeckNumber].x2, sideviewLevels[currentDeckNumber].y2, sideviewLevels[currentDeckNumber].x1, sideviewLevels[currentDeckNumber].y1, sideviewColors[SIDEVIEW_ACTIVE_DECK_COLOR].color);
@@ -276,7 +279,7 @@ void gui_renderSideView ()
 	}
 	else    // Static view of ship from terminal
 	{
-		switch (gam_getCurrentAlertLevel())
+		switch (gam_getCurrentAlertLevel ())
 		{
 			case ALERT_GREEN_TILE:
 				tempAlert.r = 0;
@@ -317,36 +320,31 @@ void gui_renderSideView ()
 		}
 	}
 
-
 	//
 	// Redraw the level and tunnel that overlap
-	if ((currentTunnel != 3) || (currentTunnel != 6))
+	//
+	if ((currentMode == MODE_GUI_LIFTVIEW) && (currentDeckNumber == 13))
+		gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_ACTIVE_DECK_COLOR].color);
+	else
 	{
 		count = 13;
 		gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
-		count = 3;
-		gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
-	}
-	else
-	{
-		// using tunnel connecting to level 13
-		if (currentDeckNumber != 13)
-		{
-			count = 13;
-			gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
-		}
 	}
 
+	count = 3;
+	gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
 	//
 	// fill in engine part
+	//
 	gui_sideviewDrawRect (sideviewLevels[7].x1, sideviewLevels[7].y1, sideviewLevels[7].x2, sideviewLevels[7].y2, sideviewColors[SIDEVIEW_ENGINE_COLOR].color);
 	//
 	// draw the lifts
+	//
 	for (count = 0; count != lifts; count++)
 	{
 		if (currentMode == MODE_GUI_LIFTVIEW)      // Only draw highlighted tunnel in lift view
 		{
-			if (gam_getCurrentTunnel() == count) // Draw currentTunnel in use
+			if (gam_getCurrentTunnel () == count) // Draw currentTunnel in use
 				gui_sideviewDrawRect (sideviewLevels[count + toLifts].x1, sideviewLevels[count + toLifts].y1, sideviewLevels[count + toLifts].x2, sideviewLevels[count + toLifts].y2, sideviewColors[SIDEVIEW_ACTIVE_LIFT_COLOR].color);
 			else
 				gui_sideviewDrawRect (sideviewLevels[count + toLifts].x1, sideviewLevels[count + toLifts].y1, sideviewLevels[count + toLifts].x2, sideviewLevels[count + toLifts].y2, sideviewColors[SIDEVIEW_LIFT_COLOR].color);
@@ -355,7 +353,7 @@ void gui_renderSideView ()
 			gui_sideviewDrawRect (sideviewLevels[count + toLifts].x1, sideviewLevels[count + toLifts].y1, sideviewLevels[count + toLifts].x2, sideviewLevels[count + toLifts].y2, sideviewColors[SIDEVIEW_LIFT_COLOR].color);
 	}
 
-	fontClass.render (renderer.renderer, sideViewTextPosX, sideViewTextPosY, 255, 255, 255, 255, sys_getString ("Deck [ %s ]", gam_returnLevelNameFromDeck (currentDeckNumber).c_str()));
+	fontClass.render (renderer.renderer, sideViewTextPosX, sideViewTextPosY, 255, 255, 255, 255, sys_getString ("Deck [ %s ]", gam_returnLevelNameFromDeck (currentDeckNumber).c_str ()));
 
 	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
 	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
@@ -373,6 +371,7 @@ void gui_prepareStarfield (int numStars, int numDepth)
 	boundaryTopY    = 50; // Get height of HUD here
 	//
 	// Setup the depth values
+	//
 	depthSpread     = 255 / numDepth;
 
 	for (auto counter = 0; counter != numStars; counter++)
@@ -400,7 +399,7 @@ void gui_renderStarfield ()
 	}
 	catch (std::out_of_range outOfRange)
 	{
-		sys_shutdownWithError(sys_getString("Out of range error"));
+		sys_shutdownWithError (sys_getString ("Out of range error"));
 	}
 }
 

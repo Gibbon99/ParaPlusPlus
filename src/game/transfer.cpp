@@ -65,7 +65,7 @@ bool trn_contactingCircuit(int circuitType)
 
 //---------------------------------------------------------------------------------------------------------------------
 //
-// Process active circuits time
+// Process active circuits time and set their color for the cell
 void trn_processCircuits ()
 //---------------------------------------------------------------------------------------------------------------------
 {
@@ -462,9 +462,9 @@ void trn_initTransferValues (int transferTargetIndex)
 			tempTransferRow.rightSideActiveIsOn       = false;
 			tempTransferRow.leftSideActiveIsOn        = false;
 			tempTransferRow.rightSideActiveAlphaColor = 255.0f;
-			tempTransferRow.rightSideActiveAlphaCount = 0.0f;
+//			tempTransferRow.rightSideActiveAlphaCount = 0.0f;
 			tempTransferRow.leftSideActiveAlphaColor  = 255.0f;
-			tempTransferRow.leftSideActiveAlphaCount  = 0.0f;
+//			tempTransferRow.leftSideActiveAlphaCount  = 0.0f;
 
 			if (i % 2 == 0)
 				tempTransferRow.currentColor = TRANSFER_COLOR_LEFT;
@@ -600,8 +600,6 @@ void trn_processTransferCountDown ()
 void trn_prepareTransferGame ()
 //---------------------------------------------------------------------------------------------------------------------
 {
-
-
 	transferTimeoutCountdown = transferTimeOut;
 	sys_setNewMode (MODE_TRANSFER_GAME, false);
 }
@@ -634,9 +632,9 @@ void trn_prepareTransferCountDown ()
 		transferItr.rightSideActiveIsOn       = false;
 		transferItr.leftSideActiveIsOn        = false;
 		transferItr.rightSideActiveAlphaColor = 255.0f;
-		transferItr.rightSideActiveAlphaCount = 0.0f;
+//		transferItr.rightSideActiveAlphaCount = 0.0f;
 		transferItr.leftSideActiveAlphaColor  = 255.0f;
-		transferItr.leftSideActiveAlphaCount  = 0.0f;
+//		transferItr.leftSideActiveAlphaCount  = 0.0f;
 
 		if (i % 2 == 0)
 			transferItr.currentColor = TRANSFER_COLOR_LEFT;

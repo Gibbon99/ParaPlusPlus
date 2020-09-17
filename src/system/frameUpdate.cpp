@@ -9,6 +9,7 @@
 #include <gui/guiLostScreen.h>
 #include <gui/guiHighScore.h>
 #include <gui/guiInput.h>
+#include <game/game.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
@@ -164,6 +165,7 @@ void sys_gameTickRun ()
 		case MODE_GAME:
 			if (gui.getCurrentDialogbox() != NO_DIALOG_BOX)
 			{
+				io_mapMouseToInput ();
 				gui.processGuiInput();
 				return;
 			}
@@ -250,12 +252,20 @@ void sys_gameTickRun ()
 			trn_processTransferGame();
 			break;
 
+		case MODE_TRANSFER_DEADLOCK:
+			trn_processDeadlock();
+			break;
+
 		case MODE_END_PRE_LOST_SCREEN:
 			gui_preRenderLostScreen();
 			break;
 
 		case MODE_END_LOST_SCREEN:
 			gui_processLostScreen();
+			break;
+
+		case MODE_GAME_OVER:
+			gam_processGameOver();
 			break;
 	}
 }

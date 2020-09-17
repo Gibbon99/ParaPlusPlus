@@ -268,14 +268,18 @@ void sys_setNewMode (int newMode, bool doFade)
 			break;
 
 		case MODE_TRANSFER_GAME:
+		case MODE_TRANSFER_DEADLOCK:
 			currentMode = newMode;
 			break;
 
 		case MODE_END_PRE_LOST_SCREEN:
 			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		case MODE_END_LOST_SCREEN:
+		case MODE_GAME_OVER:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
@@ -283,10 +287,14 @@ void sys_setNewMode (int newMode, bool doFade)
 
 		case MODE_GUI_WON_SCREEN:
 			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		case MODE_GUI_PRE_HIGHSCORE_SCREEN:
 			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		case MODE_GUI_HIGHSCORE_SCREEN:

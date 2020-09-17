@@ -16,9 +16,7 @@ struct __TRANSFER_ROW
 	float rightSideActiveCounter;
 	float startX;
 	float startY;
-	float rightSideActiveAlphaCount;
 	float rightSideActiveAlphaColor;
-	float leftSideActiveAlphaCount;
 	float leftSideActiveAlphaColor;
 };
 
@@ -43,3 +41,6 @@ void trn_transferIntoDroid();
 
 // Lost the transfer - back to 001
 void trn_transferLostGame();
+
+// Deadlock the transfer - wait for sound to finish
+void trn_processDeadlock();

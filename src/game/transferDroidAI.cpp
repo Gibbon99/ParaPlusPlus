@@ -23,6 +23,9 @@ int trn_findSuitableCircuitToUse (__TRANSFER_ROW transferIndex)
 {
 	int circuitType;
 
+	//
+	// Check if the circuit is already active - no good if it is
+	//
 	if (transferPlayerWhichSide == TRANSFER_COLOR_LEFT)
 	{
 		if (transferIndex.rightSideActive)
@@ -40,6 +43,7 @@ int trn_findSuitableCircuitToUse (__TRANSFER_ROW transferIndex)
 			circuitFound = false;
 			return -1;
 		}
+
 		circuitType = transferIndex.leftSideType;
 	}
 
@@ -94,8 +98,6 @@ int trn_findSuitableCircuitToUse (__TRANSFER_ROW transferIndex)
 void trn_moveEnemyToken (int direction)
 //---------------------------------------------------------------------------------------------------------------------
 {
-//	printf ("Move enemy token\n");
-
 	if (TRANSFER_MOVE_UP == direction)
 	{
 		droidBlockPos--;

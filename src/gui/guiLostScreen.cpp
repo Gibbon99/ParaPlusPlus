@@ -67,6 +67,8 @@ void gui_preRenderLostScreen ()
 
 	gam_setHudText ("lostGameOver");
 
+	audio.stopAllChannels();
+
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 1, 127, "endTransmission1");
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "endTransmission2");
 

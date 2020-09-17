@@ -102,6 +102,8 @@ public:
 
 	double getMaxSpeed ();
 
+	void setWaypointDirection(int newDirection);
+
 	void getWaypointDestination ();
 
 	void getNextAStarDestination ();
@@ -134,7 +136,7 @@ private:
 	float     LOSTimeoutDelayValue      = 35.0f;
 	b2Vec2    currentVelocity           = {0, 0};
 	int       wayPointIndex             = 0;
-	int       wayPointDirection         = 0;
+	int       wayPointDirection         = WAYPOINT_UP;
 	int       currentAIMode             = 0;
 	int       patrolAction              = 0;
 	int       targetDroid               = -2;   // Target nobody yet
@@ -142,7 +144,7 @@ private:
 	b2Vec2    destinationCoordsInMeters = {0, 0};
 	b2Vec2    worldPositionInMeters     = {0, 0};
 	b2Vec2    lookAheadVelocity         = {0, 0};                // How far ahead does the droid look for a player collision
-	b2Fixture *playerDroidFixture       = nullptr;    // Used to determine if the droid will run into the player on current velocity
+	b2Fixture *droidFixture             = nullptr;    // Used to determine if the droid will run into the player on current velocity
 	int       ai[AI_MODE_NUMBER]{};
 };
 
