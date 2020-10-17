@@ -15,6 +15,39 @@ float chooseRowDelayTime = 0.0f;
 
 //---------------------------------------------------------------------------------------------------------------------
 //
+// Return if a circuit to be selected is a suitable color to change
+bool trn_isCircuitSuitable(__TRANSFER_ROW transferIndex)
+//---------------------------------------------------------------------------------------------------------------------
+{
+	//
+	// Player is on left - Droid Right
+	if (transferPlayerWhichSide == TRANSFER_COLOR_LEFT)
+	{
+		if (transferIndex.currentColor == TRANSFER_COLOR_RIGHT)
+		{
+
+			printf("Droid on right - color is already right color\n");
+
+			return false;
+		}
+
+	}
+	else    // Droid is on left
+	{
+		if (transferIndex.currentColor == TRANSFER_COLOR_LEFT)
+		{
+
+			printf("Droid on left - color is already left color\n");
+
+			return false;
+		}
+	}
+
+	return true;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+//
 // Find a suitable circuit to use
 //
 // TODO: Also only choose ones that need to be changed color - maybe only for high droids
@@ -57,8 +90,11 @@ int trn_findSuitableCircuitToUse (__TRANSFER_ROW transferIndex)
 		case TRANSFER_ROW_ONE_INTO_TWO_MIDDLE:
 		case TRANSFER_ROW_REPEAT_HALF:
 		case TRANSFER_ROW_REPEAT_QUARTER:
-			circuitFound = true;
-			return 0;
+			circuitFound = trn_isCircuitSuitable(transferIndex); //true;
+			if (circuitFound)
+				return 0;
+			else
+				return -1;
 			break;
 
 		case TRANSFER_ROW_HALF_LINE:

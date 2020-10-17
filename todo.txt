@@ -6,6 +6,7 @@ BUG - When alert level is higher than green, and deck goes black, alert draws as
 BUG - Background sound can stop playing
 BUG - Door sounds are not right
 BUG - changing level and then back with active bullet - can't find bullet index
+BUG - Restarting game player is still in exploding state
 
 
 TODO
