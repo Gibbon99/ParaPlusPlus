@@ -8,7 +8,6 @@ BUG - Door sounds are not right
 BUG - changing level and then back with active bullet - can't find bullet index
 BUG - Restarting game player is still in exploding state
 
-
 TODO
 -------
 
@@ -74,7 +73,7 @@ DONE - Check the ratio maths for detecting mouse in bb range
 FIXED - BUG - Return to dead level, physics goes wild
 DONE - Use Audio pause? - added to audioClass
 DONE - Fix sideview overlap on hold level - deck 3 not being highlighted now
-
+DONE - BUG - Entering database view doesn't show current droid greater than 001
 
 
 

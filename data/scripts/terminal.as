@@ -39,7 +39,7 @@ void as_handleTerminalMenu ()
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "terminalMenu.databaseButton"))
 	{
 		gam_setHudText("terminalMenu.databaseButton");
-		gam_prepareDatabaseScreen(0);
+		gam_prepareDatabaseScreen(playerDroidType);
 		as_paraGui.restartScrollBox("databaseScreen.scrollbox");
 		sys_setNewMode(MODE_GUI_DATABASE, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "databaseScreen"));
