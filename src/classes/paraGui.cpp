@@ -496,6 +496,8 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 		default:
 			return GUI_OBJECT_NOT_FOUND;
 	}
+
+	return GUI_OBJECT_NOT_FOUND;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -1351,8 +1353,11 @@ std::string paraGui::getFontName (int objectType, int objectIndex)
 
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get font."));
+			return "Unknown object for fontName.";
 			break;
 	}
+
+	return "Unknown object for fontName.";
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -2024,8 +2029,10 @@ std::string paraGui::getLabelText (int objectType, int objectIndex)
 
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get label text."));
+			return "Unknown object for fontName.";
 			break;
 	}
+	return "Unknown object for fontName.";
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -2130,8 +2137,11 @@ int paraGui::getGapSize (int objectType, int objectIndex)
 
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get gap size."));
+			return -1;
 			break;
 	}
+
+	return -1;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -2239,8 +2249,10 @@ int paraGui::getLabelPos (int objectType, int objectIndex)
 
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get label position."));
+			return -1;
 			break;
 	}
+	return -1;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -2348,8 +2360,11 @@ int paraGui::getRadius (int objectType, int objectIndex)
 
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get radius."));
+			return GUI_OBJECT_NOT_FOUND;
 			break;
 	}
+
+	return GUI_OBJECT_NOT_FOUND;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -2644,9 +2659,12 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 
 		default:
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get color."));
+			return badColor;
 			break;
 	}
+	return badColor;
 }
+
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -2819,6 +2837,7 @@ __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 			funcOutput (-1, int_getString ("Invalid object type. Unable to get dimensions."));
 			break;
 	}
+	return badBox;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

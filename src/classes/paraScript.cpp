@@ -538,6 +538,7 @@ std::string paraScript::getContextState (int whichState)
 			return "The context has encountered an error and must be reinitialized.";
 			break;
 	}
+	return "Unknown context from switch.";
 }
 
 //----------------------------------------------------------------------------------------------------------------------

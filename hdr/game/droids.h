@@ -38,3 +38,6 @@ void gam_removeDroids ();
 
 // Show the current droids attack target
 void gam_debugShowTarget(droidClass whichDroid);
+
+// Reset the droid information for a new game
+void gam_resetDroids ();

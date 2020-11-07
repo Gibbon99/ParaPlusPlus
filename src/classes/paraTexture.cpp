@@ -249,7 +249,7 @@ bool paraTexture::createMap ()
 
 	std::cout << "Start map creation" << std::endl;
 
-	for (int      y = 0; y < surface->h; y++)
+	for (int y = 0; y < surface->h; y++)
 	{
 		for (int x = 0; x < surface->w; x++)
 		{
@@ -292,4 +292,6 @@ bool paraTexture::createMap ()
 		//Lock the surface
 		SDL_UnlockSurface (surface);
 	}
+
+	return true;
 }

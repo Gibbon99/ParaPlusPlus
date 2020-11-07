@@ -93,6 +93,7 @@ std::string gam_getDroidName (int droidType)
 			return "999";
 			break;
 	}
+	return "Error";
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -102,7 +103,7 @@ void gam_initDroids (std::string levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
 	int        wayPointStartIndex = 0;
-	int wayPointSpacing = 0;
+	int        wayPointSpacing = 0;
 	int        droidIndex         = 0;
 	int        whichDirection;
 	droidClass tempDroid;
@@ -151,6 +152,17 @@ void gam_initDroids (std::string levelName)
 		shipdecks.at (levelName).droid.push_back (tempDroid);
 
 		droidIndex++;
+	}
+}
+//-------------------------------------------------------------------------------------------------------------
+//
+// Reset the droid information for a new game
+void gam_resetDroids ()
+//-------------------------------------------------------------------------------------------------------------
+{
+	for (auto shipdeckItr : shipdecks)
+	{
+		gam_initDroids(shipdeckItr.first);
 	}
 }
 
