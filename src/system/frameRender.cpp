@@ -150,7 +150,7 @@ void sys_renderFrame (double interpolation)
 			gam_renderVisibleScreen (interpolation);
 			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2, 1.0, static_cast<Uint8>(255));
 
-			gam_renderDroids (gam_getCurrentDeckName ());
+//			gam_renderDroids (gam_getCurrentDeckName ());
 			gam_renderParticles ();
 			break;
 

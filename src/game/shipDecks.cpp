@@ -163,6 +163,9 @@ int gam_getCurrentDeckIndex ()
 		if (deckItr.first == currentDeckName)
 			return deckItr.second.deckNumber;
 	}
+
+	sys_shutdownWithError("Unable to find current deck index.");
+	return -1;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -484,6 +487,8 @@ std::string gam_returnLevelNameFromDeck (int deckNumber)
 		}
 	}
 	sys_shutdownWithError (sys_getString ("Invalid deck index when searching for deck name [ %i ]", deckNumber));
+
+	return "Compiler happy";
 }
 
 //----------------------------------------------------------------------------------------------------------------------

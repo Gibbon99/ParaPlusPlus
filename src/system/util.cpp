@@ -278,8 +278,14 @@ void sys_setNewMode (int newMode, bool doFade)
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
-		case MODE_END_LOST_SCREEN:
 		case MODE_GAME_OVER:
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (GAME_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, gameWinWidth, gameWinHeight);
+			break;
+
+		case MODE_END_LOST_SCREEN:
+
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);

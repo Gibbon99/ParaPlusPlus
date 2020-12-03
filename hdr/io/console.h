@@ -10,3 +10,6 @@ void con_addEvent(int newAction, std::string newLine);
 
 // Start the console processing queue and thread
 void con_initConsole();
+
+// Show the commands and help text
+void consoleShowHelp ();

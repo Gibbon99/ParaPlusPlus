@@ -194,7 +194,10 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_GAME_OVER:
-					gam_processGameOver();
+
+					std::cout << "EVENT_ACTION_GAME_OVER" << std::endl;
+
+//					gam_processGameOver();
 					break;
 
 				case MODE_END_PRE_LOST_SCREEN:

@@ -8,7 +8,7 @@ extern droidClass testDroid;
 extern float      explosionAnimationSpeed;
 
 // Create the droids for the level and init values
-void gam_initDroids (std::string levelName);
+void gam_initDroids (const std::string& levelName);
 
 // Animate the droid sprites
 void gam_animateDroids ();

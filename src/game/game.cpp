@@ -16,10 +16,13 @@ int explosionDamage;
 void gam_startNewGame()
 //-------------------------------------------------------------------------------------------------------------
 {
+	//
+	// TODO: Clear screen back buffer
+
+	gam_resetDroids ();
 	sys_setupEnemyPhysics (gam_getCurrentDeckName());
 	playerDroid.currentMode = DROID_MODE_NORMAL;
 	gam_setupPlayerDroid ();
-	gam_resetDroids ();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -30,36 +33,19 @@ void gam_processGameOver()
 {
 	bool animationEnd = false;
 
-	if ((playerDroid.currentMode != DROID_MODE_EXPLODING)
-		&& (playerDroid.currentMode != DROID_MODE_DEAD))
-	{
-		gui_insertNewScore (gam_getCurrentScore ());
+	animationEnd = playerDroid.sprite.animate ();
 
-		playerDroid.velocity    = {0, 0};
-		playerDroid.currentMode = DROID_MODE_EXPLODING;
-		playerDroid.sprite.create ("explosion", 25, explosionAnimationSpeed);
-		playerDroid.sprite.setAnimateSpeed (explosionAnimationSpeed);      // Set for explosion animation
+	std::cout << " Player is exploding " << animationEnd << " current mode : " << playerDroid.currentMode << std::endl;
 
-		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode1");
-		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
-
-		gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
-
-		sys_setNewMode(MODE_GAME_OVER, false);
-		return;
-	}
-
-	if (playerDroid.currentMode == DROID_MODE_EXPLODING)
-		animationEnd = playerDroid.sprite.animate ();
-
-	std::cout << " Player is exploding " << animationEnd << std::endl;
-
-//	if ((animationEnd) && (playerDroid.currentMode == DROID_MODE_EXPLODING))
 	if (animationEnd)
 	{
+
+		std::cout << "Player explosion animation is over" << std::endl;
+
 		playerDroid.currentMode = DROID_MODE_DEAD;
-//		gam_addEvent (MODE_END_PRE_LOST_SCREEN, 50, "");
 		sys_setNewMode (MODE_END_PRE_LOST_SCREEN, false);
+
 		std::cout << " Game Over " << std::endl;
+
 	}
 }

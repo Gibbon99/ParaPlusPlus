@@ -93,17 +93,17 @@ std::string gam_getDroidName (int droidType)
 			return "999";
 			break;
 	}
-	return "Error";
+	return "Error : gam_getDroidName";
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //
 // Create the droids for the level and init values
-void gam_initDroids (std::string levelName)
+void gam_initDroids (const std::string &levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
 	int        wayPointStartIndex = 0;
-	int        wayPointSpacing = 0;
+	int        wayPointSpacing    = 0;
 	int        droidIndex         = 0;
 	int        whichDirection;
 	droidClass tempDroid;
@@ -115,7 +115,7 @@ void gam_initDroids (std::string levelName)
 		shipdecks.at (levelName).droid.resize (0);
 	}
 
-	wayPointSpacing = shipdecks.at (levelName).numWaypoints / shipdecks.at (levelName).droidTypes.size() - 1;
+	wayPointSpacing = shipdecks.at (levelName).numWaypoints / shipdecks.at (levelName).droidTypes.size () - 1;
 
 	shipdecks.at (levelName).numEnemiesAlive = shipdecks.at (levelName).numDroids;
 	for (auto &droidItr : shipdecks.at (levelName).droidTypes)
@@ -126,7 +126,7 @@ void gam_initDroids (std::string levelName)
 		tempDroid.currentHealth = dataBaseEntry[tempDroid.droidType].maxHealth;
 
 		wayPointStartIndex = 0;
-		whichDirection = randomDirection.get(0, 10);
+		whichDirection     = randomDirection.get (0, 10);
 		if (whichDirection < 5)
 			tempDroid.ai.setWaypointDirection (WAYPOINT_UP);
 		else
@@ -151,9 +151,12 @@ void gam_initDroids (std::string levelName)
 
 		shipdecks.at (levelName).droid.push_back (tempDroid);
 
+		shipdecks.at (levelName).droidPhysicsCreated = false;
+
 		droidIndex++;
 	}
 }
+
 //-------------------------------------------------------------------------------------------------------------
 //
 // Reset the droid information for a new game
@@ -162,7 +165,7 @@ void gam_resetDroids ()
 {
 	for (auto shipdeckItr : shipdecks)
 	{
-		gam_initDroids(shipdeckItr.first);
+		gam_initDroids (shipdeckItr.first);
 	}
 }
 

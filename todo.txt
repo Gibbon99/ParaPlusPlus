@@ -1,4 +1,12 @@
 
+1 - Create player explosion sprite
+2 - Render level only while player explodes - HD text is Game Over
+3 - Pause on empty level
+4 - Fade to game over static
+5 - Play for x seconds
+6 - If score is in high score table - show high score table - Pause for X seconds
+7 - Fade to GUI
+
 BUGS
 --------
 
@@ -7,6 +15,10 @@ BUG - Background sound can stop playing
 BUG - Door sounds are not right
 BUG - changing level and then back with active bullet - can't find bullet index
 BUG - Restarting game player is still in exploding state
+BUG - Player bullets bouncing off droid when in collision ?
+BUG - Changing to dead level results in no physics created - player speed too much
+BUG - When alert level not green, and level goes dead, alert tiles are set to green until level is changed
+BUG - Help console command is not working
 
 TODO
 -------

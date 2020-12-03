@@ -275,6 +275,11 @@ void gam_addBullet (int bulletSourceIndex)
 				gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_TRAIL, bulletID);
 				gam_addNewLightmap (sys_convertToMeters (playerDroid.worldPosInPixels), LIGHTMAP_TYPE_BULLET, bulletID);
 			}
+			else
+			{
+				gam_addEmitter(sys_convertToMeters(g_shipDeckItr->second.droid[bulletSourceIndex].worldPosInPixels), PARTICLE_TYPE_TRAIL, bulletID);
+				gam_addNewLightmap(sys_convertToMeters(g_shipDeckItr->second.droid[bulletSourceIndex].worldPosInPixels), LIGHTMAP_TYPE_BULLET, bulletID);
+			}
 #ifdef DEBUG_BULLET
 			std::cout << "Bullet with ID : " << bulletID << " added to array position : " << indexCounter << std::endl;
 #endif

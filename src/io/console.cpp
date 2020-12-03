@@ -206,9 +206,7 @@ void con_initConsole ()
 
 	sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, sys_getString ("Console started [ %s ]", APP_NAME));
 
-	//
-	// TODO - Implement help to show help descriptions for all
-	console.addCommand ("help", "Show available commands", "functionHelp");
+	console.addCommand ("help", "Show available commands", consoleShowHelp);
 
 	console.addCommand ("d_showCurrentBackingTexture", "Show backing texture information.", debug_getCurrentBackingTexture);
 	console.addCommand ("d_showAllBackingTextures", "List all backing textures", debug_getAllBackingTextures);
@@ -245,4 +243,15 @@ void con_initConsole ()
 	console.addVariable ("height", VAR_TYPE_INT, &testVar);
 	console.addVariable ("testString", VAR_TYPE_STRING, &testVarString);
 	console.addVariable ("testFloat", VAR_TYPE_FLOAT, &testVarFloat);
+}
+
+void consoleShowHelp ()
+{
+	std::string allCommands;
+
+	for (const auto &consoleListItr : console.consoleCommands)
+	{
+		allCommands = "[ " + consoleListItr.second.commandName + " ] : [ " + consoleListItr.second.commandHelp + " ]";
+		console.add(allCommands);
+	}
 }

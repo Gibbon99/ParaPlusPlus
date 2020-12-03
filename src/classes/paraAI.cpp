@@ -9,7 +9,7 @@
 #include <game/bullet.h>
 #include "classes/paraAI.h"
 
-// #define DEBUG_AI 1
+#define DEBUG_AI 1
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
@@ -55,6 +55,8 @@ std::string paraAI::getString (int whichMode)
 			return "AI_MODE_ATTACK";
 			break;
 	}
+
+	return ("Unknown AI_MODE");
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -135,6 +137,8 @@ b2Vec2 paraAI::findLocationWithLOS (int locationType)
 			return destinationCoordsInMeters;
 			break;
 	}
+
+	return b2Vec2{0,0};
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -195,7 +199,7 @@ void paraAI::patrol ()
 						{
 							currentSpeed = 0.0f;
 							currentVelocity.SetZero ();
-							swapWaypointDirection ();
+							swapWaypointDirection ();       // TODO: Use a counter and don't change if over limit
 						}
 					}
 				}
@@ -415,6 +419,8 @@ std::string paraAI::getPatrolAction ()
 			return "MOVE_DIRECT_TO_LOCATION";
 			break;
 	}
+
+	return ("Unknown MOVE AI mode");
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -650,7 +656,9 @@ void paraAI::changeModeTo (int newAIMode)
 			tileDestination = findFleeTile();
 			if (tileDestination.x < 0)  // Can't find somewhere to flee to
 			{
-				modifyScore(AI_MODE_FLEE, -100);
+				patrolAction = FIND_WAYPOINT;
+				modifyScore(AI_MODE_PATROL, +50);
+				modifyScore(AI_MODE_FLEE, -100);    // Should go back to patrol
 				return;
 			}
 			localWorldPosInPixels = sys_convertToPixels(worldPositionInMeters);
@@ -662,6 +670,7 @@ void paraAI::changeModeTo (int newAIMode)
 				std:cout << "[ " << arrayIndex << " ]" << " Too close to flee destination to get a path. Set patrolAction to FIND_WAYPOINT" << std::endl;
 #endif
 				patrolAction = FIND_WAYPOINT;
+				modifyScore(AI_MODE_PATROL, +50);
 				checkScores();
 			}
 			break;
@@ -690,6 +699,7 @@ void paraAI::changeModeTo (int newAIMode)
 				std::cout << "[ " << arrayIndex << " ]" << " Too close to healing tile to get a path. Set patrolAction to FIND_WAYPOINT" << std::endl;
 #endif
 				patrolAction = FIND_WAYPOINT;
+				modifyScore(AI_MODE_PATROL, +50);
 				checkScores ();
 			}
 			break;
@@ -838,6 +848,7 @@ b2Vec2 paraAI::findFleeTile()
 			}
 		}
 	}
+	return b2Vec2{0,0};
 }
 
 //-----------------------------------------------------------------------------------------------------------------------

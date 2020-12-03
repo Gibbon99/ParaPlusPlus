@@ -46,21 +46,24 @@ void sys_processPhysics (double tickTime)
 	playerDroid.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);           // Change to pixels
 	playerDroid.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
 
-	if ((g_shipDeckItr->second.droidPhysicsCreated) || (g_shipDeckItr->second.deckIsDead))
+	if ((g_shipDeckItr->second.droidPhysicsCreated) || (!g_shipDeckItr->second.deckIsDead))
 	{
 		for (auto &droidItr : g_shipDeckItr->second.droid)
 		{
 			if (droidItr.currentMode == DROID_MODE_NORMAL)
 			{
 				droidItr.previousWorldPosInPixels = droidItr.worldPosInPixels;
-				droidItr.worldPosInPixels         = droidItr.body->GetPosition ();       // In Meters
+				if (droidItr.body == nullptr)
+					sys_shutdownWithError ("Invalid droidItr body pointer. Set to nullptr");
+
+				droidItr.worldPosInPixels = droidItr.body->GetPosition ();       // In Meters
 				droidItr.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);       // Change to pixels for rendering
 				droidItr.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
 				droidItr.body->SetLinearVelocity ({0, 0});
 			}
 		}
 		//	gam_processPhysicActions ();
-		playerDroid.body->SetLinearVelocity({ 0, 0 });
+		playerDroid.body->SetLinearVelocity ({0, 0});
 	}
 }
 
@@ -172,10 +175,10 @@ void sys_clearSolidWalls ()
 			delete (wallItr.userData);
 			wallItr.userData = nullptr;
 		}
-		
+
 		if (wallItr.body != nullptr)
 		{
-			wallItr.body->GetWorld()->DestroyBody(wallItr.body);
+			wallItr.body->GetWorld ()->DestroyBody (wallItr.body);
 			wallItr.body = nullptr;
 		}
 	}
@@ -246,13 +249,13 @@ void sys_freePhysicsEngine ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Clear previous level - remove physics objects from droid before changing level name
-void gam_clearDroidPhysics(std::string levelName)
+void gam_clearDroidPhysics (std::string levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
-	if (levelName.empty())      // First run - no level set as yet
+	if (levelName.empty ())      // First run - no level set as yet
 		return;
 
-	for (auto& droidItr : shipdecks.at(levelName).droid)
+	for (auto &droidItr : shipdecks.at (levelName).droid)
 	{
 		if (droidItr.userData != nullptr)
 		{
@@ -262,11 +265,11 @@ void gam_clearDroidPhysics(std::string levelName)
 
 		if (droidItr.body != nullptr)
 		{
-			droidItr.body->GetWorld()->DestroyBody(droidItr.body);
+			droidItr.body->GetWorld ()->DestroyBody (droidItr.body);
 			droidItr.body = nullptr;
 		}
 	}
-	shipdecks.at(levelName).droidPhysicsCreated = false;
+	shipdecks.at (levelName).droidPhysicsCreated = false;
 }
 
 //-------------------------------------------------------------------
@@ -291,7 +294,7 @@ void sys_setupEnemyPhysics (std::string levelName)
 		std::cout << "Droid physics already created for level : " << levelName << std::endl;
 		return;
 	}
-	
+
 	for (auto &droidItr : shipdecks.at (levelName).droid)
 	{
 		if (droidItr.currentMode == DROID_MODE_NORMAL)
@@ -303,7 +306,7 @@ void sys_setupEnemyPhysics (std::string levelName)
 
 			droidItr.userData                  = new _userData;
 			droidItr.userData->userType        = PHYSIC_TYPE_ENEMY;
-			droidItr.userData->dataValue	   = droidItr.ai.getArrayIndex();
+			droidItr.userData->dataValue       = droidItr.ai.getArrayIndex ();
 			droidItr.userData->wallIndexValue  = -1;
 			droidItr.userData->ignoreCollision = true;
 			droidItr.body->SetUserData (droidItr.userData);
@@ -321,4 +324,6 @@ void sys_setupEnemyPhysics (std::string levelName)
 		}
 	}
 	g_shipDeckItr->second.droidPhysicsCreated = true;
+
+	std::cout << "Droid physics created for level : " << levelName << std::endl;
 }

@@ -8,6 +8,8 @@
 #include <game/game.h>
 #include <game/transferGame.h>
 #include <game/particles.h>
+#include <gui/guiHighScore.h>
+#include <game/score.h>
 #include "game/player.h"
 
 #include "game/bullet.h"
@@ -79,6 +81,7 @@ void gam_setupPlayerDroid ()
 	playerDroid.currentMode = DROID_MODE_NORMAL;
 
 	sys_setupPlayerPhysics ();
+	gam_checkPlayerHealth ();
 }
 
 //-----------------------------------------------------------------------------
@@ -264,9 +267,26 @@ void gam_checkPlayerHealth ()
 	// Process player health and animation
 	if (playerDroid.currentHealth < 0)
 	{
-		if (currentMode != MODE_GAME_OVER)
-			gam_addEvent (EVENT_ACTION_GAME_OVER, 20, "");
-		return;     // TODO Remove comment to avoid dropthrough
+		if (playerDroid.currentMode != DROID_MODE_EXPLODING)
+		{
+			playerDroid.currentMode = DROID_MODE_EXPLODING;
+
+			gui_insertNewScore (gam_getCurrentScore ());
+
+			playerDroid.velocity    = {0, 0};
+			playerDroid.sprite.create ("explosion", 25, explosionAnimationSpeed);
+			playerDroid.sprite.setAnimateSpeed (explosionAnimationSpeed);      // Set for explosion animation
+
+			gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP_ALL, false, 0, 0, "");
+
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode1");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
+
+			gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+
+			sys_setNewMode(MODE_GAME_OVER, false);
+		}
+		return;
 	}
 
 	dangerHealthLevel     = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;

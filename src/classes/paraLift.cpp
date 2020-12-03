@@ -48,4 +48,7 @@ int paraLift::getTunnelIndex(int liftIndex)
 			return tunnelItr.first;
 		}
 	}
+
+	sys_shutdownWithError("Unable to find tunnel index.");
+	return -1;
 }

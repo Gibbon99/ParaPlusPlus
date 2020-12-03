@@ -39,12 +39,16 @@ void gam_renderHud ()
 
 	destination.x = 0;
 	destination.y = 0;
-	if (currentMode != MODE_GAME)
+
+	if (currentMode != MODE_GAME)  // Causing bad graphic on game over ?
 	{
 		try
 		{
 			destination.h = textures.at ("hudNew").getHeight ();
 			destination.w = textures.at ("hudNew").getWidth ();
+
+//			std::cout << "HIRES HUD texture : " << std::endl;
+
 		}
 		catch (std::out_of_range outOfRange)
 		{
@@ -55,8 +59,11 @@ void gam_renderHud ()
 	{
 		destination.h = textures.at ("hudNew").getHeight () * (static_cast<double>(gameWinHeight) / hiresVirtualHeight);
 		destination.w = gameWinWidth;
-	}
 
+//		std::cout << "LORES HUD texture : " << currentMode << "." << std::endl;
+
+	}
+	
 	textures.at ("hudNew").render (&destination);
 
 	fontClass.use ("guiFont");
