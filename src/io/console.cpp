@@ -207,6 +207,7 @@ void con_initConsole ()
 	sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, sys_getString ("Console started [ %s ]", APP_NAME));
 
 	console.addCommand ("help", "Show available commands", consoleShowHelp);
+	console.addCommand ("quit", "Quit the game.", sys_shutdown);
 
 	console.addCommand ("d_showCurrentBackingTexture", "Show backing texture information.", debug_getCurrentBackingTexture);
 	console.addCommand ("d_showAllBackingTextures", "List all backing textures", debug_getAllBackingTextures);
@@ -224,11 +225,9 @@ void con_initConsole ()
 	console.addCommand ("setVolume", "Change Volume level.", "as_setVolume");
 	console.addCommand ("getVolume", "View the current Volume level.", "as_getVolume");
 	
-	console.addCommand ("testScript", "test", "as_testFunction");
-
 	console.addCommand ("d_getOS", "Show which OS is in use.", sys_getOS);
-	console.addCommand ("quit", "Quit the game.", sys_shutdown);
 
+	console.addCommand ("testScript", "test", "as_testFunction");
 	console.addCommand ("testPlay", "Play sound", testPlay);
 	//
 	// Variables accessible from the console
@@ -245,7 +244,11 @@ void con_initConsole ()
 	console.addVariable ("testFloat", VAR_TYPE_FLOAT, &testVarFloat);
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Display the list of commands to the console
 void consoleShowHelp ()
+//----------------------------------------------------------------------------------------------------------------------
 {
 	std::string allCommands;
 

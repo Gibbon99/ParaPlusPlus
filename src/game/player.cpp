@@ -345,15 +345,12 @@ void gam_damageToPlayer (int damageSource, int sourceDroid)
 
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "damage");
 			playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bulletDamage;
+
 			break;
 
 		case PHYSIC_DAMAGE_EXPLOSION:
 			break;
 	}
-
-#ifdef MY_DEBUG
-//	std::cout << "player health now : " << playerDroid.currentHealth << std::endl;  // TODO - Remove
-#endif
 
 	gam_checkPlayerHealth ();
 }

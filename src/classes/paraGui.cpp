@@ -3650,7 +3650,7 @@ void paraGui::setDefaultKeybindings ()
 	keyBinding[KEY_DOWN].keyValue       = SDL_SCANCODE_DOWN;
 	keyBinding[KEY_UP].keyValue         = SDL_SCANCODE_UP;
 	keyBinding[KEY_PAUSE].keyValue      = SDL_SCANCODE_P;
-	keyBinding[KEY_ACTION].keyValue     = SDL_SCANCODE_SPACE;
+	keyBinding[KEY_ACTION].keyValue     = SDL_SCANCODE_LCTRL;
 	keyBinding[KEY_ESCAPE].keyValue     = SDL_SCANCODE_ESCAPE;
 	keyBinding[KEY_CONSOLE].keyValue    = SDL_SCANCODE_GRAVE;
 	keyBinding[KEY_SCREENSHOT].keyValue = SDL_SCANCODE_S;

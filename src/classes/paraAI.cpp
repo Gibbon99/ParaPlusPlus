@@ -1017,7 +1017,7 @@ void paraAI::attack()
 	if ((currentDistance > desiredAttackDistance) &&
 	(currentDistance < desiredAttackDistance + paddingSize))
 	{
-		currentVelocity.SetZero();
+//		currentVelocity.SetZero();
 		if (dataBaseEntry[g_shipDeckItr->second.droid[arrayIndex].droidType].canShoot)
 		{
 			if (targetDroid != NO_ATTACK_TARGET)
@@ -1038,9 +1038,10 @@ void paraAI::attack()
 		return;
 	}
 
-	if (currentDistance < desiredAttackDistance)
+	if (currentDistance < desiredAttackDistance)     // Too close - move away - but check that path is clear ?
 	{
 		directionVector = -directionVector;
+		directionVector.Normalize();
 		directionVector *= currentSpeed;
 		currentVelocity = directionVector;
 		return;
