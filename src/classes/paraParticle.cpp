@@ -12,7 +12,7 @@ paraRandom angleRandom;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return if the emitter is dead and can be removed
-bool paraParticle::isDead ()
+bool paraParticle::isDead (bool b)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return isDeadFlag;
@@ -256,6 +256,7 @@ void paraParticle::animate ()
 {
 	int    particleLifetimeReduce = 0;
 	int    tempAlpha;
+	int     tempBulletIndex;
 	b2Vec2 spacingVelocity;
 
 	switch (type)
@@ -301,19 +302,27 @@ void paraParticle::animate ()
 
 			if (attachedToBullet)  // Still connected to a bullet
 			{
-				particleItr.isAlive  = true;
-				particleItr.worldPos = sys_convertToPixels (bullets[gam_getArrayIndex (bulletLink)].worldPosInMeters);
-				particleItr.worldPos.x -= ((bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth () * 0.5) - angleRandom.get (0, bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth ()));
-				particleItr.worldPos.y -= ((bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameHeight () * 0.5) - angleRandom.get (0, bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameHeight ()));
-				//
-				// Put starting position behind direction of bullet travel
-				spacingVelocity      = bullets[gam_getArrayIndex (bulletLink)].velocity;
-				spacingVelocity.Normalize ();
-				spacingVelocity *= static_cast<float>(bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth () * 0.5f);
-				particleItr.worldPos -= spacingVelocity;
-				particleItr.worldPos = sys_convertToMeters (particleItr.worldPos);
+				tempBulletIndex = gam_getArrayIndex(bulletLink);    // Check that bullet is still valid
+				if (tempBulletIndex < 0)
+				{
+					isDead (true);
+				}
+				else
+				{
+					particleItr.isAlive  = true;
+					particleItr.worldPos = sys_convertToPixels (bullets[gam_getArrayIndex (bulletLink)].worldPosInMeters);
+					particleItr.worldPos.x -= ((bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth () * 0.5) - angleRandom.get (0, bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth ()));
+					particleItr.worldPos.y -= ((bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameHeight () * 0.5) - angleRandom.get (0, bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameHeight ()));
+					//
+					// Put starting position behind direction of bullet travel
+					spacingVelocity      = bullets[gam_getArrayIndex (bulletLink)].velocity;
+					spacingVelocity.Normalize ();
+					spacingVelocity *= static_cast<float>(bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth () * 0.5f);
+					particleItr.worldPos -= spacingVelocity;
+					particleItr.worldPos = sys_convertToMeters (particleItr.worldPos);
 
-				particleItr.color.a = angleRandom.get (100, 255);
+					particleItr.color.a = angleRandom.get (100, 255);
+				}
 			}
 		}
 		else    // Particle is still alive

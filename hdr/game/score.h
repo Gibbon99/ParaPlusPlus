@@ -17,3 +17,6 @@ int gam_getPrintableScore ();
 
 // Return the actual score - used for game over
 int gam_getCurrentScore();
+
+// Set the starting values for the score
+void gam_initScoreValues();

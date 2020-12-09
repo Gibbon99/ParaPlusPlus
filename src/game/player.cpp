@@ -405,6 +405,9 @@ void gam_processInfluenceTime ()
 		gam_addEmitter(sys_convertToMeters(playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
 		gam_addEmitter(sys_convertToMeters(playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
 		trn_transferLostGame();
+		playerDroid.sprite.setTintColor (255, 255, 255);
+		playerDroid.influenceFadeFlag = false;
+		playerDroid.lowInfluenceTimeleft = false;
 
 #ifdef MY_DEBUG
 		std::cout << "Influence time is up." << std::endl;

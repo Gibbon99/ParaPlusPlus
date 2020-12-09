@@ -63,8 +63,8 @@ void sys_processPhysics (double tickTime)
 			}
 		}
 		//	gam_processPhysicActions ();
-		playerDroid.body->SetLinearVelocity ({0, 0});
 	}
+	playerDroid.body->SetLinearVelocity ({0, 0});
 }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -9,16 +9,10 @@
 
 BUGS
 --------
-
-BUG - When alert level is higher than green, and deck goes black, alert draws as green
 BUG - Background sound can stop playing
 BUG - Door sounds are not right
-BUG - changing level and then back with active bullet - can't find bullet index
 BUG - Restarting game player is still in exploding state
 BUG - Player bullets bouncing off droid when in collision ?
-BUG - Changing to dead level results in no physics created - player speed too much
-BUG - When alert level not green, and level goes dead, alert tiles are set to green until level is changed
-BUG - Help console command is not working
 
 TODO
 -------
@@ -33,7 +27,6 @@ Splash screen on start
 Player health check on damage - dead animation
 Droid AI - Attack
 Droid AI - Help
-Yellow alert showing green lightmap on deck change
 Check bottom edge of animated tiles in graphics
 Fix up player location on deck view in terminal
 Calibrate joystick
@@ -88,9 +81,16 @@ DONE - Fix sideview overlap on hold level - deck 3 not being highlighted now
 >Commit
 DONE - BUG - Entering database view doesn't show current droid greater than 001
 >Commit
-
-
-
+DONE - BUG - Help console command is not working
+>Commit
+DONE - BUG - changing level and then back with active bullet - can't find bullet index
+Cleaned up removal of bullets/particles and lightmaps when changing to a new level
+DONE - BUG - Changing to dead level results in no physics created - player speed too much
+DONE - BUG - Dead levels are not reset on new game
+DONE - BUG - When alert level not green, and level goes dead, alert tiles are set to green until level is changed
+DONE - BUG - When alert level is higher than green, and deck goes black, alert draws as green
+DONE - BUG - Player stayed blue after transfer timed out
+Score resets on new game
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
 -DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "

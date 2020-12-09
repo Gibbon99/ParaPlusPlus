@@ -129,6 +129,7 @@ Uint32 paraLightmap::getAttachedBullet ()
 //-----------------------------------------------------------------------------------------------------------
 //
 // Constructor for a new lightmap instance - Pass in newWorldPos in world coords ( meters )
+// newWhichBullet is used to pass in current alert level
 paraLightmap::paraLightmap (b2Vec2 newWorldPos, int newType, int newWhichBullet)
 //-----------------------------------------------------------------------------------------------------------
 {
@@ -166,9 +167,28 @@ paraLightmap::paraLightmap (b2Vec2 newWorldPos, int newType, int newWhichBullet)
 
 		case LIGHTMAP_TYPE_ALERT:
 			attachedToBullet = false;
-			color.r = 0;
-			color.g = 255;
-			color.b = 0;
+			switch (newWhichBullet)
+			{
+				case ALERT_GREEN_TILE:
+					color.r = 0;
+					color.g = 255;
+					color.b = 0;
+					break;
+
+				case ALERT_YELLOW_TILE:
+					color.r = 255;
+					color.g = 255;
+					color.b = 0;
+
+					break;
+
+				case ALERT_RED_TILE:
+					color.r = 255;
+					color.g = 0;
+					color.b = 0;
+					break;
+			}
+
 			color.a = 32;
 			worldPosInPixels.x +=  (tileSize / 2);
 			worldPosInPixels.y +=  (tileSize / 2);

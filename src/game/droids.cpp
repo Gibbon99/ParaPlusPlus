@@ -118,6 +118,8 @@ void gam_initDroids (const std::string &levelName)
 	wayPointSpacing = shipdecks.at (levelName).numWaypoints / shipdecks.at (levelName).droidTypes.size () - 1;
 
 	shipdecks.at (levelName).numEnemiesAlive = shipdecks.at (levelName).numDroids;
+	shipdecks.at (levelName).deckIsDead = false;
+
 	for (auto &droidItr : shipdecks.at (levelName).droidTypes)
 	{
 		tempDroid.ai.initAI ();
@@ -163,7 +165,7 @@ void gam_initDroids (const std::string &levelName)
 void gam_resetDroids ()
 //-------------------------------------------------------------------------------------------------------------
 {
-	for (auto shipdeckItr : shipdecks)
+	for (auto &shipdeckItr : shipdecks)
 	{
 		gam_initDroids (shipdeckItr.first);
 	}
@@ -340,6 +342,9 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 	switch (damageSource)
 	{
 		case PHYSIC_DAMAGE_BUMP:
+
+			std::cout << "Damage to Droid " << targetDroid << " from BUMP" << std::endl;
+
 			if (g_shipDeckItr->second.droid[targetDroid].currentMode == DROID_MODE_EXPLODING)
 			{
 				if (sourceDroid != -1)  // Another droid has run into explosion
@@ -366,6 +371,9 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 			break;
 
 		case PHYSIC_DAMAGE_BULLET:
+
+			std::cout << "Damage to Droid " << targetDroid << " from BULLET " << " from " << sourceDroid << std::endl;
+
 			//
 			// Set the target to the bullets source
 			if (dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].canShoot)

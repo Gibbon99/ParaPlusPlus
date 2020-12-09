@@ -23,6 +23,7 @@ void gam_startNewGame()
 	sys_setupEnemyPhysics (gam_getCurrentDeckName());
 	playerDroid.currentMode = DROID_MODE_NORMAL;
 	gam_setupPlayerDroid ();
+	gam_initScoreValues();
 }
 
 //-------------------------------------------------------------------------------------------------------------

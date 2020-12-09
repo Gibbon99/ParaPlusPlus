@@ -653,6 +653,7 @@ void gam_setDeckIsDead ()
 		gam_loadTexture (tempFilename, tempTiles);
 		gam_modifyScore (powerdownLevelScore);
 		gam_createDeckTexture (gam_getCurrentDeckName ());      // Recreate the deck texture with new tileset
+		gam_renderAlertTiles ();
 		g_shipDeckItr->second.deckIsDead = true;
 		gam_addEvent(EVENT_ACTION_GAME_CHECK_DECK_CLEAR, 20, "");    // Check all decks
 	}

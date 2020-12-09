@@ -77,3 +77,13 @@ int gam_getPrintableScore()
 {
 	return printableScore;
 }
+
+//------------------------------------------------------------------------------------------------------
+//
+// Set the starting values for the score
+void gam_initScoreValues()
+//------------------------------------------------------------------------------------------------------
+{
+	currentScore = 0;
+	printableScore = 0;
+}

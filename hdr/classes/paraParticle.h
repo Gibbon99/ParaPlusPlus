@@ -20,7 +20,7 @@ public:
 
 	bool inUse ();
 
-	bool isDead ();
+	bool isDead (bool b);
 
 	Uint32 getAttachedBullet ();
 

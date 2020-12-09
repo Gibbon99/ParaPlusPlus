@@ -10,8 +10,10 @@ std::vector<paraParticle>   particleEmitters;
 void gam_clearEmitters()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto emitterItr : particleEmitters)
+	for (auto &emitterItr : particleEmitters)
 	{
+		emitterItr.setIsAttached(false);
+		emitterItr.isDead(true);
 //		delete emitterItr;
 	}
 }
@@ -61,8 +63,9 @@ void gam_removeDeadEmitters()
 {
 	for (auto &partItr : particleEmitters)
 	{
-		if (partItr.isDead())
+		if (partItr.isDead (false))
 		{
+			// TODO - Set inUse to false ?
 //			delete partItr;
 			return;
 		}
@@ -77,7 +80,7 @@ void gam_removeEmitter(Uint32 whichBulletID)
 {
 	for (auto &partItr : particleEmitters)
 	{
-		if ((partItr.inUse()) && (!partItr.isDead()))
+		if ((partItr.inUse()) && (!partItr.isDead (false)))
 		{
  	 		if (partItr.getAttachedBullet () == whichBulletID)
 			{

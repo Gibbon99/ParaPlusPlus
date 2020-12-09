@@ -217,6 +217,13 @@ void gam_initBulletArray ()
 	{
 		for (auto &bulletItr : bullets)
 		{
+			if (bulletItr.inUse)
+			{
+				gam_removeBullet (bulletItr.ID);
+				gam_removeEmitter (bulletItr.ID);
+				gam_removeLightmap(bulletItr.ID);
+			}
+
 			bulletItr.inUse = false;
 			bulletItr.ID    = 0;
 		}
@@ -232,7 +239,7 @@ void gam_initBulletArray ()
 
 //---------------------------------------------------------------------------------------------------------------
 //
-// Return the index of a bullet using its ID
+// Return the index of a bullet using its ID - return -1 if the bullet could not be found
 int gam_getArrayIndex (Uint32 bulletID)
 //---------------------------------------------------------------------------------------------------------------
 {
@@ -245,6 +252,8 @@ int gam_getArrayIndex (Uint32 bulletID)
 
 		indexCounter++;
 	}
+
+	return -1;
 
 	sys_shutdownWithError (sys_getString ("Unable to locate bullet index by ID [ %i ]", bulletID));
 }
@@ -328,7 +337,7 @@ void gam_removeBullet (Uint32 bulletID)
 
 	catch (const std::out_of_range &outOfRange)
 	{
-		sys_shutdownWithError (sys_getString ("Attempting to remove bullet with index [ %i ]. Out of range.", bulletIndex));
+//		sys_shutdownWithError (sys_getString ("Attempting to remove bullet with index [ %i ]. Out of range.", bulletIndex));
 	}
 }
 
