@@ -34,7 +34,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid);
 void gam_processCollision (int droidA);
 
 // Check for any droids that need to be removed - died last tick
-void gam_removeDroids ();
+void gam_removeDroids (bool clearAll);
 
 // Show the current droids attack target
 void gam_debugShowTarget(droidClass whichDroid);

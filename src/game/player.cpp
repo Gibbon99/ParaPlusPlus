@@ -68,7 +68,7 @@ void gam_weaponRechargePlayer ()
 
 //-----------------------------------------------------------------------------------------------------------------
 //
-// Setup the player droid - run once
+// Setup the player droid - run once at start of each new game
 void gam_setupPlayerDroid ()
 //-----------------------------------------------------------------------------------------------------------------
 {
@@ -79,6 +79,7 @@ void gam_setupPlayerDroid ()
 	playerDroid.ai.setMaxSpeed (dataBaseEntry[0].maxSpeed);
 	playerDroid.currentHealth = dataBaseEntry[0].maxHealth;
 	playerDroid.currentMode = DROID_MODE_NORMAL;
+	playerDroid.sprite.setLowHealth (false);
 
 	sys_setupPlayerPhysics ();
 	gam_checkPlayerHealth ();
@@ -283,6 +284,8 @@ void gam_checkPlayerHealth ()
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
 
 			gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+
+			sys_clearDroidPhysics (gam_getCurrentDeckName ());
 
 			sys_setNewMode(MODE_GAME_OVER, false);
 		}

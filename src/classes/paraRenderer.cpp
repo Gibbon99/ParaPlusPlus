@@ -578,7 +578,6 @@ void paraRenderer::presentFrame ()
 				break;
 		}
 	}
-
 	SDL_RenderPresent (renderer);
 }
 
@@ -607,7 +606,6 @@ void paraRenderer::prepareFrame ()
 				break;
 
 			case FADE_STATE_NONE:
-//				if (SDL_SetRenderTarget(paraRenderer::renderer, SDL_GetRenderTarget(paraRenderer::renderer)))
 				if (SDL_SetRenderTarget (paraRenderer::renderer, getRenderTarget (getCurrentBackingTexture ())) < 0)
 				{
 					errorCount++;
@@ -620,6 +618,16 @@ void paraRenderer::prepareFrame ()
 				break;
 		}
 	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Clear all the textures
+void paraRenderer::clearTextures()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	SDL_SetRenderDrawColor (paraRenderer::renderer, 0x00, 0x00, 0x00, 0x00);
+	SDL_RenderClear (paraRenderer::renderer);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

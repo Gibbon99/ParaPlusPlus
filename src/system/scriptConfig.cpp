@@ -298,7 +298,7 @@ void sys_scriptInitFunctions ()
 	paraScriptInstance.addHostFunction ("void gam_previousDatabase()", (functionPtr) &gam_previousDatabase);
 	paraScriptInstance.addHostFunction ("void gam_nextDatabase()", (functionPtr) &gam_nextDatabase);
 	paraScriptInstance.addHostFunction ("void gam_prepareDatabaseScreen(int whichDroidIndex)", (functionPtr) &gam_prepareDatabaseScreen);
-	paraScriptInstance.addHostFunction ("void gam_setHudText(string &in)", (functionPtr) gam_setHudText);
+	paraScriptInstance.addHostFunction ("void gam_setHudText(string &in)", (functionPtr) &gam_setHudText);
 	paraScriptInstance.addHostFunction ("void gam_loadTexture(string &in, string &in)", (functionPtr) &gam_loadTexture);
 	paraScriptInstance.addHostFunction ("void gam_createCollisionMap(string &in)", (functionPtr) &gam_createCollisionMap);
 	paraScriptInstance.addHostFunction ("void gam_setTileType()", (functionPtr) &gam_setTileType);

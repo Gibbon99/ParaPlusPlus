@@ -11,8 +11,8 @@ BUGS
 --------
 BUG - Background sound can stop playing
 BUG - Door sounds are not right
-BUG - Restarting game player is still in exploding state
 BUG - Player bullets bouncing off droid when in collision ?
+BUG - DroidITR is empty after Burnout in transfer
 
 TODO
 -------
@@ -31,6 +31,7 @@ Check bottom edge of animated tiles in graphics
 Fix up player location on deck view in terminal
 Calibrate joystick
 Stop sounds before showing end static screen
+Remove debugging from dialog gui
 
 
 
@@ -91,6 +92,11 @@ DONE - BUG - When alert level not green, and level goes dead, alert tiles are se
 DONE - BUG - When alert level is higher than green, and deck goes black, alert draws as green
 DONE - BUG - Player stayed blue after transfer timed out
 Score resets on new game
+>Commit
+Fixed issue with HUD size when player exploding
+DONE - BUG - Enemy droid physics remain from previous game when starting new one
+DONE - BUG - Restarting game player is still in exploding state
+
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
 -DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "

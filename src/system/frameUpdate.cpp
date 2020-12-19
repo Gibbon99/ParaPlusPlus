@@ -158,8 +158,8 @@ void sys_gameTickRun ()
 	switch (currentMode)
 	{
 		case MODE_PRE_GAME:
+			gam_startNewGame ();
 			sys_setNewMode (MODE_GAME, true);
-			gam_setAlertLevel (ALERT_GREEN_TILE);
 			break;
 
 		case MODE_GAME:
@@ -188,10 +188,13 @@ void sys_gameTickRun ()
 
 				gam_processAI();
 
-				gam_removeDroids();
+				gam_removeDroids (false);
 				gam_processScore();
 				gam_processHealingTile();
 				gam_processInfluenceTime ();
+
+				debug_getNumberOfShapes();
+
 			}
 			else
 			{

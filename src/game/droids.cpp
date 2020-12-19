@@ -202,7 +202,7 @@ void gam_renderDroids (std::string levelName)
 				if (droidItr.visibleToPlayer)
 					droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0, static_cast<Uint8>(droidItr.visibleValue));
 
-				droidItr.ai.renderVelocity ();
+//				droidItr.ai.renderVelocity ();
 
 				gam_debugShowTarget (droidItr);
 			}
@@ -452,7 +452,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Check for any droids that need to be removed - died last tick
-void gam_removeDroids ()
+void gam_removeDroids (bool clearAll)
 //-------------------------------------------------------------------------------------------------------------
 {
 	for (auto &droidItr : g_shipDeckItr->second.droid)
@@ -477,12 +477,15 @@ void gam_removeDroids ()
 			droidItr.currentMode = DROID_MODE_DEAD;
 			//
 			// Remove physics
-			droidItr.body->GetWorld ()->DestroyBody (droidItr.body);
-			droidItr.body = nullptr;
-			//
-			// Free memory
-			delete droidItr.userData;
-			droidItr.userData = nullptr;
+			if (droidItr.body != nullptr)
+			{
+				droidItr.body->GetWorld ()->DestroyBody (droidItr.body);
+				droidItr.body = nullptr;
+				//
+				// Free memory
+				delete droidItr.userData;
+				droidItr.userData = nullptr;
+			}
 			//
 			// Remove any path it may have been following
 			gam_removeWhichDroidPath (droidItr.ai.getArrayIndex ());
@@ -495,8 +498,6 @@ void gam_removeDroids ()
 			//
 			// add to score
 			gam_modifyScore (dataBaseEntry[droidItr.droidType].score);
-
-			droidItr.currentMode = DROID_MODE_DEAD;
 		}
 	}
 	//

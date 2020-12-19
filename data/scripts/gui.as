@@ -12,7 +12,6 @@ void as_handleMainMenu ()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "mainMenu.startGameButton"))
 	{
-		gam_changeToDeck ("Staterooms", 0);
 		gam_setHudText ("hudGameOn");
 		sys_setNewMode (MODE_PRE_GAME, false);
 		return;

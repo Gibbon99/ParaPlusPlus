@@ -130,7 +130,6 @@ void sys_setNewMode (int newMode, bool doFade)
 		case MODE_PRE_GAME:
 			gui.setRepeatOff (false);
 			currentMode = newMode;
-			gam_startNewGame ();
 			break;
 
 		case MODE_GAME:
@@ -280,12 +279,14 @@ void sys_setNewMode (int newMode, bool doFade)
 
 		case MODE_GAME_OVER:
 			currentMode = newMode;
+//			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+//			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
+
 			renderer.setCurrentBackingTexture (GAME_BACKING_TEXTURE);
 			SDL_RenderSetLogicalSize (renderer.renderer, gameWinWidth, gameWinHeight);
 			break;
 
 		case MODE_END_LOST_SCREEN:
-
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);

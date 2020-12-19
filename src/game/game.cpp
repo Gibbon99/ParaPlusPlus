@@ -5,6 +5,7 @@
 #include <system/util.h>
 #include <game/particles.h>
 #include <system/gameEvents.h>
+#include <game/alertLevel.h>
 #include "game/shipDecks.h"
 #include "game/game.h"
 
@@ -16,14 +17,14 @@ int explosionDamage;
 void gam_startNewGame()
 //-------------------------------------------------------------------------------------------------------------
 {
-	//
-	// TODO: Clear screen back buffer
-
+	renderer.clearTextures();
 	gam_resetDroids ();
-	sys_setupEnemyPhysics (gam_getCurrentDeckName());
 	playerDroid.currentMode = DROID_MODE_NORMAL;
 	gam_setupPlayerDroid ();
 	gam_initScoreValues();
+	gam_setAlertLevel (ALERT_GREEN_TILE);
+
+	gam_changeToDeck ("Staterooms", 0);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -32,15 +33,8 @@ void gam_startNewGame()
 void gam_processGameOver()
 //-------------------------------------------------------------------------------------------------------------
 {
-	bool animationEnd = false;
-
-	animationEnd = playerDroid.sprite.animate ();
-
-	std::cout << " Player is exploding " << animationEnd << " current mode : " << playerDroid.currentMode << std::endl;
-
-	if (animationEnd)
+	if (playerDroid.sprite.animate ())      // Has the animdation finished playing
 	{
-
 		std::cout << "Player explosion animation is over" << std::endl;
 
 		playerDroid.currentMode = DROID_MODE_DEAD;

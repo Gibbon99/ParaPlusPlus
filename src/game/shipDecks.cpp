@@ -494,7 +494,7 @@ std::string gam_returnLevelNameFromDeck (int deckNumber)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Change to a new deck
-void gam_changeToDeck (const std::string &deckName, int whichLift)
+void gam_changeToDeck (string deckName, int whichLift)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string tempFilename;
@@ -502,10 +502,13 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 
 	tempTiles = "tiles";
 
+	if (deckName.empty())
+		deckName = "Staterooms";
+
 	gam_clearGameEvents ();
 	//
 	// Clear out droid physics before changing level name
-	gam_clearDroidPhysics (gam_getCurrentDeckName ());
+	sys_clearDroidPhysics (currentDeckName);
 
 	currentDeckName   = std::string (deckName);
 	currentDeckNumber = gam_getCurrentDeckIndex ();
@@ -542,7 +545,7 @@ void gam_changeToDeck (const std::string &deckName, int whichLift)
 
 	// Sounds
 	gam_startAlertLevelSound (gam_getCurrentAlertLevel ());
-	gam_checkPlayerHealth();    // See if low energy sound needs to restart
+//	gam_checkPlayerHealth();    // See if low energy sound needs to restart
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -572,7 +575,7 @@ void gam_renderVisibleScreen (double interpolation)
 	sourceRect.h = gameWinHeight;
 
 	renderer.setCurrentBackingTexture (GAME_BACKING_TEXTURE);
-	SDL_RenderSetLogicalSize (renderer.renderer, gameWinWidth, gameWinHeight);
+//	SDL_RenderSetLogicalSize (renderer.renderer, gameWinWidth, gameWinHeight);
 	//
 	// Rendercopy Float still uses Integer values for source...
 	SDL_RenderCopyF (renderer.renderer, playfieldTexture, &sourceRect, nullptr);

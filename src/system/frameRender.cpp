@@ -21,6 +21,8 @@
 #include "game/hud.h"
 #include "game/doors.h"
 
+unsigned long g_debugDroidCount = 0;
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Prepare the frame for rendering
@@ -206,7 +208,7 @@ void sys_renderFrame (double interpolation)
 		gam_renderHud ();
 
 	fontClass.use ("guiFont");
-	fontClass.render(renderer.renderer, 1, 550, 200, 200, 200, 255, sys_getString ("Game : %i Think : %i FPS : %i intoNextFrame : %f ", gam_gameEventQueueSize(), thinkFPSPrint, fpsPrint, percentIntoNextFrame));
+	fontClass.render (renderer.renderer, 1, 550, 200, 200, 200, 255, sys_getString ("Droids : %i Think : %i FPS : %i intoNextFrame : %f ", g_debugDroidCount, thinkFPSPrint, fpsPrint, percentIntoNextFrame));
 
 	sys_completeFrame ();
 }

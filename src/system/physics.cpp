@@ -35,8 +35,7 @@ b2World *sys_getPhysicsWorld ()
 void sys_processPhysics (double tickTime)
 //----------------------------------------------------------------------------------------------------------------
 {
-//	bul_applyPhysics (tickTime);
-	playerDroid.body->ApplyForce (playerDroid.velocity, playerDroid.body->GetWorldCenter (), true); // TODO do this way - bulletItr.velocity.operator*= (bulletMoveSpeed);
+	playerDroid.body->ApplyForce (playerDroid.velocity, playerDroid.body->GetWorldCenter (), true);
 
 	sys_stepPhysicsWorld (1.0f / TICKS_PER_SECOND);
 
@@ -46,15 +45,17 @@ void sys_processPhysics (double tickTime)
 	playerDroid.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);           // Change to pixels
 	playerDroid.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
 
+	playerDroid.body->SetLinearVelocity ({0, 0});
+
 	if ((g_shipDeckItr->second.droidPhysicsCreated) || (!g_shipDeckItr->second.deckIsDead))
 	{
-		for (auto &droidItr : g_shipDeckItr->second.droid)
+		for (auto &droidItr : shipdecks.at (gam_getCurrentDeckName ()).droid)
 		{
 			if (droidItr.currentMode == DROID_MODE_NORMAL)
 			{
 				droidItr.previousWorldPosInPixels = droidItr.worldPosInPixels;
 				if (droidItr.body == nullptr)
-					sys_shutdownWithError ("Invalid droidItr body pointer. Set to nullptr");
+						sys_shutdownWithError ("Invalid droidItr body pointer. Set to nullptr");
 
 				droidItr.worldPosInPixels = droidItr.body->GetPosition ();       // In Meters
 				droidItr.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);       // Change to pixels for rendering
@@ -62,9 +63,7 @@ void sys_processPhysics (double tickTime)
 				droidItr.body->SetLinearVelocity ({0, 0});
 			}
 		}
-		//	gam_processPhysicActions ();
 	}
-	playerDroid.body->SetLinearVelocity ({0, 0});
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -249,7 +248,7 @@ void sys_freePhysicsEngine ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Clear previous level - remove physics objects from droid before changing level name
-void gam_clearDroidPhysics (std::string levelName)
+void sys_clearDroidPhysics (std::string levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
 	if (levelName.empty ())      // First run - no level set as yet
@@ -283,13 +282,13 @@ void sys_setupEnemyPhysics (std::string levelName)
 	if (!physicsStarted)
 		sys_shutdownWithError (sys_getString ("Attempting to setup droid physics with no engine."));
 
-	if (g_shipDeckItr->second.deckIsDead)   // No droids alive
+	if (shipdecks.at (levelName).deckIsDead)   // No droids alive
 	{
 		std::cout << "Level is dead - no physics to create." << std::endl;
 		return;
 	}
 
-	if (g_shipDeckItr->second.droidPhysicsCreated)
+	if (shipdecks.at (levelName).droidPhysicsCreated)
 	{
 		std::cout << "Droid physics already created for level : " << levelName << std::endl;
 		return;
@@ -299,31 +298,44 @@ void sys_setupEnemyPhysics (std::string levelName)
 	{
 		if (droidItr.currentMode == DROID_MODE_NORMAL)
 		{
-			droidItr.bodyDef.type = b2_dynamicBody;
-			droidItr.bodyDef.position.Set (droidItr.worldPosInPixels.x / pixelsPerMeter, droidItr.worldPosInPixels.y / pixelsPerMeter);
-			droidItr.bodyDef.angle = 0;
-			droidItr.body          = physicsWorld->CreateBody (&droidItr.bodyDef);
+			if (droidItr.body == nullptr)
+			{
+				droidItr.bodyDef.type = b2_dynamicBody;
+				droidItr.bodyDef.position.Set (droidItr.worldPosInPixels.x / pixelsPerMeter, droidItr.worldPosInPixels.y / pixelsPerMeter);
+				droidItr.bodyDef.angle = 0;
+				droidItr.body          = physicsWorld->CreateBody (&droidItr.bodyDef);
 
-			droidItr.userData                  = new _userData;
-			droidItr.userData->userType        = PHYSIC_TYPE_ENEMY;
-			droidItr.userData->dataValue       = droidItr.ai.getArrayIndex ();
-			droidItr.userData->wallIndexValue  = -1;
-			droidItr.userData->ignoreCollision = true;
-			droidItr.body->SetUserData (droidItr.userData);
+				droidItr.userData                  = new _userData;
+				droidItr.userData->userType        = PHYSIC_TYPE_ENEMY;
+				droidItr.userData->dataValue       = droidItr.ai.getArrayIndex ();
+				droidItr.userData->wallIndexValue  = -1;
+				droidItr.userData->ignoreCollision = true;
+				droidItr.body->SetUserData (droidItr.userData);
 
-			droidItr.shape.m_radius = static_cast<float>((SPRITE_SIZE * 0.5) / pixelsPerMeter);
-			droidItr.shape.m_p.Set (0, 0);
+				droidItr.shape.m_radius = static_cast<float>((SPRITE_SIZE * 0.5) / pixelsPerMeter);
+				droidItr.shape.m_p.Set (0, 0);
 
-			droidItr.fixtureDef.shape               = &droidItr.shape;
-			droidItr.fixtureDef.density             = 1;
-			droidItr.fixtureDef.friction            = 0.3f;
-			droidItr.fixtureDef.restitution         = 1.0f;
-			droidItr.fixtureDef.filter.categoryBits = PHYSIC_TYPE_ENEMY;
-			droidItr.fixtureDef.filter.maskBits     = PHYSIC_TYPE_WALL | PHYSIC_TYPE_BULLET_PLAYER | PHYSIC_TYPE_BULLET_ENEMY | PHYSIC_TYPE_PLAYER | PHYSIC_TYPE_ENEMY | PHYSIC_TYPE_DOOR_CLOSED;
-			droidItr.body->CreateFixture (&droidItr.fixtureDef);
+				droidItr.fixtureDef.shape               = &droidItr.shape;
+				droidItr.fixtureDef.density             = 1;
+				droidItr.fixtureDef.friction            = 0.3f;
+				droidItr.fixtureDef.restitution         = 1.0f;
+				droidItr.fixtureDef.filter.categoryBits = PHYSIC_TYPE_ENEMY;
+				droidItr.fixtureDef.filter.maskBits     = PHYSIC_TYPE_WALL | PHYSIC_TYPE_BULLET_PLAYER | PHYSIC_TYPE_BULLET_ENEMY | PHYSIC_TYPE_PLAYER | PHYSIC_TYPE_ENEMY | PHYSIC_TYPE_DOOR_CLOSED;
+				droidItr.body->CreateFixture (&droidItr.fixtureDef);
+			}
 		}
 	}
-	g_shipDeckItr->second.droidPhysicsCreated = true;
+	shipdecks.at (levelName).droidPhysicsCreated = true;
 
 	std::cout << "Droid physics created for level : " << levelName << std::endl;
+}
+
+void debug_getNumberOfShapes ()
+{
+	g_debugDroidCount = 0;
+
+	for (b2Body *b = sys_getPhysicsWorld ()->GetBodyList (); b; b = b->GetNext ())
+	{
+		g_debugDroidCount++;
+	}
 }

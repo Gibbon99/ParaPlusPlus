@@ -221,7 +221,7 @@ void paraFont::render(SDL_Renderer *whichRenderer, double posX, double posY, int
 		return;
 	}
 
-	if (currentMode == MODE_GAME)   // Scale font down to low res gameplay resolution
+	if ((currentMode == MODE_GAME)  || (currentMode == MODE_GAME_OVER)) // Scale font down to low res gameplay resolution
 	{
 		pos.y *= (static_cast<float>(gameWinHeight) / hiresVirtualHeight);
 		pos.x *= (static_cast<float>(gameWinWidth) / hiresVirtualWidth);

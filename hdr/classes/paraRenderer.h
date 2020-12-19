@@ -101,6 +101,8 @@ public:
 
 	void ReleaseRef ();
 
+	void clearTextures();
+
 	PARA_Texture *getFadeOffTexture ();
 
 	std::string int_getString (std::string format, ...);
