@@ -32,6 +32,7 @@ Fix up player location on deck view in terminal
 Calibrate joystick
 Stop sounds before showing end static screen
 Remove debugging from dialog gui
+999 Animation can be wrong on game over screen - wrong frame?
 
 
 
@@ -96,6 +97,7 @@ Score resets on new game
 Fixed issue with HUD size when player exploding
 DONE - BUG - Enemy droid physics remain from previous game when starting new one
 DONE - BUG - Restarting game player is still in exploding state
+>Commit
 
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address

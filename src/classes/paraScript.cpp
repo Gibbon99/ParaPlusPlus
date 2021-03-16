@@ -274,6 +274,8 @@ bool paraScript::loadAndCompile ()
 
 	for (auto &scriptItr : scriptFileCache)
 	{
+		printf("Inside add section loop\n");
+
 //		scriptItr.scriptContents = fileSystem.getString(scriptItr.sectionName);
 		retCode = builder.AddSectionFromMemory (scriptItr.sectionName.c_str (), scriptItr.scriptContents.c_str (), scriptItr.scriptContents.size (), 0);
 		switch (retCode)
@@ -292,7 +294,13 @@ bool paraScript::loadAndCompile ()
 		}
 
 		sys_freeMemory(scriptItr.sectionName);
+
 	}
+
+	SDL_Delay(200);
+
+	printf("About to run BuildModule\n");
+
 	//
 	// Build the script from the loaded sections using ScriptBuilder
 	//
@@ -303,7 +311,9 @@ bool paraScript::loadAndCompile ()
 		return false;
 	}
 
-	funcOutput ( -1, sys_getString ("Compiled scripts."));
+	printf("Finished buildModule\n");
+
+//	funcOutput ( -1, sys_getString ("Compiled scripts."));
 
 	return true;
 }

@@ -78,20 +78,26 @@ void con_processConsoleEventQueue (void *data)
 // Add a new event to the console queue - only added when mutex is free. ie: Thread is not accessing the queue
 //
 // -1 is passed in from classes to add a line to avoid including the additional header
+//
+// Cache the value for the Mutex on first run
 void con_addEvent (int newAction, string newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	PARA_Mutex       *tempMutex;
-	paraEventConsole *tempEventConsole; //(newAction, newLine);
+	static PARA_Mutex       *tempMutex = nullptr;
+	int                     mutexStatus;
+	paraEventConsole        *tempEventConsole; //(newAction, newLine);
 
-	tempMutex = evt_getMutex (CONSOLE_MUTEX_NAME);
 	if (nullptr == tempMutex)
-		sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
-
-
-	if (PARA_LockMutex (tempMutex) == 0)
 	{
+		tempMutex = evt_getMutex (CONSOLE_MUTEX_NAME);
+		if (nullptr == tempMutex)
+			sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
+	}
 
+	mutexStatus = SDL_TryLockMutex(tempMutex);
+	if (mutexStatus == 0)
+	{
+		printf("Console mutex has been locked\n");
 		if (newAction == -1)
 			newAction = EVENT_ACTION_CONSOLE_ADD_LINE;
 
@@ -100,8 +106,14 @@ void con_addEvent (int newAction, string newLine)
 		consoleEvents.push (tempEventConsole);
 		PARA_UnlockMutex (tempMutex);
 	}
+	else if (mutexStatus == SDL_MUTEX_TIMEDOUT)
+	{
+		printf ("Timed out waiting for console mutex to unlock\n");
+	}
 	else
+	{
 		logFile.write (sys_getString ("Unable to lock mutex [ %s ] [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
+	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -113,6 +125,8 @@ void con_renderConsole ()
 	PARA_Surface      *tempSurface  = nullptr;
 	PARA_Texture      *tempTexture  = nullptr;
 	static PARA_Mutex *consoleMutex = nullptr;
+
+	static int  errorCount = 0;
 
 	if (console.consoleText.size () == 0)
 		return;
@@ -137,13 +151,16 @@ void con_renderConsole ()
 		tempSurface = fontClass.write (console.consoleItr->posX, console.posY, console.consoleItr->lineText);  // Surface is freed within console class
 		if (nullptr == tempSurface)
 		{
-			log_addEvent (sys_getString ("%s", "Unable to create temp surface when rendering console."));
+			log_addEvent (sys_getString ("%s", "1. Unable to create temp surface when rendering console."));
+
+			printf("Temp surface error count [ %i ]\n", errorCount);
+			errorCount++;
 			return;
 		}
 		tempTexture = SDL_CreateTextureFromSurface (renderer.renderer, tempSurface);
 		if (nullptr == tempTexture)
 		{
-			log_addEvent (sys_getString ("%s", "Unable to create temp texture when rendering console."));
+			log_addEvent (sys_getString ("%s", "2. Unable to create temp texture when rendering console."));
 			return;
 		}
 
@@ -165,13 +182,13 @@ void con_renderConsole ()
 	tempSurface = fontClass.write (console.posX, console.posY, console.entryLine ());
 	if (nullptr == tempSurface)
 	{
-		log_addEvent (sys_getString ("%s", "Unable to create temp surface when rendering console entry line."));
+		log_addEvent (sys_getString ("%s", "3. Unable to create temp surface when rendering console entry line."));
 		return;
 	}
 	tempTexture = SDL_CreateTextureFromSurface (renderer.renderer, tempSurface);
 	if (nullptr == tempTexture)
 	{
-		log_addEvent (sys_getString ("%s", "Unable to create temp texture when rendering console."));
+		log_addEvent (sys_getString ("%s", "4. Unable to create temp texture when rendering console."));
 		return;
 	}
 	SDL_RenderCopyF (renderer.renderer, tempTexture, nullptr, &fontClass.pos);

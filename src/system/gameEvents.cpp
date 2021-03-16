@@ -142,6 +142,9 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_GAME_CHANGE_MODE:
+
+					printf("Event change to Game mode\n");
+
 					sys_setNewMode (sys_convertToInt (tempEvent->gameText1), static_cast<bool>(sys_convertToInt (tempEvent->gameText2)));
 					break;
 

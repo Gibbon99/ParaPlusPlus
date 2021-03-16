@@ -139,6 +139,7 @@ PARA_Surface *paraFont::write(double X, double Y, std::string fontText)
 	if (nullptr != paraFont::surface)
 	{
 		SDL_FreeSurface(paraFont::surface);
+		paraFont::surface = nullptr;
 	}
 
 	paraFont::surface = TTF_RenderText_Blended(fonts[currentFont].handle, fontText.c_str(), paraFont::color);

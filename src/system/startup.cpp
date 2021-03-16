@@ -141,7 +141,11 @@ void sys_startSystems ()
 	if (nullptr == initThread)
 		sys_shutdownWithError(sys_getString("Unable to start init thread - [ %s ]", SDL_GetError()));
 
+	SDL_Delay(100);
+
 	SDL_DetachThread(initThread);
+
+	printf("Start the init thread.\n");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -163,7 +167,10 @@ static int sys_startInit(void *ptr)
 	paraScriptInstance.loadAndCompile ();
 	paraScriptInstance.cacheFunctions ();
 
+#if MY_DEBUG
+	printf("Run setupPhysicsEngine\n");
 	sys_setupPhysicsEngine ();
+#endif
 
 	gam_initAudio ();
 
@@ -179,16 +186,22 @@ static int sys_startInit(void *ptr)
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName+"|guiFont28|"+to_string(28));
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, introFontFileName+"|introFont|"+to_string(introFontSize));
 
+	SDL_Delay(100);
+
 	gui.init (con_addEvent, reinterpret_cast<funcStrIn>(gui_getString), windowWidth, windowHeight, gameWinWidth, gameWinHeight, "keybinding.para");
 	gui_loadSideViewData ("sideview.dat");
 	paraScriptInstance.run ("as_createGUI", "");
 //	audio.load("start1", "start1.wav");
+
+printf("init joystick\n");
 
 	io_initJoystick ();
 
 #ifdef MY_DEBUG
 	fileSystem.getSearchPath ();
 #endif
+
+	printf("Get DBInformation\n");
 
 	gam_getDBInformation ();
 
@@ -200,5 +213,6 @@ static int sys_startInit(void *ptr)
 
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
 
+	printf ("Sent event to game mode change\n");
 	return 0;
 }
