@@ -13,6 +13,7 @@ BUG - Background sound can stop playing
 BUG - Door sounds are not right
 BUG - Player bullets bouncing off droid when in collision ?
 BUG - DroidITR is empty after Burnout in transfer
+BUG - All AI stats are 0 after healing
 
 TODO
 -------
@@ -28,13 +29,9 @@ Player health check on damage - dead animation
 Droid AI - Attack
 Droid AI - Help
 Check bottom edge of animated tiles in graphics
-Fix up player location on deck view in terminal
 Calibrate joystick
 Stop sounds before showing end static screen
-Remove debugging from dialog gui
-999 Animation can be wrong on game over screen - wrong frame?
-
-
+Blink player icon on deckview map
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
@@ -98,6 +95,14 @@ Fixed issue with HUD size when player exploding
 DONE - BUG - Enemy droid physics remain from previous game when starting new one
 DONE - BUG - Restarting game player is still in exploding state
 >Commit
+DONE - Fixed up mutex deadlock when adding console text
+>Commit
+DONE - BUG - 999 Animation can be wrong on game over screen - wrong frame
+DONE - Remove debugging from dialog gui
+DONE - Fix up player location on deck view in terminal
+DONE - Slow down rendering of console so the thread gets a chance to add text
+DONE - Improve FLEE action when a path is invalid
+DONE - BUG - Enemy droids animation not resetting after healing
 
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address

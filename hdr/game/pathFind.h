@@ -31,6 +31,7 @@ struct _nodeList
 	bool                   pathReady = false;
 	bool                   wayPointsReady = false;
 	bool                   inUse = false;
+	bool                   isValid = false;
 	b2Vec2                 startTile = {0,0};
 	b2Vec2                 destTile = {0, 0};
 	int                    currentNodePtrClosedList = -1;;
@@ -68,3 +69,6 @@ bool gam_AStarIsTileSolid (int tileIndex);
 
 // Remove a path based on droid using it
 void gam_removeWhichDroidPath(int newWhichDroid);
+
+// See if the path is a valid one
+bool gam_isAStarValid(int whichPath);

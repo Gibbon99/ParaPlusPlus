@@ -1,6 +1,6 @@
 #include <system/util.h>
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
-#include "gui/dialogBox.h"
+#include "gui/guiDialogBox.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //

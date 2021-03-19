@@ -1,4 +1,4 @@
-#include <gui/dialogBox.h>
+#include <gui/guiDialogBox.h>
 #include "gui/guiRender.h"
 #include "gui/guiButton.h"
 #include "gui/guiSlider.h"
@@ -94,7 +94,6 @@ void gui_renderGUI ()
 		else
 			gui_drawObject (gui.typeByIndex (indexCount), gui.indexByIndex (indexCount), false);
 	}
-
 
 	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
 	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);

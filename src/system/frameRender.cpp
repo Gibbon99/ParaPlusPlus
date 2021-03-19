@@ -205,10 +205,12 @@ void sys_renderFrame (double interpolation)
 		textures.at ("screen").render ();
 
 	if ((currentMode != MODE_CONSOLE_EDIT) && (currentMode != MODE_CONSOLE_INIT))
+	{
 		gam_renderHud ();
 
-	fontClass.use ("guiFont");
-	fontClass.render (renderer.renderer, 1, 550, 200, 200, 200, 255, sys_getString ("Droids : %i Think : %i FPS : %i intoNextFrame : %f ", g_debugDroidCount, thinkFPSPrint, fpsPrint, percentIntoNextFrame));
+		fontClass.use ("guiFont");
+		fontClass.render (renderer.renderer, 1, 550, 200, 200, 200, 255, sys_getString ("Droids : %i Think : %i FPS : %i intoNextFrame : %f ", g_debugDroidCount, thinkFPSPrint, fpsPrint, percentIntoNextFrame));
+	}
 
 	sys_completeFrame ();
 }

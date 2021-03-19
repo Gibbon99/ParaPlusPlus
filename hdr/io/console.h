@@ -12,4 +12,4 @@ void con_addEvent(int newAction, std::string newLine);
 void con_initConsole();
 
 // Show the commands and help text
-void consoleShowHelp ();
+void con_showHelp ();

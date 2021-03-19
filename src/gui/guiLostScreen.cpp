@@ -47,6 +47,7 @@ void gui_loadDroidGraphic ()
 	newKeyName  = "db_droid";
 
 	gam_loadTexture (newFileName, newKeyName);
+	databaseSprite.setCurrentFrame(0);
 
 	textOneString = gui_getString ("lostTransmission");
 	textTwoString = gui_getString ("lostTerminated");

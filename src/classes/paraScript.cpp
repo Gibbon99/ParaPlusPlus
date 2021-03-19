@@ -103,7 +103,7 @@ void paraScript::run (const std::string &functionName, const std::string &param)
 
 	for (const auto &funcItr : scriptFunctions)
 	{
-//		log_logMessage(LOG_LEVEL_DEBUG, sys_getString("Looking for function [ %s ] to [ %s ] to execute", functionName.c_str(), funcItr.scriptName.c_str()));
+		std::cout << sys_getString("Looking for function [ %s ] to [ %s ] to execute", functionName.c_str(), funcItr.scriptName.c_str()) << std::endl;
 
 		if (scriptEngine != context->GetEngine ())
 		{

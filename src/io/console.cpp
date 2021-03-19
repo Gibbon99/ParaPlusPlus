@@ -95,6 +95,7 @@ void con_addEvent (int newAction, string newLine)
 	}
 
 	mutexStatus = SDL_TryLockMutex(tempMutex);
+
 	if (mutexStatus == 0)
 	{
 		printf("Console mutex has been locked\n");
@@ -112,6 +113,7 @@ void con_addEvent (int newAction, string newLine)
 	}
 	else
 	{
+		printf("Unable to lock mutex\n");
 		logFile.write (sys_getString ("Unable to lock mutex [ %s ] [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
 	}
 }
@@ -127,6 +129,8 @@ void con_renderConsole ()
 	static PARA_Mutex *consoleMutex = nullptr;
 
 	static int  errorCount = 0;
+
+	SDL_Delay(100);     // Slow down the mutex locking a bit
 
 	if (console.consoleText.size () == 0)
 		return;
@@ -223,7 +227,7 @@ void con_initConsole ()
 
 	sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, sys_getString ("Console started [ %s ]", APP_NAME));
 
-	console.addCommand ("help", "Show available commands", consoleShowHelp);
+	console.addCommand ("help", "Show available commands", con_showHelp);
 	console.addCommand ("quit", "Quit the game.", sys_shutdown);
 
 	console.addCommand ("d_showCurrentBackingTexture", "Show backing texture information.", debug_getCurrentBackingTexture);
@@ -264,7 +268,7 @@ void con_initConsole ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Display the list of commands to the console
-void consoleShowHelp ()
+void con_showHelp ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string allCommands;

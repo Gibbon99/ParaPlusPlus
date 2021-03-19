@@ -41,3 +41,6 @@ void gam_debugShowTarget(droidClass whichDroid);
 
 // Reset the droid information for a new game
 void gam_resetDroids ();
+
+// Work out the droid animation speed based on health
+void gam_setHealthAnimation(int targetDroid);

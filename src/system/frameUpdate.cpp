@@ -133,7 +133,11 @@ void sys_processInputEvents ()
 
 			case SDL_TEXTINPUT:
 				if (currentMode == MODE_CONSOLE_EDIT)
+				{
 					sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_CHAR, 0, evt.text.text);
+
+					std::cout << "Added char to console : " << evt.text.text << std::endl;
+				}
 				break;
 		}
 	}

@@ -33,7 +33,7 @@ void gam_startNewGame()
 void gam_processGameOver()
 //-------------------------------------------------------------------------------------------------------------
 {
-	if (playerDroid.sprite.animate ())      // Has the animdation finished playing
+	if (playerDroid.sprite.animate ())      // Has the animation finished playing
 	{
 		std::cout << "Player explosion animation is over" << std::endl;
 

@@ -14,22 +14,13 @@ double      tileScaleY;
 void gui_renderPlayerLocation ()
 //-----------------------------------------------------------------------------
 {
-	// TODO - get scaling of position right
-
 	int tileLocationX, tileLocationY;
 
 	tileLocationX = playerDroid.previousWorldPosInPixels.x * tileScaleX;
 	tileLocationY = playerDroid.previousWorldPosInPixels.y * tileScaleY;
 
-//	tileLocationX *= smallTleSize;
-//	tileLocationY *= smallTleSize;
-
-//	tileLocationY += textures.at ("hudNew").getHeight ();
-//	tileLocationY += smallTleSize / 2;
-//	tileLocationX += smallTleSize / 2;
-
 //	if (tim_getIconState())
-	filledCircleRGBA (renderer.renderer, tileLocationX, tileLocationY, 12, 255, 255, 255, 255);
+		filledCircleRGBA (renderer.renderer, tileLocationX, tileLocationY, 12, 255, 255, 255, 255);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

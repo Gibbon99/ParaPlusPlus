@@ -325,6 +325,27 @@ void gam_explodeDroid (int droidIndex)
 
 //-------------------------------------------------------------------------------------------------------------
 //
+// Work out the droid animation speed based on health
+void gam_setHealthAnimation(int targetDroid)
+//-------------------------------------------------------------------------------------------------------------
+{
+	float newAnimationSpeed;
+
+	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_EXPLODING)
+	{
+		newAnimationSpeed     = static_cast<float>(g_shipDeckItr->second.droid[targetDroid].currentHealth) / static_cast<float>(dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].maxHealth);
+		if (newAnimationSpeed < 0.0f)
+			newAnimationSpeed = 0.1f;
+
+		if (newAnimationSpeed > 1.0f)
+			newAnimationSpeed = 1.0f;
+
+		g_shipDeckItr->second.droid[targetDroid].sprite.setAnimateSpeed (newAnimationSpeed);
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
 // Process damage to a droid
 //
 // damageSource can be either a bullet, explosion or a collision with player or another droid
@@ -332,7 +353,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
 	float newHealthPercent;
-	float newAnimationSpeed;
+
 
 	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_NORMAL)
 		return;
@@ -433,20 +454,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 	g_shipDeckItr->second.droid[targetDroid].ai.setHealthPercent (newHealthPercent);
 	g_shipDeckItr->second.droid[targetDroid].ai.checkHealth ();
 
-	//
-	// Work out the droid animation speed based on health
-	//
-	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_EXPLODING)
-	{
-		newAnimationSpeed     = static_cast<float>(g_shipDeckItr->second.droid[targetDroid].currentHealth) / static_cast<float>(dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].maxHealth);
-		if (newAnimationSpeed < 0.0f)
-			newAnimationSpeed = 0.1f;
-
-		if (newAnimationSpeed > 1.0f)
-			newAnimationSpeed = 1.0f;
-
-		g_shipDeckItr->second.droid[targetDroid].sprite.setAnimateSpeed (newAnimationSpeed);
-	}
+	gam_setHealthAnimation(targetDroid);
 }
 
 //-------------------------------------------------------------------------------------------------------------

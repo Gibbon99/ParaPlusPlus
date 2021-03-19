@@ -264,15 +264,11 @@ bool paraGui::pointInBox (int x, int y, __BOUNDING_BOX checkBox)
 		checkBox.x2 *= ratioX;
 		checkBox.y2 *= ratioY;
 
-		std::cout << "X1 : " << checkBox.x1 << " Y1 : " << checkBox.y1 << std::endl;
-		std::cout << "Mx : " << x << " My : " << y << std::endl;
-
 		tempX = static_cast<float>(x) * ratioX;
 		tempY = static_cast<float>(y) * ratioY;
 
 		x = static_cast<int>(tempX);
 		y = static_cast<int>(tempY);
-
 	}
 
 	if (x < checkBox.x1)
@@ -384,8 +380,6 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 #endif
 					return indexCounter;
 				}
-
-
 				indexCounter++;
 			}
 			return GUI_OBJECT_NOT_FOUND;
@@ -424,8 +418,6 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 #endif
 					return indexCounter;
 				}
-
-
 				indexCounter++;
 			}
 			return GUI_OBJECT_NOT_FOUND;
@@ -534,7 +526,7 @@ void paraGui::create (int objectType, std::string objectID)
 			}
 			//
 			// Check it doesn't already exist
-			for (auto screenItr : guiScreens)
+			for (const auto& screenItr : guiScreens)
 			{
 				if (screenItr.ID == objectID)
 				{
@@ -557,7 +549,7 @@ void paraGui::create (int objectType, std::string objectID)
 			}
 			//
 			// Check it doesn't already exist
-			for (auto dialogboxItr : guiDialogBoxes)
+			for (const auto& dialogboxItr : guiDialogBoxes)
 			{
 				if (dialogboxItr.ID == objectID)
 				{
@@ -581,7 +573,7 @@ void paraGui::create (int objectType, std::string objectID)
 			}
 			//
 			// Check it doesn't already exist
-			for (auto buttonItr : guiButtons)
+			for (const auto& buttonItr : guiButtons)
 			{
 				if (buttonItr.ID == objectID)
 				{
@@ -606,7 +598,7 @@ void paraGui::create (int objectType, std::string objectID)
 			}
 			//
 			// Check it doesnt already exists
-			for (auto sliderItr : guiSliders)
+			for (const auto& sliderItr : guiSliders)
 			{
 				if (sliderItr.ID == objectID)
 				{
@@ -627,7 +619,7 @@ void paraGui::create (int objectType, std::string objectID)
 				guiLabels.push_back (newLabel);
 				return;
 			}
-			for (auto labelItr : guiLabels)
+			for (const auto& labelItr : guiLabels)
 			{
 				if (labelItr.ID == objectID)
 				{
@@ -648,7 +640,7 @@ void paraGui::create (int objectType, std::string objectID)
 				guiScrollBoxes.push_back (newScrollbox);
 				break;
 			}
-			for (auto scrollboxItr : guiScrollBoxes)
+			for (const auto& scrollboxItr : guiScrollBoxes)
 			{
 				if (scrollboxItr.ID == objectID)
 				{
@@ -669,7 +661,7 @@ void paraGui::create (int objectType, std::string objectID)
 				guiCheckBoxes.push_back (newCheckBox);
 				break;
 			}
-			for (auto checkBoxItr : guiCheckBoxes)
+			for (const auto& checkBoxItr : guiCheckBoxes)
 			{
 				if (checkBoxItr.ID == objectID)
 				{
@@ -690,7 +682,7 @@ void paraGui::create (int objectType, std::string objectID)
 				guiTextboxes.push_back (newTextbox);
 				break;
 			}
-			for (auto textboxItr : guiTextboxes)
+			for (const auto& textboxItr : guiTextboxes)
 			{
 				if (textboxItr.ID == objectID)
 				{
@@ -711,7 +703,7 @@ void paraGui::create (int objectType, std::string objectID)
 				guiImages.push_back (newImage);
 				break;
 			}
-			for (auto imageItr : guiImages)
+			for (const auto& imageItr : guiImages)
 			{
 				if (imageItr.ID == objectID)
 				{
