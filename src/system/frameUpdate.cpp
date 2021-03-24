@@ -197,8 +197,9 @@ void sys_gameTickRun ()
 				gam_processHealingTile();
 				gam_processInfluenceTime ();
 
-				debug_getNumberOfShapes();
+				gam_checkPlayerHealth ();
 
+				debug_getNumberOfShapes();
 			}
 			else
 			{

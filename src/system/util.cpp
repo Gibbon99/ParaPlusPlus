@@ -267,8 +267,14 @@ void sys_setNewMode (int newMode, bool doFade)
 			break;
 
 		case MODE_TRANSFER_GAME:
+		case MODE_TRANSFER_RESULT:
+			currentMode = newMode;
+			break;
+
 		case MODE_TRANSFER_DEADLOCK:
 			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
 		case MODE_END_PRE_LOST_SCREEN:

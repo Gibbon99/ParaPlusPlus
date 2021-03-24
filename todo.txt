@@ -22,16 +22,16 @@ High Score entry screen - Drop ??
 
 Transfer - enemy AI - do based on priority of circuit types
 Transfer - work out winner
-Transfer - Right side reversers in wrong color
 Transfer - timer
 Splash screen on start
-Player health check on damage - dead animation
 Droid AI - Attack
 Droid AI - Help
 Check bottom edge of animated tiles in graphics
 Calibrate joystick
-Stop sounds before showing end static screen
 Blink player icon on deckview map
+Transfer screen one - shows player droid at wrong position on start
+Fix up transfer render for one into two
+
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
@@ -103,7 +103,14 @@ DONE - Fix up player location on deck view in terminal
 DONE - Slow down rendering of console so the thread gets a chance to add text
 DONE - Improve FLEE action when a path is invalid
 DONE - BUG - Enemy droids animation not resetting after healing
-
+>Commit
+DONE - Work on transfer outcomes and token counting for both sides
+DONE - Add sound for burntout
+DONE - Delay at the end of the transfer game to show result
+DONE - Transfer game - player tokens don't decrease
+DONE - Stop sounds before showing end static screen
+DONE - Transfer - Right side reversers in wrong color
+DONE - New lift button sound effect
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
 -DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "

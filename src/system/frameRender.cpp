@@ -148,6 +148,10 @@ void sys_renderFrame (double interpolation)
 			trn_renderTransferGame();
 			break;
 
+		case MODE_TRANSFER_RESULT:
+			trn_renderTransferGame();
+			break;
+
 		case MODE_GAME_OVER:
 			gam_renderVisibleScreen (interpolation);
 			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2, 1.0, static_cast<Uint8>(255));

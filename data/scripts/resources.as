@@ -38,6 +38,9 @@ void as_loadAudioResources()
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transfer1.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferStart.wav");
 	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "yellowAlert.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferBurntout.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "transferAction.wav");
+	gam_addAudioEvent(EVENT_ACTION_AUDIO_LOAD, false, 0, 0, "liftButton.wav");
 }
 
 //----------------------------------------------------------------------------------------------------------------------

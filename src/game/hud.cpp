@@ -19,14 +19,20 @@ double      hudScorePosY;
 void gam_setHudText (const std::string &newText)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (currentMode == MODE_TRANSFER_CHOOSE_SIDE)
-		hudText = trn_getCountdown ();
+	switch (currentMode)
+	{
+		case MODE_TRANSFER_CHOOSE_SIDE:
+			hudText = trn_getCountdown ();
+			break;
 
-	else if (currentMode == MODE_TRANSFER_GAME)
-		hudText = trn_getTransferCountdown();
+		case MODE_TRANSFER_GAME:
+			hudText = trn_getTransferCountdown ();
+			break;
 
-	else
-		hudText = gui_getString(newText);
+		default:
+			hudText = gui_getString (newText);
+			break;
+	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -58,7 +64,7 @@ void gam_renderHud ()
 			{
 				return;
 			}
-		break;
+			break;
 	}
 
 	textures.at ("hudNew").render (&destination);

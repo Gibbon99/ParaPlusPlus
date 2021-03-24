@@ -257,6 +257,8 @@ void gam_processAI ()
 {
 	for (auto &droidItr : g_shipDeckItr->second.droid)
 	{
+		gam_checkDroidHealth(&droidItr);
+
 		if (droidItr.currentMode == DROID_MODE_NORMAL)
 		{
 			if (dataBaseEntry[droidItr.droidType].canShoot)
@@ -429,20 +431,6 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 	}
 
 	//
-	// See if droid is dead - set explosion sprite and change mode
-	if (g_shipDeckItr->second.droid[targetDroid].currentHealth < 0)
-	{
-		if (sourceDroid != -1)
-		{
-			g_shipDeckItr->second.droid[sourceDroid].ai.setTargetDroid (NO_ATTACK_TARGET);
-			g_shipDeckItr->second.droid[sourceDroid].ai.modifyScore (AI_MODE_ATTACK, -60);
-		}
-
-		gam_explodeDroid (targetDroid);
-		return;
-	}
-
-	//
 	// Do AI to see if Droid needs to heal
 	//
 	newHealthPercent = static_cast<float>(g_shipDeckItr->second.droid[targetDroid].currentHealth) / static_cast<float>(dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].maxHealth);
@@ -540,6 +528,26 @@ void gam_debugShowTarget (droidClass whichDroid)
 			endPos   = sys_worldToScreen (endPos, 100);
 
 			thickLineRGBA (renderer.renderer, static_cast<Sint16>(startPos.x), static_cast<Sint16>(startPos.y), static_cast<Sint16>(endPos.x), static_cast<Sint16>(endPos.y), 2, 255, 0, 0, 255);
+		}
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
+// See if droid is dead - set explosion sprite and change mode
+//
+// gam_explodeDroid changes the currentMode
+void gam_checkDroidHealth (droidClass *whichDroid)
+//-------------------------------------------------------------------------------------------------------------
+{
+	if (whichDroid->currentMode == DROID_MODE_NORMAL)
+	{
+		if (whichDroid->currentHealth < 0)
+		{
+			whichDroid->ai.setTargetDroid (NO_ATTACK_TARGET);
+			whichDroid->ai.modifyScore (AI_MODE_ATTACK, -100);
+
+			gam_explodeDroid (whichDroid->ai.getArrayIndex ());
 		}
 	}
 }

@@ -472,7 +472,7 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 			filledBoxRGBA (renderer.renderer, rightLineStartX, lineStartY, rightLineStartX - lineLength, lineStartY + transferLineThickness, transferColorBorder.r, transferColorBorder.g, transferColorBorder.b, transferColorBorder.a);
 			if (whichRow.rightSideActive)
 			{
-				filledBoxRGBA (renderer.renderer, rightLineStartX - (activeTokenPosX * 2), lineStartY, rightLineStartX - lineLength, lineStartY + transferLineThickness, whichRow.rightSideActiveAlphaColor, transferColorRightActive.g, transferColorRightActive.b, 255);
+				filledBoxRGBA (renderer.renderer, rightLineStartX - (activeTokenPosX * 2), lineStartY, rightLineStartX - lineLength, lineStartY + transferLineThickness, transferColorRightActive.r, transferColorRightActive.g, transferColorRightActive.b, 255);
 				trn_renderToken (TOKEN_DIRECTION_LEFT, rightLineStartX - (activeTokenPosX * 2), tokenStartY, 0, 255, 255, 255);
 			}
 			//
@@ -481,7 +481,7 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 			{
 				filledBoxRGBA (renderer.renderer, rightLineStartX - (lineLength * 0.25f) - transferBorderThickness - (BLOCK_WIDTH * 2), lineStartY, rightLineStartX - lineLength, lineStartY + transferLineThickness, transferColorRightActive.r, transferColorRightActive.g, transferColorRightActive.b, static_cast<Uint8>(whichRow.rightSideActiveAlphaColor));
 			}
-			trn_renderToken (TOKEN_DIRECTION_LEFT, rightLineStartX - (lineLength * 0.25f) - transferBorderThickness, tokenStartY, 255, 255, 0, 255);
+			trn_renderToken (TOKEN_DIRECTION_LEFT, rightLineStartX - (lineLength * 0.25f) - transferBorderThickness, tokenStartY, 0, 255, 255, 255);
 			break;
 
 		case TRANSFER_ROW_REVERSE_HALF:
@@ -505,7 +505,6 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 				filledBoxRGBA (renderer.renderer, rightLineStartX - (activeTokenPosX * 2), lineStartY, rightLineStartX - (activeTokenPosX * 2) - (lineLength * 0.75f), lineStartY + transferLineThickness, transferColorRightActive.r, transferColorRightActive.g, transferColorRightActive.b, static_cast<Uint8>(whichRow.rightSideActiveAlphaColor));
 				// Yellow part
 				filledBoxRGBA (renderer.renderer, rightLineStartX - (lineLength * 0.25f), lineStartY, rightLineStartX - lineLength, lineStartY + transferLineThickness, transferColorLeftActive.r, transferColorLeftActive.g, transferColorLeftActive.b, static_cast<Uint8>(whichRow.leftSideActiveAlphaColor));
-
 				trn_renderToken (TOKEN_DIRECTION_LEFT, rightLineStartX - (activeTokenPosX * 2), tokenStartY, 0, 255, 255, 255);
 			}
 			trn_renderToken (TOKEN_DIRECTION_LEFT, rightLineStartX - (lineLength * 0.25f) - transferBorderThickness, tokenStartY, 255, 255, 0, 255);

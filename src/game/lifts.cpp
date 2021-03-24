@@ -113,7 +113,6 @@ void gam_setupTunnelLinks ()
 		std::cout << std::endl;
 	}
 #endif
-
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -128,16 +127,11 @@ void gam_moveLift (int direction)
 			if (currentTunnelDeckIndex != static_cast<int>(tunnelLinks[currentTunnel].linkedDecks.size () - 1))
 			{
 				currentTunnelDeckIndex++;
-
-				std::cout << "deckIndex : " << currentTunnelDeckIndex << std::endl;
-
 				currentDeckNumber = tunnelLinks[currentTunnel].linkedDecks[currentTunnelDeckIndex];
-
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "liftButton");
 			}
 			else
 			{
-				std::cout << "deckIndex : " << currentTunnelDeckIndex << std::endl;
 				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 			}
 
@@ -147,15 +141,11 @@ void gam_moveLift (int direction)
 			if (currentTunnelDeckIndex != 0)
 			{
 				currentTunnelDeckIndex--;
-
-				std::cout << "deckIndex : " << currentTunnelDeckIndex << std::endl;
-
 				currentDeckNumber = tunnelLinks[currentTunnel].linkedDecks[currentTunnelDeckIndex];
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "liftButton");
 			}
 			else
 			{
-				std::cout << "deckIndex : " << currentTunnelDeckIndex << std::endl;
 				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
 			}
 
@@ -166,10 +156,7 @@ void gam_moveLift (int direction)
 			if (currentTunnelDeckIndex > 6)
 			{
 				currentTunnelDeckIndex = 0;
-				std::cout << "Index exceeded maximum amount" << std::endl;
 			}
-
-			std::cout << "deckIndex : " << currentTunnelDeckIndex << std::endl;
 
 			gam_changeToDeck (gam_returnLevelNameFromDeck (currentDeckNumber), shipdecks.at (gam_returnLevelNameFromDeck (currentDeckNumber)).liftClass.getLiftIndex (currentTunnel));
 
@@ -376,7 +363,7 @@ void gam_performLiftAction ()
 //----------------------------------------------------------------------------
 {
 	currentTunnel = shipdecks.at (gam_getCurrentDeckName ()).liftClass.getTunnelIndex (playerDroid.liftIndex);
-	gam_stopAlertLevelSound (gam_getCurrentAlertLevel());
+	gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "lowEnergy");
 
 	sys_setNewMode (MODE_GUI_LIFTVIEW, true);

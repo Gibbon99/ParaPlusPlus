@@ -35,12 +35,8 @@ void gam_processGameOver()
 {
 	if (playerDroid.sprite.animate ())      // Has the animation finished playing
 	{
-		std::cout << "Player explosion animation is over" << std::endl;
-
 		playerDroid.currentMode = DROID_MODE_DEAD;
 		sys_setNewMode (MODE_END_PRE_LOST_SCREEN, false);
-
-		std::cout << " Game Over " << std::endl;
-
+		gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP_ALL, false, 0, 0, "");
 	}
 }

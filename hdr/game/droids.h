@@ -44,3 +44,6 @@ void gam_resetDroids ();
 
 // Work out the droid animation speed based on health
 void gam_setHealthAnimation(int targetDroid);
+
+// See if droid is dead - set explosion sprite and change mode
+void gam_checkDroidHealth (droidClass *whichDroid);

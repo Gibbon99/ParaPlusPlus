@@ -13,6 +13,7 @@ int                         transferPlayerWhichSide;
 int                         playerBlockPos;
 int                         transferTimeoutCountdown = 0;
 int                         transferTimeOut;
+int                         transferResultDelay;
 float                       transferDelayTime;
 std::vector<__TRANSFER_ROW> transferRows;
 
@@ -82,7 +83,15 @@ void trn_processEndOfTransferGame ()
 				playerCount++;
 			}
 		}
+		else
+		{
+			if (transferItr.currentColor == TRANSFER_COLOR_RIGHT)
+			{
+				playerCount++;
+			}
+		}
 	}
+
 	//
 	// If less and player is 001 - explode
 	//
@@ -90,9 +99,10 @@ void trn_processEndOfTransferGame ()
 	{
 		playerDroid.inTransferMode = false;
 		playerDroid.currentHealth = -1;
-		gam_checkPlayerHealth ();
-		sys_setNewMode (MODE_GAME, false);
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferBurntout");
+		sys_setNewMode (MODE_TRANSFER_RESULT, false);
 		gam_setHudText ("burntout");
+		sys_addEvent(EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, transferResultDelay, to_string(MODE_GAME)+"|"+to_string(true));
 		return;
 	}
 	//
@@ -102,10 +112,11 @@ void trn_processEndOfTransferGame ()
 	{
 		playerDroid.inTransferMode = false;
 		g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth = -1;
-		playerDroid.droidType                                                           = 0;
+		playerDroid.transferTargetDroidType = 0;    // Transfer back into 001 droid
 		trn_transferIntoDroid();    // Drop back to 001 stats and sprite
+		sys_setNewMode(MODE_TRANSFER_RESULT, false);
 		gam_setHudText ("transferFailed");
-		sys_setNewMode(MODE_GAME, true);
+		sys_addEvent(EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, transferResultDelay, to_string(MODE_GAME)+"|"+to_string(true));
 		return;
 	}
 	//
@@ -113,20 +124,21 @@ void trn_processEndOfTransferGame ()
 	//
 	if (playerCount == static_cast<int>(transferRows.size() / 2))
 	{
-		gam_setHudText("deadlock");
 		gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferdeadlock");
 		sys_setNewMode(MODE_TRANSFER_DEADLOCK, false);
+		gam_setHudText("deadlock");
 		return;
 	}
 	//
 	// if more, do transfer
 	// explode other droid - do score - call damageToDroid ?
-	// back to game
+	// back to game after delay timer after showing transfer result
 	//
 	playerDroid.inTransferMode = false;
 	trn_transferIntoDroid ();
-	sys_setNewMode (MODE_GAME, true);
+	sys_setNewMode (MODE_TRANSFER_RESULT, false);
 	gam_setHudText ("transferred");
+	sys_addEvent(EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, transferResultDelay, to_string(MODE_GAME)+"|"+to_string(true));
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -206,6 +218,10 @@ void trn_processTransferGame ()
 		{
 			transferTimeoutCountdown = transferTimeOut;
 			trn_processEndOfTransferGame ();
+
+			printf("Finished with transfer game - delay countdown\n");
+
+			return;
 		}
 	}
 
@@ -251,7 +267,7 @@ void trn_transferIntoDroid ()
 		//
 		// Destroy the droid
 		g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth = -10;
-		gam_damageToDroid (playerDroid.transferTargetDroidIndex, PHYSIC_DAMAGE_BULLET, -1);
+//		gam_damageToDroid (playerDroid.transferTargetDroidIndex, PHYSIC_DAMAGE_BULLET, -1);
 	}
 	else
 	{

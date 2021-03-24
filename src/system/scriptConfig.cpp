@@ -146,6 +146,7 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("float influenceTimelimit", &influenceTimelimit);
 	paraScriptInstance.addHostVariable ("float influenceTimelimtDelay", &influenceTimelimtDelay);
 	paraScriptInstance.addHostVariable ("float influenceTimeLeftWarning", &influenceTimeLeftWarning);
+	paraScriptInstance.addHostVariable ("int transferResultDelay", &transferResultDelay);
 
 	paraScriptInstance.addHostVariable("int playerDroidType", &playerDroid.droidType );
 }

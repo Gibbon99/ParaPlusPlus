@@ -37,7 +37,7 @@ void trn_debugTransferCells (int whichSide)
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Return true if the passed in circuits makes contact with the middle
-bool trn_contactingCircuit(int circuitType)
+bool trn_contactingCircuit (int circuitType, int checkSide, int checkRow)
 //---------------------------------------------------------------------------------------------------------------------
 {
 	switch (circuitType)
@@ -51,9 +51,23 @@ bool trn_contactingCircuit(int circuitType)
 			return true;
 			break;
 
-		case TRANSFER_ROW_ONE_INTO_TWO_BOTTOM:
-		case TRANSFER_ROW_ONE_INTO_TWO_TOP:
+//		case TRANSFER_ROW_ONE_INTO_TWO_BOTTOM:
+//		case TRANSFER_ROW_ONE_INTO_TWO_TOP:
 		case TRANSFER_ROW_TWO_INTO_ONE_MIDDLE:
+			if (checkSide == TRANSFER_COLOR_LEFT)
+			{
+				if ((transferRows[checkRow - 1].leftSideActive) && (transferRows[checkRow + 1].leftSideActive))
+					return true;
+				else
+					return false;
+			}
+			else
+			{
+				if ((transferRows[checkRow - 1].rightSideActive) && (transferRows[checkRow + 1].rightSideActive))
+					return true;
+				else
+					return false;
+			}
 			return true;
 			break;
 
@@ -76,6 +90,8 @@ void trn_processCircuits ()
 	{
 		if ((transferRowIndex.rightSideActive) || (transferRowIndex.rightSideActiveIsOn))
 		{
+			//
+			// Do the countdown until the circuit turns off
 			transferRowIndex.rightSideActiveCounter -= 1.0f * activeRowCounter;
 			if (transferRowIndex.rightSideActiveCounter < 0.0f)
 			{
@@ -99,7 +115,7 @@ void trn_processCircuits ()
 					transferRowIndex.currentColor = TRANSFER_COLOR_RIGHT;
 					if ((transferRowIndex.leftSideActive) || (transferRowIndex.leftSideActiveIsOn))
 					{
-						if (trn_contactingCircuit(transferRowIndex.leftSideType))
+						if (trn_contactingCircuit (transferRowIndex.leftSideType, TRANSFER_COLOR_LEFT, 0))
 							transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
 					}
 					break;
@@ -117,7 +133,7 @@ void trn_processCircuits ()
 						transferRows[transferRowIndex.index + 1].currentColor = TRANSFER_COLOR_RIGHT;
 						if ((transferRows[transferRowIndex.index + 1].leftSideActive) || (transferRows[transferRowIndex.index + 1].leftSideActiveIsOn))
 						{
-							if (trn_contactingCircuit(transferRows[transferRowIndex.index - 1].leftSideType))
+							if (trn_contactingCircuit (transferRows[transferRowIndex.index - 1].leftSideType, TRANSFER_COLOR_LEFT, 0))
 								transferRows[transferRowIndex.index + 1].currentColor = TRANSFER_COLOR_DISPUTE;
 						}
 					}
@@ -129,7 +145,7 @@ void trn_processCircuits ()
 						transferRows[transferRowIndex.index - 1].currentColor = TRANSFER_COLOR_RIGHT;
 						if ((transferRows[transferRowIndex.index - 1].leftSideActive) || (transferRows[transferRowIndex.index - 1].leftSideActiveIsOn))
 						{
-							if (trn_contactingCircuit(transferRows[transferRowIndex.index - 1].leftSideType))
+							if (trn_contactingCircuit (transferRows[transferRowIndex.index - 1].leftSideType, TRANSFER_COLOR_LEFT, 0))
 								transferRows[transferRowIndex.index - 1].currentColor = TRANSFER_COLOR_DISPUTE;
 						}
 					}
@@ -141,7 +157,7 @@ void trn_processCircuits ()
 						transferRowIndex.currentColor = TRANSFER_COLOR_RIGHT;
 						if ((transferRowIndex.leftSideActive) || (transferRowIndex.leftSideActiveIsOn))
 						{
-							if (trn_contactingCircuit(transferRowIndex.leftSideType))
+							if (trn_contactingCircuit (transferRowIndex.leftSideType, TRANSFER_COLOR_LEFT, 0))
 								transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
 						}
 					}
@@ -153,7 +169,7 @@ void trn_processCircuits ()
 						transferRowIndex.currentColor = TRANSFER_COLOR_RIGHT;
 						if ((transferRowIndex.leftSideActive) || (transferRowIndex.leftSideActiveIsOn))
 						{
-							if (trn_contactingCircuit(transferRowIndex.leftSideType))
+							if (trn_contactingCircuit (transferRowIndex.leftSideType, TRANSFER_COLOR_LEFT, 0))
 								transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
 						}
 					}
@@ -193,7 +209,7 @@ void trn_processCircuits ()
 					transferRowIndex.currentColor = TRANSFER_COLOR_LEFT;
 					if ((transferRowIndex.rightSideActive) || (transferRowIndex.rightSideActiveIsOn))
 					{
-						if (trn_contactingCircuit(transferRowIndex.rightSideType))
+						if (trn_contactingCircuit (transferRowIndex.rightSideType, TRANSFER_COLOR_RIGHT, 0))
 							transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
 					}
 					break;
@@ -211,7 +227,7 @@ void trn_processCircuits ()
 						transferRows[transferRowIndex.index + 1].currentColor = TRANSFER_COLOR_LEFT;
 						if ((transferRows[transferRowIndex.index + 1].rightSideActive) || (transferRows[transferRowIndex.index + 1].rightSideActiveIsOn))
 						{
-							if (trn_contactingCircuit(transferRows[transferRowIndex.index + 1].rightSideType))
+							if (trn_contactingCircuit (transferRows[transferRowIndex.index + 1].rightSideType, TRANSFER_COLOR_RIGHT, 0))
 								transferRows[transferRowIndex.index + 1].currentColor = TRANSFER_COLOR_DISPUTE;
 						}
 					}
@@ -223,7 +239,7 @@ void trn_processCircuits ()
 						transferRows[transferRowIndex.index - 1].currentColor = TRANSFER_COLOR_LEFT;
 						if ((transferRows[transferRowIndex.index - 1].rightSideActive) || (transferRows[transferRowIndex.index - 1].rightSideActiveIsOn))
 						{
-							if (trn_contactingCircuit(transferRows[transferRowIndex.index - 1].rightSideType))
+							if (trn_contactingCircuit (transferRows[transferRowIndex.index - 1].rightSideType, TRANSFER_COLOR_RIGHT, 0))
 								transferRows[transferRowIndex.index - 1].currentColor = TRANSFER_COLOR_DISPUTE;
 						}
 					}
@@ -235,7 +251,7 @@ void trn_processCircuits ()
 						transferRowIndex.currentColor = TRANSFER_COLOR_LEFT;
 						if ((transferRowIndex.rightSideActive) || (transferRowIndex.rightSideActiveIsOn))
 						{
-							if (trn_contactingCircuit(transferRowIndex.rightSideType))
+							if (trn_contactingCircuit (transferRowIndex.rightSideType, TRANSFER_COLOR_RIGHT, 0))
 								transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
 						}
 					}
@@ -247,7 +263,7 @@ void trn_processCircuits ()
 						transferRowIndex.currentColor = TRANSFER_COLOR_LEFT;
 						if ((transferRowIndex.rightSideActive) || (transferRowIndex.rightSideActiveIsOn))
 						{
-							if (trn_contactingCircuit(transferRowIndex.rightSideType))
+							if (trn_contactingCircuit (transferRowIndex.rightSideType, TRANSFER_COLOR_RIGHT, 0))
 								transferRowIndex.currentColor = TRANSFER_COLOR_DISPUTE;
 						}
 					}
@@ -291,7 +307,7 @@ bool trn_makeTransferMistake (int whichDroidLevel)
 {
 	int mistakeLevel = 0;
 
-	mistakeLevel = transferRandom.get (0, 25);
+	mistakeLevel = transferRandom.get (0, 15);
 	mistakeLevel -= whichDroidLevel;
 
 	return mistakeLevel > 0;
@@ -602,6 +618,7 @@ void trn_prepareTransferGame ()
 {
 	transferTimeoutCountdown = transferTimeOut;
 	sys_setNewMode (MODE_TRANSFER_GAME, false);
+	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferStart");
 }
 
 //---------------------------------------------------------------------------------------------------------------------

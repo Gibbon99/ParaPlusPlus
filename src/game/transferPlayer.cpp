@@ -67,7 +67,10 @@ void trn_processPlayerActions()
 				}
 			}
 			else
+			{
 				trn_placeToken (playerBlockPos, TRANSFER_COLOR_LEFT, 0);
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferAction");
+			}
 		}
 		else    // Player on right side
 		{
@@ -80,10 +83,13 @@ void trn_processPlayerActions()
 				}
 			}
 			else
+			{
 				trn_placeToken (playerBlockPos, TRANSFER_COLOR_RIGHT, 0);
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferAction");
+			}
 		}
 
-//		numPlayerTokens--;
+		numPlayerTokens--;
 		if (numPlayerTokens > 0)
 			playerBlockPos = -1;     // Put on launchpad
 		else

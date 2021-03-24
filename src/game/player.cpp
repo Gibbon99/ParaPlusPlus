@@ -354,8 +354,6 @@ void gam_damageToPlayer (int damageSource, int sourceDroid)
 		case PHYSIC_DAMAGE_EXPLOSION:
 			break;
 	}
-
-	gam_checkPlayerHealth ();
 }
 
 //-----------------------------------------------------------------------------------------------------------------

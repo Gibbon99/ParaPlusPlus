@@ -16,6 +16,7 @@ float chooseRowDelayTime = 0.0f;
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Return if a circuit to be selected is a suitable color to change
+// Return false if the circuit is already the correct color for the selected side
 bool trn_isCircuitSuitable(__TRANSFER_ROW transferIndex)
 //---------------------------------------------------------------------------------------------------------------------
 {
@@ -87,24 +88,104 @@ int trn_findSuitableCircuitToUse (__TRANSFER_ROW transferIndex)
 		case TRANSFER_ROW_FULL_LINE_1:
 		case TRANSFER_ROW_FULL_LINE_2:
 		case TRANSFER_ROW_FULL_LINE_3:
-		case TRANSFER_ROW_ONE_INTO_TWO_MIDDLE:
 		case TRANSFER_ROW_REPEAT_HALF:
 		case TRANSFER_ROW_REPEAT_QUARTER:
-			circuitFound = trn_isCircuitSuitable(transferIndex); //true;
+			circuitFound = trn_isCircuitSuitable(transferIndex);
 			if (circuitFound)
 				return 0;
 			else
 				return -1;
 			break;
 
+		case TRANSFER_ROW_ONE_INTO_TWO_MIDDLE:
+			// Droid on right side
+			if (transferPlayerWhichSide == TRANSFER_COLOR_LEFT)
+			{
+				if (transferRows[transferIndex.index - 1].currentColor == TRANSFER_COLOR_LEFT)  // Should set the middle row
+				{
+					circuitFound = true;
+					return 0;
+				}
+
+				if (transferRows[transferIndex.index + 1].currentColor == TRANSFER_COLOR_LEFT)  // Should set the middle row
+				{
+					circuitFound = true;
+					return 0;
+				}
+			}
+			else    // Droid is on left side
+			{
+				if (transferRows[transferIndex.index - 1].currentColor == TRANSFER_COLOR_RIGHT)  // Should set the middle row
+				{
+					circuitFound = true;
+					return 0;
+				}
+
+				if (transferRows[transferIndex.index + 1].currentColor == TRANSFER_COLOR_RIGHT)  // Should set the middle row
+				{
+					circuitFound = true;
+					return 0;
+				}
+			}
+			circuitFound = false;
+			return -1;
+			break;
+
+
+		case TRANSFER_ROW_TWO_INTO_ONE_TOP:
+			// Droid on right side
+			if (transferPlayerWhichSide == TRANSFER_COLOR_LEFT)
+			{
+				if (transferRows[transferIndex.index + 1].currentColor == TRANSFER_COLOR_LEFT)  // Should set the middle row
+				{
+					circuitFound = true;
+					return 0;
+				}
+			}
+			else    // Droid is on left side
+			{
+				if (transferRows[transferIndex.index + 1].currentColor == TRANSFER_COLOR_RIGHT)    // Should set the middle row
+				{
+					circuitFound = true;
+					return 0;
+				}
+			}
+			circuitFound = false;
+			return -1;
+
+			break;
+
+		case TRANSFER_ROW_TWO_INTO_ONE_BOTTOM:
+			// Droid on right side
+			if (transferPlayerWhichSide == TRANSFER_COLOR_LEFT)
+			{
+				if (transferRows[transferIndex.index - 1].currentColor == TRANSFER_COLOR_LEFT)  // Should set the middle row
+				{
+					circuitFound = true;
+					return 0;
+				}
+			}
+			else    // Droid is on left side
+			{
+				if (transferRows[transferIndex.index - 1].currentColor == TRANSFER_COLOR_RIGHT)    // Should set the middle row
+				{
+					circuitFound = true;
+					return 0;
+				}
+			}
+			circuitFound = false;
+			return -1;
+
+			break;
+
+
 		case TRANSFER_ROW_HALF_LINE:
 		case TRANSFER_ROW_3_4_LINE:
 		case TRANSFER_ROW_QUARTER_LINE:
-		case TRANSFER_ROW_TWO_INTO_ONE_TOP:
-		case TRANSFER_ROW_TWO_INTO_ONE_BOTTOM:
-			circuitFound = trn_makeTransferMistake (playerDroid.transferTargetDroidType);
-			return 0;
+			circuitFound = false;
+			return -1;
 			break;
+
 
 		case TRANSFER_ROW_REVERSE_HALF:
 		case TRANSFER_ROW_REVERSE_QUARTER:
@@ -114,11 +195,13 @@ int trn_findSuitableCircuitToUse (__TRANSFER_ROW transferIndex)
 
 		case TRANSFER_ROW_TWO_INTO_ONE_MIDDLE:
 			circuitFound = false;
+			return -1;
 			break;
 
 		case TRANSFER_ROW_ONE_INTO_TWO_TOP:
 		case TRANSFER_ROW_ONE_INTO_TWO_BOTTOM:
 			circuitFound = false;
+			return 0;
 			break;
 
 		default:
@@ -178,6 +261,8 @@ void trn_moveToCircuit ()
 			droidBlockPos = -1;     // Put on launchpad
 		else
 			droidBlockPos = -2;
+
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferAction");
 	}
 	else
 	{
@@ -212,6 +297,7 @@ void trn_processTransferDroidAI ()
 		{
 			//
 			// Look through each row for a suitable circuit to use
+			// rowCounter is the row that has been found suitable
 			for (auto &transferRowIndex : transferRows)
 			{
 				nextCircuitToUse = trn_findSuitableCircuitToUse (transferRowIndex);
@@ -219,6 +305,8 @@ void trn_processTransferDroidAI ()
 				{
 					circuitFound            = true;
 					nextCircuitToUse        = rowCounter;
+					//
+					// Which way will the token move
 					if (nextCircuitToUse > static_cast<int>(transferRows.size ()) / 2)
 						enemyTokenDirection = TRANSFER_MOVE_UP;
 					else

@@ -25,6 +25,7 @@ extern int                         playerBlockPos;
 extern float                       transferDelayTime;
 extern int                         transferTimeOut;
 extern int                         transferTimeoutCountdown;
+extern int                         transferResultDelay;
 extern std::vector<__TRANSFER_ROW> transferRows;
 
 // Play the transfer game - mode MODE_TRANSFER_GAME
