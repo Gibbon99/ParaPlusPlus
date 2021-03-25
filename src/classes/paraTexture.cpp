@@ -85,6 +85,15 @@ void paraTexture::destroy()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Check if a texture has been loaded properly
+bool paraTexture::isLoaded ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return loaded;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Load a bitmap from a memory pointer - create a texture from the surface
 bool paraTexture::load (std::string newFileName, std::string newKeyName)
 //----------------------------------------------------------------------------------------------------------------------
@@ -94,6 +103,8 @@ bool paraTexture::load (std::string newFileName, std::string newKeyName)
 		funcOutput (-1, int_getString ("Texture load - missing filename."));
 		return false;
 	}
+
+	loaded  = false;
 
 	fileName = std::move(newFileName);
 	surface  = SDL_LoadBMP_RW (funcLoad (fileName), 0);
@@ -109,7 +120,7 @@ bool paraTexture::load (std::string newFileName, std::string newKeyName)
 		funcOutput (-1, int_getString ("Failed to create texture [ %s ] - [ %s ]", fileName.c_str (), SDL_GetError ()));
 		return false;
 	}
-	loaded  = true;
+
 	keyName = std::move(newKeyName);
 	if (SDL_QueryTexture (texture, nullptr, nullptr, &width, &height) < 0)
 	{
@@ -123,6 +134,7 @@ bool paraTexture::load (std::string newFileName, std::string newKeyName)
 #endif
 	sys_freeMemory (fileName);
 
+	loaded  = true;
 	return true;
 }
 

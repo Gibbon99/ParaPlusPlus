@@ -12,25 +12,22 @@ BUGS
 BUG - Background sound can stop playing
 BUG - Door sounds are not right
 BUG - Player bullets bouncing off droid when in collision ?
-BUG - DroidITR is empty after Burnout in transfer
-BUG - All AI stats are 0 after healing
+BUG - Transfer screen one - shows player droid at wrong position on start
 
 TODO
 -------
 
 High Score entry screen - Drop ??
+Calibrate joystick
 
+Splash screen on start
 Transfer - enemy AI - do based on priority of circuit types
 Transfer - work out winner
 Transfer - timer
-Splash screen on start
 Droid AI - Attack
 Droid AI - Help
 Check bottom edge of animated tiles in graphics
-Calibrate joystick
 Blink player icon on deckview map
-Transfer screen one - shows player droid at wrong position on start
-Fix up transfer render for one into two
 
 
 DONE - Universe background on menu screens
@@ -111,6 +108,17 @@ DONE - Transfer game - player tokens don't decrease
 DONE - Stop sounds before showing end static screen
 DONE - Transfer - Right side reversers in wrong color
 DONE - New lift button sound effect
+>Commit
+DONE - Added console var to toggle performance stats
+DONE - Added loaded flag to textures so rendering sprites is not done if they are not loaded yet
+DONE - BUG - Fix up transfer render for one into two
+DONE - BUG - First level on lifts not being highlighted
+DONE - BUG - DroidITR is empty after Burnout in transfer
+DONE - BUG - All AI stats are 0 after healing
+DONE - Make HUD text usage consistent
+DONE - Pause mode when focus is lost - frameUpdate - processInputEvents
+DONE - Reload textures on system event - for Android - minimum testing done on PC
+
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
 -DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "

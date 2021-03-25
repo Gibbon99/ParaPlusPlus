@@ -1,14 +1,11 @@
-#include <game/pathFind.h>
+
 #include <game/droids.h>
 #include <game/bullet.h>
 #include <game/particles.h>
 #include <game/lightMaps.h>
-#include <game/alertLevel.h>
 #include <game/transfer.h>
 #include <game/pauseMode.h>
 #include <gui/guiLostScreen.h>
-#include <gui/guiHighScore.h>
-#include <gui/guiInput.h>
 #include <game/game.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
@@ -35,23 +32,36 @@ void sys_processInputEvents ()
 {
 	while (SDL_PollEvent (&evt) != 0)
 	{
+		//
+		// Check for OS Windowing events
+		if (evt.type == SDL_WINDOWEVENT)
+		{
+			switch (evt.window.event)
+			{
+				case SDL_RENDER_DEVICE_RESET:
+				case SDL_RENDER_TARGETS_RESET:
+					// Reload all textures - UNTESTED - Seems to reload on PC ok.
+					paraScriptInstance.run ("as_loadTextureResources", "");
+					break;
+
+				case SDL_WINDOWEVENT_FOCUS_LOST:
+					gam_changePauseMode (MODE_GAME_PAUSE_ON);
+					break;
+
+				case SDL_WINDOWEVENT_FOCUS_GAINED:
+					break;
+
+				case SDL_WINDOWEVENT_SHOWN:
+					break;
+
+				case SDL_WINDOWEVENT_CLOSE:
+					quitLoop = true;
+					break;
+			}
+		}
+
 		switch (evt.type)
 		{
-			case SDL_RENDER_DEVICE_RESET:
-			case SDL_RENDER_TARGETS_RESET:
-				// Reload all textures
-				break;
-
-			case SDL_WINDOWEVENT_FOCUS_LOST:
-				break;
-
-			case SDL_WINDOWEVENT_FOCUS_GAINED:
-				break;
-
-			case SDL_WINDOWEVENT_SHOWN:
-				break;
-
-			case SDL_WINDOWEVENT_CLOSE:
 			case SDL_QUIT:
 				quitLoop = true;
 				break;
@@ -109,7 +119,8 @@ void sys_processInputEvents ()
 					sys_setNewMode (MODE_SHOW_SPLASH, true);
 
 				if (evt.key.keysym.sym == SDLK_F3)
-					sys_setNewMode (MODE_CONSOLE_EDIT, true);
+					paraScriptInstance.run ("as_loadTextureResources", "");
+					//sys_setNewMode (MODE_CONSOLE_EDIT, true);
 
 				if (evt.key.keysym.sym == SDLK_F5)
 				{
@@ -237,6 +248,7 @@ void sys_gameTickRun ()
 			break;
 
 		case MODE_TRANSFER_PRE_SCREEN_TWO:
+			gam_addEvent (EVENT_ACTION_INIT_TRANSFER_TWO, 0, "");
 			break;
 
 		case MODE_TRANSFER_SCREEN_ONE:
@@ -274,6 +286,10 @@ void sys_gameTickRun ()
 
 		case MODE_GAME_OVER:
 			gam_processGameOver();
+			break;
+
+		default:
+//			sys_shutdownWithError(sys_getString("Fatal error: Unknown game mode. %i", currentMode));
 			break;
 	}
 }

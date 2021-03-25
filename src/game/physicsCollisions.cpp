@@ -57,8 +57,6 @@ void paraDebugDraw::DrawPolygon (const b2Vec2 *vertices, int32 vertexCount, cons
 		xCoords.push_back (tempPosition.x);
 		yCoords.push_back (tempPosition.y);
 	}
-
-
 	polygonRGBA (renderer.renderer, &xCoords[0], &yCoords[0], vertexCount, color.r * 255, color.g * 0, color.b * 255, color.a * 255);
 }
 
@@ -83,7 +81,6 @@ void paraDebugDraw::DrawSolidPolygon (const b2Vec2 *vertices, int32 vertexCount,
 		xCoords.push_back (tempPosition.x);
 		yCoords.push_back (tempPosition.y);
 	}
-
 	filledPolygonRGBA (renderer.renderer, &xCoords[0], &yCoords[0], vertexCount, color.r * 0, color.g * 255, color.b * 255, color.a * 255);
 }
 
@@ -175,7 +172,7 @@ void paraDebugDraw::DrawPoint (const b2Vec2 &p, float size, const b2Color &color
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Called when a contact is first made
+// Called when a contact is first made - put an event on the queue for action
 void contactListener::BeginContact (b2Contact *contact)
 //----------------------------------------------------------------------------------------------------------------------
 {

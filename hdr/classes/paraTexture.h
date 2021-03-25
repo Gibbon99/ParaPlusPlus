@@ -41,6 +41,8 @@ public:
 
 	void setFileName(std::string newFilename);
 
+	bool isLoaded();
+
 	PARA_Texture    *getTexture();
 
 private:

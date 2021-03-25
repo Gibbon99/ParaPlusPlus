@@ -55,10 +55,10 @@ void sys_processPhysics (double tickTime)
 			{
 				droidItr.previousWorldPosInPixels = droidItr.worldPosInPixels;
 				if (droidItr.body == nullptr)
-						sys_shutdownWithError ("Invalid droidItr body pointer. Set to nullptr");
+					sys_shutdownWithError ("Invalid droidItr body pointer. Set to nullptr");
 
-				droidItr.worldPosInPixels = droidItr.body->GetPosition ();       // In Meters
-				droidItr.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);       // Change to pixels for rendering
+				droidItr.worldPosInPixels = droidItr.body->GetPosition ();                  // In Meters
+				droidItr.worldPosInPixels.x *= static_cast<float>(pixelsPerMeter);          // Change to pixels for rendering
 				droidItr.worldPosInPixels.y *= static_cast<float>(pixelsPerMeter);
 				droidItr.body->SetLinearVelocity ({0, 0});
 			}
@@ -236,12 +236,7 @@ void sys_setupSolidWalls (const std::string levelName)
 void sys_freePhysicsEngine ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-//	gam_clearHealing ();
-//	gam_clearLifts ();
 	sys_clearSolidWalls ();
-//	sys_clearDroids ();
-//	bul_clearAllBullets ();
-//	gam_clearAllDoors ();
 	delete physicsWorld;
 }
 
@@ -271,26 +266,32 @@ void sys_clearDroidPhysics (std::string levelName)
 	shipdecks.at (levelName).droidPhysicsCreated = false;
 }
 
-//-------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 //
 // Create the physics bodies and shapes for the enemy droids
 void sys_setupEnemyPhysics (std::string levelName)
-//-------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 {
+#ifdef MY_DEBUG
 	std::cout << "Setting up enemy physics for level : " << levelName << std::endl;
+#endif
 
 	if (!physicsStarted)
 		sys_shutdownWithError (sys_getString ("Attempting to setup droid physics with no engine."));
 
 	if (shipdecks.at (levelName).deckIsDead)   // No droids alive
 	{
+#ifdef MY_DEBUG
 		std::cout << "Level is dead - no physics to create." << std::endl;
+#endif
 		return;
 	}
 
 	if (shipdecks.at (levelName).droidPhysicsCreated)
 	{
+#ifdef MY_DEBUG
 		std::cout << "Droid physics already created for level : " << levelName << std::endl;
+#endif
 		return;
 	}
 
@@ -326,11 +327,16 @@ void sys_setupEnemyPhysics (std::string levelName)
 		}
 	}
 	shipdecks.at (levelName).droidPhysicsCreated = true;
-
+#ifdef MY_DEBUG
 	std::cout << "Droid physics created for level : " << levelName << std::endl;
+#endif
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Find out how many physics body are currently in use in the world
 void debug_getNumberOfShapes ()
+//----------------------------------------------------------------------------------------------------------------------
 {
 	g_debugDroidCount = 0;
 

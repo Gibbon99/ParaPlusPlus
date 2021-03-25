@@ -14,6 +14,7 @@ void as_handleDialogBoxes ()
 	if (as_paraGui.getActiveObjectIndexDialogbox () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "quitGameDialogbox.confirmButton"))
 	{
 		// Destroy player
+		gam_setHudText ("hudMainMenu");
 		sys_setNewMode (MODE_GUI_MAINMENU, true);
 		as_paraGui.setCurrentDialogbox (NO_DIALOG_BOX);
 		return;

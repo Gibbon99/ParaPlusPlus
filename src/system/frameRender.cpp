@@ -22,6 +22,7 @@
 #include "game/doors.h"
 
 unsigned long g_debugDroidCount = 0;
+bool          d_showPerfStats   = false;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -119,7 +120,7 @@ void sys_renderFrame (double interpolation)
 			break;
 
 		case MODE_GUI_HIGHSCORE_SCREEN:
-			gui_renderHighScoreScreen();
+			gui_renderHighScoreScreen ();
 			break;
 
 		case MODE_TRANSFER_SCREEN_ONE:
@@ -141,22 +142,21 @@ void sys_renderFrame (double interpolation)
 			break;
 
 		case MODE_TRANSFER_GAME:
-			trn_renderTransferGame();
+			trn_renderTransferGame ();
 			break;
 
 		case MODE_TRANSFER_DEADLOCK:
-			trn_renderTransferGame();
+			trn_renderTransferGame ();
 			break;
 
 		case MODE_TRANSFER_RESULT:
-			trn_renderTransferGame();
+			trn_renderTransferGame ();
 			break;
 
 		case MODE_GAME_OVER:
 			gam_renderVisibleScreen (interpolation);
 			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2, 1.0, static_cast<Uint8>(255));
 
-//			gam_renderDroids (gam_getCurrentDeckName ());
 			gam_renderParticles ();
 			break;
 
@@ -195,13 +195,13 @@ void sys_renderFrame (double interpolation)
 			if (d_showAStarPath)
 				gam_AStarDebugWayPoints (0);
 
-			if (gui.getCurrentDialogbox() != NO_DIALOG_BOX)
+			if (gui.getCurrentDialogbox () != NO_DIALOG_BOX)
 				gui_renderActiveDialogbox ();
 
 			break;
 
 		case MODE_END_LOST_SCREEN:
-			gui_renderLostScreen();
+			gui_renderLostScreen ();
 			break;
 	}
 
@@ -212,8 +212,11 @@ void sys_renderFrame (double interpolation)
 	{
 		gam_renderHud ();
 
-		fontClass.use ("guiFont");
-		fontClass.render (renderer.renderer, 1, 550, 200, 200, 200, 255, sys_getString ("Droids : %i Think : %i FPS : %i intoNextFrame : %f ", g_debugDroidCount, thinkFPSPrint, fpsPrint, percentIntoNextFrame));
+		if (d_showPerfStats)
+		{
+			fontClass.use ("guiFont");
+			fontClass.render (renderer.renderer, 1, 550, 200, 200, 200, 255, sys_getString ("Droids : %i Think : %i FPS : %i intoNextFrame : %f ", g_debugDroidCount, thinkFPSPrint, fpsPrint, percentIntoNextFrame));
+		}
 	}
 
 	sys_completeFrame ();

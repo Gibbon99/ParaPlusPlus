@@ -11,6 +11,7 @@
 #include <game/game.h>
 #include <gui/guiWonScreen.h>
 #include <gui/guiHighScore.h>
+#include <game/hud.h>
 #include "../../hdr/system/gameEvents.h"
 #include "../../hdr/classes/paraEvent.h"
 
@@ -142,9 +143,7 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_GAME_CHANGE_MODE:
-
-					printf("Event change to Game mode\n");
-
+					gam_setHudText ("hudMainMenu");
 					sys_setNewMode (sys_convertToInt (tempEvent->gameText1), static_cast<bool>(sys_convertToInt (tempEvent->gameText2)));
 					break;
 
@@ -198,7 +197,9 @@ void gam_processGameEventQueue ()
 
 				case EVENT_ACTION_GAME_OVER:
 
+#ifdef MY_DEBUG
 					std::cout << "EVENT_ACTION_GAME_OVER" << std::endl;
+#endif
 
 //					gam_processGameOver();
 					break;

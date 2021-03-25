@@ -143,14 +143,14 @@ void paraAudio::stopAllChannels ()
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Returns true if current sound is playing
-bool paraAudio::isPlaying(std::string keyName)
+bool paraAudio::isPlaying(const std::string& keyName)
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto audioItr : activeSounds)
+	for (const auto& audioItr : activeSounds)
 	{
 		if (keyName == audioItr.keyName)
 		{
-			if (Mix_Playing(audioItr.whichChannel == 1))
+			if (Mix_Playing(audioItr.whichChannel) == 1)
 				return true;
 		}
 	}

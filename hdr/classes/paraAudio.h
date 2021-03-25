@@ -52,7 +52,7 @@ public:
 	int getNumPlayingChannels ();
 
 	// Returns true if current sound is playing
-	bool isPlaying(std::string keyName);
+	bool isPlaying(const std::string& keyName);
 
 	void setMasterVolume (int volume);
 

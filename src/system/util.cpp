@@ -236,8 +236,6 @@ void sys_setNewMode (int newMode, bool doFade)
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
-
-			gam_addEvent (EVENT_ACTION_INIT_TRANSFER_TWO, 0, "");
 			break;
 
 		case MODE_TRANSFER_SCREEN_TWO:

@@ -356,7 +356,8 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 			filledBoxRGBA (renderer.renderer, leftLineStartX + (lineLength * 0.5f), lineStartY, leftLineStartX + lineLength, lineStartY + transferLineThickness, transferColorBorder.r, transferColorBorder.g, transferColorBorder.b, transferColorBorder.a);
 			if (whichRow.leftSideActive)
 			{
-				filledBoxRGBA (renderer.renderer, leftLineStartX + (activeTokenPosX * 2), lineStartY, leftLineStartX + (lineLength * 0.25f), lineStartY + transferLineThickness, transferColorLeftActive.r, transferColorLeftActive.g, transferColorLeftActive.b, static_cast<Uint8>(whichRow.leftSideActiveAlphaColor));
+//				filledBoxRGBA (renderer.renderer, leftLineStartX + (activeTokenPosX * 2), lineStartY, leftLineStartX + (lineLength * 0.25f), lineStartY + transferLineThickness, transferColorLeftActive.r, transferColorLeftActive.g, transferColorLeftActive.b, static_cast<Uint8>(whichRow.leftSideActiveAlphaColor));
+				filledBoxRGBA (renderer.renderer, leftLineStartX + (activeTokenPosX * 2), lineStartY, leftLineStartX + (lineLength * 0.25f), lineStartY + transferLineThickness, transferColorLeftActive.r, transferColorLeftActive.g, 0, static_cast<Uint8>(whichRow.leftSideActiveAlphaColor));
 				trn_renderToken (TOKEN_DIRECTION_RIGHT, leftLineStartX + (activeTokenPosX * 2), tokenStartY, 255, 255, 0, 255);
 			}
 			trn_renderToken (TOKEN_DIRECTION_LEFT, leftLineStartX + (lineLength * 0.25f), tokenStartY, 255, 255, 0, 255);
@@ -392,7 +393,7 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 				filledBoxRGBA (renderer.renderer, leftLineStartX + (lineLength * 0.5f), lineStartY - transferRowHeight, leftLineStartX + lineLength, (lineStartY - transferRowHeight) + transferLineThickness, transferColorLeftActive.r, transferColorLeftActive.g, transferColorLeftActive.b, static_cast<Uint8>(whichRow.leftSideActiveAlphaColor));
 				//
 				// Bottom line
-//				filledBoxRGBA (renderer.renderer, leftLineStartX + (lineLength * 0.5f), lineStartY + transferRowHeight, leftLineStartX + lineLength, (lineStartY + transferRowHeight) + transferLineThickness, transferColorLeftActive.r, transferColorLeftActive.g, transferColorLeftActive.b, static_cast<Uint8>(whichRow.leftSideActiveAlphaColor));
+				filledBoxRGBA (renderer.renderer, leftLineStartX + (lineLength * 0.5f), lineStartY + transferRowHeight, leftLineStartX + lineLength, (lineStartY + transferRowHeight) + transferLineThickness, transferColorLeftActive.r, transferColorLeftActive.g, transferColorLeftActive.b, static_cast<Uint8>(whichRow.leftSideActiveAlphaColor));
 				//
 				// Middle line
 				filledBoxRGBA (renderer.renderer, leftLineStartX + (activeTokenPosX * 2), lineStartY, (leftLineStartX + (lineLength * 0.5f)) + (BLOCK_WIDTH * 1.5), lineStartY + transferLineThickness, transferColorLeftActive.r, transferColorLeftActive.g, transferColorLeftActive.b, static_cast<Uint8>(whichRow.leftSideActiveAlphaColor));
@@ -590,7 +591,8 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 			{
 				//
 				// Top Line
-				filledBoxRGBA (renderer.renderer, rightLineStartX - (lineLength * 0.5f), lineStartY - transferRowHeight,  rightLineStartX - lineLength, (lineStartY - transferRowHeight) + transferLineThickness, transferColorRightActive.r, transferColorRightActive.g, transferColorRightActive.b, static_cast<Uint8>(whichRow.rightSideActiveAlphaColor));
+				filledBoxRGBA (renderer.renderer, rightLineStartX - (lineLength * 0.5f), lineStartY - transferRowHeight,  rightLineStartX - (lineLength - (transferRowCellWidth - BLOCK_WIDTH)), (lineStartY - transferRowHeight) + transferLineThickness, transferColorRightActive.r, transferColorRightActive.g, transferColorRightActive.b, static_cast<Uint8>(whichRow.rightSideActiveAlphaColor));
+
 				//
 				// Bottom line
 				filledBoxRGBA (renderer.renderer, rightLineStartX - (lineLength * 0.5f), lineStartY + transferRowHeight,  rightLineStartX - lineLength, (lineStartY + transferRowHeight) + transferLineThickness, transferColorRightActive.r, transferColorRightActive.g, transferColorRightActive.b, static_cast<Uint8>(whichRow.rightSideActiveAlphaColor));

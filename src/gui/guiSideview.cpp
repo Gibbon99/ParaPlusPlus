@@ -219,7 +219,7 @@ void gui_renderSideView ()
 	double        sideViewTextPosY;
 	Uint8         r, g, b, a;
 	SDL_BlendMode tempMode;
-	__PARA_COLOR  tempAlert;
+	__PARA_COLOR  tempAlert{};
 
 	fontClass.use ("guiFont");
 
@@ -323,16 +323,23 @@ void gui_renderSideView ()
 	//
 	// Redraw the level and tunnel that overlap
 	//
-	if ((currentMode == MODE_GUI_LIFTVIEW) && (currentDeckNumber == 13))
-		gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_ACTIVE_DECK_COLOR].color);
+	if (currentDeckNumber == 13)
+		gui_sideviewDrawRect (sideviewLevels[13].x1, sideviewLevels[13].y1, sideviewLevels[13].x2, sideviewLevels[13].y2, sideviewColors[SIDEVIEW_ACTIVE_DECK_COLOR].color);
 	else
 	{
 		count = 13;
 		gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
 	}
 
-	count = 3;
-	gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
+	if (currentDeckNumber == 3)
+	{
+		gui_sideviewDrawRect (sideviewLevels[3].x1, sideviewLevels[3].y1, sideviewLevels[3].x2, sideviewLevels[3].y2, sideviewColors[SIDEVIEW_ACTIVE_DECK_COLOR].color);
+	}
+	else
+	{
+		count = 3;
+		gui_sideviewDrawRect (sideviewLevels[count].x1, sideviewLevels[count].y1, sideviewLevels[count].x2, sideviewLevels[count].y2, sideviewColors[SIDEVIEW_SHIP_COLOR].color);
+	}
 	//
 	// fill in engine part
 	//

@@ -460,8 +460,6 @@ void trn_initTransferValues (int transferTargetIndex)
 			(g_shipDeckItr->second.droid[transferTargetIndex].currentMode == DROID_MODE_DEAD))
 		return;
 
-	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferStage1");
-
 	if (transferRows.empty ())
 	{
 		for (int i = 0; i != numberTransferRows; i++)
@@ -478,9 +476,7 @@ void trn_initTransferValues (int transferTargetIndex)
 			tempTransferRow.rightSideActiveIsOn       = false;
 			tempTransferRow.leftSideActiveIsOn        = false;
 			tempTransferRow.rightSideActiveAlphaColor = 255.0f;
-//			tempTransferRow.rightSideActiveAlphaCount = 0.0f;
 			tempTransferRow.leftSideActiveAlphaColor  = 255.0f;
-//			tempTransferRow.leftSideActiveAlphaCount  = 0.0f;
 
 			if (i % 2 == 0)
 				tempTransferRow.currentColor = TRANSFER_COLOR_LEFT;
@@ -517,17 +513,22 @@ void trn_initTransferValues (int transferTargetIndex)
 
 	trn_setupTransferCellValues ();
 
-	gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
-	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 127, "transferMove");
-	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "guiTransferOne"));
-	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "guiTransferOne.nextButton");
-	gui.setState (KEY_ACTION, false, 0);
-
 	newKeyName  = "db_droid";
 	newFileName = dataBaseEntry[playerDroid.droidType].dbImageFileName + ".bmp";
 	gam_loadTexture (newFileName, newKeyName);
 	databaseSprite.setCurrentFrame (0);
 	databaseSprite.setTintColor (64, 64, 64);
+
+	gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
+//	audio.stopAllChannels();
+
+	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 127, "transferMove");
+	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferStage1");
+	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "guiTransferOne"));
+	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "guiTransferOne.nextButton");
+	gui.setState (KEY_ACTION, false, 0);
+
+	gam_setHudText("hudCaptured");
 
 	sys_setNewMode (MODE_TRANSFER_SCREEN_ONE, true);
 }
@@ -535,6 +536,8 @@ void trn_initTransferValues (int transferTargetIndex)
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Check the playing sounds for transfer information screens, move on if still playing
+//
+// TODO - Doesn't work as intended
 void trn_checkTransferScreenSounds ()
 //---------------------------------------------------------------------------------------------------------------------
 {
@@ -554,6 +557,9 @@ void trn_checkTransferScreenSounds ()
 				sys_setNewMode (MODE_PRE_TRANSFER_CHOOSE_SIDE, false);
 				return;
 			}
+			break;
+
+		default:
 			break;
 	}
 }

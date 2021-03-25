@@ -24,7 +24,7 @@ void gam_startNewGame()
 	gam_initScoreValues();
 	gam_setAlertLevel (ALERT_GREEN_TILE);
 
-	gam_changeToDeck ("Staterooms", 0);
+	gam_changeToDeck ("Stores", 0);
 }
 
 //-------------------------------------------------------------------------------------------------------------

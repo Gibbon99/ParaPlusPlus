@@ -129,7 +129,8 @@ void paraSprite::render (double posX, double posY, double scale, double angle)
 			SDL_SetTextureColorMod (textures.at (textureKeyName).getTexture (), tintColor.r, tintColor.g, tintColor.b);
 		}
 
-		SDL_RenderCopyExF (renderer.renderer, texturePtr, &srcRect, &destRect, angle, nullptr, SDL_FLIP_NONE);
+		if (textureItr->second.isLoaded())
+			SDL_RenderCopyExF (renderer.renderer, texturePtr, &srcRect, &destRect, angle, nullptr, SDL_FLIP_NONE);
 	}
 
 	catch (std::out_of_range &outOfRange)

@@ -67,6 +67,7 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("hudBriefing", "Briefing");
 	gui_addKeyAndText ("hudTutorial", "Tutorial");
 	gui_addKeyAndText ("hudPauseMode", "Paused");
+	gui_addKeyAndText ("hudOptions", "Options");
 
 	gui_addKeyAndText ("backButton", "Back");
 	gui_addKeyAndText ("nextButton", "Next");
@@ -144,5 +145,9 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("quitGameDialogbox.text", "Do you wish to cancel this transmission and return to the menu ?");
 	gui_addKeyAndText ("quitGameDialogbox.confirmButton", "Confirm");
 	gui_addKeyAndText ("quitGameDialogbox.denyButton", "Deny");
+
+	gui_addKeyAndText ("hudCaptured", "Captured");
+	gui_addKeyAndText ("hudMainMenu", "Main menu");
+
 }
 

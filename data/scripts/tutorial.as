@@ -15,11 +15,11 @@ float tutImageSize = 128;
 void as_handleTutorialElements ()
 //-------------------------------------------------------------------------------------------------------------------------------------------
 {
-
 //
 // Start of the tutorial screens - how to move
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "scrTutorial.buttonTutorialCancel"))
 	{
+		gam_setHudText ("hudMainMenu");
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
 		sys_setNewMode (MODE_GUI_MAINMENU, true);
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
@@ -123,6 +123,7 @@ void as_handleTutorialElements ()
 // Gameplay tips
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "scrTutTips.buttonTutTipsCancel"))
 	{
+		gam_setHudText ("hudMainMenu");
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
 		sys_setNewMode (MODE_GUI_MAINMENU, true);
 		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");

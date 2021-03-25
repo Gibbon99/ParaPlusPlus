@@ -259,6 +259,7 @@ void con_initConsole ()
 	console.addVariable ("d_showInfluenceMap", VAR_TYPE_BOOL, &d_showInfluenceMap);
 	console.addVariable ("d_showNodeArrays", VAR_TYPE_BOOL, &d_showNodeArrays);
 	console.addVariable ("d_showAStarPath", VAR_TYPE_BOOL, &d_showAStarPath);
+	console.addVariable ("d_showPerfStats", VAR_TYPE_BOOL, &d_showPerfStats);
 
 	console.addVariable ("height", VAR_TYPE_INT, &testVar);
 	console.addVariable ("testString", VAR_TYPE_STRING, &testVarString);
