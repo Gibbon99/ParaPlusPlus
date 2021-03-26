@@ -77,10 +77,10 @@ struct __GUI_OBJECT
 
 struct __KeyBindings
 {
-	std::string text;
-	PARA_Scancode keyValue;
-	bool        active;
-	int         state;
+	std::string     text;
+	PARA_Scancode   keyValue;
+	bool            active;
+	int             state;
 };
 
 struct _sliderElement
@@ -359,6 +359,10 @@ public:
 	void setMouse (int newPosX, int newPosY);
 
 	int getScancode (int whichKey);
+
+	std::string getKeyName(int keyIndex);
+
+	void setScancode(int whichKey, int newScancode);
 
 	const Uint8 *keyboardState;
 

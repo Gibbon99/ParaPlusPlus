@@ -7,7 +7,45 @@
 #include <system/util.h>
 #include <game/transfer.h>
 #include <game/pauseMode.h>
+#include <game/hud.h>
 #include "io/keyboard.h"
+
+static int settingCurrentKeyIndex;
+static int previousGuiMode;
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Called when a key is pressed on the keyboard while in keyinput mode
+void io_setNewKeycodeValue(int newKeyCode)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	gui.setScancode(settingCurrentKeyIndex, newKeyCode);
+
+	sys_setNewMode(previousGuiMode, false);
+
+	gam_setHudText("optionsMenu.controlsButton");
+	gui.setCurrentScreen(gui.getIndex(GUI_OBJECT_SCREEN, "controlsMenu"));
+	gui.setActiveObject(gui.getCurrentScreen(), GUI_OBJECT_BUTTON, "controlsMenu.backButton");
+
+	paraScriptInstance.run ("as_refreshControlLabels", "");
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Function called from the GUI script to change the mode to input a new key value
+void io_initNewKeycodeValue(int whichKey)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if ((whichKey < 0) || (whichKey > KEY_NUMBER_ACTIONS))
+	{
+		std::cout << "Invalid keyIndex passed to io_getNewKeycodeValue from script." << std::endl;
+		return;
+	}
+
+	settingCurrentKeyIndex = whichKey;
+	previousGuiMode = currentMode;
+	sys_setNewMode(MODE_GUI_KEYCODE_ENTRY, false);
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 //

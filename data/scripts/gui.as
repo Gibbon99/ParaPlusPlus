@@ -134,11 +134,68 @@ void as_handleAudioMenu()
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 //
+// Refresh the key label
+void as_refreshControlLabels()
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+{
+    as_paraGui.setLabel(GUI_OBJECT_LABEL, "controlsOptions.leftKeyname", 0, GUI_LABEL_LEFT, as_paraGui.getKeyName(KEY_LEFT));
+    as_paraGui.setLabel(GUI_OBJECT_LABEL, "controlsOptions.rightKeyname", 0, GUI_LABEL_LEFT, as_paraGui.getKeyName(KEY_RIGHT));
+    as_paraGui.setLabel(GUI_OBJECT_LABEL, "controlsOptions.upKeyname", 0, GUI_LABEL_LEFT, as_paraGui.getKeyName(KEY_UP));
+    as_paraGui.setLabel(GUI_OBJECT_LABEL, "controlsOptions.downKeyname", 0, GUI_LABEL_LEFT, as_paraGui.getKeyName(KEY_DOWN));
+    as_paraGui.setLabel(GUI_OBJECT_LABEL, "controlsOptions.actionKeyname", 0, GUI_LABEL_LEFT, as_paraGui.getKeyName(KEY_ACTION));
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+//
 // Process the elements on the Control menu
 void as_handleControlsMenu()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
+    if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "controlsOptions.left"))
+    {
+        gam_setHudText("hudPressKey");
+        io_initNewKeycodeValue(KEY_LEFT);
+        return;
+    }
+
+    if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "controlsOptions.right"))
+    {
+        gam_setHudText("hudPressKey");
+        io_initNewKeycodeValue(KEY_RIGHT);
+        return;
+    }
+
+    if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "controlsOptions.up"))
+    {
+        gam_setHudText("hudPressKey");
+        io_initNewKeycodeValue(KEY_UP);
+        return;
+    }
+
+    if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "controlsOptions.down"))
+    {
+        gam_setHudText("hudPressKey");
+        io_initNewKeycodeValue(KEY_DOWN);
+        return;
+    }
+
+    if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "controlsOptions.action"))
+    {
+        gam_setHudText("hudPressKey");
+        io_initNewKeycodeValue(KEY_ACTION);
+        return;
+    }
+
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "controlsMenu.backButton")) {
+        gam_setHudText("hudOptions");
+        as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "optionsMenu.controlsButton");
+        return;
+    }
+
+    if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "controlsMenu.applyButton"))
+    {
+        as_paraGui.save();  // Save keymappings to file
         gam_setHudText("hudOptions");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
         as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "optionsMenu.controlsButton");
@@ -224,12 +281,9 @@ void as_handleVideoOptions()
 void createVideoOptions()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
-    int
-    numRenderers;
-    string
-    tempNum;
-    string
-    currentRendererStr;
+    int numRenderers;
+    string tempNum;
+    string currentRendererStr;
 
     as_paraGui.create(GUI_OBJECT_SCREEN, "videoOptions");
     /*
@@ -366,10 +420,8 @@ void createVideoOptions()
 void createAudioMenu()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
-    string
-    currentVolumeStr;
-    string
-    tempNum;
+    string currentVolumeStr;
+    string tempNum;
 
     as_paraGui.create(GUI_OBJECT_SCREEN, "audioOptions");
 
@@ -440,22 +492,113 @@ void createAudioMenu()
 void createControlsMenu()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
+    int controlsButtonSpacing = 12;
+    int controlsButtonsStartY = 22;
+    int controlsGapSize = 15;
+    int controlsButtonsNameY = controlsButtonsStartY + 3;
+
     as_paraGui.create(GUI_OBJECT_SCREEN, "controlsMenu");
 
     as_paraGui.create(GUI_OBJECT_LABEL, "controlsOptions.heading");
     as_paraGui.addToScreen(GUI_OBJECT_LABEL, "controlsOptions.heading", "controlsMenu");
-    as_paraGui.setPosition(GUI_OBJECT_LABEL, "controlsOptions.heading", 0, GUI_COORD_ABSOLUTE, 3, 3, 2, 2);
+    as_paraGui.setPosition(GUI_OBJECT_LABEL, "controlsOptions.heading", 8, GUI_COORD_PERCENT, buttonStartX, buttonSpacing, buttonWidth, buttonHeight);
     as_paraGui.setLabel(GUI_OBJECT_LABEL, "controlsOptions.heading", 0, GUI_LABEL_LEFT, gui_getString("controlsOptions.heading"));
     as_paraGui.setFontName(GUI_OBJECT_LABEL, "controlsOptions.heading", "guiFont");
     as_paraGui.setReady(GUI_OBJECT_LABEL, "controlsOptions.heading", true);
+
+
+    as_paraGui.create(GUI_OBJECT_BUTTON, "controlsOptions.left");
+    as_paraGui.addToScreen(GUI_OBJECT_BUTTON, "controlsOptions.left", "controlsMenu");
+    as_paraGui.setPosition(GUI_OBJECT_BUTTON, "controlsOptions.left", 8, GUI_COORD_PERCENT, buttonStartX, controlsButtonsStartY, buttonWidth, buttonHeight);
+    as_paraGui.setLabel(GUI_OBJECT_BUTTON, "controlsOptions.left", controlsGapSize, GUI_LABEL_LEFT, gui_getString("gameLeft"));
+    as_paraGui.setFontName(GUI_OBJECT_BUTTON, "controlsOptions.left", "guiFont");
+    as_paraGui.setAction(GUI_OBJECT_BUTTON, "controlsOptions.left", "as_handleControlsMenu");
+    as_paraGui.setReady(GUI_OBJECT_BUTTON, "controlsOptions.left", true);
+
+    as_paraGui.create(GUI_OBJECT_BUTTON, "controlsOptions.right");
+    as_paraGui.addToScreen(GUI_OBJECT_BUTTON, "controlsOptions.right", "controlsMenu");
+    as_paraGui.setPosition(GUI_OBJECT_BUTTON, "controlsOptions.right", 8, GUI_COORD_PERCENT, buttonStartX, controlsButtonsStartY + (controlsButtonSpacing * 1), buttonWidth, buttonHeight);
+    as_paraGui.setLabel(GUI_OBJECT_BUTTON, "controlsOptions.right", controlsGapSize, GUI_LABEL_LEFT, gui_getString("gameRight"));
+    as_paraGui.setFontName(GUI_OBJECT_BUTTON, "controlsOptions.right", "guiFont");
+    as_paraGui.setAction(GUI_OBJECT_BUTTON, "controlsOptions.right", "as_handleControlsMenu");
+    as_paraGui.setReady(GUI_OBJECT_BUTTON, "controlsOptions.right", true);
+
+    as_paraGui.create(GUI_OBJECT_BUTTON, "controlsOptions.up");
+    as_paraGui.addToScreen(GUI_OBJECT_BUTTON, "controlsOptions.up", "controlsMenu");
+    as_paraGui.setPosition(GUI_OBJECT_BUTTON, "controlsOptions.up", 8, GUI_COORD_PERCENT, buttonStartX, controlsButtonsStartY + (controlsButtonSpacing * 2), buttonWidth, buttonHeight);
+    as_paraGui.setLabel(GUI_OBJECT_BUTTON, "controlsOptions.up", controlsGapSize, GUI_LABEL_LEFT, gui_getString("gameUp"));
+    as_paraGui.setFontName(GUI_OBJECT_BUTTON, "controlsOptions.up", "guiFont");
+    as_paraGui.setAction(GUI_OBJECT_BUTTON, "controlsOptions.up", "as_handleControlsMenu");
+    as_paraGui.setReady(GUI_OBJECT_BUTTON, "controlsOptions.up", true);
+
+    as_paraGui.create(GUI_OBJECT_BUTTON, "controlsOptions.down");
+    as_paraGui.addToScreen(GUI_OBJECT_BUTTON, "controlsOptions.down", "controlsMenu");
+    as_paraGui.setPosition(GUI_OBJECT_BUTTON, "controlsOptions.down", 8, GUI_COORD_PERCENT, buttonStartX, controlsButtonsStartY + (controlsButtonSpacing * 3), buttonWidth, buttonHeight);
+    as_paraGui.setLabel(GUI_OBJECT_BUTTON, "controlsOptions.down", controlsGapSize, GUI_LABEL_LEFT, gui_getString("gameDown"));
+    as_paraGui.setFontName(GUI_OBJECT_BUTTON, "controlsOptions.down", "guiFont");
+    as_paraGui.setAction(GUI_OBJECT_BUTTON, "controlsOptions.down", "as_handleControlsMenu");
+    as_paraGui.setReady(GUI_OBJECT_BUTTON, "controlsOptions.down", true);
+
+    as_paraGui.create(GUI_OBJECT_BUTTON, "controlsOptions.action");
+    as_paraGui.addToScreen(GUI_OBJECT_BUTTON, "controlsOptions.action", "controlsMenu");
+    as_paraGui.setPosition(GUI_OBJECT_BUTTON, "controlsOptions.action", 8, GUI_COORD_PERCENT, buttonStartX, controlsButtonsStartY + (controlsButtonSpacing * 4), buttonWidth, buttonHeight);
+    as_paraGui.setLabel(GUI_OBJECT_BUTTON, "controlsOptions.action", controlsGapSize, GUI_LABEL_LEFT, gui_getString("gameAction"));
+    as_paraGui.setFontName(GUI_OBJECT_BUTTON, "controlsOptions.action", "guiFont");
+    as_paraGui.setAction(GUI_OBJECT_BUTTON, "controlsOptions.action", "as_handleControlsMenu");
+    as_paraGui.setReady(GUI_OBJECT_BUTTON, "controlsOptions.action", true);
+
+// Show the text name of the keys
+    as_paraGui.create(GUI_OBJECT_LABEL, "controlsOptions.leftKeyname");
+    as_paraGui.addToScreen(GUI_OBJECT_LABEL, "controlsOptions.leftKeyname", "controlsMenu");
+    as_paraGui.setPosition(GUI_OBJECT_LABEL, "controlsOptions.leftKeyname", 9, GUI_COORD_PERCENT, 55, controlsButtonsNameY, 10, 10);
+    as_paraGui.setLabel(GUI_OBJECT_LABEL, "controlsOptions.leftKeyname", 0, GUI_LABEL_LEFT, as_paraGui.getKeyName(KEY_LEFT));
+    as_paraGui.setFontName(GUI_OBJECT_LABEL, "controlsOptions.leftKeyname", "guiFont");
+    as_paraGui.setReady(GUI_OBJECT_LABEL, "controlsOptions.leftKeyname", true);
+
+    as_paraGui.create(GUI_OBJECT_LABEL, "controlsOptions.rightKeyname");
+    as_paraGui.addToScreen(GUI_OBJECT_LABEL, "controlsOptions.rightKeyname", "controlsMenu");
+    as_paraGui.setPosition(GUI_OBJECT_LABEL, "controlsOptions.rightKeyname", 9, GUI_COORD_PERCENT, 55, controlsButtonsNameY + (controlsButtonSpacing * 1), 10, 10);
+    as_paraGui.setLabel(GUI_OBJECT_LABEL, "controlsOptions.rightKeyname", 0, GUI_LABEL_LEFT, as_paraGui.getKeyName(KEY_RIGHT));
+    as_paraGui.setFontName(GUI_OBJECT_LABEL, "controlsOptions.rightKeyname", "guiFont");
+    as_paraGui.setReady(GUI_OBJECT_LABEL, "controlsOptions.rightKeyname", true);
+
+    as_paraGui.create(GUI_OBJECT_LABEL, "controlsOptions.upKeyname");
+    as_paraGui.addToScreen(GUI_OBJECT_LABEL, "controlsOptions.upKeyname", "controlsMenu");
+    as_paraGui.setPosition(GUI_OBJECT_LABEL, "controlsOptions.upKeyname", 9, GUI_COORD_PERCENT, 55, controlsButtonsNameY + (controlsButtonSpacing * 2), 10, 10);
+    as_paraGui.setLabel(GUI_OBJECT_LABEL, "controlsOptions.upKeyname", 0, GUI_LABEL_LEFT, as_paraGui.getKeyName(KEY_UP));
+    as_paraGui.setFontName(GUI_OBJECT_LABEL, "controlsOptions.upKeyname", "guiFont");
+    as_paraGui.setReady(GUI_OBJECT_LABEL, "controlsOptions.upKeyname", true);
+
+    as_paraGui.create(GUI_OBJECT_LABEL, "controlsOptions.downKeyname");
+    as_paraGui.addToScreen(GUI_OBJECT_LABEL, "controlsOptions.downKeyname", "controlsMenu");
+    as_paraGui.setPosition(GUI_OBJECT_LABEL, "controlsOptions.downKeyname", 9, GUI_COORD_PERCENT, 55, controlsButtonsNameY + (controlsButtonSpacing * 3), 10, 10);
+    as_paraGui.setLabel(GUI_OBJECT_LABEL, "controlsOptions.downKeyname", 0, GUI_LABEL_LEFT, as_paraGui.getKeyName(KEY_DOWN));
+    as_paraGui.setFontName(GUI_OBJECT_LABEL, "controlsOptions.downKeyname", "guiFont");
+    as_paraGui.setReady(GUI_OBJECT_LABEL, "controlsOptions.downKeyname", true);
+
+    as_paraGui.create(GUI_OBJECT_LABEL, "controlsOptions.actionKeyname");
+    as_paraGui.addToScreen(GUI_OBJECT_LABEL, "controlsOptions.actionKeyname", "controlsMenu");
+    as_paraGui.setPosition(GUI_OBJECT_LABEL, "controlsOptions.actionKeyname", 9, GUI_COORD_PERCENT, 55, controlsButtonsNameY + (controlsButtonSpacing * 4), 10, 10);
+    as_paraGui.setLabel(GUI_OBJECT_LABEL, "controlsOptions.actionKeyname", 0, GUI_LABEL_LEFT, as_paraGui.getKeyName(KEY_ACTION));
+    as_paraGui.setFontName(GUI_OBJECT_LABEL, "controlsOptions.actionKeyname", "guiFont");
+    as_paraGui.setReady(GUI_OBJECT_LABEL, "controlsOptions.actionKeyname", true);
 
     as_paraGui.create(GUI_OBJECT_BUTTON, "controlsMenu.backButton");
     as_paraGui.addToScreen(GUI_OBJECT_BUTTON, "controlsMenu.backButton", "controlsMenu");
     as_paraGui.setLabel(GUI_OBJECT_BUTTON, "controlsMenu.backButton", 3, GUI_LABEL_CENTER, gui_getString("backButton"));
     as_paraGui.setFontName(GUI_OBJECT_BUTTON, "controlsMenu.backButton", "guiFont");
-    as_paraGui.setPosition(GUI_OBJECT_BUTTON, "controlsMenu.backButton", 8, GUI_COORD_PERCENT, buttonStartX, buttonSpacing * 5, buttonWidth, buttonHeight);
+    as_paraGui.setPosition(GUI_OBJECT_BUTTON, "controlsMenu.backButton", 8, GUI_COORD_PERCENT, buttonStartX, (buttonSpacing * 5) + 10, buttonWidth, buttonHeight);
     as_paraGui.setAction(GUI_OBJECT_BUTTON, "controlsMenu.backButton", "as_handleControlsMenu");
     as_paraGui.setReady(GUI_OBJECT_BUTTON, "controlsMenu.backButton", true);
+
+    as_paraGui.create(GUI_OBJECT_BUTTON, "controlsMenu.applyButton");
+    as_paraGui.addToScreen(GUI_OBJECT_BUTTON, "controlsMenu.applyButton", "controlsMenu");
+    as_paraGui.setLabel(GUI_OBJECT_BUTTON, "controlsMenu.applyButton", 3, GUI_LABEL_CENTER, gui_getString("videoOptions.applyButton"));
+    as_paraGui.setFontName(GUI_OBJECT_BUTTON, "controlsMenu.applyButton", "guiFont");
+    as_paraGui.setPosition(GUI_OBJECT_BUTTON, "controlsMenu.applyButton", 8, GUI_COORD_PERCENT, 55, (buttonSpacing * 5) + 10, buttonWidth, buttonHeight);
+    as_paraGui.setAction(GUI_OBJECT_BUTTON, "controlsMenu.applyButton", "as_handleControlsMenu");
+    as_paraGui.setReady(GUI_OBJECT_BUTTON, "controlsMenu.applyButton", true);
+
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------

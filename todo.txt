@@ -13,6 +13,7 @@ BUG - Background sound can stop playing
 BUG - Door sounds are not right
 BUG - Player bullets bouncing off droid when in collision ?
 BUG - Transfer screen one - shows player droid at wrong position on start
+BUG - Some script functions are not being found when called from console
 
 TODO
 -------
@@ -118,7 +119,8 @@ DONE - BUG - All AI stats are 0 after healing
 DONE - Make HUD text usage consistent
 DONE - Pause mode when focus is lost - frameUpdate - processInputEvents
 DONE - Reload textures on system event - for Android - minimum testing done on PC
-
+>Commit
+DONE - Added GUI screen to map keys to actions for input controls
 
 Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
 -DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "

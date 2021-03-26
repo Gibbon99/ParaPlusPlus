@@ -16,6 +16,7 @@
 #include <game/alertLevel.h>
 #include <gui/guiLostScreen.h>
 #include <gui/guiHighScore.h>
+#include <io/keyboard.h>
 #include "game/audio.h"
 #include "gui/guiLanguage.h"
 #include "system/startup.h"
@@ -62,7 +63,9 @@ void sys_scriptInitScriptFunctions ()
 
 	paraScriptInstance.addScriptFunction ("void as_handleDialogBoxes ()", "as_handleDialogBoxes");
 
-	paraScriptInstance.addScriptFunction ("void as_testFunction()", "as_testFunction");
+//	paraScriptInstance.addScriptFunction ("void as_testFunction()", "as_testFunction");
+
+	paraScriptInstance.addScriptFunction ("void as_refreshControlLabels()", "as_refreshControlLabels");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -229,6 +232,13 @@ void sys_scriptInitFunctions ()
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectBehaviour ("paraGui", asBEHAVE_RELEASE, "void f()", asMETHOD(paraGui, ReleaseRef), asCALL_THISCALL);
 	assert(r >= 0);
+
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "string getKeyName (int keyIndex)", asMETHOD(paraGui, getKeyName), asCALL_THISCALL);
+	assert(r >= 0);
+
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void save ()", asMETHOD(paraGui, save), asCALL_THISCALL);
+	assert(r >= 0);
+
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void setLabel (int objectType, string objectID, int gapSize, int newLabelPos, string newLabel)", asMETHOD(paraGui, setLabel), asCALL_THISCALL);
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void setAction (int objectType, string objectID, string newAction)", asMETHOD(paraGui, setAction), asCALL_THISCALL);
@@ -306,4 +316,5 @@ void sys_scriptInitFunctions ()
 	paraScriptInstance.addHostFunction ("void gam_loadShipDeck (string &in)", (functionPtr) &gam_loadShipDeck);
 	paraScriptInstance.addHostFunction ("void gam_changeToDeck (string &in, int whichLift)", (functionPtr) &gam_changeToDeck);
 	paraScriptInstance.addHostFunction ("void trn_setTransferColor (int whichSide, float red, float green, float blue, float alpha)", (functionPtr) &trn_setTransferColor);
+	paraScriptInstance.addHostFunction ("void io_initNewKeycodeValue(int whichKey)", (functionPtr) &io_initNewKeycodeValue);
 }

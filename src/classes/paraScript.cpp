@@ -103,7 +103,7 @@ void paraScript::run (const std::string &functionName, const std::string &param)
 
 	for (const auto &funcItr : scriptFunctions)
 	{
-		std::cout << sys_getString("Looking for function [ %s ] to [ %s ] to execute", functionName.c_str(), funcItr.scriptName.c_str()) << std::endl;
+//		std::cout << sys_getString("Looking for function [ %s ] to [ %s ] to execute", functionName.c_str(), funcItr.scriptName.c_str()) << std::endl;
 
 		if (scriptEngine != context->GetEngine ())
 		{
@@ -140,7 +140,7 @@ void paraScript::run (const std::string &functionName, const std::string &param)
 				}
 			}
 #ifdef MY_DEBUG
-			std::cout << "Context state : " << getContextState (context->GetState ()) << std::endl;
+//			std::cout << "Context state : " << getContextState (context->GetState ()) << std::endl;
 			std::cout << "Execute : " << functionName << std::endl;
 #endif
 			if (asEXECUTION_PREPARED != context->GetState())

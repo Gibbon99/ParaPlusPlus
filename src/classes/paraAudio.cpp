@@ -102,6 +102,8 @@ int paraAudio::init (int numMaxActiveChannels, audioFunctionPtrStr outputFunctio
 		activeSounds.push_back (tempActiveSounds);
 	}
 	audioDeviceOpened = true;
+
+	return 0;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------

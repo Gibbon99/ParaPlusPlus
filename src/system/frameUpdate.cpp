@@ -88,6 +88,13 @@ void sys_processInputEvents ()
 				break;
 
 			case SDL_KEYDOWN:
+
+				if (currentMode == MODE_GUI_KEYCODE_ENTRY)
+				{
+					io_setNewKeycodeValue(evt.key.keysym.scancode);
+					return;
+				}
+
 				if (currentMode == MODE_CONSOLE_EDIT)
 				{
 					if (evt.key.keysym.sym == SDLK_ESCAPE)
@@ -146,8 +153,6 @@ void sys_processInputEvents ()
 				if (currentMode == MODE_CONSOLE_EDIT)
 				{
 					sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_CHAR, 0, evt.text.text);
-
-					std::cout << "Added char to console : " << evt.text.text << std::endl;
 				}
 				break;
 		}
@@ -165,7 +170,14 @@ void sys_gameTickRun ()
 
 	io_checkFileWatcher ();
 
-	sys_processInputEvents();
+	if (currentMode == MODE_GUI_KEYCODE_ENTRY)
+	{
+		sys_processInputEvents ();
+		return;
+	}
+
+	sys_processInputEvents ();
+
 	gam_processGameEventQueue();
 
 	io_processKeyboardState ();

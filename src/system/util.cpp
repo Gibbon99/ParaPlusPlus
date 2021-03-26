@@ -314,6 +314,10 @@ void sys_setNewMode (int newMode, bool doFade)
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 			break;
 
+		case MODE_GUI_KEYCODE_ENTRY:
+			currentMode = newMode;
+			break;
+
 		default:
 			sys_shutdownWithError ("Attempting to set an unknown mode.");
 			break;

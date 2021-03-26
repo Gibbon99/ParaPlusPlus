@@ -3633,6 +3633,22 @@ void paraGui::setKeyDescription ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Return the text name of the key
+string paraGui::getKeyName(int keyIndex)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	string keyName;
+
+	if ((keyIndex < 0) || (keyIndex > KEY_NUMBER_ACTIONS))
+		return "Invalid keyIndex";
+
+	keyName = SDL_GetKeyName(SDL_GetKeyFromScancode(keyBinding[keyIndex].keyValue));
+
+	return keyName;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Set the default values for keybindings
 void paraGui::setDefaultKeybindings ()
 //----------------------------------------------------------------------------------------------------------------------
@@ -3664,6 +3680,20 @@ void paraGui::setRepeatOff (bool newState)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	repeatOff = newState;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Set a new scancode for a key setting
+void paraGui::setScancode(int whichKey, int newScancode)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if ((whichKey < 0) || (whichKey > KEY_NUMBER_ACTIONS))
+		return;
+
+	keyBinding[whichKey].keyValue = static_cast<SDL_Scancode>(newScancode);
+
+	keyBinding[whichKey].text = SDL_GetKeyName(SDL_GetKeyFromScancode(keyBinding[whichKey].keyValue));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
