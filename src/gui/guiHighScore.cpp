@@ -2,133 +2,172 @@
 #include <system/util.h>
 #include <game/hud.h>
 #include <gui/guiLanguage.h>
+#include <game/score.h>
 #include "io/logFile.h"
 #include "gui/guiHighScore.h"
 
-std::string highScoreFilename = "highscore.dat";
-std::array<int, 5> highScores = {10, 20, 30, 40, 50};
+struct highScore
+{
+	int  scoreValue = 0;
+	char nameValue[4];
+};
 
-float headingPosX;
-float headingPosY;
-float tableSpacingY;
-float rowNumberPosX;
-float rowNumberScoreX;
-float rowY;
+std::string                               highScoreFilename = "highscore.dat";
+std::array<highScore, NUM_HIGHSCORE_ROWS> highScoreTable{};
 
-std::string headingText = "High Scores";
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the current high score from the table
+int gui_getLowestScore()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return highScoreTable.end()->scoreValue;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Sort function for highscoretable
+bool gui_scoreSortFunction (highScore const &lhs, highScore const &rhs)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return lhs.scoreValue > rhs.scoreValue;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Change to high score entry screen
+void gui_showHighscoreEntry()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	sys_setNewMode (MODE_GUI_HIGHSCORE_ENTRY, true);
+
+	gam_setHudText ("hudHighscore");
+
+	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "highScoreEntry"));
+	// Set active object
+	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "highScoreEntry.backButton");
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Change to GUI mode and display highscore table screen
+void gui_showHighscoreTable ()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	sys_setNewMode (MODE_GUI_HIGHSCORE_DISPLAY, true);
+
+	gam_setHudText ("hudHighscore");
+	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "highScoreDisplay"));
+	// Set active object
+	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "highScoreDisplay.backButton");
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the string representation of the highscore - by index
+std::string gui_getHighScoreValueByIndex (int highScoreIndex)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if ((highScoreIndex < 0) || (highScoreIndex > NUM_HIGHSCORE_ROWS))
+		return "Invalid highscore index.";
+
+	return sys_getString ("%i", highScoreTable[highScoreIndex].scoreValue);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Get the string for the highscore name - by index
+std::string gui_getHighScoreNameByIndex (int highScoreIndex)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if ((highScoreIndex < 0) || (highScoreIndex > NUM_HIGHSCORE_ROWS))
+		return "Invalid highscore index.";
+
+	return highScoreTable[highScoreIndex].nameValue;
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Save the highscores to a file
-void gui_writeHighScore()
+void gui_writeHighScore ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (!fileSystem.save(highScoreFilename, &highScores, highScores.size() * sizeof(int)))
+	if (!fileSystem.save (highScoreFilename, &highScoreTable, highScoreTable.size () * sizeof (highScore)))
 	{
-		log_addEvent("Unable to write highscore file.");
+		log_addEvent ("Unable to write highscore file.");
 	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Read the highscore file into array
-void gui_readHighScore()
+// Read the highscore file into array - if the file can't be found init array with starting values and save it
+void gui_readHighScore ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (fileSystem.doesFileExist(highScoreFilename))
+	if (fileSystem.doesFileExist (highScoreFilename))
 	{
-		fileSystem.getFileIntoMemory(highScoreFilename, &highScores);
+		fileSystem.getFileIntoMemory (highScoreFilename, &highScoreTable);
+	}
+	else
+	{
+		for (int i = 0; i != NUM_HIGHSCORE_ROWS; i++)
+		{
+			highScoreTable[i].scoreValue = i * 1000;
+			strcpy (highScoreTable[i].nameValue, "DAB");
+		}
+		gui_writeHighScore ();
 	}
 
-#ifdef MY_DEBUG
-	for (auto scoreItr : highScores)
-		std::cout << "Score : " << scoreItr << std::endl;
-#endif
-
+	std::sort (highScoreTable.begin (), highScoreTable.end (), &gui_scoreSortFunction);
 }
 
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Prepare to render the high score screen
-void gui_prepareHighScoreScreen()
-//----------------------------------------------------------------------------------------------------------------------
-{
-	//
-	// Sort the table for presentation
-	std::sort(highScores.begin(), highScores.end(), std::greater<int>());
-	//
-	// Get localised text
-	headingText = gui_getString("highScore");
-
-	headingPosX = (hiresVirtualWidth - fontClass.width (headingText)) / 2;
-	headingPosY = textures.at ("hudNew").getHeight () + 50;
-
-	rowNumberPosX = hiresVirtualWidth / 3;
-	rowNumberScoreX = rowNumberPosX + fontClass.width ("00000");
-
-	rowY = headingPosY + fontClass.height() * 2;
-
-	gam_setHudText ("highScore");
-
-	sys_setNewMode(MODE_GUI_HIGHSCORE_SCREEN, true);
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Render the high score screen
-void gui_renderHighScoreScreen()
-//----------------------------------------------------------------------------------------------------------------------
-{
-	int indexCount = 1;
-
-	fontClass.use ("guiFont");
-
-	fontClass.render (renderer.renderer, headingPosX, headingPosY, 255, 255, 255, 255, sys_getString ("%s", headingText.c_str ()));
-
-	for (auto scoreItr : highScores)
-	{
-		fontClass.render (renderer.renderer, rowNumberPosX, rowY + (tableSpacingY * indexCount), 255, 255 - (10 * indexCount), 255 - (10 * indexCount), 255, sys_getString ("%i.", indexCount));
-		fontClass.render(renderer.renderer, rowNumberScoreX, rowY + (tableSpacingY * indexCount), 255, 255 - (10 * indexCount), 255 - (10 * indexCount), 255, sys_getString("%i", scoreItr));
-		indexCount++;
-	}
-}
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Insert a new score into the highscore table
-void gui_insertNewScore(int newScore)
+void gui_insertNewScore (string newName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int scoreIndex = 0;
+	int newScore;
 
-	std::sort(highScores.begin(), highScores.end(), std::less<int>());
+	newScore = gam_getCurrentScore();
 
-	if (newScore <= highScores[0])
+	std::sort (highScoreTable.begin (), highScoreTable.end (), &gui_scoreSortFunction);
+
+	if (newScore <= highScoreTable.end ()->scoreValue)
 		return; // Didn't make it onto the table
 
 	//
-	// Handle new highest score - shuffle other scores down
-	if (newScore > highScores[highScores.size()])
+	// Handle new highest score, push other scores down
+	if (newScore >= highScoreTable.begin ()->scoreValue)
 	{
-		for (scoreIndex = 0; scoreIndex < static_cast<int>(highScores.size() - 1); scoreIndex++)
+		for (scoreIndex = highScoreTable.size (); scoreIndex != 0; scoreIndex--)
 		{
-			highScores[scoreIndex] = highScores[scoreIndex + 1];
+			highScoreTable[scoreIndex] = highScoreTable[scoreIndex - 1];
 		}
 
-		highScores[highScores.size () - 1] = newScore;
+		highScoreTable.begin ()->scoreValue = newScore;
+		strcpy (highScoreTable.begin ()->nameValue, newName.c_str ());
 
+		paraScriptInstance.run ("as_refreshHighscoreLabels", "");
 		return;
 	}
 
-	for (scoreIndex = 0; scoreIndex != highScores.size() - 1; scoreIndex++)
+	//
+	// Insert a new score into the table, push other scores down
+	for (scoreIndex = highScoreTable.size (); scoreIndex != 0; scoreIndex--)
 	{
-		if (newScore > highScores[scoreIndex])
+		if ((newScore > highScoreTable[scoreIndex].scoreValue) && (newScore > highScoreTable[scoreIndex - 1].scoreValue))
 		{
-			highScores[scoreIndex] - highScores[scoreIndex + 1];
+			highScoreTable[scoreIndex] = highScoreTable[scoreIndex - 1];
 		}
 		else
 		{
-			highScores[scoreIndex] = newScore;
+			highScoreTable[scoreIndex].scoreValue = newScore;
+			strcpy (highScoreTable[scoreIndex].nameValue, newName.c_str ());
+			paraScriptInstance.run ("as_refreshHighscoreLabels", "");
+			return;
 		}
 	}
 }

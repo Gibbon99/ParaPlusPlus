@@ -71,7 +71,6 @@ void io_processKeyboardState ()
 		case MODE_GUI_TUT_TERMINALS:
 		case MODE_GUI_TUT_HEALING:
 		case MODE_GUI_TUT_TIPS:
-
 		case MODE_GUI_MAINMENU:
 		case MODE_GUI_TERMINAL:
 		case MODE_GUI_DATABASE:
@@ -79,14 +78,15 @@ void io_processKeyboardState ()
 		case MODE_GUI_SHIPVIEW:
 		case MODE_TRANSFER_SCREEN_ONE:
 		case MODE_TRANSFER_SCREEN_TWO:
+		case MODE_GUI_HIGHSCORE_DISPLAY:
+		case MODE_GUI_HIGHSCORE_ENTRY:
 			io_mapMouseToInput ();
 			gui.processGuiInput ();
 			gui_processKeyboard ();
 			break;
 
-		case MODE_GUI_INTROSCROLL:
 		case MODE_GUI_WON_SCREEN:
-		case MODE_GUI_HIGHSCORE_SCREEN:
+		case MODE_GUI_INTROSCROLL:
 			gui_processKeyboard ();
 			break;
 

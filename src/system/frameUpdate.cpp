@@ -7,6 +7,7 @@
 #include <game/pauseMode.h>
 #include <gui/guiLostScreen.h>
 #include <game/game.h>
+#include <gui/guiHighScore.h>
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
@@ -88,6 +89,11 @@ void sys_processInputEvents ()
 				break;
 
 			case SDL_KEYDOWN:
+				if (currentMode == MODE_SHOW_SPLASH)
+				{
+					sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
+					return;
+				}
 
 				if (currentMode == MODE_GUI_KEYCODE_ENTRY)
 				{
@@ -126,20 +132,17 @@ void sys_processInputEvents ()
 					sys_setNewMode (MODE_SHOW_SPLASH, true);
 
 				if (evt.key.keysym.sym == SDLK_F3)
-					paraScriptInstance.run ("as_loadTextureResources", "");
-					//sys_setNewMode (MODE_CONSOLE_EDIT, true);
+					gui_showHighscoreEntry();
 
 				if (evt.key.keysym.sym == SDLK_F5)
 				{
-//					sys_setNewMode (MODE_GUI_WON_SCREEN, true);
-					gam_addEvent (EVENT_ACTION_PRE_HIGHSCORE, 0, "");
+					sys_setNewMode (MODE_GUI_WON_SCREEN, true);
 				}
 
 				if (evt.key.state == SDL_PRESSED)
 				{
 					io_setKeyboardState (evt.key.keysym.scancode, SDL_PRESSED, evt.key.repeat);
 				}
-
 				break;
 
 			case SDL_KEYUP:

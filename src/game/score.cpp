@@ -1,3 +1,4 @@
+#include <gui/guiHighScore.h>
 #include "game/score.h"
 #include "game/alertLevel.h"
 
@@ -66,7 +67,7 @@ void gam_processScore()
 int gam_getCurrentScore()
 //------------------------------------------------------------------------------------------------------
 {
-	return currentScore;
+	return printableScore + currentScore;
 }
 
 //------------------------------------------------------------------------------------------------------
@@ -86,4 +87,24 @@ void gam_initScoreValues()
 {
 	currentScore = 0;
 	printableScore = 0;
+}
+
+//------------------------------------------------------------------------------------------------------
+//
+// See if we need to show the high score entry screen - or just the high score screen
+void gam_decideScoreAction()
+//------------------------------------------------------------------------------------------------------
+{
+	int finalScore;
+
+	finalScore = currentScore + printableScore;
+
+	if (finalScore >= gui_getLowestScore ())
+	{
+		gui_showHighscoreEntry();
+	}
+	else
+	{
+		gui_showHighscoreTable();
+	}
 }

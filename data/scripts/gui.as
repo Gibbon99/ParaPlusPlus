@@ -847,7 +847,6 @@ void as_createGUI()
     alertLevelVolume = 190;  // Higher is softer - 1 is full loud
     staticAnimationDelay = 0.8f;
     lostScreenShowTime = 120;  // 10 seconds
-    tableSpacingY = 40;
     disrupterFadeAmount = 20;
     influenceTimelimit = 1000;
     influenceTimeLeftWarning = 250;
@@ -873,6 +872,9 @@ void as_createGUI()
     createShipViewScreen();
 
     createTutorialScreens();
+
+    createHighscoreDisplay();
+    createHighscoreEntry();
 
     as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "mainMenu"));
     as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "mainMenu.startGame");

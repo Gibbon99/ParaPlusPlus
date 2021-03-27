@@ -1,12 +1,3 @@
-
-1 - Create player explosion sprite
-2 - Render level only while player explodes - HD text is Game Over
-3 - Pause on empty level
-4 - Fade to game over static
-5 - Play for x seconds
-6 - If score is in high score table - show high score table - Pause for X seconds
-7 - Fade to GUI
-
 BUGS
 --------
 BUG - Background sound can stop playing
@@ -18,10 +9,9 @@ BUG - Some script functions are not being found when called from console
 TODO
 -------
 
-High Score entry screen - Drop ??
 Calibrate joystick
 
-Splash screen on start
+
 Transfer - enemy AI - do based on priority of circuit types
 Transfer - work out winner
 Transfer - timer
@@ -29,7 +19,7 @@ Droid AI - Attack
 Droid AI - Help
 Check bottom edge of animated tiles in graphics
 Blink player icon on deckview map
-
+Fix up player firing rate - needs to be slower
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
@@ -121,11 +111,10 @@ DONE - Pause mode when focus is lost - frameUpdate - processInputEvents
 DONE - Reload textures on system event - for Android - minimum testing done on PC
 >Commit
 DONE - Added GUI screen to map keys to actions for input controls
+DONE - Added high score display table screen, saves and reads data to file
+DONE - Added high score entry screen, cleaned up score functions
+DONE - Splash screen on start
 
-Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
--DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "
-
-Particles
 GUI
 ------
 
@@ -143,13 +132,13 @@ DONE - Borderless window - checkbox
 DONE - Allow highDPI - checkbox
 DONE - Render scale quality - slider
 
-DONE - Audio
+Audio
 DONE - - Enable sound - checkbox
 DONE - - Volume - slider
 DONE - - Number speakers - slider
 
 Controls
-- Keyboard controls
+DONE - Keyboard controls
 - Calibrate joystick
 
 Game
@@ -161,6 +150,10 @@ DONE - Language - slider
 DONE - scrollBox
 DONE - label
 
+
+NOTES
+-----------
+
 Android
 Use these hints:
 
@@ -168,3 +161,6 @@ SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
 
 Then multiply your touch events by window / renderer width & height and they should mirror mouse coordinates.
+--
+Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
+-DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "

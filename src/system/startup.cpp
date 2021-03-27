@@ -164,13 +164,17 @@ static int sys_startInit(void *ptr)
 	sys_scriptInitFunctions ();
 	sys_scriptInitVariables ();
 	io_getScriptFileNames ("scripts");
-	paraScriptInstance.loadAndCompile ();
+	if (!paraScriptInstance.loadAndCompile ())
+	{
+		sys_shutdownWithError("Error: Could not compile scripts.");
+	}
 	paraScriptInstance.cacheFunctions ();
 
 #if MY_DEBUG
 	printf("Run setupPhysicsEngine\n");
-	sys_setupPhysicsEngine ();
 #endif
+
+	sys_setupPhysicsEngine ();
 
 	gam_initAudio ();
 
@@ -211,8 +215,8 @@ printf("init joystick\n");
 
 	gam_setupPlayerDroid ();
 
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 100, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_SHOW_SPLASH)+"|"+to_string(true));
 
-	printf ("Sent event to game mode change\n");
 	return 0;
 }

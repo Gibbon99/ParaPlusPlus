@@ -150,5 +150,11 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("hudCaptured", "Captured");
 	gui_addKeyAndText ("hudMainMenu", "Main menu");
 
+	gui_addKeyAndText ("highScoreDisplay.heading", "High Scores");
+	gui_addKeyAndText ("hudHighscore", "High Score");
+	gui_addKeyAndText ("highScoreEntry.achieved", "You have achieved a high score.");
+	gui_addKeyAndText ("highScoreEntry.initials", "Enter your initials.");
+	gui_addKeyAndText ("emptyString", "...");
+
 }
 

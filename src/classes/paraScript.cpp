@@ -274,7 +274,7 @@ bool paraScript::loadAndCompile ()
 
 	for (auto &scriptItr : scriptFileCache)
 	{
-		printf("Inside add section loop\n");
+//		printf("Inside add section loop\n");
 
 //		scriptItr.scriptContents = fileSystem.getString(scriptItr.sectionName);
 		retCode = builder.AddSectionFromMemory (scriptItr.sectionName.c_str (), scriptItr.scriptContents.c_str (), scriptItr.scriptContents.size (), 0);

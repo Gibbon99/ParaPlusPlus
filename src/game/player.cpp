@@ -272,8 +272,6 @@ void gam_checkPlayerHealth ()
 		{
 			playerDroid.currentMode = DROID_MODE_EXPLODING;
 
-			gui_insertNewScore (gam_getCurrentScore ());
-
 			playerDroid.velocity    = {0, 0};
 			playerDroid.sprite.create ("explosion", 25, explosionAnimationSpeed);
 			playerDroid.sprite.setAnimateSpeed (explosionAnimationSpeed);      // Set for explosion animation

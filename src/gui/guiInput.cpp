@@ -46,7 +46,6 @@ void gui_processKeyboard()
 				break;
 
 			case MODE_GUI_WON_SCREEN:
-			case MODE_GUI_HIGHSCORE_SCREEN:
 				sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
 				break;
 		}

@@ -86,6 +86,8 @@ void sys_renderFrame (double interpolation)
 		case MODE_GUI_TUT_TERMINALS:
 		case MODE_GUI_TUT_HEALING:
 		case MODE_GUI_TUT_TIPS:
+		case MODE_GUI_HIGHSCORE_DISPLAY:
+		case MODE_GUI_HIGHSCORE_ENTRY:
 			gui_renderGUI ();
 			break;
 
@@ -97,7 +99,7 @@ void sys_renderFrame (double interpolation)
 			break;
 
 		case MODE_GUI_DECKVIEW:
-			gam_renderHealingFrames ();
+			gam_renderHealingFrames ();     // TODO: Only animating ones in visible playview
 			gui_renderTerminalDeck ();
 			gui_renderGUI ();
 			break;
@@ -117,10 +119,6 @@ void sys_renderFrame (double interpolation)
 
 		case MODE_GUI_WON_SCREEN:
 			gui_renderScrollbox ("wonScreen.scrollbox", interpolation);
-			break;
-
-		case MODE_GUI_HIGHSCORE_SCREEN:
-			gui_renderHighScoreScreen ();
 			break;
 
 		case MODE_TRANSFER_SCREEN_ONE:
@@ -208,7 +206,7 @@ void sys_renderFrame (double interpolation)
 	if (doScreenEffect)
 		textures.at ("screen").render ();
 
-	if ((currentMode != MODE_CONSOLE_EDIT) && (currentMode != MODE_CONSOLE_INIT))
+	if ((currentMode != MODE_CONSOLE_EDIT) && (currentMode != MODE_CONSOLE_INIT) && (currentMode != MODE_SHOW_SPLASH))
 	{
 		gam_renderHud ();
 

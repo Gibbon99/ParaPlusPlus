@@ -20,3 +20,6 @@ int gam_getCurrentScore();
 
 // Set the starting values for the score
 void gam_initScoreValues();
+
+// See if we need to show the high score entry screen - or just the high score screen
+void gam_decideScoreAction();

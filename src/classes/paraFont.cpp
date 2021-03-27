@@ -1,6 +1,7 @@
 #include <vector>
 #include <cstdarg>
 #include <system/startup.h>
+#include <io/fileSystem.h>
 #include "../../hdr/classes/paraFont.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -88,7 +89,11 @@ bool paraFont::load (int fontSize, std::string keyName, std::string fileName)
 		                         link_version->patch));
 	}
 
-	tempFont.handle = TTF_OpenFont(fileName.c_str(), fontSize);
+//	tempFont.handle = TTF_OpenFont(fileName.c_str(), fontSize);
+//
+// Load from packfile rather than filesystem - should be done via load function redirect like texture class
+	tempFont.handle = TTF_OpenFontRW(io_loadRawFile (fileName.c_str()), 0, fontSize);
+
 	if (nullptr == tempFont.handle)
 	{
 		funcOutput(-1, int_getString("Unable to open font [ %s ] - [ %s ]", fileName.c_str(), TTF_GetError()));

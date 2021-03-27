@@ -12,6 +12,7 @@
 #include <gui/guiWonScreen.h>
 #include <gui/guiHighScore.h>
 #include <game/hud.h>
+#include <game/score.h>
 #include "../../hdr/system/gameEvents.h"
 #include "../../hdr/classes/paraEvent.h"
 
@@ -191,10 +192,6 @@ void gam_processGameEventQueue ()
 					gui_prepareWonScreen();
 					break;
 
-				case EVENT_ACTION_PRE_HIGHSCORE:
-					gui_prepareHighScoreScreen();
-					break;
-
 				case EVENT_ACTION_GAME_OVER:
 
 #ifdef MY_DEBUG
@@ -210,7 +207,7 @@ void gam_processGameEventQueue ()
 
 				case EVENT_ACTION_END_LOST_SCREEN:
 					audio.stopAllChannels();
-					sys_setNewMode (MODE_GUI_MAINMENU, true);
+					gam_decideScoreAction();
 					break;
 			}
 

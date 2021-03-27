@@ -98,7 +98,7 @@ void con_addEvent (int newAction, string newLine)
 
 	if (mutexStatus == 0)
 	{
-		printf("Console mutex has been locked\n");
+//		printf("Console mutex has been locked\n");
 		if (newAction == -1)
 			newAction = EVENT_ACTION_CONSOLE_ADD_LINE;
 

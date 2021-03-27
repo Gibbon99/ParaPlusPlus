@@ -63,9 +63,12 @@ void sys_scriptInitScriptFunctions ()
 
 	paraScriptInstance.addScriptFunction ("void as_handleDialogBoxes ()", "as_handleDialogBoxes");
 
+	paraScriptInstance.addScriptFunction("void as_handleHighscoreDisplay()", "as_handleHighscoreDisplay");
 //	paraScriptInstance.addScriptFunction ("void as_testFunction()", "as_testFunction");
 
 	paraScriptInstance.addScriptFunction ("void as_refreshControlLabels()", "as_refreshControlLabels");
+	paraScriptInstance.addScriptFunction ("void as_refreshHighscoreLabels()", "as_refreshHighscoreLabels");
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -145,7 +148,7 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("int alertLevelVolume", &alertLevelVolume);
 	paraScriptInstance.addHostVariable ("float staticAnimationDelay", &staticAnimationDelay);
 	paraScriptInstance.addHostVariable ("int lostScreenShowTime", &lostScreenShowTime);
-	paraScriptInstance.addHostVariable ("float tableSpacingY", &tableSpacingY);
+//	paraScriptInstance.addHostVariable ("float tableSpacingY", &tableSpacingY);
 	paraScriptInstance.addHostVariable ("float influenceTimelimit", &influenceTimelimit);
 	paraScriptInstance.addHostVariable ("float influenceTimelimtDelay", &influenceTimelimtDelay);
 	paraScriptInstance.addHostVariable ("float influenceTimeLeftWarning", &influenceTimeLeftWarning);
@@ -316,5 +319,14 @@ void sys_scriptInitFunctions ()
 	paraScriptInstance.addHostFunction ("void gam_loadShipDeck (string &in)", (functionPtr) &gam_loadShipDeck);
 	paraScriptInstance.addHostFunction ("void gam_changeToDeck (string &in, int whichLift)", (functionPtr) &gam_changeToDeck);
 	paraScriptInstance.addHostFunction ("void trn_setTransferColor (int whichSide, float red, float green, float blue, float alpha)", (functionPtr) &trn_setTransferColor);
-	paraScriptInstance.addHostFunction ("void io_initNewKeycodeValue(int whichKey)", (functionPtr) &io_initNewKeycodeValue);
+	paraScriptInstance.addHostFunction ("void io_initNewKeycodeValue (int whichKey)", (functionPtr) &io_initNewKeycodeValue);
+
+	paraScriptInstance.addHostFunction ("string gui_getHighScoreValueByIndex (int highScoreIndex)", (functionPtr) &gui_getHighScoreValueByIndex);
+	paraScriptInstance.addHostFunction ("string gui_getHighScoreNameByIndex (int highScoreIndex)", (functionPtr) &gui_getHighScoreNameByIndex);
+
+	paraScriptInstance.addHostFunction ("void gui_showHighscoreTable ()", (functionPtr) &gui_showHighscoreTable);
+
+	paraScriptInstance.addHostFunction ("void gui_insertNewScore (string &in)", (functionPtr) &gui_insertNewScore);
 }
+
+

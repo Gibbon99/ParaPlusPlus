@@ -168,6 +168,20 @@ void sys_setNewMode (int newMode, bool doFade)
 			gui.setActiveObject(gui.getCurrentScreen(), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
 			break;
 
+		case MODE_GUI_HIGHSCORE_DISPLAY:
+			gui.setRepeatOff (true);
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
+			break;
+
+		case MODE_GUI_HIGHSCORE_ENTRY:
+			gui.setRepeatOff (true);
+			currentMode = newMode;
+			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
+			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
+			break;
+
 		case MODE_GUI_INTROSCROLL:
 			gui.setRepeatOff (true);
 			currentMode = newMode;
@@ -303,12 +317,6 @@ void sys_setNewMode (int newMode, bool doFade)
 			break;
 
 		case MODE_GUI_PRE_HIGHSCORE_SCREEN:
-			currentMode = newMode;
-			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
-			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
-			break;
-
-		case MODE_GUI_HIGHSCORE_SCREEN:
 			currentMode = newMode;
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
