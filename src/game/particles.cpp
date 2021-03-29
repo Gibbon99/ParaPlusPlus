@@ -65,8 +65,7 @@ void gam_removeDeadEmitters()
 	{
 		if (partItr.isDead (false))
 		{
-			// TODO - Set inUse to false ?
-//			delete partItr;
+			partItr.setInUse(false);
 			return;
 		}
 	}

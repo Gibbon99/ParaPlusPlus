@@ -26,5 +26,4 @@ public:
 private:
 };
 
-
 #endif //PARA_PARARANDOM_H

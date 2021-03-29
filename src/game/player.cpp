@@ -39,9 +39,15 @@ void gam_moveTestCircle ()
 		if (angle > 359)
 			angle = 0;
 	}
+}
 
-//	testCircle.worldPosInPixels.x = (gameWinWidth / 2) + (radius * cos (angle * (3.14 / 180)));
-//	testCircle.worldPosInPixels.y = (gameWinHeight / 2) + (radius * sin (angle * (3.14 / 180)));
+//-----------------------------------------------------------------------------
+//
+// Return the type of droid for checking access in database view
+int gam_getDroidType()
+//-----------------------------------------------------------------------------
+{
+	return playerDroid.droidType;
 }
 
 //-----------------------------------------------------------------------------
@@ -52,6 +58,8 @@ void gam_weaponRechargePlayer ()
 {
 	if (!playerDroid.weaponCanFire)
 	{
+		gam_setHudText ("hudRecharging");
+
 		if (dataBaseEntry[playerDroid.droidType].canShoot)
 			playerDroid.weaponDelay += dataBaseEntry[playerDroid.droidType].rechargeTime;
 		else
@@ -246,7 +254,6 @@ void gam_processActionKey ()
 
 					gam_addBullet (-1);
 					gui.setState (KEY_ACTION, false, 0);
-					gam_setHudText ("hudRecharging");
 					return;
 				}
 			}
@@ -290,7 +297,7 @@ void gam_checkPlayerHealth ()
 		return;
 	}
 
-	dangerHealthLevel     = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
+	dangerHealthLevel = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
 
 	if (playerDroid.currentHealth < static_cast<int>(dangerHealthLevel))
 	{
@@ -343,13 +350,13 @@ void gam_damageToPlayer (int damageSource, int sourceDroid)
 #ifdef MY_DEBUG
 			std::cout << "Player hit by bullet" << std::endl;
 #endif
-
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "damage");
 			playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bulletDamage;
 
 			break;
 
 		case PHYSIC_DAMAGE_EXPLOSION:
+			// Not required - handled in BUMP case
 			break;
 	}
 }

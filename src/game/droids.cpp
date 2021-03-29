@@ -118,7 +118,7 @@ void gam_initDroids (const std::string &levelName)
 	wayPointSpacing = shipdecks.at (levelName).numWaypoints / shipdecks.at (levelName).droidTypes.size () - 1;
 
 	shipdecks.at (levelName).numEnemiesAlive = shipdecks.at (levelName).numDroids;
-	shipdecks.at (levelName).deckIsDead = false;
+	shipdecks.at (levelName).deckIsDead      = false;
 
 	for (auto &droidItr : shipdecks.at (levelName).droidTypes)
 	{
@@ -204,7 +204,7 @@ void gam_renderDroids (std::string levelName)
 
 //				droidItr.ai.renderVelocity ();
 
-				gam_debugShowTarget (droidItr);
+//				gam_debugShowTarget (droidItr);
 			}
 		}
 	}
@@ -257,7 +257,7 @@ void gam_processAI ()
 {
 	for (auto &droidItr : g_shipDeckItr->second.droid)
 	{
-		gam_checkDroidHealth(&droidItr);
+		gam_checkDroidHealth (&droidItr);
 
 		if (droidItr.currentMode == DROID_MODE_NORMAL)
 		{
@@ -328,7 +328,7 @@ void gam_explodeDroid (int droidIndex)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Work out the droid animation speed based on health
-void gam_setHealthAnimation(int targetDroid)
+void gam_setHealthAnimation (int targetDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
 	float newAnimationSpeed;
@@ -348,91 +348,15 @@ void gam_setHealthAnimation(int targetDroid)
 
 //-------------------------------------------------------------------------------------------------------------
 //
-// Process damage to a droid
-//
-// damageSource can be either a bullet, explosion or a collision with player or another droid
-void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
+// Calculate new droid health percentage and modify AI behaviour
+void gam_checkDroidHealth(int targetDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
 	float newHealthPercent;
 
-
-	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_NORMAL)
-		return;
-
-	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 64, 127, "damage");
-
-	switch (damageSource)
-	{
-		case PHYSIC_DAMAGE_BUMP:
-
-			std::cout << "Damage to Droid " << targetDroid << " from BUMP" << std::endl;
-
-			if (g_shipDeckItr->second.droid[targetDroid].currentMode == DROID_MODE_EXPLODING)
-			{
-				if (sourceDroid != -1)  // Another droid has run into explosion
-				{
-					g_shipDeckItr->second.droid[sourceDroid].currentHealth -= explosionDamage;
-				}
-				else
-				{
-					gam_damageToPlayer (PHYSIC_DAMAGE_EXPLOSION, targetDroid);
-				}
-				return;
-			}
-
-			if (sourceDroid == -1)  // Hit from player
-			{
-				g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 10);
-				g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid (sourceDroid);
-				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bounceDamage;
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 100, 127, "collision1");
-				//
-				// Damage to player droid - bump and explosion damage done in this routine
-				gam_damageToPlayer (PHYSIC_DAMAGE_BUMP, targetDroid);
-			}
-			break;
-
-		case PHYSIC_DAMAGE_BULLET:
-
-			std::cout << "Damage to Droid " << targetDroid << " from BULLET " << " from " << sourceDroid << std::endl;
-
-			//
-			// Set the target to the bullets source
-			if (dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].canShoot)
-			{
-				g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid (sourceDroid);
-				g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 40);
-			}
-			else    // or Flee if can not shoot back
-			{
-				g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_FLEE, 30);
-			}
-
-			if (sourceDroid == -1)      // Player shot this bullet
-			{
-				if (dataBaseEntry[playerDroid.droidType].canShoot)
-					g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bulletDamage;
-				else
-					g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[0].bulletDamage;
-			}
-			else        // Droid shot this bullet
-			{
-				if (targetDroid != -1)  // Not the player hit by a bullet
-				{
-					g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bulletDamage;
-				}
-				else    // Player hit by droid bullet
-				{
-					gam_damageToPlayer (PHYSIC_DAMAGE_BULLET, sourceDroid);
-				}
-			}
-			break;
-	}
-
-	//
-	// Do AI to see if Droid needs to heal
-	//
+//
+// Do AI to see if Droid needs to heal
+//
 	newHealthPercent = static_cast<float>(g_shipDeckItr->second.droid[targetDroid].currentHealth) / static_cast<float>(dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].maxHealth);
 	newHealthPercent *= 100.0;
 
@@ -442,7 +366,120 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 	g_shipDeckItr->second.droid[targetDroid].ai.setHealthPercent (newHealthPercent);
 	g_shipDeckItr->second.droid[targetDroid].ai.checkHealth ();
 
-	gam_setHealthAnimation(targetDroid);
+	gam_setHealthAnimation (targetDroid);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
+// Process damage to a droid
+//
+// damageSource can be either a bullet, explosion or a collision with player or another droid
+void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
+//-------------------------------------------------------------------------------------------------------------
+{
+	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_NORMAL)
+		return;
+
+
+	printf ("gam_damageToDroid target %i damageSource %i sourceDroid %i\n", targetDroid, damageSource, sourceDroid);
+
+
+	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 64, 127, "damage");
+
+	switch (damageSource)
+	{
+		case PHYSIC_DAMAGE_BUMP:
+#ifdef MY_DEBUG
+			std::cout << "Damage to Droid " << targetDroid << " from BUMP" << std::endl;
+#endif
+			if ((sourceDroid != -1) && (targetDroid != -1))     // Two droids colliding
+			{
+				if (g_shipDeckItr->second.droid[targetDroid].currentMode == DROID_MODE_EXPLODING)
+				{
+					g_shipDeckItr->second.droid[sourceDroid].currentHealth -= explosionDamage;
+					gam_checkDroidHealth(sourceDroid);
+				}
+
+				if (g_shipDeckItr->second.droid[sourceDroid].currentMode == DROID_MODE_EXPLODING)
+				{
+					g_shipDeckItr->second.droid[targetDroid].currentHealth -= explosionDamage;
+					gam_checkDroidHealth(targetDroid);
+				}
+				return;
+			}
+
+			if (sourceDroid == -1)  // Hit from player
+			{
+				if (targetDroid < 0)
+					return;
+
+				g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 10);
+				g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid (sourceDroid);
+				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bounceDamage;
+				gam_checkDroidHealth(targetDroid);
+
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 100, 127, "collision1");
+				//
+				// Damage to player droid - bump and explosion damage done in this routine
+				gam_damageToPlayer (PHYSIC_DAMAGE_BUMP, targetDroid);
+				//
+				// Damage to player from hitting exploding droid
+				if (g_shipDeckItr->second.droid[targetDroid].currentMode == DROID_MODE_EXPLODING)
+				{
+					gam_damageToPlayer (PHYSIC_DAMAGE_EXPLOSION, targetDroid);
+				}
+			}
+			break;
+
+		case PHYSIC_DAMAGE_BULLET:
+
+			//
+			// BUG when target is -2 ??
+			//
+			std::cout << "Damage to Droid " << targetDroid << " from BULLET " << " from " << sourceDroid << std::endl;
+
+			if ((targetDroid != TARGET_PLAYER) && (sourceDroid != TARGET_PLAYER))     // Droids shot this at another droid
+			{
+				//
+				// Set the target to the bullets source
+				if (dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].droidType].canShoot)
+				{
+					g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid (sourceDroid);
+					g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 40);
+				}
+				else    // Cant shoot back
+				{
+					g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_FLEE, 30);
+				}
+
+				//
+				// Do the bullet damage to target droid
+				g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bulletDamage;
+				gam_checkDroidHealth(targetDroid);
+			}
+
+			if ((targetDroid == TARGET_PLAYER) && (sourceDroid != TARGET_PLAYER))      // Droid hit player with bullet
+			{
+				gam_damageToPlayer (PHYSIC_DAMAGE_BULLET, sourceDroid);
+			}
+
+			if ((sourceDroid == TARGET_PLAYER) && (targetDroid != TARGET_PLAYER))      // Player shot this bullet at a droid
+			{
+				//
+				// Bullet does damage according to current droid type if it has a weapon
+				if (dataBaseEntry[playerDroid.droidType].canShoot)
+					g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[playerDroid.droidType].bulletDamage;
+				else
+					g_shipDeckItr->second.droid[targetDroid].currentHealth -= dataBaseEntry[0].bulletDamage;
+
+				gam_checkDroidHealth(targetDroid);
+				//
+				// Target player droid
+				g_shipDeckItr->second.droid[targetDroid].ai.setTargetDroid (sourceDroid);
+				g_shipDeckItr->second.droid[targetDroid].ai.modifyScore (AI_MODE_ATTACK, 40);
+			}
+			break;
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------

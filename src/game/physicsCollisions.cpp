@@ -210,6 +210,17 @@ void contactListener::BeginContact (b2Contact *contact)
 				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
 				renderPosition = bullets[gam_getArrayIndex (bodyUserData_A->ID)].worldPosInMeters;
 				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
+				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
+				return;
+			}
+
+			if (bodyUserData_B->userType == PHYSICS_TYPE_BULLET_ENEMY)
+			{
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
+				renderPosition = bullets[gam_getArrayIndex (bodyUserData_A->ID)].worldPosInMeters;
+				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
+				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
 				return;
 			}
 			break;
@@ -332,6 +343,15 @@ void contactListener::BeginContact (b2Contact *contact)
 				renderPosition = bullets[gam_getArrayIndex (bodyUserData_B->ID)].worldPosInMeters;
 				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
 				return;
+			}
+
+			if (bodyUserData_A->userType == PHYSICS_TYPE_BULLET_ENEMY)
+			{
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
+				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
+				renderPosition = bullets[gam_getArrayIndex (bodyUserData_B->ID)].worldPosInMeters;
+				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
+				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
 			}
 			break;
 

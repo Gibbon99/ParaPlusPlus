@@ -816,7 +816,7 @@ void as_createGUI()
 {
     as_setLanguageStrings();
 
-    baseGameSpeed = 1.0;
+    baseGameSpeed = 1.0;        // lower is faster - can not be zero
     sideviewDrawScale = 1.2;
     healingAnimSpeed = 0.3;
     pixelsPerMeter = 12.0;        // 12 pixels is 1 meter
@@ -829,7 +829,7 @@ void as_createGUI()
     bulletDensity = 0.1f;
     bulletFriction = 0.01f;
     bulletAnimationSpeed = 0.5f;
-    bulletMoveSpeed = 0.3f;
+    bulletMoveSpeed = 0.4f;
     hudTextPosX = 15;
     hudTextPosY = 27;
     hudScorePosX = 620;
@@ -838,12 +838,12 @@ void as_createGUI()
     redAlertLevel = 500;
     yellowAlertLevel = 300;
     updateScoreDelay = 0.5f;
-    distanceForDoorSoundMax = 10.0f;   // In meters
+    distanceForDoorSoundMax = 50.0f;   // In meters
     powerdownLevelScore = 1000;
     healingDelayCounter = 0.8f;
     healingAmountPerTick = 2;
     explosionAnimationSpeed = 1.5f;
-    explosionDamage = 2;
+    explosionDamage = 5;
     alertLevelVolume = 190;  // Higher is softer - 1 is full loud
     staticAnimationDelay = 0.8f;
     lostScreenShowTime = 120;  // 10 seconds

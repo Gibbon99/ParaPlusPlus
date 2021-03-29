@@ -36,3 +36,6 @@ void gam_setInfluenceTimelimit (int targetDroidClass);
 
 // Process how long a droid can be controlled for
 void gam_processInfluenceTime ();
+
+// Return the type of droid for checking access in database view
+int gam_getDroidType();

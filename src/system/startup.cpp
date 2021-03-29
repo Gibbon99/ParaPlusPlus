@@ -1,24 +1,20 @@
 #include <system/physics.h>
 #include <game/audio.h>
 #include <io/fileWatch.h>
-#include <io/keyboard.h>
 #include <gui/guiLanguage.h>
 #include <io/joystick.h>
 #include <game/database.h>
 #include <game/tiles.h>
 #include <system/util.h>
 #include <game/player.h>
-#include <game/lifts.h>
 #include <classes/paraLightmap.h>
 #include <gui/guiHighScore.h>
-#include "../../hdr/system/startup.h"
-#include "../../hdr/system/scriptEngine.h"
-#include "../../hdr/system/scriptConfig.h"
-#include "../../hdr/io/fileSystem.h"
-#include "../../hdr/io/configFile.h"
-#include "../../hdr/io/logFile.h"
-#include "../../hdr/io/console.h"
-#include "gui/guiSideview.h"
+#include <system/scriptEngine.h>
+#include <system/scriptConfig.h>
+#include <io/fileSystem.h>
+#include <io/configFile.h>
+#include <io/logFile.h>
+#include <gui/guiSideview.h>
 
 // Variables needed to start everything
 int         gameWinWidth;
@@ -144,8 +140,6 @@ void sys_startSystems ()
 	SDL_Delay(100);
 
 	SDL_DetachThread(initThread);
-
-	printf("Start the init thread.\n");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -171,7 +165,7 @@ static int sys_startInit(void *ptr)
 	paraScriptInstance.cacheFunctions ();
 
 #if MY_DEBUG
-	printf("Run setupPhysicsEngine\n");
+	log_addEvent ("Run setupPhysicsEngine\n");
 #endif
 
 	sys_setupPhysicsEngine ();
@@ -195,17 +189,12 @@ static int sys_startInit(void *ptr)
 	gui.init (con_addEvent, reinterpret_cast<funcStrIn>(gui_getString), windowWidth, windowHeight, gameWinWidth, gameWinHeight, "keybinding.para");
 	gui_loadSideViewData ("sideview.dat");
 	paraScriptInstance.run ("as_createGUI", "");
-//	audio.load("start1", "start1.wav");
-
-printf("init joystick\n");
 
 	io_initJoystick ();
 
 #ifdef MY_DEBUG
 	fileSystem.getSearchPath ();
 #endif
-
-	printf("Get DBInformation\n");
 
 	gam_getDBInformation ();
 
@@ -214,6 +203,8 @@ printf("init joystick\n");
 // SDL_SetTextureBlendMode (textures.at ("screen").getTexture (), SDL_BLENDMODE_MOD);
 
 	gam_setupPlayerDroid ();
+
+	createLookupTable();
 
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 100, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_SHOW_SPLASH)+"|"+to_string(true));

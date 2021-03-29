@@ -47,3 +47,12 @@ b2Vec2 sys_convertToTiles(b2Vec2 convertFrom);
 
 // Convert a string to an integer value
 int sys_convertToInt(std::string convertFrom);
+
+// Look up a value from the SIN table
+float sys_getSinValue(int angle);
+
+// Look up a value from the COS table
+float sys_getCosValue(int angle);
+
+// Create the sin/cos tables
+void createLookupTable();

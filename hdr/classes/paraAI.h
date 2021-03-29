@@ -140,6 +140,7 @@ private:
 	int       currentAIMode             = 0;
 	int       patrolAction              = 0;
 	int       targetDroid               = -2;   // Target nobody yet
+	int       swapDirectionCounter      = 0;
 	float     wayPointDistanceInMeters  = 0.0f;
 	b2Vec2    destinationCoordsInMeters = {0, 0};
 	b2Vec2    worldPositionInMeters     = {0, 0};

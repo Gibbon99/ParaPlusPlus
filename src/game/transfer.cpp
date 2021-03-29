@@ -522,6 +522,7 @@ void trn_initTransferValues (int transferTargetIndex)
 	gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
 //	audio.stopAllChannels();
 
+	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 127, "lowEnergy");
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 127, "transferMove");
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferStage1");
 	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "guiTransferOne"));

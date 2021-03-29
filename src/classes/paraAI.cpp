@@ -72,7 +72,6 @@ void paraAI::initAI ()
 	currentAIMode = AI_MODE_NUMBER;     // Will set to AI_MODE_PATROL when checking scores first run
 	patrolAction  = NORMAL_PATROL;
 	ai[AI_MODE_PATROL] = 50;
-//	ai[AI_MODE_HEAL]   = 0;
 	wayPointDirection = WAYPOINT_DOWN;
 	currentSpeed      = 0;
 	aiActionCounter   = 0.0;
@@ -174,13 +173,16 @@ void paraAI::patrol ()
 			lookAheadVelocity *= LOOK_AHEAD_DISTANCE;
 			//
 			// Change direction if going to run into player
-			droidFixture             = playerDroid.body->GetFixtureList ();    // Only have one fixture per body
+			droidFixture = playerDroid.body->GetFixtureList ();    // Only have one fixture per body
 
 			if (droidFixture->TestPoint (lookAheadVelocity + worldPositionInMeters))
 			{
 				currentSpeed    = 0.0;
 				currentVelocity = {0.0, 0.0};
-				swapWaypointDirection ();
+				if (swapDirectionCounter < 3)
+					swapWaypointDirection ();
+				else
+					swapDirectionCounter = 0;
 				aiActionCounter = 3.0;
 				return;
 			}
@@ -199,7 +201,10 @@ void paraAI::patrol ()
 						{
 							currentSpeed = 0.0f;
 							currentVelocity.SetZero ();
-							swapWaypointDirection ();       // TODO: Use a counter and don't change if over limit
+							if (swapDirectionCounter < 3)
+								swapWaypointDirection ();
+							else
+								swapDirectionCounter = 0;
 						}
 					}
 				}
@@ -229,7 +234,7 @@ void paraAI::patrol ()
 			tileDestinationInTiles = g_shipDeckItr->second.wayPoints[wayPointIndex];   // Go to random waypoint
 			tileDestinationInTiles = sys_convertToTiles (tileDestinationInTiles);
 			worldPosInTiles        = sys_convertToTiles (sys_convertToPixels (worldPositionInMeters));
-			currentVelocity        = {0, 0};
+
 			aStarWaypointIndex     = 0;
 			haveAStarDestination   = false;
 			patrolAction           = FOLLOW_ASTAR;
@@ -237,7 +242,10 @@ void paraAI::patrol ()
 
 			if (aStarIndex == PATH_TOO_SHORT)
 			{
-				sys_shutdownWithError ("Unable to locate suitable path. Path is too short");
+				//
+				// Try again to see if a different waypoint is selected that is further away
+				patrolAction = FIND_WAYPOINT;
+//				sys_shutdownWithError ("Unable to locate suitable path. Path is too short");
 			}
 			return;     // Should now go back to patrol
 
@@ -429,8 +437,6 @@ std::string paraAI::getPatrolAction ()
 void paraAI::setTargetDroid (int newTargetDroid)
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	std::cout << " Changing target droid to : " << newTargetDroid << " for droid : " << arrayIndex << std::endl;
-
 	targetDroid = newTargetDroid;
 }
 
@@ -479,6 +485,9 @@ void paraAI::swapWaypointDirection ()
 		wayPointDirection = WAYPOINT_UP;
 
 	getWaypointDestination ();
+
+	swapDirectionCounter++;
+
 }
 
 
@@ -637,9 +646,13 @@ void paraAI::flee ()
 	}
 
 	if (path[aStarIndex].pathReady)
+	{
 		followAStar ();
+		return;
+	}
 
-	// TODO: What to do when there is no path ?
+	modifyScore (AI_MODE_FLEE, -80);
+	modifyScore (AI_MODE_PATROL, +60);
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -668,7 +681,7 @@ void paraAI::changeModeTo (int newAIMode)
 	}
 
 #ifdef DEBUG_AI
-	std::cout << "[ " << arrayIndex << " ]" << " Changing to new AI mode : " << getString (currentAIMode) << " : " << getPatrolAction () << std::endl;
+//	std::cout << "[ " << arrayIndex << " ]" << " Changing to new AI mode : " << getString (currentAIMode) << " : " << getPatrolAction () << std::endl;
 #endif
 
 	switch (newAIMode)
@@ -931,7 +944,7 @@ void paraAI::setHealthPercent (float newHealthPercent)
 	healthPercent = newHealthPercent;
 
 #ifdef DEBUG_AI
-	std::cout << "[ " << arrayIndex << " ] Health percent is now : " << healthPercent << std::endl;
+//	std::cout << "[ " << arrayIndex << " ] Health percent is now : " << healthPercent << std::endl;
 #endif
 }
 

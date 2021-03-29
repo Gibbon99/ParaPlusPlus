@@ -1,25 +1,24 @@
 BUGS
 --------
 BUG - Background sound can stop playing
-BUG - Door sounds are not right
-BUG - Player bullets bouncing off droid when in collision ?
 BUG - Transfer screen one - shows player droid at wrong position on start
-BUG - Some script functions are not being found when called from console
+BUG - Door sound can not play - too many at once?? Put in counter in playDoor routine to limit consecutive number
 
-TODO
+
+TO DO
 -------
 
 Calibrate joystick
 
 
 Transfer - enemy AI - do based on priority of circuit types
-Transfer - work out winner
-Transfer - timer
 Droid AI - Attack
 Droid AI - Help
 Check bottom edge of animated tiles in graphics
 Blink player icon on deckview map
-Fix up player firing rate - needs to be slower
+Stop droids from continually ramming when on a aStar path
+Follow mode ? Droid follows exact tile path that player took? Array to store tile path? Use tiles as waypoints
+Need debug mode to show path destination to track why aStar isn't working sometimes
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
@@ -114,6 +113,24 @@ DONE - Added GUI screen to map keys to actions for input controls
 DONE - Added high score display table screen, saves and reads data to file
 DONE - Added high score entry screen, cleaned up score functions
 DONE - Splash screen on start
+>Commit
+DONE - BUG - Door sounds are not right - added new effect - check for below 0
+DONE - BUG - Some script functions are not being found when called from console
+DONE - All droids weapon recharge based off base setting for 001
+DONE - Fix up player firing rate - needs to be slower
+DONE - Lock database view to current droid
+DONE - Put in counter to stop continual direction swapping - limit to 3 then ignore
+DONE - What to do when there is no path for flee - default to change back to PATROL
+DONE - Using lookup table for particle explosion
+DONE - Stop lowEnergy playing when entering transfer mode
+DONE - Droid patrol AI - use direction counter more - try to find another waypoint if pathing fails
+DONE - Healing tiles now animated in deck view
+DONE - Reworked logic around collisions and bullets
+DONE - BUG - If on low health, color is wrong for player sprite in transfer screen
+DONE - BUG - Player bullets bouncing off droid when in collision - was droid to droid bullets
+DONE - BUG - Droids bullets are bouncing off each other, not being destroyed
+DONE - BUG - Player fade in low health disappears from view - alpha setting wrong - from bump damage?
+DONE - BUG - Highscore not working - always adding name when score is too low
 
 GUI
 ------

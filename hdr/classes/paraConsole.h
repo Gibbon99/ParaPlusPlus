@@ -136,8 +136,6 @@ public:
 
 	std::string entryLine();
 
-	// TODO: bool entryMode - false means don't allow text entry
-
 	std::vector<_consoleLine>                   consoleText;
 	std::vector<std::string>                    userBuffer;        // Remember commands entered
 	float                                       posX             = 0;

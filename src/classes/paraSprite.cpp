@@ -190,10 +190,10 @@ void paraSprite::setLowHealth (bool newState)
 {
 	if (newState != lowHealth)
 	{
-		lowHealthColor    = tintColor;
+		lowHealthColor = tintColor;
 	}
 
-	lowHealth          = newState;
+	lowHealth = newState;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -214,7 +214,7 @@ void paraSprite::animateLowHealth ()
 		if (!lowHealthDirection)
 		{
 			lowHealthColorFade -= 10.0f;
-			if (lowHealthColorFade < 0)
+			if (lowHealthColorFade < 100)
 			{
 				lowHealthColorFade  = 0;
 				lowHealthDirection = !lowHealthDirection;

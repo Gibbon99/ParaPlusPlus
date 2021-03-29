@@ -264,6 +264,10 @@ void trn_transferIntoDroid ()
 		playerDroid.currentHealth = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth;
 		playerDroid.droidName     = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].droidName;
 		playerDroid.sprite        = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].sprite;
+
+		playerDroid.ai.setAcceleration (dataBaseEntry[playerDroid.droidType].accelerate);
+		playerDroid.ai.setMaxSpeed (dataBaseEntry[playerDroid.droidType].maxSpeed);
+
 		//
 		// Destroy the droid
 		g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth = -10;

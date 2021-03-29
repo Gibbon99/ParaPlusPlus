@@ -9,11 +9,11 @@
 
 paraRandom angleRandom;
 
-//----------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 //
 // Return if the emitter is dead and can be removed
 bool paraParticle::isDead (bool b)
-//----------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 {
 	return isDeadFlag;
 }
@@ -46,6 +46,15 @@ Uint32 paraParticle::getAttachedBullet ()
 		return 0;
 
 	return bulletLink;
+}
+
+//-----------------------------------------------------------------------------------------------------------
+//
+// Set if the particle is in use or not
+void paraParticle::setInUse(bool newState)
+//-----------------------------------------------------------------------------------------------------------
+{
+	isInUse = newState;
 }
 
 //-----------------------------------------------------------------------------------------------------------
@@ -241,8 +250,13 @@ b2Vec2 paraParticle::getCircleAngle ()
 			break;
 	}
 
-	direction.x = (speed * cos (angle));    // TODO - create a pre calculated table
+#ifdef USE_LOOKUP_TABLE
+	direction.x = static_cast<float>(speed) * sys_getCosValue(angle);
+	direction.y = static_cast<float>(speed) * sys_getSinValue(angle);
+#else
+	direction.x = (speed * cos (angle));
 	direction.y = (speed * sin (angle));
+#endif
 
 	direction.Normalize ();  // Is this needed, negates getting the speed??
 	return direction;

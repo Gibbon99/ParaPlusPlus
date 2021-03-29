@@ -747,6 +747,7 @@ void trn_renderTransferGame ()
 			}
 		}
 
+		playerDroid.sprite.setLowHealth(false);
 		playerDroid.sprite.setTintColor (255, 255, 255);
 		playerDroid.sprite.render (droidX, droidY, droidDrawScale, static_cast<Uint8>(255));
 
@@ -815,6 +816,7 @@ void trn_renderTransferGame ()
 
 		droidX = ((transferBitmapWidth - (transferSidebarGap + transferSidebarWidth)) - gapWidth) - ((SPRITE_SIZE * droidDrawScale) / 2);
 
+		playerDroid.sprite.setLowHealth(false);
 		playerDroid.sprite.setTintColor (255, 255, 255);
 		playerDroid.sprite.render (droidX, droidY, droidDrawScale, static_cast<Uint8>(255));
 

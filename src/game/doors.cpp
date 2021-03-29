@@ -97,6 +97,7 @@ void gam_playDoorSound (int whichTrigger, std::string keyName)
 	//
 	// How far is player from this door - attenuate for distance
 	distanceToDoor         = b2Distance (sys_convertToMeters (doorTriggers[whichTrigger].worldPosition), sys_convertToMeters (playerDroid.worldPosInPixels));
+
 	if (distanceToDoor > distanceForDoorSoundMax)
 		distanceSoundLevel = 254;
 	else
@@ -123,11 +124,11 @@ void gam_playDoorSound (int whichTrigger, std::string keyName)
 		else
 		{
 			distanceOrientation = 127 * 1.0f - (distanceForDoorSoundMax / 10.0f);
-//			distanceOrientation = 127 - distanceOrientation;
 		}
 	}
 
-//	std::cout << "Playing door sound : distance " << distanceSoundLevel << " Orientation level : " << distanceOrientation << std::endl;
+	if (distanceSoundLevel < 0)
+		distanceSoundLevel = 0;
 
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, static_cast<int>(distanceSoundLevel), static_cast<int>(distanceOrientation), keyName);
 }

@@ -25,14 +25,17 @@ void gam_renderHealingFrames ()
 
 	SDL_SetRenderTarget (renderer.renderer, gam_getPlayfieldTexture ());
 
-	// TODO : Put in try / catch
-
 	for (const auto &healingItr : g_shipDeckItr->second.healing)
 	{
-		if (sys_visibleOnScreen (healingItr.worldPosInPixels, tileSize))
+		if (currentMode != MODE_GUI_DECKVIEW)
 		{
-			gam_renderSingleTile (healingItr.worldPosInPixels.x, healingItr.worldPosInPixels.y, healingItr.currentFrame);
+			if (sys_visibleOnScreen (healingItr.worldPosInPixels, tileSize))
+			{
+				gam_renderSingleTile (healingItr.worldPosInPixels.x, healingItr.worldPosInPixels.y, healingItr.currentFrame);
+			}
 		}
+		else
+			gam_renderSingleTile (healingItr.worldPosInPixels.x, healingItr.worldPosInPixels.y, healingItr.currentFrame);
 	}
 
 	SDL_SetRenderTarget (renderer.renderer, tempTexture);

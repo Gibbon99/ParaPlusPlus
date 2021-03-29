@@ -32,10 +32,6 @@ double  pixelsPerMeter;          // From script
 //
 double baseGameSpeed;
 
-// TODO Remove these
-std::string testVarString = "First string text";
-float       testVarFloat  = 3.145;
-
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Timer callback to track the Update and Render FPS

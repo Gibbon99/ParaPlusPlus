@@ -205,7 +205,6 @@ void sys_gameTickRun ()
 				sys_processPhysics (TICKS_PER_SECOND);
 				gam_animateHealing ();
 				playerDroid.sprite.animate ();
-				gam_weaponRechargePlayer ();
 				gam_animateDroids();
 				gam_doorCheckTriggerAreas ();
 				gam_doorProcessActions ();
@@ -224,6 +223,7 @@ void sys_gameTickRun ()
 				gam_processInfluenceTime ();
 
 				gam_checkPlayerHealth ();
+				gam_weaponRechargePlayer ();
 
 				debug_getNumberOfShapes();
 			}

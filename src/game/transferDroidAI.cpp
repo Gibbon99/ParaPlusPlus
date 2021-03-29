@@ -26,9 +26,9 @@ bool trn_isCircuitSuitable(__TRANSFER_ROW transferIndex)
 	{
 		if (transferIndex.currentColor == TRANSFER_COLOR_RIGHT)
 		{
-
+#ifdef MY_DEBUG
 			printf("Droid on right - color is already right color\n");
-
+#endif
 			return false;
 		}
 
@@ -37,9 +37,9 @@ bool trn_isCircuitSuitable(__TRANSFER_ROW transferIndex)
 	{
 		if (transferIndex.currentColor == TRANSFER_COLOR_LEFT)
 		{
-
+#ifdef MY_DEBUG
 			printf("Droid on left - color is already left color\n");
-
+#endif
 			return false;
 		}
 	}
@@ -51,7 +51,6 @@ bool trn_isCircuitSuitable(__TRANSFER_ROW transferIndex)
 //
 // Find a suitable circuit to use
 //
-// TODO: Also only choose ones that need to be changed color - maybe only for high droids
 int trn_findSuitableCircuitToUse (__TRANSFER_ROW transferIndex)
 //---------------------------------------------------------------------------------------------------------------------
 {

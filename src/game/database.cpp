@@ -1,4 +1,6 @@
 #include <system/util.h>
+#include <game/player.h>
+#include <game/audio.h>
 #include "gui/guiLanguage.h"
 #include "game/texture.h"
 #include "game/database.h"
@@ -40,6 +42,9 @@ bool io_getDBDroidInfo (std::string fileName)
 		if (tempDataBaseEntry.maxHealth == 0)
 			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "max_health"));
 
+		tempDataBaseEntry.rechargeTime = databaseFile.GetDoubleValue ("droidInfo", "rechargeTime", -1.0);
+		if (tempDataBaseEntry.rechargeTime == -1.0)
+			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "rechargeTime"));
 	}
 	else
 	{
@@ -64,6 +69,13 @@ bool io_getDBDroidInfo (std::string fileName)
 		tempDataBaseEntry.maxSpeed /= baseGameSpeed;
 		tempDataBaseEntry.accelerate /= baseGameSpeed;
 
+		tempVar = databaseFile.GetDoubleValue ("droidInfo", "rechargeTime", -1.0);
+		if (tempVar == -1.0)
+			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "rechargeTime"));
+
+		tempDataBaseEntry.rechargeTime = dataBaseEntry[0].rechargeTime + tempVar;
+
+
 		tempDataBaseEntry.maxHealth = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "max_health", 0));
 		if (tempDataBaseEntry.maxHealth == 0)
 			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "max_health"));
@@ -79,10 +91,6 @@ bool io_getDBDroidInfo (std::string fileName)
 		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "bounce_damage"));
 
 	tempDataBaseEntry.canShoot = databaseFile.GetBoolValue ("droidInfo", "can_shoot", true);
-
-	tempDataBaseEntry.rechargeTime = databaseFile.GetDoubleValue ("droidInfo", "rechargeTime", -1.0);
-	if (tempDataBaseEntry.rechargeTime == -1.0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "rechargeTime"));
 
 	tempDataBaseEntry.bulletType = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "bullet_type", -2));
 	if (tempDataBaseEntry.bulletType == -2.0)
@@ -280,6 +288,13 @@ void gam_nextDatabase()
 
 	if (currentDatabaseRecord < static_cast<int>(dataBaseEntry.size() - 1))
 		currentDatabaseRecord++;
+
+	if (currentDatabaseRecord - 1 == gam_getDroidType())
+	{
+		currentDatabaseRecord--;
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
+		return;
+	}
 
 	newFileName = dataBaseEntry[currentDatabaseRecord].dbImageFileName + ".bmp";
 	gam_loadTexture(newFileName, newKeyName);

@@ -279,8 +279,9 @@ bool paraAudio::load (std::string fileName)
 	}
 	tempAudio.loaded = true;
 	audio.insert (std::pair<std::string, __audio> (tempAudio.keyName, tempAudio));
-	funcOutput (-1, int_getString ("Loaded [ %s ] with key [ %s ]", tempAudio.fileName.c_str (), tempAudio.keyName.c_str ()));
+
 #ifdef MY_DEBUG
+	funcOutput (-1, int_getString ("Loaded [ %s ] with key [ %s ]", tempAudio.fileName.c_str (), tempAudio.keyName.c_str ()));
 	std::cout << "Loaded file : " << tempAudio.fileName << std::endl;
 #endif
 	return true;

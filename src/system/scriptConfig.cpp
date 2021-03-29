@@ -5,7 +5,6 @@
 #include <game/player.h>
 #include <system/util.h>
 #include <game/bullet.h>
-#include <game/particles.h>
 #include <game/lineOfSight.h>
 #include <game/score.h>
 #include <game/transferRender.h>
@@ -17,16 +16,16 @@
 #include <gui/guiLostScreen.h>
 #include <gui/guiHighScore.h>
 #include <io/keyboard.h>
-#include "game/audio.h"
-#include "gui/guiLanguage.h"
-#include "system/startup.h"
-#include "game/database.h"
-#include "game/hud.h"
-#include "game/texture.h"
-#include "system/scriptConfig.h"
-#include "gui/guiSideview.h"
-#include "game/doors.h"
-#include "game/pathFind.h"
+#include <game/audio.h>
+#include <gui/guiLanguage.h>
+#include <system/startup.h>
+#include <game/database.h>
+#include <game/hud.h>
+#include <game/texture.h>
+#include <system/scriptConfig.h>
+#include <gui/guiSideview.h>
+#include <game/doors.h>
+#include <game/pathFind.h>
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -64,7 +63,6 @@ void sys_scriptInitScriptFunctions ()
 	paraScriptInstance.addScriptFunction ("void as_handleDialogBoxes ()", "as_handleDialogBoxes");
 
 	paraScriptInstance.addScriptFunction("void as_handleHighscoreDisplay()", "as_handleHighscoreDisplay");
-//	paraScriptInstance.addScriptFunction ("void as_testFunction()", "as_testFunction");
 
 	paraScriptInstance.addScriptFunction ("void as_refreshControlLabels()", "as_refreshControlLabels");
 	paraScriptInstance.addScriptFunction ("void as_refreshHighscoreLabels()", "as_refreshHighscoreLabels");

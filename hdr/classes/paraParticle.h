@@ -8,6 +8,8 @@
 #include <box2d/b2_body.h>
 #include <system/physics.h>
 
+#define USE_LOOKUP_TABLE 1
+
 class paraParticle
 {
 public:
@@ -19,6 +21,8 @@ public:
 	b2Vec2 getCircleAngle ();
 
 	bool inUse ();
+
+	void setInUse(bool newState);
 
 	bool isDead (bool b);
 

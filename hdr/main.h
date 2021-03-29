@@ -86,7 +86,4 @@ extern bool   d_showPerfStats;
 //
 extern double baseGameSpeed;
 
-extern std::string testVarString;
-extern float       testVarFloat;
-
 extern unsigned long g_debugDroidCount;

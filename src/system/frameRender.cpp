@@ -1,6 +1,5 @@
 #include <gui/guiLostScreen.h>
 #include <gui/guiHighScore.h>
-#include <system/gameEvents.h>
 #include <system/util.h>
 #include "gui/guiScrollbox.h"
 #include "system/startup.h"
@@ -23,6 +22,8 @@
 
 unsigned long g_debugDroidCount = 0;
 bool          d_showPerfStats   = false;
+int           d_showPathIndex   = 0;
+bool          d_showWaypoints   = false;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -99,7 +100,7 @@ void sys_renderFrame (double interpolation)
 			break;
 
 		case MODE_GUI_DECKVIEW:
-			gam_renderHealingFrames ();     // TODO: Only animating ones in visible playview
+			gam_renderHealingFrames ();
 			gui_renderTerminalDeck ();
 			gui_renderGUI ();
 			break;
@@ -180,7 +181,9 @@ void sys_renderFrame (double interpolation)
 			gam_renderBullets ();
 			gam_renderParticles ();
 
-//			gam_showWayPoints (gam_getCurrentDeckName());
+			if (d_showWaypoints)
+				gam_showWayPoints (gam_getCurrentDeckName ());
+
 			if (d_showInfluenceMap)
 				gam_debugInfluenceMap ();
 
@@ -188,10 +191,10 @@ void sys_renderFrame (double interpolation)
 				sys_getPhysicsWorld ()->DebugDraw ();
 
 			if (d_showNodeArrays)
-				gam_AStarDebugNodes (0);
+				gam_AStarDebugNodes (d_showPathIndex);
 
 			if (d_showAStarPath)
-				gam_AStarDebugWayPoints (0);
+				gam_AStarDebugWayPoints (d_showPathIndex);
 
 			if (gui.getCurrentDialogbox () != NO_DIALOG_BOX)
 				gui_renderActiveDialogbox ();

@@ -14,7 +14,7 @@ typedef struct
 	int         chanceToShoot;
 	int         bulletDamage;
 	bool        disrupterImmune;
-	float       rechargeTime;
+	double      rechargeTime;
 	int         tokenCount;
 	int         imageIndex;
 	std::string dbImageFileName;

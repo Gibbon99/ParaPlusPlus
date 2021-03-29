@@ -21,7 +21,7 @@ std::array<highScore, NUM_HIGHSCORE_ROWS> highScoreTable{};
 int gui_getLowestScore()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	return highScoreTable.end()->scoreValue;
+	return highScoreTable[NUM_HIGHSCORE_ROWS - 1].scoreValue;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
