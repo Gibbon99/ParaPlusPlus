@@ -87,3 +87,5 @@ extern bool   d_showPerfStats;
 extern double baseGameSpeed;
 
 extern unsigned long g_debugDroidCount;
+
+extern Uint32 sys_getCurrentTime();

@@ -6,6 +6,7 @@ void as_handleDeckviewScreen()
 {
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "deckviewScreen.backButton"))
 	{
+		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_STOP_BLINK_TIMER, 0, "");
 		gam_setHudText("terminalMenu.terminalText");
 		sys_setNewMode (MODE_GUI_TERMINAL, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
@@ -49,6 +50,7 @@ void as_handleTerminalMenu ()
 
 	if (as_paraGui.getActiveObjectIndex () == as_paraGui.getIndex (GUI_OBJECT_BUTTON, "terminalMenu.deckviewButton"))
 	{
+		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_START_BLINK_TIMER, 0, "");
 		gam_setHudText("terminalMenu.deckviewButton");
 		sys_setNewMode(MODE_GUI_DECKVIEW, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "deckviewScreen"));

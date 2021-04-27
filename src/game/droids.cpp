@@ -371,6 +371,30 @@ void gam_checkDroidHealth(int targetDroid)
 
 //-------------------------------------------------------------------------------------------------------------
 //
+// See if a droid sees another droid get shot, or get transferred into
+void gam_checkActionWitness()
+//-------------------------------------------------------------------------------------------------------------
+{
+	for (auto &droidItr : g_shipDeckItr->second.droid)
+	{
+		if (droidItr.visibleToPlayer)
+		{
+			if (dataBaseEntry[droidItr.droidType].canShoot)
+			{
+				droidItr.ai.setTargetDroid(-1);
+				droidItr.ai.modifyScore (AI_MODE_ATTACK, +40);
+
+				printf("Droid witness an action - increase ATTACK.\n");
+
+			}
+			else
+				droidItr.ai.modifyScore(AI_MODE_FLEE, +40);
+		}
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
 // Process damage to a droid
 //
 // damageSource can be either a bullet, explosion or a collision with player or another droid
@@ -465,6 +489,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 
 			if ((sourceDroid == TARGET_PLAYER) && (targetDroid != TARGET_PLAYER))      // Player shot this bullet at a droid
 			{
+				gam_checkActionWitness ();
 				//
 				// Bullet does damage according to current droid type if it has a weapon
 				if (dataBaseEntry[playerDroid.droidType].canShoot)

@@ -4,10 +4,12 @@
 #include "game/droidClass.h"
 
 extern droidClass playerDroid;
-extern double     playerFriction;      // From script
+extern double     playerFriction;           // From script
 extern float      influenceTimelimit;
 extern float      influenceTimelimtDelay;
 extern float      influenceTimeLeftWarning;
+extern int        maxNumBumps;              // From script
+extern float      bounceCounterDelay;       // From script
 
 
 // Setup the player droid - run once
@@ -38,4 +40,19 @@ void gam_setInfluenceTimelimit (int targetDroidClass);
 void gam_processInfluenceTime ();
 
 // Return the type of droid for checking access in database view
-int gam_getDroidType();
+int gam_getDroidType ();
+
+// Check and decrement the bump counter
+void gam_checkBumpCounter ();
+
+// Create a breadcrumb trail as the player moves around
+void gam_createTrail ();
+
+// Show the player trail
+void gam_debugShowPlayerTrail();
+
+// Reset the trail data when changing to a new level
+void gam_clearPlayerTrail();
+
+// Return the coordinates from the last position in the trial array
+b2Vec2 gam_getLastPlayerTrail();

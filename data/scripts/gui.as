@@ -851,6 +851,8 @@ void as_createGUI()
     influenceTimelimit = 1000;
     influenceTimeLeftWarning = 250;
     influenceTimelimtDelay = 0.2f;
+    maxNumBumps = 10;
+    bounceCounterDelay = 0.3;
 
     as_setSideviewColors();
 

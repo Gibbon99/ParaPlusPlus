@@ -10,6 +10,7 @@
 #include <game/particles.h>
 #include <gui/guiHighScore.h>
 #include <game/score.h>
+#include <SDL2_gfxPrimitives.h>
 #include "game/player.h"
 
 #include "game/bullet.h"
@@ -19,9 +20,16 @@ double     playerFriction;      // From script
 float      influenceTimelimit;
 float      influenceTimelimtDelay;
 float      influenceTimeLeftWarning;
+int        bounceCounterTimeout = 0;       // How many bumps before ignoring them
+int        bounceCounter        = 0;
+int        maxNumBumps;        // From script
+float      bounceCounterDelay;           // From script
 
-static double angleCounter = 1.0;
-int           radius       = 40;
+static double angleCounter       = 1.0;
+int           radius             = 40;
+
+std::vector<b2Vec2> playerTrail;
+unsigned long       maxTrailSize = 10;
 
 //-----------------------------------------------------------------------------------------------------------------
 //
@@ -44,10 +52,27 @@ void gam_moveTestCircle ()
 //-----------------------------------------------------------------------------
 //
 // Return the type of droid for checking access in database view
-int gam_getDroidType()
+int gam_getDroidType ()
 //-----------------------------------------------------------------------------
 {
 	return playerDroid.droidType;
+}
+
+//-----------------------------------------------------------------------------
+//
+// Check and decrement the bump counter
+void gam_checkBumpCounter ()
+//-----------------------------------------------------------------------------
+{
+	if (bounceCounter > 0)
+	{
+		bounceCounterTimeout -= 1.0f * bounceCounterDelay;
+		if (bounceCounterTimeout < 0.0f)
+		{
+			bounceCounterTimeout = 1.0f;
+			bounceCounter--;
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -86,7 +111,7 @@ void gam_setupPlayerDroid ()
 	playerDroid.ai.setAcceleration (dataBaseEntry[0].accelerate);
 	playerDroid.ai.setMaxSpeed (dataBaseEntry[0].maxSpeed);
 	playerDroid.currentHealth = dataBaseEntry[0].maxHealth;
-	playerDroid.currentMode = DROID_MODE_NORMAL;
+	playerDroid.currentMode   = DROID_MODE_NORMAL;
 	playerDroid.sprite.setLowHealth (false);
 
 	sys_setupPlayerPhysics ();
@@ -279,11 +304,11 @@ void gam_checkPlayerHealth ()
 		{
 			playerDroid.currentMode = DROID_MODE_EXPLODING;
 
-			playerDroid.velocity    = {0, 0};
+			playerDroid.velocity = {0, 0};
 			playerDroid.sprite.create ("explosion", 25, explosionAnimationSpeed);
 			playerDroid.sprite.setAnimateSpeed (explosionAnimationSpeed);      // Set for explosion animation
 
-			gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP_ALL, false, 0, 0, "");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP_ALL, false, 0, 0, "");
 
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode1");
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
@@ -292,17 +317,17 @@ void gam_checkPlayerHealth ()
 
 			sys_clearDroidPhysics (gam_getCurrentDeckName ());
 
-			sys_setNewMode(MODE_GAME_OVER, false);
+			sys_setNewMode (MODE_GAME_OVER, false);
 		}
 		return;
 	}
 
-	dangerHealthLevel = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
+	dangerHealthLevel     = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
 
 	if (playerDroid.currentHealth < static_cast<int>(dangerHealthLevel))
 	{
 		playerDroid.sprite.setLowHealth (true);
-		if (!audio.isPlaying("lowEnergy"))
+		if (!audio.isPlaying ("lowEnergy"))
 		{
 			lowEnergySoundPlaying = true;
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "lowEnergy");
@@ -311,7 +336,7 @@ void gam_checkPlayerHealth ()
 	else
 	{
 		playerDroid.sprite.setLowHealth (false);
-		if (audio.isPlaying("lowEnergy"))
+		if (audio.isPlaying ("lowEnergy"))
 		{
 			lowEnergySoundPlaying = false;
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "lowEnergy");
@@ -338,6 +363,10 @@ void gam_damageToPlayer (int damageSource, int sourceDroid)
 	switch (damageSource)
 	{
 		case PHYSIC_DAMAGE_BUMP:
+			bounceCounter++;
+			if (bounceCounter > maxNumBumps)
+				return;
+
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 100, 127, "collision1");
 
 			if (g_shipDeckItr->second.droid[sourceDroid].currentMode == DROID_MODE_EXPLODING)
@@ -385,7 +414,7 @@ void gam_processInfluenceTime ()
 		playerDroid.influenceFade -= 10;
 		if (playerDroid.influenceFade < 50)
 		{
-			playerDroid.influenceFade = 50;
+			playerDroid.influenceFade     = 50;
 			playerDroid.influenceFadeFlag = !playerDroid.influenceFadeFlag;
 		}
 	}
@@ -394,7 +423,7 @@ void gam_processInfluenceTime ()
 		playerDroid.influenceFade += 10;
 		if (playerDroid.influenceFade > 254)
 		{
-			playerDroid.influenceFade = 254;
+			playerDroid.influenceFade     = 254;
 			playerDroid.influenceFadeFlag = !playerDroid.influenceFadeFlag;
 		}
 	}
@@ -406,13 +435,13 @@ void gam_processInfluenceTime ()
 
 	if (playerDroid.influenceTimeLeft < 0.0f)
 	{
-		playerDroid.velocity = {0,0};
-		gam_addAudioEvent(EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
-		gam_addEmitter(sys_convertToMeters(playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
-		gam_addEmitter(sys_convertToMeters(playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
-		trn_transferLostGame();
+		playerDroid.velocity = {0, 0};
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
+		gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+		gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+		trn_transferLostGame ();
 		playerDroid.sprite.setTintColor (255, 255, 255);
-		playerDroid.influenceFadeFlag = false;
+		playerDroid.influenceFadeFlag    = false;
 		playerDroid.lowInfluenceTimeleft = false;
 
 #ifdef MY_DEBUG
@@ -424,4 +453,90 @@ void gam_processInfluenceTime ()
 	if (playerDroid.lowInfluenceTimeleft)
 		std::cout << "Influence time is about to run out" << std::endl;
 #endif
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+//
+// Create a breadcrumb trail as the player moves around
+void gam_createTrail ()
+//-----------------------------------------------------------------------------------------------------------------
+{
+
+	b2Vec2 tempPosition;
+
+	tempPosition = sys_convertToTiles (playerDroid.worldPosInPixels);
+
+	if (playerTrail.size () == 0)
+	{
+		playerTrail.push_back (tempPosition);
+		return;
+	}
+
+	if (tempPosition != playerTrail[0])
+	{
+		if (playerTrail.size () < maxTrailSize)
+		{
+			playerTrail.push_back(tempPosition);
+
+			for (int i = playerTrail.size(); i != 0; i--)
+			{
+				playerTrail[i] = playerTrail[i - 1];
+			}
+			playerTrail[0] = tempPosition;
+			return;
+		}
+		else    // Reached max size for trail
+		{
+			for (int i = playerTrail.size(); i != 0; i--)
+			{
+				playerTrail[i] = playerTrail[i - 1];
+			}
+			playerTrail[0] = tempPosition;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+//
+// Return the coordinates from the last position in the trial array
+b2Vec2 gam_getLastPlayerTrail()
+//-----------------------------------------------------------------------------------------------------------------
+{
+	b2Vec2  returnCoords;
+
+	if (playerTrail.size() == 0)
+	{
+		returnCoords.x = returnCoords.y = -1;
+		return returnCoords;
+	}
+
+	return playerTrail[playerTrail.size() - 1];
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+//
+// Reset the trail data when changing to a new level
+void gam_clearPlayerTrail()
+//-----------------------------------------------------------------------------------------------------------------
+{
+	playerTrail.clear();
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+//
+// Show the player trail
+void gam_debugShowPlayerTrail()
+//-----------------------------------------------------------------------------------------------------------------
+{
+	b2Vec2  drawPosition;
+
+	for (auto trailItr : playerTrail)
+	{
+		drawPosition.x = trailItr.x * tileSize;
+		drawPosition.y = trailItr.y * tileSize;
+
+		drawPosition = sys_worldToScreen(drawPosition, tileSize);
+
+		boxRGBA (renderer.renderer, static_cast<Sint16>(drawPosition.x), static_cast<Sint16>(drawPosition.y), static_cast<Sint16>(drawPosition.x + tileSize), static_cast<Sint16>(drawPosition.y + tileSize), 50, 50, 150, 128);
+	}
 }

@@ -11,6 +11,9 @@
 
 #define DEBUG_AI 1
 
+float desiredAttackDistance = 6;    // meters
+float paddingSize           = 2;
+
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Constructor
@@ -39,8 +42,8 @@ std::string paraAI::getString (int whichMode)
 		case AI_MODE_PATROL:
 			return "AI_MODE_PATROL";
 			break;
-		case AI_MODE_HELP:
-			return "AI_MODE_HELP";
+		case AI_MODE_HUNT:
+			return "AI_MODE_HUNT";
 			break;
 
 		case AI_MODE_FLEE:
@@ -72,9 +75,11 @@ void paraAI::initAI ()
 	currentAIMode = AI_MODE_NUMBER;     // Will set to AI_MODE_PATROL when checking scores first run
 	patrolAction  = NORMAL_PATROL;
 	ai[AI_MODE_PATROL] = 50;
-	wayPointDirection = WAYPOINT_DOWN;
-	currentSpeed      = 0;
-	aiActionCounter   = 0.0;
+	wayPointDirection         = WAYPOINT_DOWN;
+	currentSpeed              = 0;
+	aiActionCounter           = 0.0;
+	currentWaypointTimestamp  = 0;
+	previousWaypointTimestamp = currentWaypointTimestamp;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -105,7 +110,7 @@ b2Vec2 paraAI::findLocationWithLOS (int locationType)
 	int                currentDistance;
 
 #ifdef DEBUG_AI
-	std::cout << "[ " << arrayIndex << " ] - Search for a close waypoint." << std::endl;
+	std::cout << "[ " << arrayIndex << " ] - Search for a visible waypoint." << std::endl;
 #endif
 
 	switch (locationType)
@@ -136,7 +141,6 @@ b2Vec2 paraAI::findLocationWithLOS (int locationType)
 			return destinationCoordsInMeters;
 			break;
 	}
-
 	return b2Vec2{0, 0};
 }
 
@@ -173,17 +177,17 @@ void paraAI::patrol ()
 			lookAheadVelocity *= LOOK_AHEAD_DISTANCE;
 			//
 			// Change direction if going to run into player
-			droidFixture = playerDroid.body->GetFixtureList ();    // Only have one fixture per body
+			droidFixture             = playerDroid.body->GetFixtureList ();    // Only have one fixture per body
 
 			if (droidFixture->TestPoint (lookAheadVelocity + worldPositionInMeters))
 			{
-				currentSpeed    = 0.0;
-				currentVelocity = {0.0, 0.0};
+				currentSpeed             = 0.0;
+				currentVelocity          = {0.0, 0.0};
 				if (swapDirectionCounter < 3)
 					swapWaypointDirection ();
 				else
 					swapDirectionCounter = 0;
-				aiActionCounter = 3.0;
+				aiActionCounter          = 3.0;
 				return;
 			}
 
@@ -235,10 +239,10 @@ void paraAI::patrol ()
 			tileDestinationInTiles = sys_convertToTiles (tileDestinationInTiles);
 			worldPosInTiles        = sys_convertToTiles (sys_convertToPixels (worldPositionInMeters));
 
-			aStarWaypointIndex     = 0;
-			haveAStarDestination   = false;
-			patrolAction           = FOLLOW_ASTAR;
-			aStarIndex             = gam_requestNewPath (b2Vec2{worldPosInTiles.x, worldPosInTiles.y}, tileDestinationInTiles, arrayIndex, gam_getCurrentDeckName ());
+			aStarWaypointIndex   = 0;
+			haveAStarDestination = false;
+			patrolAction         = FOLLOW_ASTAR;
+			aStarIndex           = gam_requestNewPath (b2Vec2{worldPosInTiles.x, worldPosInTiles.y}, tileDestinationInTiles, arrayIndex, gam_getCurrentDeckName ());
 
 			if (aStarIndex == PATH_TOO_SHORT)
 			{
@@ -446,6 +450,10 @@ void paraAI::setTargetDroid (int newTargetDroid)
 void paraAI::getWaypointDestination ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
+	Uint32 tempTimeStamp;
+
+	previousWaypointTimestamp = currentWaypointTimestamp;
+
 	switch (wayPointDirection)
 	{
 		case WAYPOINT_DOWN:
@@ -487,9 +495,7 @@ void paraAI::swapWaypointDirection ()
 	getWaypointDestination ();
 
 	swapDirectionCounter++;
-
 }
-
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
@@ -497,6 +503,10 @@ void paraAI::swapWaypointDirection ()
 void paraAI::getNextAStarDestination ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
+	Uint32 tempTimeStamp;
+
+	previousWaypointTimestamp = currentWaypointTimestamp;
+
 	aStarWaypointIndex--;
 
 	if (aStarWaypointIndex < 0)    // Reached the AStar destination
@@ -519,12 +529,11 @@ void paraAI::getNextAStarDestination ()
 
 				// Clear heal mode
 				modifyScore (AI_MODE_HEAL, -100);  // Reset to zero - should be fully healed
-				modifyScore(AI_MODE_PATROL, +20);
+//				modifyScore (AI_MODE_PATROL, +20);
 				//
 				// Fully heal
 				g_shipDeckItr->second.droid[arrayIndex].currentHealth = dataBaseEntry[g_shipDeckItr->second.droid[arrayIndex].droidType].maxHealth;    // Need another way of doing this
-				gam_setHealthAnimation(arrayIndex);
-
+				gam_setHealthAnimation (arrayIndex);
 
 #ifdef DEBUG_AI
 				std::cout << "[ " << arrayIndex << " ]" << " Finished HEAL mode. Health score is now " << ai[AI_MODE_HEAL] << std::endl;
@@ -544,7 +553,7 @@ void paraAI::getNextAStarDestination ()
 
 				// Clear flee mode
 				modifyScore (AI_MODE_FLEE, -100);  // Reset to zero - have reached the flee tile
-				modifyScore(AI_MODE_PATROL, +20);   // Go back to patrolling
+//				modifyScore (AI_MODE_PATROL, +20);   // Go back to patrolling
 
 				break;
 
@@ -570,6 +579,13 @@ void paraAI::getNextAStarDestination ()
 #endif
 						break;
 				}
+
+			case AI_MODE_HUNT:
+				huntFinish ();
+				break;
+
+			default:
+				break;
 		}
 
 		return;
@@ -631,11 +647,68 @@ void paraAI::heal ()
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
+// Finished the hunt process - found the player
+void paraAI::huntFinish ()
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	//
+	// Clear the path for reuse
+	gam_AStarRemovePath (aStarIndex);
+	aStarIndex           = -1;
+	aStarWaypointIndex   = 0;
+	haveAStarDestination = false;
+
+	modifyScore (AI_MODE_HUNT, -60);
+	modifyScore (AI_MODE_ATTACK, 60);
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
+// Run the hunt action
+void paraAI::hunt ()
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	float currentDistance;
+
+	if (-1 == aStarIndex)
+		return;
+
+	if (!path[aStarIndex].pathReady)
+		return;
+
+	if (!path[aStarIndex].isValid)
+	{
+		modifyScore (AI_MODE_HUNT, -100);
+		modifyScore (AI_MODE_ATTACK, -40);
+		return;
+	}
+	else
+	{
+		//
+		// See if we are now in attack range of the player
+		currentDistance = b2Distance (sys_convertToMeters (playerDroid.worldPosInPixels), sys_convertToMeters (g_shipDeckItr->second.droid[arrayIndex].worldPosInPixels));
+		if ((currentDistance > desiredAttackDistance) && (currentDistance < desiredAttackDistance + paddingSize))
+		{
+
+			printf ("Within attack range of player while in HUNT mode.\n");
+
+			huntFinish ();
+			return;
+		}
+		followAStar ();
+	}
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
 // Run the flee action
 void paraAI::flee ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	if (-1 == aStarIndex)
+		return;
+
+	if (!path[aStarIndex].pathReady)
 		return;
 
 	if (!path[aStarIndex].isValid)
@@ -644,15 +717,10 @@ void paraAI::flee ()
 		modifyScore (AI_MODE_PATROL, +40);
 		return;
 	}
-
-	if (path[aStarIndex].pathReady)
+	else
 	{
 		followAStar ();
-		return;
 	}
-
-	modifyScore (AI_MODE_FLEE, -80);
-	modifyScore (AI_MODE_PATROL, +60);
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -700,30 +768,25 @@ void paraAI::changeModeTo (int newAIMode)
 			{
 				modifyScore (AI_MODE_ATTACK, -100);
 				modifyScore (AI_MODE_FLEE, 40);
-				return;
 			}
 			break;
 
 //-------------------------- AI_MODE_FLEE ---------------------------
 
 		case AI_MODE_FLEE:
-			haveAStarDestination = false;
-			tileDestination      = findFleeTile ();
+			haveAStarDestination  = false;
+			tileDestination       = findFleeTile ();
 
 			if (tileDestination.x < 0)  // Can't find somewhere to flee to
 			{
 				patrolAction = FIND_WAYPOINT;
 				modifyScore (AI_MODE_FLEE, -80);
 				modifyScore (AI_MODE_PATROL, +40);
-				checkScores ();
-
-				printf ("ERROR: Unable to find a valid tile to flee to.\n");
-
 				return;
 			}
 			localWorldPosInPixels = sys_convertToPixels (worldPositionInMeters);
-//			sys_convertToTiles(localWorldPosInPixels)
-			aStarIndex            = gam_requestNewPath (b2Vec2{localWorldPosInPixels.x / tileSize, localWorldPosInPixels.y / tileSize}, tileDestination, arrayIndex, gam_getCurrentDeckName ());
+
+			aStarIndex = gam_requestNewPath (b2Vec2{localWorldPosInPixels.x / tileSize, localWorldPosInPixels.y / tileSize}, tileDestination, arrayIndex, gam_getCurrentDeckName ());
 			if (PATH_TOO_SHORT == aStarIndex)
 			{
 #ifdef DEBUG_AI
@@ -731,7 +794,6 @@ void paraAI::changeModeTo (int newAIMode)
 #endif
 				modifyScore (AI_MODE_FLEE, -80);
 				modifyScore (AI_MODE_PATROL, +40);
-				checkScores ();
 			}
 			break;
 
@@ -754,7 +816,6 @@ void paraAI::changeModeTo (int newAIMode)
 #ifdef DEBUG_AI
 			std::cout << "[ " << arrayIndex << " ]" << " Found the destination healing tile." << std::endl;
 #endif
-
 			localWorldPosInPixels = sys_convertToPixels (worldPositionInMeters);
 
 			aStarIndex = gam_requestNewPath (b2Vec2{localWorldPosInPixels.x / tileSize, localWorldPosInPixels.y / tileSize}, tileDestination, arrayIndex, gam_getCurrentDeckName ());
@@ -770,12 +831,42 @@ void paraAI::changeModeTo (int newAIMode)
 #endif
 				modifyScore (AI_MODE_HEAL, -100);
 				modifyScore (AI_MODE_FLEE, 40);
-				modifyScore(AI_MODE_PATROL, -70);
+				modifyScore (AI_MODE_PATROL, -70);
 			}
 			break;
 
-		case AI_MODE_HELP:
+		case AI_MODE_HUNT:
+
+			printf ("Change to HUNT mode\n");
+
+			haveAStarDestination = false;
+			tileDestination      = gam_getLastPlayerTrail ();
+			if (tileDestination.x < 0)                // Couldn't get a tile from player trail
+			{
+				modifyScore (AI_MODE_HUNT, -100);
+				modifyScore (AI_MODE_FLEE, 40);
+
+				tileDestination = sys_convertToTiles (playerDroid.worldPosInPixels);
+			}
+
+			localWorldPosInPixels = sys_convertToPixels (worldPositionInMeters);
+
+			aStarIndex = gam_requestNewPath (b2Vec2{localWorldPosInPixels.x, localWorldPosInPixels.y}, tileDestination, arrayIndex, gam_getCurrentDeckName ());
+			if (PATH_TOO_SHORT == aStarIndex)
+			{
+#ifdef DEBUG_AI
+				std::cout << "[ " << arrayIndex << " ]" << " Too close to hunt tile to get a path. Set patrolAction to FIND_WAYPOINT" << std::endl;
+#endif
+				modifyScore (AI_MODE_HUNT, -100);
+				modifyScore (AI_MODE_ATTACK, -50);
+				modifyScore (AI_MODE_FLEE, 40);
+				modifyScore (AI_MODE_PATROL, 70);
+			}
 			break;
+
+		default:   // Keep compiler happy
+			break;
+
 	}
 }
 
@@ -790,10 +881,10 @@ void paraAI::checkScores ()
 
 	sanityCheck ();
 
-	if (ai[AI_MODE_HEAL] == 100)
+	if (ai[AI_MODE_HEAL] >= 100)
 	{
-		modifyScore(AI_MODE_PATROL,-70);
-		modifyScore(AI_MODE_FLEE,-70);
+		modifyScore (AI_MODE_PATROL, -70);
+		modifyScore (AI_MODE_FLEE, -70);
 
 		if (scoreMemory == currentAIMode)
 			return;
@@ -968,6 +1059,8 @@ void paraAI::process (b2Vec2 newWorldPosInMeters)
 {
 	worldPositionInMeters = newWorldPosInMeters;
 
+	checkTimestamp ();
+
 	checkScores ();
 
 	switch (currentAIMode)
@@ -988,7 +1081,8 @@ void paraAI::process (b2Vec2 newWorldPosInMeters)
 			heal ();
 			break;
 
-		case AI_MODE_HELP:
+		case AI_MODE_HUNT:
+			hunt ();
 			break;
 	}
 }
@@ -1001,13 +1095,14 @@ void paraAI::showValues ()
 {
 	int counter = 0;
 
-	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%s %s %s %s %s", "        PTL", "   HLP", "   FLE", "   HEL", "   ATK"));
+	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%s %s %s %s %s", "        PTL", "   HNT", "   FLE", "   HEL", "   ATK"));
 
 	for (auto droidItr : g_shipDeckItr->second.droid)
 	{
 		if (droidItr.currentMode == DROID_MODE_NORMAL)
-			con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%i   --  %2i --   %2i --   %2i --  %2i  --  %2i  -- %s - %s aStar %i ", counter, droidItr.ai.ai[0], droidItr.ai.ai[1], droidItr.ai.ai[2], droidItr.ai.ai[3], droidItr.ai.ai[4], getString (droidItr.ai.getCurrentMode ()).c_str (),
-			                                                            droidItr.ai.getCurrentMode () == AI_MODE_PATROL ? droidItr.ai.getPatrolAction ().c_str () : " ", droidItr.ai.getAStarIndex ()));
+			con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%i   --  %2i --   %2i --   %2i --  %2i  --  %2i  -- %s - %s aStar %i Max %i waypointCount %i ", counter, droidItr.ai.ai[0], droidItr.ai.ai[1], droidItr.ai.ai[2], droidItr.ai.ai[3], droidItr.ai.ai[4], getString (droidItr.ai.getCurrentMode ()).c_str (),
+			                                                            droidItr.ai.getCurrentMode () == AI_MODE_PATROL ? droidItr.ai.getPatrolAction ().c_str () : " ", droidItr.ai.getAStarIndex (), timeStampMaximum,
+			                                                            currentWaypointTimestamp - previousWaypointTimestamp));
 		else
 			con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%i %s", counter, "Dead"));
 
@@ -1041,25 +1136,31 @@ int paraAI::getHealScore ()
 	return ai[AI_MODE_HEAL];
 }
 
-float desiredAttackDistance = 6;    // meters
-float paddingSize           = 2;
-
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // If droid can not see target for period of time - then stop attack and disregard target
-void paraAI::processLOSTimeout ()
+
+//
+//
+// this changes to processhunt timeout mode - timeout if not found
+void paraAI::checkPlayerVisibility ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	static float LOSTimeoutDelay = 1.0f;
 
-	if (g_shipDeckItr->second.droid[arrayIndex].visibleToPlayer)
+	if (!g_shipDeckItr->second.droid[arrayIndex].visibleToPlayer)
 	{
-		LOSTimeoutDelay   = 1.0f;
-		LOSTimeoutCounter = LOSTimeoutDelayValue;
+		modifyScore (AI_MODE_HUNT, 100);
+		modifyScore (AI_MODE_ATTACK, -10);
+
+		printf ("Player is not visible to droid in ATTACK mode.\n");
+
+//		LOSTimeoutDelay   = 1.0f;
+//		LOSTimeoutCounter = LOSTimeoutDelayValue;
 		return;
 	}
 
-	LOSTimeoutDelay -= 1.0f * 0.4f;
+	LOSTimeoutDelay -= 1.0f * 0.4f; // TODO - decrease this to allow longer hunt time
 	if (LOSTimeoutDelay < 0.0)
 	{
 		LOSTimeoutDelay = 1.0f;
@@ -1067,8 +1168,9 @@ void paraAI::processLOSTimeout ()
 		if (LOSTimeoutCounter < 0)
 		{
 			LOSTimeoutCounter = LOSTimeoutDelayValue;
-			targetDroid       = -2;
-			modifyScore (AI_MODE_ATTACK, -60);
+			targetDroid       = NO_ATTACK_TARGET;
+//			modifyScore (AI_MODE_ATTACK, -60);  // TODO - check
+			modifyScore (AI_MODE_HUNT, -60);
 		}
 	}
 }
@@ -1084,7 +1186,19 @@ void paraAI::attack ()
 
 	//
 	// Stop attack if loss of target for period of time
-	processLOSTimeout ();
+	// If in attack mode, and lose sight of player - go into hunt mode
+//	checkPlayerVisibility ();
+
+	if (!g_shipDeckItr->second.droid[arrayIndex].visibleToPlayer)
+	{
+		modifyScore (AI_MODE_HUNT, 100);
+		modifyScore (AI_MODE_ATTACK, -10);
+
+		printf ("Player is not visible to droid in ATTACK mode.\n");
+
+		return;
+	}
+
 	//
 	// Stop having a target if the droid is not in a normal state
 	if (targetDroid != -1)
@@ -1109,7 +1223,6 @@ void paraAI::attack ()
 
 	if ((currentDistance > desiredAttackDistance) && (currentDistance < desiredAttackDistance + paddingSize))
 	{
-//		currentVelocity.SetZero();
 		if (dataBaseEntry[g_shipDeckItr->second.droid[arrayIndex].droidType].canShoot)
 		{
 			if (targetDroid != NO_ATTACK_TARGET)
@@ -1137,5 +1250,51 @@ void paraAI::attack ()
 		directionVector *= currentSpeed;
 		currentVelocity = directionVector;
 		return;
+	}
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
+// Run a check to see if the Droid has become stuck and needs to do something else
+void paraAI::checkTimestamp ()
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	currentWaypointTimestamp++;
+
+	if ((currentWaypointTimestamp - previousWaypointTimestamp) > timeStampMaximum)
+	{
+		switch (currentAIMode)
+		{
+			case AI_MODE_PATROL:
+
+				timeStampMaximum          = (currentWaypointTimestamp - previousWaypointTimestamp);
+				previousWaypointTimestamp = currentWaypointTimestamp;
+
+				findLocationWithLOS (LOCATION_WAYPOINT);
+
+				printf (" %i Too long in PATROL - reset\n", arrayIndex);
+
+				break;
+
+			case AI_MODE_FLEE:
+
+				timeStampMaximum          = (currentWaypointTimestamp - previousWaypointTimestamp);
+				previousWaypointTimestamp = currentWaypointTimestamp;
+
+				findLocationWithLOS (LOCATION_WAYPOINT);
+				printf ("Too long in FLEE - reset\n");
+
+				break;
+
+			case AI_MODE_HEAL:
+
+				timeStampMaximum          = (currentWaypointTimestamp - previousWaypointTimestamp);
+				previousWaypointTimestamp = currentWaypointTimestamp;
+
+				findLocationWithLOS (LOCATION_WAYPOINT);
+				printf ("Too long in HEAL - reset\n");
+
+				break;
+		}
 	}
 }

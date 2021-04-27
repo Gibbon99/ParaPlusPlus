@@ -25,6 +25,7 @@ struct __audio
 
 struct __audioActiveSounds
 {
+	bool        doorSound;
 	int         whichChannel;
 	std::string keyName;
 };
@@ -71,6 +72,9 @@ public:
 	void stop (std::string keyName);
 
 	void setOutputFunction (audioFunctionPtrStr outputFunction);
+
+	// Special case - handle number of door sounds playing
+	bool handleDoorSounds(int distance, int pan);
 
 private:
 	std::vector<__audioActiveSounds> activeSounds;

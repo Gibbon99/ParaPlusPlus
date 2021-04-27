@@ -7,6 +7,7 @@
 
 #define MAX_NUM_CHANNELS    64
 #define DEFAULT_NUM_CHANNELS    16
+#define numDoorSounds 5
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
@@ -211,6 +212,8 @@ void paraAudio::stop (std::string keyName)
 int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
 //-----------------------------------------------------------------------------------------------------------------------
 {
+	static int numDoorsPlaying = 0;
+
 	if ((distance < 0) || (distance > 255))
 		distance = 128;
 
@@ -218,6 +221,7 @@ int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
 		pan = 127;
 
 	auto audioItr = audio.find (keyName);
+
 	if (audioItr != audio.end ())
 	{
 		if (!audio[keyName].loaded)
@@ -230,6 +234,9 @@ int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
 		{
 			if (Mix_Playing (activeItr.whichChannel) == 0)   // Channel is not playing
 			{
+				if (activeItr.doorSound)        // If it was a door sound - decrement counter
+					numDoorsPlaying--;
+
 				Mix_UnregisterAllEffects (activeItr.whichChannel);       // Reset any effects from previous sounds
 
 				if (!Mix_SetPanning (activeItr.whichChannel, pan, 254 - pan))
@@ -238,12 +245,34 @@ int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
 				if (!Mix_SetDistance (activeItr.whichChannel, distance))
 					funcOutput (-1, int_getString ("Failed to set attenuation for [ %s ] - [ %s ]", keyName.c_str (), Mix_GetError ()));
 
-				activeItr.whichChannel = Mix_PlayChannel(activeItr.whichChannel, audio[keyName].audio, loop ? -1 : 0);
-				activeItr.keyName      = keyName;
+				if ((keyName == "doorOpen") || (keyName == "doorClose"))
+				{
+					if (numDoorsPlaying > numDoorSounds)
+					{
+						activeItr.doorSound = false;
+						return -1;
+					}
+
+					numDoorsPlaying++;
+					activeItr.doorSound = true;
+
+					activeItr.whichChannel = Mix_PlayChannel(activeItr.whichChannel, audio[keyName].audio, loop ? -1 : 0);
+					activeItr.keyName      = keyName;
 #ifdef AUDIO_DEBUG
-				std::cout << "Playing : " << keyName << " on channel : " << activeItr.whichChannel << std::endl;
+					std::cout << "Playing : " << keyName << " on channel : " << activeItr.whichChannel << std::endl;
 #endif
-				return activeItr.whichChannel;
+					return activeItr.whichChannel;
+				}
+				else
+				{
+					activeItr.doorSound = false;
+					activeItr.whichChannel = Mix_PlayChannel(activeItr.whichChannel, audio[keyName].audio, loop ? -1 : 0);
+					activeItr.keyName      = keyName;
+#ifdef AUDIO_DEBUG
+					std::cout << "Playing : " << keyName << " on channel : " << activeItr.whichChannel << std::endl;
+#endif
+					return activeItr.whichChannel;
+				}
 			}
 		}
 		funcOutput (-1, int_getString ("Unable to play sound [ %s ]. No active channels left.", keyName.c_str ()));

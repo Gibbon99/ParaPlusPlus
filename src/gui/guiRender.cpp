@@ -54,8 +54,8 @@ void gui_renderActiveDialogbox ()
 	//
 	// SDL2_gfx changes the blend mode and draw color
 	// as part of its rendering - remember so we can change it back
-	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
-	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
+//	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
+//	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
 
 	gui_renderDialogbox (gui.getCurrentDialogbox ());
 
@@ -67,8 +67,8 @@ void gui_renderActiveDialogbox ()
 			gui_drawObject (gui.typeByIndexDialogbox (indexCount), gui.indexByIndexDialogbox (indexCount), false);
 	}
 
-	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
-	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
+//	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
+//	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -84,8 +84,8 @@ void gui_renderGUI ()
 	//
 	// SDL2_gfx changes the blend mode and draw color
 	// as part of its rendering - remember so we can change it back
-	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
-	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
+//	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
+//	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
 
 	for (indexCount = 0; indexCount != gui.numElements (); indexCount++)
 	{
@@ -95,6 +95,6 @@ void gui_renderGUI ()
 			gui_drawObject (gui.typeByIndex (indexCount), gui.indexByIndex (indexCount), false);
 	}
 
-	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
-	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
+//	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
+//	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
 }

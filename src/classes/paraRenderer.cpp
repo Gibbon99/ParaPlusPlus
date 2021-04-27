@@ -214,12 +214,14 @@ void paraRenderer::getRendererInfo ()
 		rendererInfo.clear ();
 	}
 
+	/*
 	std::cout << "Inside getRenderInfo" << std::endl;
 
 	if (oktouse)
 		consoleOutFunc (-1, "Inside getRenderInfo");
 
 	oktouse = true;
+*/
 
 	numRenderDrivers = SDL_GetNumRenderDrivers ();
 	if (numRenderDrivers <= 0)
@@ -385,9 +387,6 @@ void paraRenderer::setCurrentBackingTexture (std::string newActiveTexture)
 			activeBackingTexture = newActiveTexture;
 			SDL_SetRenderTarget (renderer, getRenderTarget (newActiveTexture));
 			targetTextureAvailable = true;
-
-//			std::cout << "Set backing texture to " << newActiveTexture << std::endl;
-
 			return;
 		}
 	}
@@ -413,6 +412,8 @@ PARA_Texture *paraRenderer::getRenderTarget (std::string textureName)
 		}
 	}
 	shutdownFunc (int_getString ("Backing texture [ %s ] does not exist.", textureName.c_str ()));
+
+	return nullptr;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -641,6 +642,8 @@ int paraRenderer::renderWidth()
 	{
 		return backingItr->second.logicalWidth;
 	}
+
+	return -1;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -654,4 +657,6 @@ int paraRenderer::renderHeight()
 	{
 		return backingItr->second.logicalHeight;
 	}
+
+	return -1;
 }

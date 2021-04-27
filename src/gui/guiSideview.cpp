@@ -229,8 +229,8 @@ void gui_renderSideView ()
 	// SDL2_gfx changes the blend mode and draw color
 	// as part of its rendering - remember so we can change it back
 	//
-	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
-	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
+//	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
+//	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
 
 	try
 	{
@@ -362,8 +362,8 @@ void gui_renderSideView ()
 
 	fontClass.render (renderer.renderer, sideViewTextPosX, sideViewTextPosY, 255, 255, 255, 255, sys_getString ("Deck [ %s ]", gam_returnLevelNameFromDeck (currentDeckNumber).c_str ()));
 
-	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
-	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
+//	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
+//	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
 }
 
 // ----------------------------------------------------------------------------

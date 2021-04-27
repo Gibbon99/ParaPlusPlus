@@ -25,13 +25,26 @@ bool          d_showPerfStats   = false;
 int           d_showPathIndex   = 0;
 bool          d_showWaypoints   = false;
 
+Uint8         r, g, b, a;
+SDL_BlendMode tempMode;
+
+
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Prepare the frame for rendering
 void sys_prepareFrame ()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	//
+// SDL2_gfx changes the blend mode and draw color
+// as part of its rendering - remember so we can change it back
+//
+	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
+	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
+
 	renderer.prepareFrame ();
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -40,6 +53,9 @@ void sys_prepareFrame ()
 void sys_completeFrame ()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
+	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
+
 	renderer.presentFrame ();
 }
 
@@ -180,6 +196,8 @@ void sys_renderFrame (double interpolation)
 			gam_renderLightmaps ();
 			gam_renderBullets ();
 			gam_renderParticles ();
+
+//			gam_debugShowPlayerTrail();
 
 			if (d_showWaypoints)
 				gam_showWayPoints (gam_getCurrentDeckName ());

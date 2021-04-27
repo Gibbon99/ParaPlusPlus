@@ -25,12 +25,22 @@ Uint32 thinkFPS             = 0;
 Uint32 thinkFPSPrint        = 0;
 double percentIntoNextFrame = 0.0f;
 int    currentMode;
-double  pixelsPerMeter;          // From script
+double pixelsPerMeter;          // From script
+Uint32 currentTime          = 0;
 
 //
 // Game levers
 //
 double baseGameSpeed;
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the current game time
+Uint32 sys_getCurrentTime()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return currentTime;
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -54,10 +64,10 @@ int main (int argc, char *argv[])
 	double msPerUpdate  = 1000.0f / TICKS_PER_SECOND;
 	double timeLag      = 0.0f;
 	Uint32 previousTime = PARA_GetTicks ();
-	Uint32 currentTime  = 0;
 
 	sys_startSystems ();
 
+	// TODO - use this for blinking player on deckview
 	SDL_TimerID myTimer = SDL_AddTimer (1000, fpsCallback, nullptr);
 
 	while (!quitLoop)
@@ -67,7 +77,7 @@ int main (int argc, char *argv[])
 		maxNumUpdateLoops    = 0;
 
 		timeLag += (currentTime - previousTime);
-		
+
 		while (timeLag >= msPerUpdate && maxNumUpdateLoops < MAX_FRAMESKIP)
 		{
 			sys_gameTickRun ();

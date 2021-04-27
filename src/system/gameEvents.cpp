@@ -13,6 +13,7 @@
 #include <gui/guiHighScore.h>
 #include <game/hud.h>
 #include <game/score.h>
+#include <gui/guiDeckView.h>
 #include "../../hdr/system/gameEvents.h"
 #include "../../hdr/classes/paraEvent.h"
 
@@ -211,6 +212,14 @@ void gam_processGameEventQueue ()
 				case EVENT_ACTION_END_LOST_SCREEN:
 					audio.stopAllChannels();
 					gam_decideScoreAction();
+					break;
+
+				case EVENT_ACTION_STOP_BLINK_TIMER:
+					gui_stopBlinkTimer();
+					break;
+
+				case EVENT_ACTION_START_BLINK_TIMER:
+					gui_startBlinkTimer(500);
 					break;
 			}
 

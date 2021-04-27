@@ -224,8 +224,11 @@ void sys_gameTickRun ()
 
 				gam_checkPlayerHealth ();
 				gam_weaponRechargePlayer ();
+				gam_checkBumpCounter();
 
-				debug_getNumberOfShapes();
+				gam_createTrail ();
+
+//				debug_getNumberOfShapes();
 			}
 			else
 			{

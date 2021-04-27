@@ -271,6 +271,9 @@ void trn_transferIntoDroid ()
 		//
 		// Destroy the droid
 		g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth = -10;
+
+		gam_checkActionWitness();
+
 //		gam_damageToDroid (playerDroid.transferTargetDroidIndex, PHYSIC_DAMAGE_BULLET, -1);
 	}
 	else

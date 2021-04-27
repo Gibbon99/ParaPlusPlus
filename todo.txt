@@ -2,8 +2,6 @@ BUGS
 --------
 BUG - Background sound can stop playing
 BUG - Transfer screen one - shows player droid at wrong position on start
-BUG - Door sound can not play - too many at once?? Put in counter in playDoor routine to limit consecutive number
-
 
 TO DO
 -------
@@ -15,10 +13,15 @@ Transfer - enemy AI - do based on priority of circuit types
 Droid AI - Attack
 Droid AI - Help
 Check bottom edge of animated tiles in graphics
-Blink player icon on deckview map
 Stop droids from continually ramming when on a aStar path
 Follow mode ? Droid follows exact tile path that player took? Array to store tile path? Use tiles as waypoints
+ - player - track a breadcrumb trail -- do coordinates as tile coords.
+ Hunt mode - when in attack mode, and lose sight, go into hunt - check current tile to see if it is one
+ in the player trail or not, if so, follow to player - until attack timer runs out
+
 Need debug mode to show path destination to track why aStar isn't working sometimes
+Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
+Deck view - Player icon location wrong on observation, airlock
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
@@ -131,6 +134,12 @@ DONE - BUG - Player bullets bouncing off droid when in collision - was droid to 
 DONE - BUG - Droids bullets are bouncing off each other, not being destroyed
 DONE - BUG - Player fade in low health disappears from view - alpha setting wrong - from bump damage?
 DONE - BUG - Highscore not working - always adding name when score is too low
+>Commit
+DONE - Added in AI routine to check and remedy when a droid can't follow a path
+DONE - Added counter to ignore bounce damage to player after maxCount
+DONE - Blink player icon on deckview map
+DONE - BUG - Door sound can not play - too many at once?? Put in counter in playDoor routine to limit consecutive number
+>Commit
 
 GUI
 ------

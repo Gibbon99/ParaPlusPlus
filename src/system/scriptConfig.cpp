@@ -62,7 +62,7 @@ void sys_scriptInitScriptFunctions ()
 
 	paraScriptInstance.addScriptFunction ("void as_handleDialogBoxes ()", "as_handleDialogBoxes");
 
-	paraScriptInstance.addScriptFunction("void as_handleHighscoreDisplay()", "as_handleHighscoreDisplay");
+	paraScriptInstance.addScriptFunction ("void as_handleHighscoreDisplay()", "as_handleHighscoreDisplay");
 
 	paraScriptInstance.addScriptFunction ("void as_refreshControlLabels()", "as_refreshControlLabels");
 	paraScriptInstance.addScriptFunction ("void as_refreshHighscoreLabels()", "as_refreshHighscoreLabels");
@@ -152,7 +152,9 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("float influenceTimeLeftWarning", &influenceTimeLeftWarning);
 	paraScriptInstance.addHostVariable ("int transferResultDelay", &transferResultDelay);
 
-	paraScriptInstance.addHostVariable("int playerDroidType", &playerDroid.droidType );
+	paraScriptInstance.addHostVariable ("int playerDroidType", &playerDroid.droidType);
+	paraScriptInstance.addHostVariable ("int maxNumBumps", &maxNumBumps);
+	paraScriptInstance.addHostVariable("float bounceCounterDelay", &bounceCounterDelay);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)

@@ -47,3 +47,6 @@ void gam_setHealthAnimation(int targetDroid);
 
 // See if droid is dead - set explosion sprite and change mode
 void gam_checkDroidHealth (droidClass *whichDroid);
+
+// See if a droid sees another droid get shot, or get transferred into
+void gam_checkActionWitness();

@@ -545,6 +545,10 @@ void gam_changeToDeck (string deckName, int whichLift)
 
 	// Sounds
 	gam_startAlertLevelSound (gam_getCurrentAlertLevel ());
+
+	// Player
+	gam_clearPlayerTrail();
+
 //	gam_checkPlayerHealth();    // See if low energy sound needs to restart
 }
 
