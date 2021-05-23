@@ -15,8 +15,8 @@ void as_handleDialogBoxes ()
 	{
 		// Destroy player
 		gam_setHudText ("hudMainMenu");
-		sys_setNewMode (MODE_GUI_MAINMENU, true);
 		as_paraGui.setCurrentDialogbox (NO_DIALOG_BOX);
+		playerDroidCurrentHealth -= 200;
 		return;
 	}
 }

@@ -140,6 +140,10 @@ DONE - Added counter to ignore bounce damage to player after maxCount
 DONE - Blink player icon on deckview map
 DONE - BUG - Door sound can not play - too many at once?? Put in counter in playDoor routine to limit consecutive number
 >Commit
+DONE - BUG - Fix bug passing in wrong coordinates when in hunt mode
+DONE - Random deck on start
+DONE - Fix up exiting game by resetting everything correctly for next restart
+DONE - BUG - Player can stop taking damage from bullets
 
 GUI
 ------

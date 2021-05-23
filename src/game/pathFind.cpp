@@ -214,6 +214,9 @@ int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int newWhichDroid, std
 	double    distanceTest;
 	SDL_Thread *thread;
 
+
+	printf("Request new path : start [ %f %f ]\n\n", start.x, start.y);
+
 	start.x = static_cast<int>(start.x);
 	start.y = static_cast<int>(start.y);
 
@@ -258,6 +261,8 @@ int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int newWhichDroid, std
 			path[i].currentNodePtrClosedList = -1;
 			path[i].whichDroid               = newWhichDroid;
 			path[i].whichLevel               = whichLevel;
+			path[i].openNodes.clear();
+			path[i].closedNodes.clear();
 			path[i].openNodes.reserve (initialNumReserveNodes);
 			path[i].closedNodes.reserve (initialNumReserveNodes);
 
@@ -359,7 +364,8 @@ bool gam_AStarIsTileSolid (int tileIndex, int whichPath)
 	// TODO - why is whichlevel empty when whichpath is 0
 
 	if (tileIndex > static_cast<int>(shipdecks.at (path[whichPath].whichLevel).tiles.size ()))
-		sys_shutdownWithError (sys_getString ("Access outside size of tile array."));
+		return false;
+//		sys_shutdownWithError (sys_getString ("Access outside size of tile array."));
 
 	int whichTile = shipdecks.at (path[whichPath].whichLevel).tiles[tileIndex];
 
@@ -486,6 +492,9 @@ bool gam_AStarGenerateNewNode (int whichPath, int whichDirection)
 	if (path[whichPath].pathReady)
 		return true;
 
+//	if (path[whichPath].currentNodePtrClosedList == 0)
+//		return false;
+
 #ifdef DEBUG_ASTAR
 	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("---"));
 	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("Generate a new node based on the node with the current lowest cost."));
@@ -535,8 +544,8 @@ bool gam_AStarGenerateNewNode (int whichPath, int whichDirection)
 	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("See if the node is solid or not"));
 #endif
 
-	if (path[whichPath].whichLevel.size () < 2)
-		sys_shutdownWithError ("Attempting to use path with an invalid level name: gam_AStarGenerateNewNode");
+//	if (path[whichPath].whichLevel.size () < 2)
+//		sys_shutdownWithError ("Attempting to use path with an invalid level name: gam_AStarGenerateNewNode");
 
 	if (gam_AStarIsTileSolid (static_cast<int>((tempNode.tileLocation.y * (shipdecks.at (path[whichPath].whichLevel).levelDimensions.x) + tempNode.tileLocation.x)), whichPath))
 	{

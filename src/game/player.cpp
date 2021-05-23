@@ -360,6 +360,11 @@ void gam_checkPlayerHealth ()
 void gam_damageToPlayer (int damageSource, int sourceDroid)
 //-----------------------------------------------------------------------------------------------------------------
 {
+
+#ifdef MY_DEBUG
+	printf ("DamageToPlayer : damageSource [ %i ] sourceDroid [ %i ]\n\n", damageSource, sourceDroid);
+#endif
+
 	switch (damageSource)
 	{
 		case PHYSIC_DAMAGE_BUMP:

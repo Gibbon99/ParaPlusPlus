@@ -151,7 +151,7 @@ void gam_processGameEventQueue ()
 
 				case EVENT_ACTION_DAMAGE_TO_DROID:
 
-					printf("Damage to droid\n");
+					printf("Damage to droid - got EVENT_ACTION_DAMAGE_TO_DROID - call gam_damageToDroid\n");
 
 					gam_damageToDroid (sys_convertToInt (tempEvent->gameText1), sys_convertToInt (tempEvent->gameText2), sys_convertToInt (tempEvent->gameText3));
 					break;

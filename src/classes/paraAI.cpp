@@ -42,6 +42,7 @@ std::string paraAI::getString (int whichMode)
 		case AI_MODE_PATROL:
 			return "AI_MODE_PATROL";
 			break;
+
 		case AI_MODE_HUNT:
 			return "AI_MODE_HUNT";
 			break;
@@ -59,7 +60,7 @@ std::string paraAI::getString (int whichMode)
 			break;
 	}
 
-	return ("Unknown AI_MODE");
+	return (sys_getString("Unknown AI_MODE - mode [ %i ]", whichMode));
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -851,7 +852,7 @@ void paraAI::changeModeTo (int newAIMode)
 
 			localWorldPosInPixels = sys_convertToPixels (worldPositionInMeters);
 
-			aStarIndex = gam_requestNewPath (b2Vec2{localWorldPosInPixels.x, localWorldPosInPixels.y}, tileDestination, arrayIndex, gam_getCurrentDeckName ());
+			aStarIndex = gam_requestNewPath (b2Vec2{localWorldPosInPixels.x / tileSize, localWorldPosInPixels.y / tileSize}, tileDestination, arrayIndex, gam_getCurrentDeckName ());
 			if (PATH_TOO_SHORT == aStarIndex)
 			{
 #ifdef DEBUG_AI
@@ -865,6 +866,9 @@ void paraAI::changeModeTo (int newAIMode)
 			break;
 
 		default:   // Keep compiler happy
+
+		printf("ERROR: Have set an invalid AI mode.\n");
+
 			break;
 
 	}
@@ -907,6 +911,9 @@ void paraAI::checkScores ()
 		return;
 	//
 	// Change to new mode
+	if (scoreMemory == AI_MODE_NUMBER)
+		sys_shutdownWithError ("Invalid AI mode - too great");
+
 	changeModeTo (scoreMemory);
 
 #ifdef DEBUG_AI
@@ -1083,6 +1090,10 @@ void paraAI::process (b2Vec2 newWorldPosInMeters)
 
 		case AI_MODE_HUNT:
 			hunt ();
+			break;
+
+		default:
+			printf("ERROR: Process invalid AI mode [ %i ]\n", currentAIMode);
 			break;
 	}
 }

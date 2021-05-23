@@ -153,6 +153,7 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("int transferResultDelay", &transferResultDelay);
 
 	paraScriptInstance.addHostVariable ("int playerDroidType", &playerDroid.droidType);
+	paraScriptInstance.addHostVariable ("int playerDroidCurrentHealth", &playerDroid.currentHealth);
 	paraScriptInstance.addHostVariable ("int maxNumBumps", &maxNumBumps);
 	paraScriptInstance.addHostVariable("float bounceCounterDelay", &bounceCounterDelay);
 }

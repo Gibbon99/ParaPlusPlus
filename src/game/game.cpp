@@ -6,6 +6,8 @@
 #include <game/particles.h>
 #include <system/gameEvents.h>
 #include <game/alertLevel.h>
+#include <ctime>
+#include <classes/paraRandom.h>
 #include "game/shipDecks.h"
 #include "game/game.h"
 
@@ -13,30 +15,52 @@ int explosionDamage;
 
 //-------------------------------------------------------------------------------------------------------------
 //
-// Start a new game
-void gam_startNewGame()
+// Start on a random deck - lift 0
+std::string gam_returnStartingDeck ()
 //-------------------------------------------------------------------------------------------------------------
 {
-	renderer.clearTextures();
+	std::vector<std::string> randomDeckNames;
+	paraRandom               randDeckName;
+
+	int randomIndex;
+
+	randomDeckNames.emplace_back ("Stores");
+	randomDeckNames.emplace_back ("Staterooms");
+	randomDeckNames.emplace_back ("Repairs");
+	randomDeckNames.emplace_back ("Quarters");
+	randomDeckNames.emplace_back ("Research");
+
+	randomIndex = randDeckName.get (0, static_cast<int>(randomDeckNames.size () - 1));
+	return randomDeckNames[randomIndex];
+
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
+// Start a new game
+void gam_startNewGame ()
+//-------------------------------------------------------------------------------------------------------------
+{
+	renderer.clearTextures ();
 	gam_resetDroids ();
 	playerDroid.currentMode = DROID_MODE_NORMAL;
 	gam_setupPlayerDroid ();
-	gam_initScoreValues();
+	gam_initScoreValues ();
 	gam_setAlertLevel (ALERT_GREEN_TILE);
 
-	gam_changeToDeck ("Stores", 0);
+	gam_changeToDeck (gam_returnStartingDeck (), 0);
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //
 // Process game over event
-void gam_processGameOver()
+void gam_processGameOver ()
 //-------------------------------------------------------------------------------------------------------------
 {
 	if (playerDroid.sprite.animate ())      // Has the animation finished playing
 	{
 		playerDroid.currentMode = DROID_MODE_DEAD;
 		sys_setNewMode (MODE_END_PRE_LOST_SCREEN, false);
-		gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP_ALL, false, 0, 0, "");
+		gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP_ALL, false, 0, 0, "");
 	}
 }

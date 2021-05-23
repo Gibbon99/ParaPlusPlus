@@ -200,7 +200,14 @@ void gam_renderDroids (std::string levelName)
 					droidItr.sprite.setTintColor (255, 255, 255);  // Full color for explosion
 
 				if (droidItr.visibleToPlayer)
+				{
 					droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0, static_cast<Uint8>(droidItr.visibleValue));
+#ifdef MY_DEBUG
+					fontClass.use ("guiFont");
+					fontClass.render (renderer.renderer, droidScreenPosition.x, droidScreenPosition.y, 0, 0, 0, 255, droidItr.droidName + " " + droidItr.ai.getString (droidItr.ai.getCurrentMode()));
+#endif
+				}
+//				droidItr.ai.getCurrentMode()
 
 //				droidItr.ai.renderVelocity ();
 
@@ -293,6 +300,11 @@ void gam_processCollision (int droidA)
 {
 	if (g_shipDeckItr->second.droid[droidA].currentMode == DROID_MODE_NORMAL)
 	{
+		if (g_shipDeckItr->second.droid[droidA].userData == nullptr)
+		{
+			printf("Error: Userdata is set to null - droid [ %i ]\n", droidA);
+			return;
+		}
 		if (g_shipDeckItr->second.droid[droidA].userData->ignoreCollision)
 			return;
 
@@ -401,11 +413,14 @@ void gam_checkActionWitness()
 void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
-	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_NORMAL)
-		return;
-
 
 	printf ("gam_damageToDroid target %i damageSource %i sourceDroid %i\n", targetDroid, damageSource, sourceDroid);
+
+
+//	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_NORMAL)
+//		return;
+
+
 
 
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 64, 127, "damage");

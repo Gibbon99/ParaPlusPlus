@@ -823,7 +823,7 @@ void as_createGUI()
     playerFriction = 0.7;
     gravity = 100.0;
     doorAnimSpeed = 1.0f;
-    numAStarPaths = 8;
+    numAStarPaths = 16;
     collisionLimit = 3;
     collisionCount = 6.0;
     bulletDensity = 0.1f;
