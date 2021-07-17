@@ -518,7 +518,7 @@ void paraAI::getNextAStarDestination ()
 		switch (currentAIMode)
 		{
 			case AI_MODE_HEAL:
-				currentAIMode   = AI_MODE_NUMBER;     // Set to something not AI_MODE_PATROL, otherwise the match stops the change happening
+				currentAIMode   = AI_MODE_PATROL;     // Set to something not AI_MODE_PATROL, otherwise the match stops the change happening
 				patrolAction    = FIND_WAYPOINT;
 				currentVelocity = {0, 0};
 				//
@@ -530,7 +530,7 @@ void paraAI::getNextAStarDestination ()
 
 				// Clear heal mode
 				modifyScore (AI_MODE_HEAL, -100);  // Reset to zero - should be fully healed
-//				modifyScore (AI_MODE_PATROL, +20);
+				modifyScore (AI_MODE_PATROL, +20);
 				//
 				// Fully heal
 				g_shipDeckItr->second.droid[arrayIndex].currentHealth = dataBaseEntry[g_shipDeckItr->second.droid[arrayIndex].droidType].maxHealth;    // Need another way of doing this
@@ -542,7 +542,7 @@ void paraAI::getNextAStarDestination ()
 				break;
 
 			case AI_MODE_FLEE:
-				currentAIMode   = AI_MODE_NUMBER;     // Set to something not AI_MODE_PATROL, otherwise the match stops the change happening
+				currentAIMode   = AI_MODE_PATROL;     // Set to something not AI_MODE_FLEE, otherwise the match stops the change happening
 				patrolAction    = FIND_WAYPOINT;
 				currentVelocity = {0, 0};
 				//
@@ -554,7 +554,7 @@ void paraAI::getNextAStarDestination ()
 
 				// Clear flee mode
 				modifyScore (AI_MODE_FLEE, -100);  // Reset to zero - have reached the flee tile
-//				modifyScore (AI_MODE_PATROL, +20);   // Go back to patrolling
+				modifyScore (AI_MODE_PATROL, +20);   // Go back to patrolling
 
 				break;
 
@@ -578,6 +578,12 @@ void paraAI::getNextAStarDestination ()
 #ifdef DEBUG_AI
 						std::cout << "[ " << arrayIndex << " ]" << " Finished following ASTAR - change back to NORMAL_PATROL : " << getString (currentAIMode) << std::endl;
 #endif
+						break;
+
+					case FIND_WAYPOINT:
+
+						sys_shutdownWithError ("Do this action");
+
 						break;
 				}
 
@@ -907,12 +913,18 @@ void paraAI::checkScores ()
 			scoreMemory  = i;
 		}
 	}
-	if (scoreMemory == currentAIMode)     // already doing highest score action
-		return;
+
 	//
 	// Change to new mode
 	if (scoreMemory == AI_MODE_NUMBER)
-		sys_shutdownWithError ("Invalid AI mode - too great");
+		changeModeTo (AI_MODE_PATROL);
+//		sys_shutdownWithError ("Invalid AI mode - too great");
+
+
+	if (scoreMemory == currentAIMode)     // already doing highest score action
+	{
+		return;
+	}
 
 	changeModeTo (scoreMemory);
 
@@ -1295,6 +1307,8 @@ void paraAI::checkTimestamp ()
 				findLocationWithLOS (LOCATION_WAYPOINT);
 				printf ("Too long in FLEE - reset\n");
 
+				changeModeTo (AI_MODE_PATROL);
+
 				break;
 
 			case AI_MODE_HEAL:
@@ -1304,6 +1318,8 @@ void paraAI::checkTimestamp ()
 
 				findLocationWithLOS (LOCATION_WAYPOINT);
 				printf ("Too long in HEAL - reset\n");
+
+				changeModeTo (AI_MODE_PATROL);
 
 				break;
 		}

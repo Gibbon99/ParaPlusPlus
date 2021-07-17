@@ -3,6 +3,8 @@
 #include <system/util.h>
 #include "gui/guiScrollbox.h"
 
+#define CLIP_SCROLLBOX 1        // Use either fade on/off or clip the text to the scrollbox background
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a scrollbox
@@ -85,8 +87,20 @@ void gui_renderScrollbox (std::string whichScrollbox, double interpolate)
 		drawPositionY += gui.getPreviousScrollY (objectIndex);
 	}
 
+#ifdef CLIP_SCROLLBOX
+	SDL_Rect    clipRect;
+
+	clipRect.h = bb.y2 - bb.y1;
+	clipRect.w = bb.x2 - bb.x1;
+	clipRect.x = bb.x1;
+	clipRect.y = bb.y1;
+
+	SDL_RenderSetClipRect(renderer.renderer, &clipRect);
+#endif
+
 	for (auto lineItr = gui.getRBegin (objectIndex); lineItr != gui.getREnd (objectIndex); ++lineItr)
 	{
+#ifndef CLIP_SCROLLBOX
 		lineAlpha = fontColor.a;
 
 		if (lineCount == 0)
@@ -103,16 +117,34 @@ void gui_renderScrollbox (std::string whichScrollbox, double interpolate)
 		{
 			lineAlpha = 255.0 - (alphaStep * gui.getScrollY (objectIndex));
 		}
-	renderPosX = bb.x1; // + gapSize / 2.0
+#endif
 
+	renderPosX = bb.x1;
+
+#ifdef CLIP_SCROLLBOX
+	renderPosY = ((bb.y2) - (lineCount * fontClass.height()) - drawPositionY);
+#else
 	renderPosY = ((bb.y2 - fontClass.height()) - (lineCount * fontClass.height()) - drawPositionY);
+#endif
 
+#ifdef CLIP_SCROLLBOX
+	fontClass.render(renderer.renderer, renderPosX, renderPosY, fontColor.r, fontColor.g, fontColor.b, 250, lineItr->c_str());
+#else
 	fontClass.render(renderer.renderer, renderPosX, renderPosY, fontColor.r, fontColor.g, fontColor.b, static_cast<Uint8>(lineAlpha), lineItr->c_str());
+#endif
 
 	lineCount++;
+#ifdef CLIP_SCROLLBOX
+	if (lineCount == gui.getNumberPrintLines(objectIndex) + 2)
+#else
 	if (lineCount == gui.getNumberPrintLines(objectIndex) - 1)
+#endif
 		break;
 	}
+
+	//
+	// Disable clipping
+	SDL_RenderSetClipRect(renderer.renderer, nullptr);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

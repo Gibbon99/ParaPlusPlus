@@ -1,7 +1,8 @@
 BUGS
 --------
-BUG - Background sound can stop playing
+BUG - Background sound can stop playing  - after transfer game
 BUG - Transfer screen one - shows player droid at wrong position on start
+BUG - Player remained blue after transfer lost
 
 TO DO
 -------
@@ -144,6 +145,8 @@ DONE - BUG - Fix bug passing in wrong coordinates when in hunt mode
 DONE - Random deck on start
 DONE - Fix up exiting game by resetting everything correctly for next restart
 DONE - BUG - Player can stop taking damage from bullets
+>Commit
+DONE - Use SDL_CLIPRECT for scroll boxes - use CLIP_SCROLLBOX define to switch on or off
 
 GUI
 ------
