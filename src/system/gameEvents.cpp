@@ -150,9 +150,6 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_DAMAGE_TO_DROID:
-
-					printf("Damage to droid - got EVENT_ACTION_DAMAGE_TO_DROID - call gam_damageToDroid\n");
-
 					gam_damageToDroid (sys_convertToInt (tempEvent->gameText1), sys_convertToInt (tempEvent->gameText2), sys_convertToInt (tempEvent->gameText3));
 					break;
 
@@ -220,6 +217,10 @@ void gam_processGameEventQueue ()
 
 				case EVENT_ACTION_START_BLINK_TIMER:
 					gui_startBlinkTimer(500);
+					break;
+
+				case EVENT_ACTION_START_BACKGROUND_SOUND:
+					gam_startAlertLevelSound (gam_getCurrentAlertLevel());
 					break;
 			}
 

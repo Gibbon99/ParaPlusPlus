@@ -56,3 +56,6 @@ void gam_clearPlayerTrail();
 
 // Return the coordinates from the last position in the trial array
 b2Vec2 gam_getLastPlayerTrail();
+
+// Reset the Influence time flag - so player doesn't change color
+void gam_resetInfluenceTimeLeftFlag();

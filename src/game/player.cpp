@@ -322,7 +322,7 @@ void gam_checkPlayerHealth ()
 		return;
 	}
 
-	dangerHealthLevel     = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
+	dangerHealthLevel = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
 
 	if (playerDroid.currentHealth < static_cast<int>(dangerHealthLevel))
 	{
@@ -402,6 +402,15 @@ void gam_setInfluenceTimelimit (int targetDroidClass)
 //-----------------------------------------------------------------------------------------------------------------
 {
 	playerDroid.influenceTimeLeft    = influenceTimelimit - (static_cast<float>(targetDroidClass) * 2);
+	playerDroid.lowInfluenceTimeleft = false;
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+//
+// Reset the Influence time flag - so player doesn't change color
+void gam_resetInfluenceTimeLeftFlag()
+//-----------------------------------------------------------------------------------------------------------------
+{
 	playerDroid.lowInfluenceTimeleft = false;
 }
 

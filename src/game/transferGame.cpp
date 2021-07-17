@@ -1,5 +1,6 @@
 #include <game/player.h>
 #include <game/database.h>
+#include <game/alertLevel.h>
 #include "game/hud.h"
 #include "system/util.h"
 #include "gui/guiLanguage.h"
@@ -61,12 +62,6 @@ void trn_processEndOfTransferGame ()
 	//
 	// Wait for circuits to stop being active
 	//
-	for (auto &transferItr : transferRows)
-	{
-//		transferItr.leftSideActiveIsOn = false;
-//		transferItr.rightSideActiveIsOn = false;
-	}
-
 	while (!okToProceed)
 	{
 		okToProceed = trn_checkForActiveCircuits ();
@@ -117,6 +112,7 @@ void trn_processEndOfTransferGame ()
 		sys_setNewMode(MODE_TRANSFER_RESULT, false);
 		gam_setHudText ("transferFailed");
 		sys_addEvent(EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, transferResultDelay, to_string(MODE_GAME)+"|"+to_string(true));
+		sys_addEvent(EVENT_TYPE_GAME, EVENT_ACTION_START_BACKGROUND_SOUND, transferResultDelay, to_string(MODE_GAME)+"|"+to_string(true));
 		return;
 	}
 	//
@@ -139,6 +135,7 @@ void trn_processEndOfTransferGame ()
 	sys_setNewMode (MODE_TRANSFER_RESULT, false);
 	gam_setHudText ("transferred");
 	sys_addEvent(EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, transferResultDelay, to_string(MODE_GAME)+"|"+to_string(true));
+	sys_addEvent(EVENT_TYPE_GAME, EVENT_ACTION_START_BACKGROUND_SOUND, transferResultDelay, to_string(MODE_GAME)+"|"+to_string(true));
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -218,9 +215,6 @@ void trn_processTransferGame ()
 		{
 			transferTimeoutCountdown = transferTimeOut;
 			trn_processEndOfTransferGame ();
-
-			printf("Finished with transfer game - delay countdown\n");
-
 			return;
 		}
 	}
@@ -282,5 +276,6 @@ void trn_transferIntoDroid ()
 		gam_setupPlayerDroid ();
 		playerDroid.currentHealth = dataBaseEntry[0].maxHealth / 4;
 		gam_checkPlayerHealth();    // Set animation speed
+		gam_resetInfluenceTimeLeftFlag();   // Don't draw in blue if in low influence time and fail transfer
 	}
 }
