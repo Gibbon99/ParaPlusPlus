@@ -35,7 +35,7 @@ enum doorBulletDirection
 //
 //-----------------------------------------------------------------------------
 
-typedef struct
+struct _doorTrigger
 {
 	int            tileIndex;
 	float          height;
@@ -58,7 +58,7 @@ typedef struct
 	b2FixtureDef   fixtureDef;
 	b2Body         *body;
 	_userData      *userData;
-} _doorTrigger;
+};
 
 extern float distanceForDoorSoundMax;
 extern double doorAnimSpeed;

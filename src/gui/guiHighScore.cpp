@@ -1,21 +1,20 @@
+#include <array>
 #include <system/startup.h>
 #include <system/util.h>
 #include <game/hud.h>
-#include <gui/guiLanguage.h>
 #include <game/score.h>
 #include "io/logFile.h"
 #include "gui/guiHighScore.h"
 
 struct highScore
 {
-	int  scoreValue = 0;
-	char nameValue[4]{};
+	public:
+		int  scoreValue{};
+		char nameValue[4]{};
 };
 
 std::string                               highScoreFilename = "highscore.dat";
-typedef std::array<highScore, NUM_HIGHSCORE_ROWS> highScoreTable1;
-
-highScoreTable1 highScoreTable;
+std::array<highScore, NUM_HIGHSCORE_ROWS> highScoreTable{};
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -115,7 +114,7 @@ void gui_readHighScore ()
 		for (int i = 0; i != NUM_HIGHSCORE_ROWS; i++)
 		{
 			highScoreTable[i].scoreValue = i * 1000;
-			strcpy (highScoreTable[i].nameValue, "DAB");
+			strcpy_s (highScoreTable[i].nameValue, "DAB");
 		}
 		gui_writeHighScore ();
 	}
@@ -150,7 +149,7 @@ void gui_insertNewScore (string newName)
 		}
 
 		highScoreTable.begin ()->scoreValue = newScore;
-		strcpy (highScoreTable.begin ()->nameValue, newName.c_str ());
+		strcpy_s (highScoreTable.begin ()->nameValue, newName.c_str ());
 
 		paraScriptInstance.run ("as_refreshHighscoreLabels", "");
 		return;
@@ -167,7 +166,7 @@ void gui_insertNewScore (string newName)
 		else
 		{
 			highScoreTable[scoreIndex].scoreValue = newScore;
-			strcpy (highScoreTable[scoreIndex].nameValue, newName.c_str ());
+			strcpy_s (highScoreTable[scoreIndex].nameValue, newName.c_str ());
 			paraScriptInstance.run ("as_refreshHighscoreLabels", "");
 			return;
 		}

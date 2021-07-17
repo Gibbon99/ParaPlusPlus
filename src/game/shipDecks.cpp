@@ -57,33 +57,33 @@ void gam_setInfluenceValues (b2Vec2 startPos, int value, int size)
 
 	finalSize = size * 2;
 
-	influenceMap[startPos.y * (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + startPos.x] = value;
+	influenceMap[(unsigned int)startPos.y * (unsigned int)(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int)startPos.x] = value;
 
-	topRight.x = startPos.x + size;
-	topRight.y = startPos.y + size;
+	topRight.x = startPos.x + (float)size;
+	topRight.y = startPos.y + (float)size;
 
 	for (auto i = 0; i != finalSize; i++)
 	{
 		topRight.y--;
-		influenceMap[topRight.y * (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + topRight.x] = value;
+		influenceMap[(unsigned int)topRight.y * (unsigned int)(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int)topRight.x] = value;
 	}
 
 	for (auto i = 0; i != finalSize; i++)
 	{
 		topRight.x--;
-		influenceMap[topRight.y * (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + topRight.x] = value;
+		influenceMap[(unsigned int)topRight.y * (unsigned int)(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int)topRight.x] = value;
 	}
 
 	for (auto i = 0; i != finalSize; i++)
 	{
 		topRight.y++;
-		influenceMap[topRight.y * (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + topRight.x] = value;
+		influenceMap[(unsigned int)topRight.y * (unsigned int)(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int)topRight.x] = value;
 	}
 
 	for (auto i = 0; i != finalSize; i++)
 	{
 		topRight.x++;
-		influenceMap[topRight.y * (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + topRight.x] = value;
+		influenceMap[(unsigned int)topRight.y * (unsigned int)(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int)topRight.x] = value;
 	}
 }
 
@@ -97,12 +97,11 @@ void gam_populateInfluenceMap (b2Vec2 playerPositionInPixels)
 
 	std::fill (influenceMap.begin (), influenceMap.end (), 0);
 
-	newPosition.x = static_cast<int>(playerPositionInPixels.x) / tileSize;
-	newPosition.y = static_cast<int>(playerPositionInPixels.y) / tileSize;
+	newPosition.x = (playerPositionInPixels.x) / static_cast<float>(tileSize);
+	newPosition.y = (playerPositionInPixels.y) / static_cast<float>(tileSize);
 
 	gam_setInfluenceValues (newPosition, 15, 2);
 	gam_setInfluenceValues (newPosition, 25, 1);
-//	gam_setInfluenceValues (newPosition, 20, 3);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -113,7 +112,7 @@ void gam_createInfluenceMap ()
 {
 	//
 	// Create the influence map and set to 0 values
-	influenceMap.resize (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x * shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.y);
+	influenceMap.resize (static_cast<int>(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) * static_cast<int>(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.y));
 	std::fill (influenceMap.begin (), influenceMap.end (), 0);
 }
 
@@ -126,19 +125,19 @@ void gam_debugInfluenceMap ()
 	int    influenceValue;
 	b2Vec2 drawPosition;
 
-	for (auto countY = 0; countY != shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.y; countY++)
+	for (auto countY = 0; countY != static_cast<int>(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.y); countY++)
 	{
-		for (auto countX = 0; countX != shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x; countX++)
+		for (auto countX = 0; countX != static_cast<int>(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x); countX++)
 		{
-			influenceValue = influenceMap[(countY * shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + countX];
+			influenceValue = influenceMap[(countY * static_cast<unsigned int>(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x)) + countX];
 			if (influenceValue > 0)
 			{
-				drawPosition.x = countX * tileSize;
-				drawPosition.y = countY * tileSize;
+				drawPosition.x = static_cast<float>(countX * tileSize);
+				drawPosition.y = static_cast<float>(countY * tileSize);
 
 				drawPosition = sys_worldToScreen (drawPosition, tileSize);
 
-				boxRGBA (renderer.renderer, drawPosition.x, drawPosition.y, drawPosition.x + tileSize, drawPosition.y + tileSize, 30 + ((influenceValue / 10) * 40), 0, 0, 60);
+				boxRGBA (renderer.renderer, static_cast<short int>(drawPosition.x), static_cast<short int>(drawPosition.y), static_cast<short int>(drawPosition.x + static_cast<float>(tileSize)), static_cast<short int>(drawPosition.y + static_cast<float>(tileSize)), 30 + ((influenceValue / 10) * 40), 0, 0, 60);
 			}
 		}
 	}
@@ -191,26 +190,26 @@ void gam_addPaddingToLevel (const std::string fileName)
 	int              destX, destY;
 	std::string      levelName;
 
-	drawOffset.x = (gameWinWidth / tileSize);
-	drawOffset.y = (gameWinHeight / tileSize);
+	drawOffset.x = static_cast<float>(gameWinWidth / tileSize);
+	drawOffset.y = static_cast<float>(gameWinHeight / tileSize);
 
-	destY = drawOffset.y / 2;
+	destY = static_cast<int>(drawOffset.y / 2);
 
 	tempDimensions.x = shipdecks.at (fileName).levelDimensions.x;
 	tempDimensions.y = shipdecks.at (fileName).levelDimensions.y;
 
-	tempLevel.reserve ((shipdecks.at (fileName).levelDimensions.x + drawOffset.x) * (shipdecks.at (fileName).levelDimensions.y + drawOffset.y));
+	tempLevel.reserve (static_cast<unsigned int>((shipdecks.at (fileName).levelDimensions.x + drawOffset.x) * (shipdecks.at (fileName).levelDimensions.y + drawOffset.y)));
 
-	tempLevel.assign ((shipdecks.at (fileName).levelDimensions.x + drawOffset.x) * (shipdecks.at (fileName).levelDimensions.y + drawOffset.y), 0);
+	tempLevel.assign (static_cast<unsigned int>((shipdecks.at (fileName).levelDimensions.x + drawOffset.x) * (shipdecks.at (fileName).levelDimensions.y + drawOffset.y)), 0);
 
-	for (countY = 0; countY != shipdecks.at (fileName).levelDimensions.y; countY++)
+	for (countY = 0; countY != static_cast<int>(shipdecks.at (fileName).levelDimensions.y); countY++)
 	{
-		destX = drawOffset.x / 2;
+		destX = static_cast<int>(drawOffset.x) / 2;
 
-		for (countX = 0; countX != shipdecks.at (fileName).levelDimensions.x; countX++)
+		for (countX = 0; countX != static_cast<int>(shipdecks.at (fileName).levelDimensions.x); countX++)
 		{
-			whichTile = shipdecks.at (fileName).tiles[(countY * shipdecks.at (fileName).levelDimensions.x) + countX];
-			tempLevel[(destY * (tempDimensions.x + drawOffset.x)) + destX] = whichTile;
+			whichTile = shipdecks.at (fileName).tiles[static_cast<unsigned int>((countY * static_cast<int>(shipdecks.at (fileName).levelDimensions.x)) + countX)];
+			tempLevel[static_cast<unsigned int>((destY * static_cast<int>((tempDimensions.x + drawOffset.x))) + destX)] = whichTile;
 			destX++;
 		}
 		destY++;
@@ -224,9 +223,9 @@ void gam_addPaddingToLevel (const std::string fileName)
 
 	shipdecks.at (fileName).tiles.clear ();
 
-	shipdecks.at (fileName).tiles.reserve (tempDimensions.x * tempDimensions.y);
+	shipdecks.at (fileName).tiles.reserve (static_cast<unsigned int>(tempDimensions.x * tempDimensions.y));
 
-	shipdecks.at (fileName).tiles.assign (tempDimensions.x * tempDimensions.y, 0);
+	shipdecks.at (fileName).tiles.assign (static_cast<unsigned int>(tempDimensions.x * tempDimensions.y), 0);
 
 	for (int i = 0; i != tempDimensions.x * tempDimensions.y; i++)
 	{
@@ -264,8 +263,8 @@ void gam_loadShipDeck (const std::string &fileName)
 		return;
 	}
 
-	drawOffset.x = gameWinWidth / 2;     // Padding to make tilePosX always positive
-	drawOffset.y = gameWinHeight / 2;    // Padding to make tilePosY always positive
+	drawOffset.x = static_cast<float>(gameWinWidth) / 2;     // Padding to make tilePosX always positive
+	drawOffset.y = static_cast<float>(gameWinHeight) / 2;    // Padding to make tilePosY always positive
 
 	fileSize = fileSystem.getFileSize (fileName);
 	if (fileSize < 0)
@@ -412,7 +411,7 @@ void gam_renderSingleTile (int destX, int destY, int tileIndex)
 	{
 		previousTileIndex = tileIndex;
 
-		sourceRect.x = static_cast<float>((tileIndex % numTileAcrossInTexture)) * tileSize;
+		sourceRect.x = static_cast<int>((tileIndex % numTileAcrossInTexture) * tileSize);
 		sourceRect.y = (tileIndex / numTilesDownInTexture) * tileSize;
 		sourceRect.w = tileSize;
 		sourceRect.h = tileSize; // - 1;
@@ -442,7 +441,7 @@ void gam_createDeckTexture (std::string deckName)
 	if (playfieldTexture != nullptr)
 		SDL_DestroyTexture (playfieldTexture);
 
-	playfieldTexture = SDL_CreateTexture (renderer.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, shipdecks.at (deckName).levelDimensions.x * tileSize, shipdecks.at (deckName).levelDimensions.y * tileSize);
+	playfieldTexture = SDL_CreateTexture (renderer.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, static_cast<int>(shipdecks.at (deckName).levelDimensions.x * tileSize), static_cast<int>(shipdecks.at (deckName).levelDimensions.y * tileSize));
 	if (nullptr == playfieldTexture)
 		sys_shutdownWithError (sys_getString ("Unable to create playfield texture [ %s ].", SDL_GetError ()));
 
@@ -450,24 +449,16 @@ void gam_createDeckTexture (std::string deckName)
 	SDL_SetRenderDrawColor (renderer.renderer, 0x00, 0x00, 0x00, 0x00);
 	SDL_RenderClear (renderer.renderer);
 
-	for (auto countY = 0; countY != shipdecks.at (deckName).levelDimensions.y; countY++)
+	for (auto countY = 0; countY != static_cast<int>(shipdecks.at (deckName).levelDimensions.y); countY++)
 	{
-		for (auto countX = 0; countX != shipdecks.at (deckName).levelDimensions.x; countX++)
+		for (auto countX = 0; countX != static_cast<int>(shipdecks.at (deckName).levelDimensions.x); countX++)
 		{
-			tileIndex = shipdecks.at (deckName).tiles[(countY * shipdecks.at (deckName).levelDimensions.x) + countX];
+			tileIndex = shipdecks.at (deckName).tiles[(countY * static_cast<int>(shipdecks.at (deckName).levelDimensions.x)) + countX];
 			if (tileIndex > 0)
 				gam_renderSingleTile (countX * tileSize, countY * tileSize, tileIndex);
 		}
 	}
 	SDL_SetRenderTarget (renderer.renderer, nullptr);
-
-/*
-	if (false == writeFile)
-	{
-		writeFile = true;
-		sys_saveTexture(renderer.renderer, playfieldTexture, "playField.bmp");
-	}
-*/
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -565,25 +556,24 @@ void gam_renderVisibleScreen (double interpolation)
 	SDL_Rect sourceRect;
 	b2Vec2   renderPosition{};
 
-	viewportRect.x = playerDroid.worldPosInPixels.x - (gameWinWidth / 2);
-	viewportRect.y = playerDroid.worldPosInPixels.y - (gameWinHeight / 2);
+	viewportRect.x = static_cast<int>(playerDroid.worldPosInPixels.x) - (gameWinWidth / 2);
+	viewportRect.y = static_cast<int>(playerDroid.worldPosInPixels.y) - (gameWinHeight / 2);
 	viewportRect.w = gameWinWidth;
 	viewportRect.h = gameWinHeight;
 
 	renderPosition.x = playerDroid.worldPosInPixels.x - playerDroid.previousWorldPosInPixels.x;
 	renderPosition.y = playerDroid.worldPosInPixels.y - playerDroid.previousWorldPosInPixels.y;
 
-	renderPosition *= interpolation;
+	renderPosition *= static_cast<float>(interpolation);
 	renderPosition.x += playerDroid.previousWorldPosInPixels.x;
 	renderPosition.y += playerDroid.previousWorldPosInPixels.y;
 
-	sourceRect.x = renderPosition.x - (gameWinWidth / 2);
-	sourceRect.y = renderPosition.y - (gameWinHeight / 2);
+	sourceRect.x = static_cast<int>(renderPosition.x) - (gameWinWidth / 2);
+	sourceRect.y = static_cast<int>(renderPosition.y) - (gameWinHeight / 2);
 	sourceRect.w = gameWinWidth;
 	sourceRect.h = gameWinHeight;
 
 	renderer.setCurrentBackingTexture (GAME_BACKING_TEXTURE);
-//	SDL_RenderSetLogicalSize (renderer.renderer, gameWinWidth, gameWinHeight);
 	//
 	// Rendercopy Float still uses Integer values for source...
 	SDL_RenderCopyF (renderer.renderer, playfieldTexture, &sourceRect, nullptr);
@@ -634,11 +624,11 @@ void gam_showWayPoints (const std::string levelName)
 		wallStartDraw  = sys_worldToScreen (wallStartDraw, 50);
 		wallFinishDraw = sys_worldToScreen (wallFinishDraw, 50);
 
-		thickLineRGBA (renderer.renderer, wallStartDraw.x, wallStartDraw.y, wallFinishDraw.x, wallFinishDraw.y, 3, 0, 0, 200, 55);
+		thickLineRGBA (renderer.renderer, static_cast<short int>(wallStartDraw.x), static_cast<short int>(wallStartDraw.y), static_cast<short int>(wallFinishDraw.x), static_cast<short int>(wallFinishDraw.y), 3, 0, 0, 200, 55);
 
-		roundedRectangleRGBA (renderer.renderer, wallStartDraw.x - 8, wallStartDraw.y - 8, wallStartDraw.x + 8, wallStartDraw.y + 8, 2, 0, 200, 0, 55);
+		roundedRectangleRGBA (renderer.renderer, static_cast<short int>(wallStartDraw.x) - 8, static_cast<short int>(wallStartDraw.y) - 8, static_cast<short int>(wallStartDraw.x) + 8, static_cast<short int>(wallStartDraw.y) + 8, 2, 0, 200, 0, 55);
 
-		roundedRectangleRGBA (renderer.renderer, wallFinishDraw.x - 4, wallFinishDraw.y - 4, wallFinishDraw.x + 4, wallFinishDraw.y + 4, 2, 0, 200, 0, 55);
+		roundedRectangleRGBA (renderer.renderer, static_cast<short int>(wallFinishDraw.x) - 4, static_cast<short int>(wallFinishDraw.y) - 4, static_cast<short int>(wallFinishDraw.x) + 4, static_cast<short int>(wallFinishDraw.y) + 4, 2, 0, 200, 0, 55);
 
 		indexCount++;
 	}

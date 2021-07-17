@@ -16,14 +16,14 @@
 #include "game/bullet.h"
 
 droidClass playerDroid;
-double     playerFriction;      // From script
+double     playerFriction;                  // From script
 float      influenceTimelimit;
 float      influenceTimelimtDelay;
 float      influenceTimeLeftWarning;
-int        bounceCounterTimeout = 0;       // How many bumps before ignoring them
+int        bounceCounterTimeout = 0;        // How many bumps before ignoring them
 int        bounceCounter        = 0;
-int        maxNumBumps;        // From script
-float      bounceCounterDelay;           // From script
+int        maxNumBumps;                     // From script
+float      bounceCounterDelay;              // From script
 
 static double angleCounter       = 1.0;
 int           radius             = 40;
@@ -475,7 +475,6 @@ void gam_processInfluenceTime ()
 void gam_createTrail ()
 //-----------------------------------------------------------------------------------------------------------------
 {
-
 	b2Vec2 tempPosition;
 
 	tempPosition = sys_convertToTiles (playerDroid.worldPosInPixels);
@@ -492,19 +491,13 @@ void gam_createTrail ()
 		{
 			playerTrail.push_back(tempPosition);
 
-			for (int i = playerTrail.size(); i != 0; i--)
-			{
-				playerTrail[i] = playerTrail[i - 1];
-			}
+			std::rotate(playerTrail.rbegin(), playerTrail.rbegin() + 1, playerTrail.rend());
 			playerTrail[0] = tempPosition;
 			return;
 		}
 		else    // Reached max size for trail
 		{
-			for (int i = playerTrail.size(); i != 0; i--)
-			{
-				playerTrail[i] = playerTrail[i - 1];
-			}
+			std::rotate(playerTrail.rbegin(), playerTrail.rbegin() + 1, playerTrail.rend());
 			playerTrail[0] = tempPosition;
 		}
 	}
