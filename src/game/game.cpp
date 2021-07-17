@@ -63,4 +63,7 @@ void gam_processGameOver ()
 		sys_setNewMode (MODE_END_PRE_LOST_SCREEN, false);
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP_ALL, false, 0, 0, "");
 	}
+
+	gui.restartScrollBox ("introScreen.scrollbox");
+	gui.restartScrollBox ("wonScreen.scrollbox");
 }
