@@ -72,3 +72,9 @@ void gam_removeWhichDroidPath(int newWhichDroid);
 
 // See if the path is a valid one
 bool gam_isAStarValid(int whichPath);
+
+// Draw all current aStar paths
+void gam_AStarDebugAllPaths();
+
+// Reset all path entries
+void gam_resetAllPaths ();

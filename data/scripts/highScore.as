@@ -56,7 +56,7 @@ void as_handleHighscoreDisplay()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Update the values in tehe GUI labels from the current score table
+// Update the values in the GUI labels from the current score table
 void as_refreshHighscoreLabels()
 //----------------------------------------------------------------------------------------------------------------------
 {

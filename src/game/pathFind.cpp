@@ -32,9 +32,9 @@ void gam_AStarDebugDraw (b2Vec2 lineStart, b2Vec2 lineFinish, int whichPath, int
 
 	thickLineRGBA (renderer.renderer, static_cast<Sint16>(lineStart.x), static_cast<Sint16>(lineStart.y), static_cast<Sint16>(lineFinish.x), static_cast<Sint16>(lineFinish.y), 3, 0, 0, 200, 255);
 
-	roundedRectangleRGBA (renderer.renderer, static_cast<Sint16>(lineStart.x - 8), static_cast<Sint16>(lineStart.y - 8), static_cast<Sint16>(lineStart.x + 8), static_cast<Sint16>(lineStart.y + 8), 2, 0, 200, 0, 255);
+	roundedRectangleRGBA (renderer.renderer, static_cast<Sint16>(lineStart.x - 8), static_cast<Sint16>(lineStart.y - 8), static_cast<Sint16>(lineStart.x + 8), static_cast<Sint16>(lineStart.y + 8), 2, 0, 200 + (10 * whichPath), 0, 255);
 
-	roundedRectangleRGBA (renderer.renderer, static_cast<Sint16>(lineFinish.x - 4), static_cast<Sint16>(lineFinish.y - 4), static_cast<Sint16>(lineFinish.x + 4), static_cast<Sint16>(lineFinish.y + 4), 2, 0, 200, 0, 255);
+	roundedRectangleRGBA (renderer.renderer, static_cast<Sint16>(lineFinish.x - 4), static_cast<Sint16>(lineFinish.y - 4), static_cast<Sint16>(lineFinish.x + 4), static_cast<Sint16>(lineFinish.y + 4), 2, 0, 200 + (10 * whichPath), 0, 255);
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -117,6 +117,20 @@ void gam_AStarDebugWayPoints (int whichPath)
 	gam_AStarDebugDraw (lineStart, lineFinish, whichPath, i);
 }
 
+//--------------------------------------------------------------------------------------------------------
+//
+// Draw all current aStar paths
+void gam_AStarDebugAllPaths()
+//--------------------------------------------------------------------------------------------------------
+{
+	for (int i = 0; i != static_cast<int>(path.size ()); i++)
+	{
+		if (path[i].isValid)
+		{
+			gam_AStarDebugWayPoints(i);
+		}
+	}
+}
 //--------------------------------------------------------------------------------------------------------
 //
 // Find the distance from one tile to the next - Manhatten distance
@@ -248,7 +262,7 @@ int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int newWhichDroid, std
 	}
 	//
 	// Find an unused path slot and use it
-	for (int   i = 0; i != static_cast<int>(path.size ()); i++)
+	for (int i = 0; i != static_cast<int>(path.size ()); i++)
 	{
 		if (!path[i].inUse)
 		{
@@ -718,12 +732,15 @@ void gam_AStarConvertToCoords (int whichPath)
 void gam_AStarRemovePath (int whichPath)
 //--------------------------------------------------------------------------------------------------------
 {
+	/*
 	if (!path[whichPath].inUse)
 	{
 		printf ("Error: Path not in use - can not remove. Path [ %i ]\n", whichPath);
 		return;
 	}
+*/
 
+	path[whichPath].isValid                  = false;
 	path[whichPath].pathReady                = false;
 	path[whichPath].wayPointsReady           = false;
 	path[whichPath].currentNodePtrClosedList = 0;

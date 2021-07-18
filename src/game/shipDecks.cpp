@@ -12,6 +12,7 @@
 #include <game/texture.h>
 #include <game/audio.h>
 #include <game/score.h>
+#include <game/pathFind.h>
 #include "game/shipDecks.h"
 #include "game/doors.h"
 #include "game/terminal.h"
@@ -548,6 +549,9 @@ void gam_changeToDeck (string deckName, int whichLift)
 
 	// Player
 	gam_clearPlayerTrail();
+
+	// TEST
+//	gam_resetAllPaths ();
 
 //	gam_checkPlayerHealth();    // See if low energy sound needs to restart
 }

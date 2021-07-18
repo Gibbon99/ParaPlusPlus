@@ -9,11 +9,13 @@
 struct highScore
 {
 	int  scoreValue = 0;
-	char nameValue[4];
+	char nameValue[4]{};
 };
 
 std::string                               highScoreFilename = "highscore.dat";
-std::array<highScore, NUM_HIGHSCORE_ROWS> highScoreTable{};
+typedef std::array<highScore, NUM_HIGHSCORE_ROWS> highScoreTable1;
+
+highScoreTable1 highScoreTable;
 
 //----------------------------------------------------------------------------------------------------------------------
 //

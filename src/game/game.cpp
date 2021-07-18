@@ -8,6 +8,7 @@
 #include <game/alertLevel.h>
 #include <ctime>
 #include <classes/paraRandom.h>
+#include <game/pathFind.h>
 #include "game/shipDecks.h"
 #include "game/game.h"
 
@@ -66,4 +67,5 @@ void gam_processGameOver ()
 
 	gui.restartScrollBox ("introScreen.scrollbox");
 	gui.restartScrollBox ("wonScreen.scrollbox");
+	gam_resetAllPaths ();
 }

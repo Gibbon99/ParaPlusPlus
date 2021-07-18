@@ -213,7 +213,8 @@ void sys_renderFrame (double interpolation)
 
 			if (d_showAStarPath)
 				// TODO: Put this in a loop and for each active path show it
-				gam_AStarDebugWayPoints (d_showPathIndex);
+				//gam_AStarDebugWayPoints (d_showPathIndex);
+				gam_AStarDebugAllPaths();
 
 			if (gui.getCurrentDialogbox () != NO_DIALOG_BOX)
 				gui_renderActiveDialogbox ();
