@@ -114,7 +114,11 @@ void gui_readHighScore ()
 		for (int i = 0; i != NUM_HIGHSCORE_ROWS; i++)
 		{
 			highScoreTable[i].scoreValue = i * 1000;
+#ifdef __WIN32__
 			strcpy_s (highScoreTable[i].nameValue, "DAB");
+#else
+			strcpy (highScoreTable[i].nameValue, "DAB");
+#endif
 		}
 		gui_writeHighScore ();
 	}
@@ -149,7 +153,11 @@ void gui_insertNewScore (string newName)
 		}
 
 		highScoreTable.begin ()->scoreValue = newScore;
+#ifdef __WIN32__
 		strcpy_s (highScoreTable.begin ()->nameValue, newName.c_str ());
+#else
+		strcpy (highScoreTable.begin ()->nameValue, newName.c_str ());
+#endif
 
 		paraScriptInstance.run ("as_refreshHighscoreLabels", "");
 		return;
@@ -166,7 +174,11 @@ void gui_insertNewScore (string newName)
 		else
 		{
 			highScoreTable[scoreIndex].scoreValue = newScore;
+#ifdef __WIN32__
 			strcpy_s (highScoreTable[scoreIndex].nameValue, newName.c_str ());
+#else
+			strcpy (highScoreTable[scoreIndex].nameValue, newName.c_str ());
+#endif
 			paraScriptInstance.run ("as_refreshHighscoreLabels", "");
 			return;
 		}
