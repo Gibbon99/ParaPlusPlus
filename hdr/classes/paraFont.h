@@ -20,6 +20,11 @@ struct __PARA_FONT
 class paraFont
 {
 public:
+
+	paraFont();
+
+	~paraFont();
+
 	bool load (int fontSize, std::string keyName, std::string fileName);
 
 	void close ();
@@ -42,14 +47,14 @@ public:
 
 	void render (SDL_Renderer *whichRenderer, double posX, double posY, int r, int g, int b, int a, std::string text);
 
-	SDL_FRect pos;
+	SDL_FRect pos{};
 
 private:
 	bool                               fontSystemAvailable = false;
 	TTF_Font                           *fontHandle         = nullptr;
 	PARA_Surface *surface                                  = nullptr;
 	PARA_Color   color                                     = {0, 0, 0, 0};
-	funcPtrIntStr                      funcOutput;
+	funcPtrIntStr                      funcOutput{};
 	std::string                        currentFont;
 	std::map<std::string, __PARA_FONT> fonts;
 };

@@ -71,7 +71,7 @@ void gam_AStarDebugNodes (int whichPath)
 
 		drawPosition = sys_worldToScreen (drawPosition, tileSize);
 
-		boxRGBA (renderer.renderer, static_cast<Sint16>(drawPosition.x), static_cast<Sint16>(drawPosition.y), static_cast<Sint16>(drawPosition.x + tileSize), static_cast<Sint16>(drawPosition.y + tileSize), 0, 0, 150, 128);
+//		boxRGBA (renderer.renderer, static_cast<Sint16>(drawPosition.x), static_cast<Sint16>(drawPosition.y), static_cast<Sint16>(drawPosition.x + tileSize), static_cast<Sint16>(drawPosition.y + tileSize), 0, 0, 150, 128);
 	}
 }
 
@@ -131,6 +131,7 @@ void gam_AStarDebugAllPaths()
 		}
 	}
 }
+
 //--------------------------------------------------------------------------------------------------------
 //
 // Find the distance from one tile to the next - Manhatten distance
@@ -191,7 +192,7 @@ static int gam_processAStarWithThread (void *ptr)
 {
 	int pathIndex;
 
-	pathIndex = reinterpret_cast<int>(ptr);
+//	pathIndex = reinterpret_cast<int>(ptr);
 
 	gam_AStarSearchThread (pathIndex);
 
@@ -204,6 +205,9 @@ static int gam_processAStarWithThread (void *ptr)
 bool gam_isAStarReady (int whichPath)
 //--------------------------------------------------------------------------------------------------------
 {
+	if (whichPath < 0)
+		return false;
+
 	return path[whichPath].pathReady;
 }
 
@@ -213,6 +217,9 @@ bool gam_isAStarReady (int whichPath)
 bool gam_isAStarValid (int whichPath)
 //--------------------------------------------------------------------------------------------------------
 {
+	if  (whichPath < 0)
+		return false;
+
 	return path[whichPath].isValid;
 }
 
@@ -229,7 +236,7 @@ int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int newWhichDroid, std
 	SDL_Thread *thread;
 
 
-	printf("Request new path : start [ %f %f ]\n\n", start.x, start.y);
+	printf("Request new path : start [ %f %f ] destination [  %f  %f  ]\n\n", start.x, start.y, destination.x, destination.y);
 
 	start.x = static_cast<int>(start.x);
 	start.y = static_cast<int>(start.y);
@@ -238,11 +245,12 @@ int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int newWhichDroid, std
 	destination.y = static_cast<int>(destination.y);
 
 	distanceTest = static_cast<double>(b2Distance (start, destination));
+	printf("Distance between points [ %f  ]\n", distanceTest);
 	if (distanceTest < 2) // 2 Tiles
-		return PATH_TOO_SHORT;
+		return ASTAR_PATH_TOO_SHORT;
 
 	if (gam_AStarIsTileSolid (static_cast<int>((start.y * (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + start.x))))
-		return PATH_TOO_SHORT; // Solid - don't use
+		return ASTAR_PATH_TOO_SHORT; // Solid - don't use
 
 	//
 	// Setup a number of paths ready to use
@@ -311,6 +319,9 @@ int gam_AStarFindLowestCostNode (int whichPath)
 	lowestCost           = 50000;
 	lowestNodeIndexArray = 0;
 
+//	if (whichPath < 0)
+//		return -1;
+
 	if (path[whichPath].openNodes.empty ())
 	{
 		con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("ERROR: No open nodes to search in gam_AStarFindLowestCostNode - path [ %i ]", whichPath));
@@ -346,6 +357,9 @@ void gam_AStarMoveNodeToClosedList (int whichPath, int whichNodeIndex)
 	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("Move open node [ %i ] to closedNode list", whichNodeIndex));
 #endif
 
+//	if (whichPath < 0)
+//		return;
+
 	tempNode = path[whichPath].openNodes[whichNodeIndex];
 	path[whichPath].closedNodes.push_back (tempNode);
 	path[whichPath].currentNodePtrClosedList = path[whichPath].closedNodes.size () - 1;
@@ -374,6 +388,9 @@ bool gam_AStarIsTileSolid (int tileIndex, int whichPath)
 {
 	if (tileIndex < 0)
 		return true;
+
+//	if (whichPath < 0)
+//		return true;
 
 	// TODO - why is whichlevel empty when whichpath is 0
 
@@ -462,6 +479,9 @@ bool gam_AStarIsTileSolid (int tileIndex)
 bool gam_AStarIsNodeInClosedList (int whichPath, b2Vec2 whichNode)
 //--------------------------------------------------------------------------------------------------------
 {
+	if (whichPath < 0)
+		return false;
+
 	whichNode.x = static_cast<int>(whichNode.x);
 	whichNode.y = static_cast<int>(whichNode.y);
 
@@ -479,6 +499,9 @@ bool gam_AStarIsNodeInClosedList (int whichPath, b2Vec2 whichNode)
 bool gam_AStarIsNodeInOpenList (int whichPath, b2Vec2 whichNode)
 //--------------------------------------------------------------------------------------------------------
 {
+	if (whichPath < 0)
+		return false;
+
 	whichNode.x = static_cast<int>(whichNode.x);
 	whichNode.y = static_cast<int>(whichNode.y);
 
@@ -502,6 +525,9 @@ bool gam_AStarGenerateNewNode (int whichPath, int whichDirection)
 	std::string directionStr;
 	_pathNode   tempNode;
 	int         moveTileCost = 10;
+
+	if (whichPath <  0)
+		return false;
 
 	if (path[whichPath].pathReady)
 		return true;
@@ -720,7 +746,7 @@ void gam_AStarConvertToCoords (int whichPath)
 		tempWaypoint.y /= tileSize;
 	}
 
-	return;
+//	return;
 
 	if (path[whichPath].wayPoints.size () > 4)
 		gam_AStarCompressWaypoints (whichPath);
@@ -732,6 +758,11 @@ void gam_AStarConvertToCoords (int whichPath)
 void gam_AStarRemovePath (int whichPath)
 //--------------------------------------------------------------------------------------------------------
 {
+	if (-1 == whichPath)
+	{
+		printf("ERROR: Attempting to remove invalid path.\n");
+		return;
+	}
 	/*
 	if (!path[whichPath].inUse)
 	{
@@ -846,10 +877,10 @@ void gam_removeWhichDroidPath (int newWhichDroid)
 		if (pathItr.whichDroid == newWhichDroid)
 		{
 
-			std::cout << "Removing aStar for droid : " << newWhichDroid << " path index : " << g_shipDeckItr->second.droid[newWhichDroid].ai.getAStarIndex () << std::endl;
+//			std::cout << "Removing aStar for droid : " << newWhichDroid << " path index : " << g_shipDeckItr->second.droid[newWhichDroid].ai.getAStarIndex () << std::endl;
 
-			gam_AStarRemovePath (g_shipDeckItr->second.droid[newWhichDroid].ai.getAStarIndex ());
-			g_shipDeckItr->second.droid[newWhichDroid].ai.setAStarIndex (-1);
+//			gam_AStarRemovePath (g_shipDeckItr->second.droid[newWhichDroid].ai.getAStarIndex ());
+//			g_shipDeckItr->second.droid[newWhichDroid].ai.setAStarIndex (-1);
 			pathItr.inUse = false;
 		}
 	}

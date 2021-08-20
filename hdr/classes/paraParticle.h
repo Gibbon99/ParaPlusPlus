@@ -22,13 +22,13 @@ public:
 
 	bool inUse ();
 
-	void setInUse(bool newState);
+	void setInUse (bool newState);
 
 	bool isDead (bool b);
 
 	Uint32 getAttachedBullet ();
 
-	bool isAttached();
+	bool isAttached ();
 
 	void setIsAttached (bool newState);
 
@@ -66,16 +66,14 @@ private:
 	int   particleTrailReduceRate        = 0;
 	int   particleSparkReduceRate        = 0;
 
-	bool                    isDeadFlag        = false;
-	bool                    isInUse           = false;
-	bool                    usePhysics        = true;
-//	bool                    useDirections     = true;
-	Uint32                  bulletLink        = 0;
-	bool                    attachedToBullet  = true;       // Use this to keep emitter alive until finished, as bullet is gone
-//	unsigned int            numParticlesAlive = 0;
-	unsigned int            type              = -1;
-	std::string             image             = "";
-	b2Vec2                  worldPos          = {0, 0};
+	bool                    isDeadFlag       = false;
+	bool                    isInUse          = false;
+	bool                    usePhysics       = true;
+	bool                    attachedToBullet = true;       // Use this to keep emitter alive until finished, as bullet is gone
+	unsigned int            type             = -1;
+	Uint32                  bulletLink       = 0;
+	std::string             image            = "";
+	b2Vec2                  worldPos         = {0, 0};
 	std::vector<__PARTICLE> particle;
 };
 

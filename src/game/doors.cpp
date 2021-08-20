@@ -42,10 +42,10 @@ void gam_doorCheckTriggerAreas ()
 	{
 		for (auto droidItr : g_shipDeckItr->second.droid)
 		{
-			if (droidItr.currentMode == DROID_MODE_NORMAL)
+			if (droidItr.getCurrentMode() == DROID_MODE_NORMAL)
 			{
-				if ((droidItr.worldPosInPixels.x + (SPRITE_SIZE / 2) > doorItr.topLeft.x) && (droidItr.worldPosInPixels.y + (SPRITE_SIZE / 2) > doorItr.topLeft.y) && (droidItr.worldPosInPixels.x + (SPRITE_SIZE / 2) < doorItr.botRight.x) &&
-				    (droidItr.worldPosInPixels.y + (SPRITE_SIZE / 2) < doorItr.botRight.y))
+				if ((droidItr.getWorldPosInPixels().x + (SPRITE_SIZE / 2) > doorItr.topLeft.x) && (droidItr.getWorldPosInPixels().y + (SPRITE_SIZE / 2) > doorItr.topLeft.y) && (droidItr.getWorldPosInPixels().x + (SPRITE_SIZE / 2) < doorItr.botRight.x) &&
+				(droidItr.getWorldPosInPixels().y + (SPRITE_SIZE / 2) < doorItr.botRight.y))
 				{
 					doorItr.inUse = true;
 				}
@@ -96,7 +96,7 @@ void gam_playDoorSound (int whichTrigger, std::string keyName)
 
 	//
 	// How far is player from this door - attenuate for distance
-	distanceToDoor         = b2Distance (sys_convertToMeters (doorTriggers[whichTrigger].worldPosition), sys_convertToMeters (playerDroid.worldPosInPixels));
+	distanceToDoor         = b2Distance (sys_convertPixelsToMeters (doorTriggers[whichTrigger].worldPosition), sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()));
 
 	if (distanceToDoor > distanceForDoorSoundMax)
 		distanceSoundLevel = 254;
@@ -107,7 +107,7 @@ void gam_playDoorSound (int whichTrigger, std::string keyName)
 	}
 	//
 	// Which side should the sound come from - attenuate for distance
-	if (doorTriggers[whichTrigger].worldPosition.x < playerDroid.worldPosInPixels.x)   // Door is to the left
+	if (doorTriggers[whichTrigger].worldPosition.x < playerDroid.getWorldPosInPixels().x)   // Door is to the left
 	{
 		if (distanceToDoor > distanceForDoorSoundMax)
 			distanceOrientation = 254;  // All the way to the left
@@ -274,6 +274,30 @@ void gam_renderDoorFrames ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Free memory used for userData
+void gam_doorFreeSensorMemory()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	for (auto sensorItr : doorBulletSensor)
+	{
+		delete sensorItr.userData;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Free memory used for door triggers
+void gam_doorFreeTriggerMemory()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	for (auto triggerItr : doorTriggers)
+	{
+//		delete triggerItr.userData;     // Trips address sanitizer on exit
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Create a door bullet sensor
 void gam_createDoorBulletSensor (unsigned long whichDoor)
 //----------------------------------------------------------------------------------------------------------------------
@@ -282,7 +306,7 @@ void gam_createDoorBulletSensor (unsigned long whichDoor)
 	doorBulletSensor[whichDoor].bodyDef.position.Set (doorBulletSensor[whichDoor].worldPosition.x / pixelsPerMeter, doorBulletSensor[whichDoor].worldPosition.y / pixelsPerMeter);
 	doorBulletSensor[whichDoor].body = sys_getPhysicsWorld ()->CreateBody (&doorBulletSensor[whichDoor].bodyDef);
 
-	doorBulletSensor[whichDoor].userData            = new _userData;
+	doorBulletSensor[whichDoor].userData            = new _userData;    // Free this on shutdown
 	doorBulletSensor[whichDoor].userData->userType  = PHYSIC_TYPE_DOOR_BULLET;
 	doorBulletSensor[whichDoor].userData->dataValue = (int) whichDoor;
 	doorBulletSensor[whichDoor].body->SetUserData (doorBulletSensor[whichDoor].userData);

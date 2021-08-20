@@ -858,7 +858,7 @@ int asCGarbageCollector::IdentifyGarbageWithCyclicRefs()
 
 		case breakCircles_init:
 		{
-			gcMap.MoveFirst (&gcMapCursor);
+			gcMap.MoveFirst(&gcMapCursor);
 			detectState = breakCircles_loop;
 
 			// If the application has requested a callback for detected circular references,
@@ -869,15 +869,15 @@ int asCGarbageCollector::IdentifyGarbageWithCyclicRefs()
 			{
 				while (gcMapCursor)
 				{
-					void          *gcObj = gcMap.GetKey (gcMapCursor);
-					asCObjectType *type  = gcMap.GetValue (gcMapCursor).type;
-					circularRefDetectCallbackFunc (type, gcObj, circularRefDetectCallbackParam);
+					void *gcObj = gcMap.GetKey(gcMapCursor);
+					asCObjectType *type = gcMap.GetValue(gcMapCursor).type;
+					circularRefDetectCallbackFunc(type, gcObj, circularRefDetectCallbackParam);
 
-					gcMap.MoveNext (&gcMapCursor, gcMapCursor);
+					gcMap.MoveNext(&gcMapCursor, gcMapCursor);
 				}
 
 				// Reset iterator
-				gcMap.MoveFirst (&gcMapCursor);
+				gcMap.MoveFirst(&gcMapCursor);
 			}
 		}
 		break;

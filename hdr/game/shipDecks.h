@@ -133,7 +133,7 @@ struct _deckStruct
 	std::vector<_liftBasic>    lifts;
 	paraLift                   liftClass;
 	std::vector<_basicHealing> healing;
-	std::vector<droidClass>    droid;
+	std::vector<paraDroid>    droid;
 
 	bool wallPhysicsCreated  = false;
 	bool droidPhysicsCreated = false;

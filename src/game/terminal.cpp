@@ -14,7 +14,7 @@ void gam_createTerminalSensor (unsigned long whichTerminal, int index)
 	terminals[whichTerminal].bodyDef.position.Set (terminals[whichTerminal].worldPosition.x / pixelsPerMeter, terminals[whichTerminal].worldPosition.y / pixelsPerMeter);
 	terminals[whichTerminal].body = sys_getPhysicsWorld ()->CreateBody (&terminals[whichTerminal].bodyDef);
 
-	terminals[whichTerminal].userData            = new _userData;
+	terminals[whichTerminal].userData            = new _userData;   // TODO: Free this on shutdown
 	terminals[whichTerminal].userData->userType  = PHYSIC_TYPE_TERMINAL;
 	terminals[whichTerminal].userData->dataValue = (int) index;
 	terminals[whichTerminal].body->SetUserData (terminals[whichTerminal].userData);
@@ -35,6 +35,7 @@ void gam_clearTerminals ()
 	{
 		if (terminalItr.userData != nullptr)
 			delete (terminalItr.userData);
+
 		if (terminalItr.body != nullptr)
 			sys_getPhysicsWorld ()->DestroyBody (terminalItr.body);
 	}

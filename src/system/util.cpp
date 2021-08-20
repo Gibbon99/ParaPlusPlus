@@ -1,3 +1,5 @@
+#include <game/doors.h>
+#include <game/terminal.h>
 #include "game/player.h"
 #include "game/transfer.h"
 #include "game/texture.h"
@@ -470,6 +472,9 @@ void sys_freeMemory ()
 		if (memoryItr.second.pointer != nullptr)
 			free (memoryItr.second.pointer);
 	}
+
+	gam_doorFreeSensorMemory();
+	gam_doorFreeTriggerMemory();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -526,7 +531,7 @@ b2Vec2 sys_worldToScreen (b2Vec2 worldPos, int shapeSize)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Convert coords to pixels from meters
-b2Vec2 sys_convertToMeters (b2Vec2 convertFrom)
+b2Vec2 sys_convertPixelsToMeters (b2Vec2 convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	b2Vec2 returnValue;
@@ -540,7 +545,7 @@ b2Vec2 sys_convertToMeters (b2Vec2 convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Convert coords from meters to pixels
-b2Vec2 sys_convertToPixels (b2Vec2 convertFrom)
+b2Vec2 sys_convertMetersToPixels (b2Vec2 convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	b2Vec2 returnValue;
@@ -554,7 +559,7 @@ b2Vec2 sys_convertToPixels (b2Vec2 convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Convert from pixels to tileSize coordinates
-b2Vec2 sys_convertToTiles (b2Vec2 convertFrom)
+b2Vec2 sys_convertPixelsToTiles (b2Vec2 convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	b2Vec2 returnValue;
@@ -565,6 +570,19 @@ b2Vec2 sys_convertToTiles (b2Vec2 convertFrom)
 	return returnValue;
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Convert from tiles to pixels coordinates
+b2Vec2 sys_convertTilesToPixels(b2Vec2 convertFrom)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	b2Vec2 returnValue;
+
+	returnValue.x = static_cast<int>(convertFrom.x) * tileSize;
+	returnValue.y = static_cast<int>(convertFrom.y) * tileSize;
+
+	return returnValue;
+}
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Convert a string to an integer value

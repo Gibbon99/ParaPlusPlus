@@ -2,11 +2,6 @@
 #include <regex>
 #include <system/util.h>
 
-#include "../../hdr/classes/paraConsole.h"
-#include "../../hdr/wrapper.h"
-#include "../../hdr/main.h"
-#include "../../hdr/system/gameEvents.h"
-
 paraConsole::paraConsole(float defaultPosX, int red, int green, int blue, int alpha)
 {
 	paraConsole::defaultRed   = red;
@@ -14,6 +9,18 @@ paraConsole::paraConsole(float defaultPosX, int red, int green, int blue, int al
 	paraConsole::defaultBlue  = blue;
 	paraConsole::defaultAlpha = alpha;
 	paraConsole::defaultPosX  = defaultPosX;
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
+// Deconstruct
+paraConsole::~paraConsole ()
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	for (auto variableItr : consoleVariables)
+	{
+
+	}
 }
 
 void paraConsole::setScreenSize(int consoleWinWidth, int consoleWinHeight)
@@ -30,28 +37,28 @@ float paraConsole::getDefaultPosX() const
 int paraConsole::getDefaultRed() const
 {
 	return defaultRed;
-};
+}
 
 int paraConsole::getDefaultGreen() const
 {
 	return defaultGreen;
-};
+}
 
 int paraConsole::getDefaultBlue() const
 {
 	return defaultBlue;
-};
+}
 
 int paraConsole::getDefaultAlpha() const
 {
 	return defaultAlpha;
-};
+}
 
 void paraConsole::addTempLine(const _consoleLine &newTempLine)
 {
 	while (isDrawing)  // Wait until any drawing operation is completed
 	{
-		// cout << "Cant add while drawing in operation" << endl;
+		// cout << "Can't add while drawing in operation" << endl;
 	}
 
 	if (paraConsole::consoleText.size() < CONSOLE_MEM_SIZE)
@@ -135,7 +142,7 @@ void paraConsole::addCharLine()
 	paraConsole::processCommand(paraConsole::tokeniseEntryLine(paraConsole::enterLine));
 
 	paraConsole::enterLine.clear();
-	paraConsole::userBufferIndex = userBuffer.size();
+	paraConsole::userBufferIndex = static_cast<int>(userBuffer.size()); // TODO Check it isn't size -1
 
 	paraConsole::scrollbackOffset = 0;
 }
@@ -173,6 +180,10 @@ void paraConsole::userBufferPrevious()
 void paraConsole::addVariable(const std::string &variableName, int variableType, void *variablePtr)
 {
 	_variables tempVar;
+
+	tempVar.varPtrFloat = static_cast<float *>(malloc (sizeof (float))); //new float;
+	tempVar.varPtrBool = static_cast<bool *>(malloc (sizeof (bool))); //new bool;
+	tempVar.varPtrInt = static_cast<int *>(malloc (sizeof (int))); //new int;
 
 	if ((variableName.empty()) || (nullptr == variablePtr))
 	{
@@ -221,6 +232,13 @@ void paraConsole::addVariable(const std::string &variableName, int variableType,
 			break;
 	}
 	consoleVariables.push_back(tempVar);
+
+//	free ( tempVar.varPtrBool );
+//	free(  tempVar.varPtrInt);
+//	free(  tempVar.varPtrFloat);
+//	delete tempVar->varPtrString;
+
+//	delete tempVar;
 
 	cout << "Var : " << variableName << " has been added." << endl;
 }
@@ -296,7 +314,7 @@ void paraConsole::setVarFunc(const std::string &varName, float variablePtr)
 	}
 }
 
-void paraConsole::setVarFunc(const std::string &varName, std::string variablePtr)
+void paraConsole::setVarFunc(const std::string &varName, const std::string& variablePtr)
 {
 	for (auto &varItr : consoleVariables)
 	{
@@ -335,12 +353,12 @@ void paraConsole::setVar(const std::string &varName, const std::string &varParam
 				case VAR_TYPE_BOOL:
 					if ((varParam == "true") || (varParam == "1") || (varParam == "True") || (varParam == "on") || (varParam == "On"))
 					{
-						setVarBool(varName, 1);
+						setVarBool(varName, true);  // Was 1
 						return;
 					}
 					else
 					{
-						setVarBool(varName, 0);
+						setVarBool(varName, false);     // Was 0
 						return;
 					}
 					break;
@@ -371,13 +389,13 @@ void paraConsole::setNumVarColumns(int newNumVarColumns)
 void paraConsole::displayInColumns(const std::vector<std::string> &displayText)
 {
 	float columnPosX     = 3;
-	float columnVarWidth = (float) (screenWidth / numVarColumns);
+	auto columnVarWidth =  static_cast<float>(screenWidth / numVarColumns);
 
 	for (const auto &varItr : displayText)
 	{
 		paraConsole::add(columnPosX, sys_getString("[ %s ]", varItr.c_str()));
 		columnPosX += columnVarWidth;
-		if (columnPosX > (columnVarWidth * (numVarColumns)))
+		if (columnPosX > (columnVarWidth * static_cast<float>(numVarColumns)))
 		{
 			columnPosX = 3;
 		}
@@ -397,7 +415,7 @@ void paraConsole::listVariables()
 
 void paraConsole::getVariable(const std::vector<std::string> &commandLine)
 {
-	bool matchFound = false;
+	bool matchFound;
 
 	if (commandLine.size() < 2)
 	{
@@ -559,7 +577,7 @@ void paraConsole::changeScrollBackOffset(int value)
 void paraConsole::tabCompletion()
 {
 	int                      numMatchingVariables = 0;
-	int                      numMatchingGetSet    = 0;
+	int                      numMatchingGetSet;
 	int                      numMatchingCommands  = 0;
 	std::string              pushVariableString;
 	std::string              pushCommandString;

@@ -44,7 +44,7 @@ void gam_startNewGame ()
 {
 	renderer.clearTextures ();
 	gam_resetDroids ();
-	playerDroid.currentMode = DROID_MODE_NORMAL;
+	playerDroid.setCurrentMode (DROID_MODE_NORMAL);
 	gam_setupPlayerDroid ();
 	gam_initScoreValues ();
 	gam_setAlertLevel (ALERT_GREEN_TILE);
@@ -60,7 +60,7 @@ void gam_processGameOver ()
 {
 	if (playerDroid.sprite.animate ())      // Has the animation finished playing
 	{
-		playerDroid.currentMode = DROID_MODE_DEAD;
+		playerDroid.setCurrentMode (DROID_MODE_DEAD);
 		sys_setNewMode (MODE_END_PRE_LOST_SCREEN, false);
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP_ALL, false, 0, 0, "");
 	}

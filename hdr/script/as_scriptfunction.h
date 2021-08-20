@@ -91,11 +91,11 @@ struct asSListPatternDataTypeNode : public asSListPatternNode
 
 enum asEObjVarInfoOption
 {
-	asOBJ_UNINIT,    // object is uninitialized/destroyed
-	asOBJ_INIT,        // object is initialized
-	asBLOCK_BEGIN,    // scope block begins
-	asBLOCK_END,    // scope block ends
-	asOBJ_VARDECL    // object variable is declared (but not necessarily initialized)
+	asOBJ_UNINIT,	// object is uninitialized/destroyed
+	asOBJ_INIT,		// object is initialized
+	asBLOCK_BEGIN,	// scope block begins
+	asBLOCK_END,	// scope block ends
+	asOBJ_VARDECL	// object variable is declared (but not necessarily initialized)
 };
 
 enum asEFuncTrait
@@ -141,7 +141,7 @@ struct asSSystemFunctionInterface;
 //       also functions/methods that are being called. This could be used to build a
 //       code database with call graphs, etc.
 
-void RegisterScriptFunction (asCScriptEngine *engine);
+void RegisterScriptFunction(asCScriptEngine *engine);
 
 class asCScriptFunction : public asIScriptFunction
 {
@@ -165,44 +165,28 @@ public:
 
 	// Function signature
 	asITypeInfo         *GetObjectType() const;
-
-	const char *GetObjectName () const;
-
-	const char *GetName () const;
-
-	const char *GetNamespace () const;
-
-	const char *GetDeclaration (bool includeObjectName = true, bool includeNamespace = false, bool includeParamNames = false) const;
-
-	bool IsReadOnly () const;
-
-	bool IsPrivate () const;
-
-	bool IsProtected () const;
-
-	bool IsFinal () const;
-
-	bool IsOverride () const;
-
-	bool IsShared () const;
-
-	bool IsExplicit () const;
-
-	bool IsProperty () const;
-
-	asUINT GetParamCount () const;
-
-	int GetParam (asUINT index, int *typeId, asDWORD *flags = 0, const char **name = 0, const char **defaultArg = 0) const;
-
-	int GetReturnTypeId (asDWORD *flags = 0) const;
+	const char          *GetObjectName() const;
+	const char          *GetName() const;
+	const char          *GetNamespace() const;
+	const char          *GetDeclaration(bool includeObjectName = true, bool includeNamespace = false, bool includeParamNames = false) const;
+	bool                 IsReadOnly() const;
+	bool                 IsPrivate() const;
+	bool                 IsProtected() const;
+	bool                 IsFinal() const;
+	bool                 IsOverride() const;
+	bool                 IsShared() const;
+	bool                 IsExplicit() const;
+	bool                 IsProperty() const;
+	asUINT               GetParamCount() const;
+	int                  GetParam(asUINT index, int *typeId, asDWORD *flags = 0, const char **name = 0, const char **defaultArg = 0) const;
+	int                  GetReturnTypeId(asDWORD *flags = 0) const;
 
 	// Type id for function pointers
-	int GetTypeId () const;
-
-	bool IsCompatibleWithTypeId (int typeId) const;
+	int                  GetTypeId() const;
+	bool                 IsCompatibleWithTypeId(int typeId) const;
 
 	// Delegates
-	void *GetDelegateObject () const;
+	void                *GetDelegateObject() const;
 	asITypeInfo         *GetDelegateObjectType() const;
 	asIScriptFunction   *GetDelegateFunction() const;
 
@@ -213,68 +197,34 @@ public:
 	int                  FindNextLineWithCode(int line) const;
 
 	// For JIT compilation
-	asDWORD *GetByteCode (asUINT *length = 0);
+	asDWORD             *GetByteCode(asUINT *length = 0);
 
 	// User data
-	void *SetUserData (void *userData, asPWORD type);
-
-	void *GetUserData (asPWORD type) const;
+	void                *SetUserData(void *userData, asPWORD type);
+	void                *GetUserData(asPWORD type) const;
 
 public:
 	//-----------------------------------
 	// Internal methods
 
-	void SetShared (bool set)
-	{
-		traits.SetTrait (asTRAIT_SHARED, set);
-	}
+	void SetShared(bool set) { traits.SetTrait(asTRAIT_SHARED, set); }
+	void SetReadOnly(bool set) { traits.SetTrait(asTRAIT_CONST, set); }
+	void SetFinal(bool set) { traits.SetTrait(asTRAIT_FINAL, set); }
+	void SetOverride(bool set) { traits.SetTrait(asTRAIT_OVERRIDE, set); }
+	void SetExplicit(bool set) { traits.SetTrait(asTRAIT_EXPLICIT, set); }
+	void SetProtected(bool set) { traits.SetTrait(asTRAIT_PROTECTED, set); }
+	void SetPrivate(bool set) { traits.SetTrait(asTRAIT_PRIVATE, set); }
+	void SetProperty(bool set) { traits.SetTrait(asTRAIT_PROPERTY, set); }
 
-	void SetReadOnly (bool set)
-	{
-		traits.SetTrait (asTRAIT_CONST, set);
-	}
-
-	void SetFinal (bool set)
-	{
-		traits.SetTrait (asTRAIT_FINAL, set);
-	}
-
-	void SetOverride (bool set)
-	{
-		traits.SetTrait (asTRAIT_OVERRIDE, set);
-	}
-
-	void SetExplicit (bool set)
-	{
-		traits.SetTrait (asTRAIT_EXPLICIT, set);
-	}
-
-	void SetProtected (bool set)
-	{
-		traits.SetTrait (asTRAIT_PROTECTED, set);
-	}
-
-	void SetPrivate (bool set)
-	{
-		traits.SetTrait (asTRAIT_PRIVATE, set);
-	}
-
-	void SetProperty (bool set)
-	{
-		traits.SetTrait (asTRAIT_PROPERTY, set);
-	}
-
-	asCScriptFunction (asCScriptEngine *engine, asCModule *mod, asEFuncType funcType);
-
-	~asCScriptFunction ();
+	asCScriptFunction(asCScriptEngine *engine, asCModule *mod, asEFuncType funcType);
+	~asCScriptFunction();
 
 	// Keep an internal reference counter to separate references coming from
 	// application or script objects and references coming from the script code
-	int AddRefInternal ();
+	int AddRefInternal();
+	int ReleaseInternal();
 
-	int ReleaseInternal ();
-
-	void DestroyHalfCreated ();
+	void     DestroyHalfCreated();
 
 	// TODO: operator==
 	// TODO: The asIScriptFunction should provide operator== and operator!= that should do a
@@ -372,34 +322,34 @@ public:
 	struct ScriptFunctionData
 	{
 		// Bytecode for the script function
-		asCArray<asDWORD> byteCode;
+		asCArray<asDWORD>               byteCode;
 
 		// The stack space needed for the local variables
-		asDWORD variableSpace;
+		asDWORD                         variableSpace;
 
 		// These hold information on objects and function pointers, including temporary
 		// variables used by exception handler and when saving bytecode
-		asCArray<asCTypeInfo *> objVariableTypes;
-		asCArray<int>           objVariablePos; // offset on stackframe
+		asCArray<asCTypeInfo*>          objVariableTypes;
+		asCArray<int>                   objVariablePos; // offset on stackframe
 
 		// The first variables in above array are allocated on the heap, the rest on the stack.
 		// This variable shows how many are on the heap.
-		asUINT objVariablesOnHeap;
+		asUINT                          objVariablesOnHeap;
 
 		// Holds information on scope for object variables on the stack
 		asCArray<asSObjectVariableInfo> objVariableInfo;
 
 		// Holds information on try/catch blocks for exception handling
-		asCArray<asSTryCatchInfo> tryCatchInfo;
+		asCArray<asSTryCatchInfo>       tryCatchInfo;
 
 		// The stack needed to execute the function
-		int stackNeeded;
+		int                             stackNeeded;
 
 		// JIT compiled code of this function
-		asJITFunction jitFunction;
+		asJITFunction                   jitFunction;
 
 		// Holds debug information on explicitly declared variables
-		asCArray<asSScriptVariable *>   variables;
+		asCArray<asSScriptVariable*>    variables;
 		// Store position, line number pairs for debug information
 		asCArray<int>                   lineNumbers;
 		// Store the script section where the code was declared

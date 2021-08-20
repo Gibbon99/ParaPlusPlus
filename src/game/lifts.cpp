@@ -39,7 +39,7 @@ void gam_setCurrentTunnelDeckIndex ()
 
 	for (auto tunnelItr : shipdecks.at (gam_getCurrentDeckName ()).liftClass.tunnels)
 	{
-		if (tunnelItr.second == playerDroid.liftIndex)
+		if (tunnelItr.second == playerDroid.getLiftIndex())
 		{
 			tempTunnel = tunnelItr.first;
 			break;
@@ -182,22 +182,36 @@ void gam_clearLifts ()
 
 	//
 	// Player is still making contact with the lift detector causing Box2d to crash when removing the body
-	sys_setPlayerPhysicsPosition (b2Vec2 (0, 0));
-	sys_stepPhysicsWorld (1.0f / TICKS_PER_SECOND);
+//	sys_setPlayerPhysicsPosition (b2Vec2 (0, 0));
+//	sys_stepPhysicsWorld (1.0f / TICKS_PER_SECOND);
+
+// TODO - Check all of this
+
+stopContactPhysicsBugFlag = true;
 
 	for (auto &liftItr : lifts)
 	{
 		if (liftItr.userData != nullptr)
+		{
 			delete (liftItr.userData);
+			liftItr.userData = nullptr;
+		}
 
 		if (liftItr.body != nullptr)
-			sys_getPhysicsWorld ()->DestroyBody (liftItr.body);
+		{
+			liftItr.body->DestroyFixture (liftItr.body->GetFixtureList());
+			liftItr.body->SetEnabled (false);
+			liftItr.body->SetUserData (nullptr);
+			liftItr.body->GetWorld()->DestroyBody (liftItr.body);
+			liftItr.body = nullptr;
+		}
 	}
 	lifts.clear ();
 
-	playerDroid.body->SetTransform (tempPosition, playerDroid.body->GetAngle ());
-	sys_stepPhysicsWorld (1.0f / TICKS_PER_SECOND);
+	stopContactPhysicsBugFlag = false;
 
+//	playerDroid.body->SetTransform (tempPosition, playerDroid.body->GetAngle ());
+//	sys_stepPhysicsWorld (1.0f / TICKS_PER_SECOND);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -362,7 +376,7 @@ void gam_setupLifts ()
 void gam_performLiftAction ()
 //----------------------------------------------------------------------------
 {
-	currentTunnel = shipdecks.at (gam_getCurrentDeckName ()).liftClass.getTunnelIndex (playerDroid.liftIndex);
+	currentTunnel = shipdecks.at (gam_getCurrentDeckName ()).liftClass.getTunnelIndex (playerDroid.getLiftIndex());
 	gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "lowEnergy");
 

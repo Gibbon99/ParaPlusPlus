@@ -583,8 +583,8 @@ bool asCScriptFunction::IsCompatibleWithTypeId(int typeId) const
 // interface
 const char *asCScriptFunction::GetModuleName() const
 {
-	if (module)
-		return module->GetName ();
+	if( module )
+		return module->GetName();
 
 	return 0;
 }
@@ -707,7 +707,7 @@ asCString asCScriptFunction::GetDeclarationStr(bool includeObjectName, bool incl
 		else
 			str += "_unnamed_type_::";
 	}
-	else if (includeNamespace && nameSpace->name != "" && !objectType)
+	else if( includeNamespace && nameSpace->name != "" && !objectType )
 	{
 		str += nameSpace->name + "::";
 	}
@@ -1701,25 +1701,25 @@ bool asCScriptFunction::IsShared() const
 // interface
 bool asCScriptFunction::IsFinal() const
 {
-	return traits.GetTrait (asTRAIT_FINAL);
+	return traits.GetTrait(asTRAIT_FINAL);
 }
 
 // interface
-bool asCScriptFunction::IsOverride () const
+bool asCScriptFunction::IsOverride() const
 {
-	return traits.GetTrait (asTRAIT_OVERRIDE);
+	return traits.GetTrait(asTRAIT_OVERRIDE);
 }
 
 // interface
-bool asCScriptFunction::IsExplicit () const
+bool asCScriptFunction::IsExplicit() const
 {
-	return traits.GetTrait (asTRAIT_EXPLICIT);
+	return traits.GetTrait(asTRAIT_EXPLICIT);
 }
 
 // interface
-bool asCScriptFunction::IsProperty () const
+bool asCScriptFunction::IsProperty() const
 {
-	return traits.GetTrait (asTRAIT_PROPERTY);
+	return traits.GetTrait(asTRAIT_PROPERTY);
 }
 
 END_AS_NAMESPACE

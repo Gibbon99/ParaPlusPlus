@@ -98,6 +98,9 @@ void gam_removeEmitter(Uint32 whichBulletID)
 void gam_renderParticles()
  //----------------------------------------------------------------------------------------------------------------------
 {
+	if (particleEmitters.size() == 0)
+		return;
+
 	for (auto emitterItr : particleEmitters)
 	{
 		if (emitterItr.inUse())

@@ -433,7 +433,7 @@ void trn_initTransferScreenTwo ()
 	std::string newKeyName;
 
 	newKeyName  = "db_droid";
-	newFileName = dataBaseEntry[g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].droidType].dbImageFileName + ".bmp";
+	newFileName = dataBaseEntry[g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].getDroidType()].dbImageFileName + ".bmp";
 	gam_loadTexture (newFileName, newKeyName);
 
 	databaseSprite.setCurrentFrame (0);
@@ -455,9 +455,9 @@ void trn_initTransferValues (int transferTargetIndex)
 	std::string    newFileName;
 	std::string    newKeyName;
 
-	if ((g_shipDeckItr->second.droid[transferTargetIndex].currentMode == DROID_MODE_FOR_REMOVAL) ||
-			(g_shipDeckItr->second.droid[transferTargetIndex].currentMode == DROID_MODE_EXPLODING) ||
-			(g_shipDeckItr->second.droid[transferTargetIndex].currentMode == DROID_MODE_DEAD))
+	if ((g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode() == DROID_MODE_FOR_REMOVAL) ||
+	(g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode() == DROID_MODE_EXPLODING) ||
+	(g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode() == DROID_MODE_DEAD))
 		return;
 
 	if (transferRows.empty ())
@@ -506,15 +506,15 @@ void trn_initTransferValues (int transferTargetIndex)
 	playerBlockPos = -1;
 
 	playerDroid.transferTargetDroidIndex = transferTargetIndex;
-	playerDroid.transferTargetDroidType  = g_shipDeckItr->second.droid[transferTargetIndex].droidType;
+	playerDroid.transferTargetDroidType  = g_shipDeckItr->second.droid[transferTargetIndex].getDroidType();
 
-	numDroidTokens  = dataBaseEntry[g_shipDeckItr->second.droid[transferTargetIndex].droidType].tokenCount;
-	numPlayerTokens = dataBaseEntry[playerDroid.droidType].tokenCount;
+	numDroidTokens  = dataBaseEntry[g_shipDeckItr->second.droid[transferTargetIndex].getDroidType()].tokenCount;
+	numPlayerTokens = dataBaseEntry[playerDroid.getDroidType()].tokenCount;
 
 	trn_setupTransferCellValues ();
 
 	newKeyName  = "db_droid";
-	newFileName = dataBaseEntry[playerDroid.droidType].dbImageFileName + ".bmp";
+	newFileName = dataBaseEntry[playerDroid.getDroidType()].dbImageFileName + ".bmp";
 	gam_loadTexture (newFileName, newKeyName);
 	databaseSprite.setCurrentFrame (0);
 	databaseSprite.setTintColor (64, 64, 64);

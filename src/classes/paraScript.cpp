@@ -321,7 +321,7 @@ bool paraScript::loadAndCompile ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Register all the functions to make available to the script
-void paraScript::addHostFunction (const std::string &funcName, functionPtr funcPtr)
+void paraScript::addHostFunction (const std::string &funcName, asSFuncPtr funcPtr)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int            returnCode;
@@ -368,7 +368,8 @@ void paraScript::addHostFunction (const std::string &funcName, functionPtr funcP
 	}
 */
 	tempFunc.scriptFunctionName = funcName;
-	tempFunc.hostFunctionPtr    = reinterpret_cast<int *>(funcPtr);
+//	tempFunc.hostFunctionPtr    = reinterpret_cast<int *>(funcPtr);
+	tempFunc.hostFunctionPtr    = asSFuncPtr(funcPtr);
 
 	returnCode = scriptEngine->RegisterGlobalFunction (funcName.c_str (), (asSFuncPtr &&) funcPtr, callType); //asCALL_CDECL);
 	if (returnCode < 0)

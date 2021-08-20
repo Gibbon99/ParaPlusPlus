@@ -15,7 +15,7 @@
 
 #include "game/bullet.h"
 
-droidClass playerDroid;
+paraDroid playerDroid;
 double     playerFriction;                  // From script
 float      influenceTimelimit;
 float      influenceTimelimtDelay;
@@ -51,17 +51,8 @@ void gam_moveTestCircle ()
 
 //-----------------------------------------------------------------------------
 //
-// Return the type of droid for checking access in database view
-int gam_getDroidType ()
-//-----------------------------------------------------------------------------
-{
-	return playerDroid.droidType;
-}
-
-//-----------------------------------------------------------------------------
-//
 // Check and decrement the bump counter
-void gam_checkBumpCounter ()
+void gam_checkBumpCounter ()        // TODO - Can be removed?
 //-----------------------------------------------------------------------------
 {
 	if (bounceCounter > 0)
@@ -81,19 +72,19 @@ void gam_checkBumpCounter ()
 void gam_weaponRechargePlayer ()
 //-----------------------------------------------------------------------------
 {
-	if (!playerDroid.weaponCanFire)
+	if (!playerDroid.getWeaponCanFire())
 	{
 		gam_setHudText ("hudRecharging");
 
-		if (dataBaseEntry[playerDroid.droidType].canShoot)
-			playerDroid.weaponDelay += dataBaseEntry[playerDroid.droidType].rechargeTime;
+		if (dataBaseEntry[playerDroid.getDroidType()].canShoot)
+			playerDroid.setWeaponDelay(playerDroid.getWeaponDelay() + dataBaseEntry[playerDroid.getDroidType()].rechargeTime);
 		else
-			playerDroid.weaponDelay += dataBaseEntry[0].rechargeTime;
+			playerDroid.setWeaponDelay(playerDroid.getWeaponDelay() + dataBaseEntry[0].rechargeTime);
 
-		if (playerDroid.weaponDelay > 1.0f)
+		if (playerDroid.getWeaponDelay() > 1.0f)
 		{
-			playerDroid.weaponDelay   = 0.0f;
-			playerDroid.weaponCanFire = true;
+			playerDroid.setWeaponDelay(0.0f);
+			playerDroid.setWeaponCanFire(true);
 			gam_setHudText ("hudMoving");
 		}
 	}
@@ -105,13 +96,13 @@ void gam_weaponRechargePlayer ()
 void gam_setupPlayerDroid ()
 //-----------------------------------------------------------------------------------------------------------------
 {
-	playerDroid.droidType = 0;
-	playerDroid.droidName = "001";
-	playerDroid.sprite.create (playerDroid.droidName, 9, 1.0);
-	playerDroid.ai.setAcceleration (dataBaseEntry[0].accelerate);
-	playerDroid.ai.setMaxSpeed (dataBaseEntry[0].maxSpeed);
-	playerDroid.currentHealth = dataBaseEntry[0].maxHealth;
-	playerDroid.currentMode   = DROID_MODE_NORMAL;
+	playerDroid.setDroidType(0);
+	playerDroid.setDroidName("001");
+	playerDroid.sprite.create (playerDroid.getDroidName(), 9, 1.0);
+	playerDroid.ai2.setAcceleration (dataBaseEntry[0].accelerate);
+	playerDroid.ai2.setMaxSpeed (dataBaseEntry[0].maxSpeed);
+	playerDroid.setCurrentHealth (dataBaseEntry[0].maxHealth);
+	playerDroid.setCurrentMode (DROID_MODE_NORMAL);
 	playerDroid.sprite.setLowHealth (false);
 
 	sys_setupPlayerPhysics ();
@@ -126,37 +117,37 @@ void gam_processPlayerMovement ()
 {
 	if (gui.keyDown (KEY_LEFT))
 	{
-		playerDroid.velocity.x -= playerDroid.ai.getAcceleration ();
-		if (playerDroid.velocity.x < -playerDroid.ai.getMaxSpeed ())
+		playerDroid.setVelocity(b2Vec2{static_cast<float>(playerDroid.getVelocity().x - playerDroid.ai2.getAcceleration ()), playerDroid.getVelocity().y});
+		if (playerDroid.getVelocity().x < -playerDroid.ai2.getMaxSpeed ())
 		{
-			playerDroid.velocity.x = -playerDroid.ai.getMaxSpeed ();
+			playerDroid.setVelocity(b2Vec2{static_cast<float>(-playerDroid.ai2.getMaxSpeed ()), playerDroid.getVelocity().y});
 		}
 	}
 
 	else if (gui.keyDown (KEY_RIGHT))
 	{
-		playerDroid.velocity.x += playerDroid.ai.getAcceleration ();
-		if (playerDroid.velocity.x > playerDroid.ai.getMaxSpeed ())
+		playerDroid.setVelocity(b2Vec2{static_cast<float>(playerDroid.getVelocity().x + playerDroid.ai2.getAcceleration ()), playerDroid.getVelocity().y});
+		if (playerDroid.getVelocity().x > playerDroid.ai2.getMaxSpeed ())
 		{
-			playerDroid.velocity.x = playerDroid.ai.getMaxSpeed ();
+			playerDroid.setVelocity(b2Vec2{static_cast<float>(playerDroid.ai2.getMaxSpeed ()), playerDroid.getVelocity().y});
 		}
 	}
 
 	if (gui.keyDown (KEY_UP))
 	{
-		playerDroid.velocity.y -= playerDroid.ai.getAcceleration ();
-		if (playerDroid.velocity.y < -playerDroid.ai.getMaxSpeed ())
+		playerDroid.setVelocity(b2Vec2{playerDroid.getVelocity().x, static_cast<float>(playerDroid.getVelocity().y - playerDroid.ai2.getAcceleration ())});
+		if (playerDroid.getVelocity().y < -playerDroid.ai2.getMaxSpeed ())
 		{
-			playerDroid.velocity.y = -playerDroid.ai.getMaxSpeed ();
+			playerDroid.setVelocity(b2Vec2{playerDroid.getVelocity().x, static_cast<float>(-playerDroid.ai2.getMaxSpeed ())});
 		}
 	}
 
 	else if (gui.keyDown (KEY_DOWN))
 	{
-		playerDroid.velocity.y += playerDroid.ai.getAcceleration ();
-		if (playerDroid.velocity.y > playerDroid.ai.getMaxSpeed ())
+		playerDroid.setVelocity(b2Vec2{playerDroid.getVelocity().x, static_cast<float>(playerDroid.getVelocity().y + playerDroid.ai2.getAcceleration ())});
+		if (playerDroid.getVelocity().y > playerDroid.ai2.getMaxSpeed ())
 		{
-			playerDroid.velocity.y = playerDroid.ai.getMaxSpeed ();
+			playerDroid.setVelocity(b2Vec2{playerDroid.getVelocity().x, static_cast<float>(playerDroid.ai2.getMaxSpeed ())});
 		}
 	}
 
@@ -164,48 +155,48 @@ void gam_processPlayerMovement ()
 // Do gravity slowdown when no key is pressed
 	if (!gui.keyDown (KEY_LEFT))
 	{
-		if (playerDroid.velocity.x < 0.0f)
+		if (playerDroid.getVelocity().x < 0.0f)
 		{
-			playerDroid.velocity.x += gravity;
-			if (playerDroid.velocity.x > 0.0f)
+			playerDroid.setVelocity(b2Vec2{static_cast<float>(playerDroid.getVelocity().x + gravity), playerDroid.getVelocity().y});
+			if (playerDroid.getVelocity().x > 0.0f)
 			{
-				playerDroid.velocity.x = 0.0f;
+				playerDroid.setVelocity(b2Vec2{0.0f, playerDroid.getVelocity().y});
 			}
 		}
 	}
 
 	if (!gui.keyDown (KEY_RIGHT))
 	{
-		if (playerDroid.velocity.x > 0.0f)
+		if (playerDroid.getVelocity().x > 0.0f)
 		{
-			playerDroid.velocity.x -= gravity;
-			if (playerDroid.velocity.x < 0.0f)
+			playerDroid.setVelocity(b2Vec2{static_cast<float>(playerDroid.getVelocity().x - gravity), playerDroid.getVelocity().y});
+			if (playerDroid.getVelocity().x < 0.0f)
 			{
-				playerDroid.velocity.x = 0.0f;
+				playerDroid.setVelocity(b2Vec2{0.0f, playerDroid.getVelocity().y});
 			}
 		}
 	}
 
 	if (!gui.keyDown (KEY_UP))
 	{
-		if (playerDroid.velocity.y < 0.0f)
+		if (playerDroid.getVelocity().y < 0.0f)
 		{
-			playerDroid.velocity.y += gravity;
-			if (playerDroid.velocity.y > 0.0f)
+			playerDroid.setVelocity(b2Vec2{playerDroid.getVelocity().x, static_cast<float>(playerDroid.getVelocity().y + gravity)});
+			if (playerDroid.getVelocity().y > 0.0f)
 			{
-				playerDroid.velocity.y = 0.0f;
+				playerDroid.setVelocity(b2Vec2{playerDroid.getVelocity().x, 0.0f});
 			}
 		}
 	}
 
 	if (!gui.keyDown (KEY_DOWN))
 	{
-		if (playerDroid.velocity.y > 0.0f)
+		if (playerDroid.getVelocity().y > 0.0f)
 		{
-			playerDroid.velocity.y -= gravity;
-			if (playerDroid.velocity.y < 0.0f)
+			playerDroid.setVelocity(b2Vec2{playerDroid.getVelocity().x, static_cast<float>(playerDroid.getVelocity().y - gravity)});
+			if (playerDroid.getVelocity().y < 0.0f)
 			{
-				playerDroid.velocity.y = 0.0f;
+				playerDroid.setVelocity(b2Vec2{playerDroid.getVelocity().x, 0.0f});
 			}
 		}
 	}
@@ -219,14 +210,14 @@ void gam_processActionKey ()
 {
 	gam_setHudText ("hudMoving");
 
-	if ((!gui.keyDown (KEY_ACTION) && (playerDroid.inTransferMode)))
+	if ((!gui.keyDown (KEY_ACTION) && (playerDroid.getInTransferMode())))
 	{
-		playerDroid.inTransferMode = false;
+		playerDroid.setInTransferMode(false);
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 127, "transferMove");
 		gam_setHudText ("hudMoving");
 	}
 
-	if (playerDroid.inTransferMode)
+	if (playerDroid.getInTransferMode())
 		gam_setHudText ("hudTransfer");
 
 	if (gui.keyDown (KEY_ACTION))
@@ -235,9 +226,9 @@ void gam_processActionKey ()
 		// Actions when no movements are down
 		if ((!gui.keyDown (KEY_LEFT)) && (!gui.keyDown (KEY_RIGHT)) && (!gui.keyDown (KEY_DOWN)) && (!gui.keyDown (KEY_UP)))
 		{
-			if (playerDroid.overLiftTile)
+			if (playerDroid.getOverLiftTile())
 			{
-				if (!playerDroid.inTransferMode)
+				if (!playerDroid.getInTransferMode())
 				{
 					gam_setHudText ("hudLift");
 					gui.setState (KEY_ACTION, false, 0);
@@ -247,9 +238,9 @@ void gam_processActionKey ()
 				}
 			}
 
-			if (playerDroid.overTerminalTile)
+			if (playerDroid.getOverTerminalTile())
 			{
-				if (!playerDroid.inTransferMode)
+				if (!playerDroid.getInTransferMode())
 				{
 					gui.setState (KEY_ACTION, false, 0);
 					gam_setHudText ("terminalMenu.terminalText");
@@ -261,20 +252,20 @@ void gam_processActionKey ()
 				}
 			}
 
-			if (!playerDroid.inTransferMode)
+			if (!playerDroid.getInTransferMode())
 			{
-				playerDroid.inTransferMode = true;
+				playerDroid.setInTransferMode(true);
 				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "transferMove");
 				gam_setHudText ("hudTransfer");
 			}
 		}
 
-		if (!playerDroid.inTransferMode)
+		if (!playerDroid.getInTransferMode())
 		{
 			{
-				if (playerDroid.weaponCanFire)
+				if (playerDroid.getWeaponCanFire())
 				{
-					if ((playerDroid.velocity.x == 0.0f) && (playerDroid.velocity.y == 0.0f))       // Don't create bullet with no velocity
+					if ((playerDroid.getVelocity().x == 0.0f) && (playerDroid.getVelocity().y == 0.0f))       // Don't create bullet with no velocity
 						return;
 
 					gam_addBullet (-1);
@@ -298,13 +289,13 @@ void gam_checkPlayerHealth ()
 
 	//
 	// Process player health and animation
-	if (playerDroid.currentHealth < 0)
+	if (playerDroid.getCurrentHealth() < 0)
 	{
-		if (playerDroid.currentMode != DROID_MODE_EXPLODING)
+		if (playerDroid.getCurrentMode() != DROID_MODE_EXPLODING)
 		{
-			playerDroid.currentMode = DROID_MODE_EXPLODING;
+			playerDroid.setCurrentMode (DROID_MODE_EXPLODING);
 
-			playerDroid.velocity = {0, 0};
+			playerDroid.setVelocity(b2Vec2{0, 0});
 			playerDroid.sprite.create ("explosion", 25, explosionAnimationSpeed);
 			playerDroid.sprite.setAnimateSpeed (explosionAnimationSpeed);      // Set for explosion animation
 
@@ -313,7 +304,7 @@ void gam_checkPlayerHealth ()
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode1");
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
 
-			gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+			gam_addEmitter (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()), PARTICLE_TYPE_EXPLOSION, 0);
 
 			sys_clearDroidPhysics (gam_getCurrentDeckName ());
 
@@ -322,9 +313,9 @@ void gam_checkPlayerHealth ()
 		return;
 	}
 
-	dangerHealthLevel = static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth) * 0.25f;
+	dangerHealthLevel = static_cast<float>(dataBaseEntry[playerDroid.getDroidType()].maxHealth) * 0.25f;
 
-	if (playerDroid.currentHealth < static_cast<int>(dangerHealthLevel))
+	if (playerDroid.getCurrentHealth() < static_cast<int>(dangerHealthLevel))
 	{
 		playerDroid.sprite.setLowHealth (true);
 		if (!audio.isPlaying ("lowEnergy"))
@@ -344,7 +335,7 @@ void gam_checkPlayerHealth ()
 	}
 	//
 	// Work out the player droid animation speed based on health
-	newAnimationSpeed     = static_cast<float>(playerDroid.currentHealth) / static_cast<float>(dataBaseEntry[playerDroid.droidType].maxHealth);
+	newAnimationSpeed     = static_cast<float>(playerDroid.getCurrentHealth()) / static_cast<float>(dataBaseEntry[playerDroid.getDroidType()].maxHealth);
 	if (newAnimationSpeed < 0.0f)
 		newAnimationSpeed = 0.1f;
 
@@ -374,10 +365,10 @@ void gam_damageToPlayer (int damageSource, int sourceDroid)
 
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 100, 127, "collision1");
 
-			if (g_shipDeckItr->second.droid[sourceDroid].currentMode == DROID_MODE_EXPLODING)
-				playerDroid.currentHealth -= explosionDamage;
+			if (g_shipDeckItr->second.droid[sourceDroid].getCurrentMode() == DROID_MODE_EXPLODING)
+				playerDroid.setCurrentHealth (playerDroid.getCurrentHealth() - explosionDamage);
 			else
-				playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bounceDamage;
+				playerDroid.setCurrentHealth(playerDroid.getCurrentHealth() - dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].getDroidType()].bounceDamage);
 			break;
 
 		case PHYSIC_DAMAGE_BULLET:
@@ -385,7 +376,7 @@ void gam_damageToPlayer (int damageSource, int sourceDroid)
 			std::cout << "Player hit by bullet" << std::endl;
 #endif
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "damage");
-			playerDroid.currentHealth -= dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].droidType].bulletDamage;
+			playerDroid.setCurrentHealth(playerDroid.getCurrentHealth() - dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].getDroidType()].bulletDamage);
 
 			break;
 
@@ -401,8 +392,8 @@ void gam_damageToPlayer (int damageSource, int sourceDroid)
 void gam_setInfluenceTimelimit (int targetDroidClass)
 //-----------------------------------------------------------------------------------------------------------------
 {
-	playerDroid.influenceTimeLeft    = influenceTimelimit - (static_cast<float>(targetDroidClass) * 2);
-	playerDroid.lowInfluenceTimeleft = false;
+	playerDroid.setInfluenceTimeLeft(influenceTimelimit - (static_cast<float>(targetDroidClass) * 2));
+	playerDroid.setLowInfluenceTimeLeft(false);
 }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -411,7 +402,7 @@ void gam_setInfluenceTimelimit (int targetDroidClass)
 void gam_resetInfluenceTimeLeftFlag()
 //-----------------------------------------------------------------------------------------------------------------
 {
-	playerDroid.lowInfluenceTimeleft = false;
+	playerDroid.setLowInfluenceTimeLeft(false);
 }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -420,43 +411,43 @@ void gam_resetInfluenceTimeLeftFlag()
 void gam_processInfluenceTime ()
 //-----------------------------------------------------------------------------------------------------------------
 {
-	if (playerDroid.droidType == 0)
+	if (playerDroid.getDroidType() == 0)
 		return;
 
 	if (playerDroid.influenceFadeFlag)
 	{
-		playerDroid.influenceFade -= 10;
-		if (playerDroid.influenceFade < 50)
+		playerDroid.setInfluenceFade(playerDroid.getInfluenceFade() - 10);
+		if (playerDroid.getInfluenceFade() < 50)
 		{
-			playerDroid.influenceFade     = 50;
+			playerDroid.setInfluenceFade(50);
 			playerDroid.influenceFadeFlag = !playerDroid.influenceFadeFlag;
 		}
 	}
 	else
 	{
-		playerDroid.influenceFade += 10;
-		if (playerDroid.influenceFade > 254)
+		playerDroid.setInfluenceFade(playerDroid.getInfluenceFade() + 10);
+		if (playerDroid.getInfluenceFade() > 254)
 		{
-			playerDroid.influenceFade     = 254;
+			playerDroid.setInfluenceFade(254);
 			playerDroid.influenceFadeFlag = !playerDroid.influenceFadeFlag;
 		}
 	}
 
-	playerDroid.influenceTimeLeft -= 1.0f * influenceTimelimtDelay;
+	playerDroid.setInfluenceTimeLeft(playerDroid.getInfluenceTimeLeft() - 1.0f * influenceTimelimtDelay);
 
-	if (playerDroid.influenceTimeLeft < influenceTimeLeftWarning)
-		playerDroid.lowInfluenceTimeleft = true;
+	if (playerDroid.getInfluenceTimeLeft() < influenceTimeLeftWarning)
+		playerDroid.setLowInfluenceTimeLeft(true);
 
-	if (playerDroid.influenceTimeLeft < 0.0f)
+	if (playerDroid.getInfluenceTimeLeft() < 0.0f)
 	{
-		playerDroid.velocity = {0, 0};
+		playerDroid.setVelocity(b2Vec2{0, 0});
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
-		gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
-		gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_EXPLOSION, 0);
+		gam_addEmitter (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()), PARTICLE_TYPE_EXPLOSION, 0);
+		gam_addEmitter (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()), PARTICLE_TYPE_EXPLOSION, 0);
 		trn_transferLostGame ();
 		playerDroid.sprite.setTintColor (255, 255, 255);
 		playerDroid.influenceFadeFlag    = false;
-		playerDroid.lowInfluenceTimeleft = false;
+		playerDroid.setLowInfluenceTimeLeft(false);
 
 #ifdef MY_DEBUG
 		std::cout << "Influence time is up." << std::endl;
@@ -464,7 +455,7 @@ void gam_processInfluenceTime ()
 	}
 
 #ifdef MY_DEBUG
-	if (playerDroid.lowInfluenceTimeleft)
+	if (playerDroid.getLowInfluenceTimeLeft())
 		std::cout << "Influence time is about to run out" << std::endl;
 #endif
 }
@@ -477,7 +468,7 @@ void gam_createTrail ()
 {
 	b2Vec2 tempPosition;
 
-	tempPosition = sys_convertToTiles (playerDroid.worldPosInPixels);
+	tempPosition = sys_convertPixelsToTiles (playerDroid.getWorldPosInPixels());
 
 	if (playerTrail.size () == 0)
 	{

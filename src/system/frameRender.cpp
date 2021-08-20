@@ -7,7 +7,6 @@
 #include "game/healing.h"
 #include "game/player.h"
 #include "gui/guiDeckView.h"
-#include "game/pathFind.h"
 #include "game/droids.h"
 #include "game/bullet.h"
 #include "game/particles.h"
@@ -180,11 +179,11 @@ void sys_renderFrame (double interpolation)
 			gam_renderHealingFrames ();
 			gam_renderDoorFrames ();
 
-			if (playerDroid.inTransferMode)
+			if (playerDroid.getInTransferMode())
 				playerDroid.sprite.setTintColor (0, 0, 255);
 
-			else if (playerDroid.lowInfluenceTimeleft)
-				playerDroid.sprite.setTintColor (static_cast<Uint8>(playerDroid.influenceFade), static_cast<Uint8>(playerDroid.influenceFade), 255);
+			else if (playerDroid.getLowInfluenceTimeLeft())
+				playerDroid.sprite.setTintColor (static_cast<Uint8>(playerDroid.getInfluenceFade()), static_cast<Uint8>(playerDroid.getInfluenceFade()), 255);
 
 			else
 				playerDroid.sprite.setTintColor (255, 255, 255);
@@ -208,17 +207,20 @@ void sys_renderFrame (double interpolation)
 			if (d_showPhysics)
 				sys_getPhysicsWorld ()->DebugDraw ();
 
-			if (d_showNodeArrays)
-				gam_AStarDebugNodes (d_showPathIndex);
+//			if (d_showNodeArrays)
+//				gam_AStarDebugNodes (d_showPathIndex);
 
-			if (d_showAStarPath)
-				// TODO: Put this in a loop and for each active path show it
-				//gam_AStarDebugWayPoints (d_showPathIndex);
-				gam_AStarDebugAllPaths();
+//			if (d_showAStarPath)
+//				gam_AStarDebugAllPaths();
 
 			if (gui.getCurrentDialogbox () != NO_DIALOG_BOX)
 				gui_renderActiveDialogbox ();
 
+			for (auto itr : shipdecks.at(gam_getCurrentDeckName()).droid)
+			{
+//				itr.ai2.aStar.debugNodes();
+//				itr.ai2.aStar.debugWayPoints();
+			}
 			break;
 
 		case MODE_END_LOST_SCREEN:

@@ -224,20 +224,20 @@ void gam_processHealingTile ()
 {
 	static float healingDelay = 1.0f;
 
-	if (!playerDroid.overHealingTile)
+	if (!playerDroid.getOverHealingTile())
 		return;
 
 	healingDelay -= 1.0f * healingDelayCounter;
 	if (healingDelay < 0.0f)
 	{
 		healingDelay = 1.0f;
-		playerDroid.currentHealth += 1;
+		playerDroid.setCurrentHealth (playerDroid.getCurrentHealth () + 1);
 		gam_modifyScore (-1);
-		if (playerDroid.currentHealth > dataBaseEntry[playerDroid.droidType].maxHealth)
+		if (playerDroid.getCurrentHealth() > dataBaseEntry[playerDroid.getDroidType()].maxHealth)
 		{
-			playerDroid.currentHealth = dataBaseEntry[playerDroid.droidType].maxHealth;
+			playerDroid.setCurrentHealth(dataBaseEntry[playerDroid.getDroidType()].maxHealth);
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
-			playerDroid.overHealingTile = false;
+			playerDroid.setOverHealingTile(false);
 		}
 		gam_checkPlayerHealth();
 	}

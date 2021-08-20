@@ -156,10 +156,10 @@ paraParticle::paraParticle (b2Vec2 newWorldPos, int newType, Uint32 newBulletID)
 				break;
 
 			case PARTICLE_TYPE_TRAIL:
-				tempParticle.worldPos = sys_convertToPixels (tempParticle.worldPos);
+				tempParticle.worldPos = sys_convertMetersToPixels (tempParticle.worldPos);
 				tempParticle.worldPos.x -= (6 - angleRandom.get (0, 12));
 				tempParticle.worldPos.y -= (6 - angleRandom.get (0, 12));
-				tempParticle.worldPos = sys_convertToMeters (tempParticle.worldPos);
+				tempParticle.worldPos = sys_convertPixelsToMeters (tempParticle.worldPos);
 				trailColor = angleRandom.get (100, 254);
 				tempParticle.color.r = trailColor;
 				tempParticle.color.g = trailColor;
@@ -208,24 +208,33 @@ paraParticle::~paraParticle ()
 	std::cout << "De-construct particle" << std::endl;
 #endif
 
+	stopContactPhysicsBugFlag = true;
+
 	if (usePhysics)
 	{
 		for (auto &partItr : particle)
 		{
-			if (partItr.physicObject.body != nullptr)
-			{
-//				partItr.physicObject.body->GetWorld ()->DestroyBody (partItr.physicObject.body);
-//				partItr.physicObject.body = nullptr;
-			}
-
 			if (partItr.physicObject.userData != nullptr)
 			{
 //				delete partItr.physicObject.userData;
-//				partItr.physicObject.userData = nullptr;
+				partItr.physicObject.userData = nullptr;
+			}
+
+			if (partItr.physicObject.body != nullptr)
+			{
+				/*
+				partItr.physicObject.body->DestroyFixture (partItr.physicObject.body->GetFixtureList());
+				partItr.physicObject.body->SetEnabled (false);
+				partItr.physicObject.body->SetUserData (nullptr);
+				partItr.physicObject.body->GetWorld()->DestroyBody (partItr.physicObject.body);
+				partItr.physicObject.body = nullptr;
+				*/
 			}
 		}
 	}
 	particle.clear ();
+
+	stopContactPhysicsBugFlag = false;
 }
 
 //-----------------------------------------------------------------------------------------------------------
@@ -324,7 +333,7 @@ void paraParticle::animate ()
 				else
 				{
 					particleItr.isAlive  = true;
-					particleItr.worldPos = sys_convertToPixels (bullets[gam_getArrayIndex (bulletLink)].worldPosInMeters);
+					particleItr.worldPos = sys_convertMetersToPixels (bullets[gam_getArrayIndex (bulletLink)].worldPosInMeters);
 					particleItr.worldPos.x -= ((bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth () * 0.5) - angleRandom.get (0, bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth ()));
 					particleItr.worldPos.y -= ((bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameHeight () * 0.5) - angleRandom.get (0, bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameHeight ()));
 					//
@@ -333,7 +342,7 @@ void paraParticle::animate ()
 					spacingVelocity.Normalize ();
 					spacingVelocity *= static_cast<float>(bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth () * 0.5f);
 					particleItr.worldPos -= spacingVelocity;
-					particleItr.worldPos = sys_convertToMeters (particleItr.worldPos);
+					particleItr.worldPos = sys_convertPixelsToMeters (particleItr.worldPos);
 
 					particleItr.color.a = angleRandom.get (100, 255);
 				}
@@ -423,7 +432,7 @@ void paraParticle::render ()
 					break;
 			}
 
-			renderPosition = sys_convertToPixels (renderPosition);
+			renderPosition = sys_convertMetersToPixels (renderPosition);
 			renderPosition = sys_worldToScreen (renderPosition, static_cast<int>(particleSize));
 
 			switch (particleRenderType)

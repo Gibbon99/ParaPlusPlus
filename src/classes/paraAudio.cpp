@@ -25,6 +25,16 @@ paraAudio::~paraAudio ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	Mix_Quit ();
+
+	auto audioItr = audio.begin();
+
+	while (audioItr != audio.end())
+	{
+		free(audioItr->second.audio);
+
+		audioItr++;
+	}
+
 }
 
 void paraAudio::AddRef ()
@@ -313,6 +323,7 @@ bool paraAudio::load (std::string fileName)
 	funcOutput (-1, int_getString ("Loaded [ %s ] with key [ %s ]", tempAudio.fileName.c_str (), tempAudio.keyName.c_str ()));
 	std::cout << "Loaded file : " << tempAudio.fileName << std::endl;
 #endif
+
 	return true;
 }
 

@@ -289,7 +289,7 @@ void gam_nextDatabase()
 	if (currentDatabaseRecord < static_cast<int>(dataBaseEntry.size() - 1))
 		currentDatabaseRecord++;
 
-	if (currentDatabaseRecord - 1 == gam_getDroidType())
+	if (currentDatabaseRecord - 1 == playerDroid.getDroidType())
 	{
 		currentDatabaseRecord--;
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");

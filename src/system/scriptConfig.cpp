@@ -152,10 +152,8 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("float influenceTimeLeftWarning", &influenceTimeLeftWarning);
 	paraScriptInstance.addHostVariable ("int transferResultDelay", &transferResultDelay);
 
-	paraScriptInstance.addHostVariable ("int playerDroidType", &playerDroid.droidType);
-	paraScriptInstance.addHostVariable ("int playerDroidCurrentHealth", &playerDroid.currentHealth);
 	paraScriptInstance.addHostVariable ("int maxNumBumps", &maxNumBumps);
-	paraScriptInstance.addHostVariable("float bounceCounterDelay", &bounceCounterDelay);
+	paraScriptInstance.addHostVariable ("float bounceCounterDelay", &bounceCounterDelay);
 }
 
 void sys_scriptPrintInt (std::string inStr, int inInt)
@@ -197,6 +195,24 @@ void sys_scriptInitFunctions ()
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraRenderer", "int getCurrentRendererIndex()", asMETHOD(paraRenderer, getCurrentRendererIndex), asCALL_THISCALL);
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterGlobalProperty ("paraRenderer as_renderer", &renderer);
+	assert(r >= 0);
+
+
+	//
+	// Pass in the player class to the script
+	r = paraScriptInstance.scriptEngine->RegisterObjectType ("paraDroid", 0, asOBJ_REF);
+	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectBehaviour ("paraDroid", asBEHAVE_ADDREF, "void f()", asMETHOD(paraDroid, AddRef), asCALL_THISCALL);
+	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectBehaviour ("paraDroid", asBEHAVE_RELEASE, "void f()", asMETHOD(paraDroid, ReleaseRef), asCALL_THISCALL);
+	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraDroid", "int getDroidType()", asMETHOD(paraDroid, getDroidType), asCALL_THISCALL);
+	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraDroid", "void setCurrentHealth(int newCurrentHealth)", asMETHOD(paraDroid, setCurrentHealth), asCALL_THISCALL);
+	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterGlobalProperty ("paraDroid as_paraDroid", &playerDroid);
+	assert(r >= 0);
+
 
 	//
 	// Pass in the texture class to the script
@@ -297,37 +313,37 @@ void sys_scriptInitFunctions ()
 	r = paraScriptInstance.scriptEngine->RegisterGlobalProperty ("paraGui as_paraGui", &gui);
 	assert(r >= 0);
 
-	paraScriptInstance.addHostFunction ("void sys_printConInt (string &in, int param)", (functionPtr) &sys_scriptPrintInt);
+	paraScriptInstance.addHostFunction ("void sys_printConInt (string &in, int param)", asFUNCTION(sys_scriptPrintInt));
 
-	paraScriptInstance.addHostFunction ("void sys_setNewMode (int newMode, bool doFade)", (functionPtr) &sys_setNewMode);
-	paraScriptInstance.addHostFunction ("void sys_addEvent (int eventType, int eventAction, int eventDelay, string &in)", (functionPtr) &sys_addEvent);
-	paraScriptInstance.addHostFunction ("void gam_addAudioEvent (int action, bool loop, int distance, int pan, string &in)", (functionPtr) &gam_addAudioEvent);
+	paraScriptInstance.addHostFunction ("void sys_setNewMode (int newMode, bool doFade)", asFUNCTION(sys_setNewMode));
+	paraScriptInstance.addHostFunction ("void sys_addEvent (int eventType, int eventAction, int eventDelay, string &in)", asFUNCTION(sys_addEvent));
+	paraScriptInstance.addHostFunction ("void gam_addAudioEvent (int action, bool loop, int distance, int pan, string &in)", asFUNCTION(gam_addAudioEvent));
 
-	paraScriptInstance.addHostFunction ("void gui_addKeyAndText (string &in, string &in)", (functionPtr) &gui_addKeyAndText);
-	paraScriptInstance.addHostFunction ("string gui_getString (string &in)", (functionPtr) &gui_getString);
+	paraScriptInstance.addHostFunction ("void gui_addKeyAndText (string &in, string &in)", asFUNCTION(gui_addKeyAndText));
+	paraScriptInstance.addHostFunction ("string gui_getString (string &in)", asFUNCTION(gui_getString));
 
-	paraScriptInstance.addHostFunction ("void as_createSideViewColor  (int index, int red, int green, int blue, int alpha)", (functionPtr) &gui_createSideViewColor);
-	paraScriptInstance.addHostFunction ("void io_updateConfigValueInt(string &in, int newValue)", (functionPtr) &io_updateConfigValueInt);
-	paraScriptInstance.addHostFunction ("void io_updateConfigValue(string &in, string &in)", (functionPtr) &io_updateConfigValue);
+	paraScriptInstance.addHostFunction ("void as_createSideViewColor  (int index, int red, int green, int blue, int alpha)", asFUNCTION(gui_createSideViewColor));
+	paraScriptInstance.addHostFunction ("void io_updateConfigValueInt(string &in, int newValue)", asFUNCTION(io_updateConfigValueInt));
+	paraScriptInstance.addHostFunction ("void io_updateConfigValue(string &in, string &in)", asFUNCTION(io_updateConfigValue));
 
-	paraScriptInstance.addHostFunction ("void gam_previousDatabase()", (functionPtr) &gam_previousDatabase);
-	paraScriptInstance.addHostFunction ("void gam_nextDatabase()", (functionPtr) &gam_nextDatabase);
-	paraScriptInstance.addHostFunction ("void gam_prepareDatabaseScreen(int whichDroidIndex)", (functionPtr) &gam_prepareDatabaseScreen);
-	paraScriptInstance.addHostFunction ("void gam_setHudText(string &in)", (functionPtr) &gam_setHudText);
-	paraScriptInstance.addHostFunction ("void gam_loadTexture(string &in, string &in)", (functionPtr) &gam_loadTexture);
-	paraScriptInstance.addHostFunction ("void gam_createCollisionMap(string &in)", (functionPtr) &gam_createCollisionMap);
-	paraScriptInstance.addHostFunction ("void gam_setTileType()", (functionPtr) &gam_setTileType);
-	paraScriptInstance.addHostFunction ("void gam_loadShipDeck (string &in)", (functionPtr) &gam_loadShipDeck);
-	paraScriptInstance.addHostFunction ("void gam_changeToDeck (string &in, int whichLift)", (functionPtr) &gam_changeToDeck);
-	paraScriptInstance.addHostFunction ("void trn_setTransferColor (int whichSide, float red, float green, float blue, float alpha)", (functionPtr) &trn_setTransferColor);
-	paraScriptInstance.addHostFunction ("void io_initNewKeycodeValue (int whichKey)", (functionPtr) &io_initNewKeycodeValue);
+	paraScriptInstance.addHostFunction ("void gam_previousDatabase()", asFUNCTION(gam_previousDatabase));
+	paraScriptInstance.addHostFunction ("void gam_nextDatabase()", asFUNCTION(gam_nextDatabase));
+	paraScriptInstance.addHostFunction ("void gam_prepareDatabaseScreen(int whichDroidIndex)", asFUNCTION(gam_prepareDatabaseScreen));
+	paraScriptInstance.addHostFunction ("void gam_setHudText(string &in)", asFUNCTION(gam_setHudText));
+	paraScriptInstance.addHostFunction ("void gam_loadTexture(string &in, string &in)", asFUNCTION(gam_loadTexture));
+	paraScriptInstance.addHostFunction ("void gam_createCollisionMap(string &in)", asFUNCTION(gam_createCollisionMap));
+	paraScriptInstance.addHostFunction ("void gam_setTileType()", asFUNCTION(gam_setTileType));
+	paraScriptInstance.addHostFunction ("void gam_loadShipDeck (string &in)", asFUNCTION(gam_loadShipDeck));
+	paraScriptInstance.addHostFunction ("void gam_changeToDeck (string &in, int whichLift)", asFUNCTION(gam_changeToDeck));
+	paraScriptInstance.addHostFunction ("void trn_setTransferColor (int whichSide, float red, float green, float blue, float alpha)", asFUNCTION(trn_setTransferColor));
+	paraScriptInstance.addHostFunction ("void io_initNewKeycodeValue (int whichKey)", asFUNCTION(io_initNewKeycodeValue));
 
-	paraScriptInstance.addHostFunction ("string gui_getHighScoreValueByIndex (int highScoreIndex)", (functionPtr) &gui_getHighScoreValueByIndex);
-	paraScriptInstance.addHostFunction ("string gui_getHighScoreNameByIndex (int highScoreIndex)", (functionPtr) &gui_getHighScoreNameByIndex);
+	paraScriptInstance.addHostFunction ("string gui_getHighScoreValueByIndex (int highScoreIndex)", asFUNCTION(gui_getHighScoreValueByIndex));
+	paraScriptInstance.addHostFunction ("string gui_getHighScoreNameByIndex (int highScoreIndex)", asFUNCTION(gui_getHighScoreNameByIndex));
 
-	paraScriptInstance.addHostFunction ("void gui_showHighscoreTable ()", (functionPtr) &gui_showHighscoreTable);
+	paraScriptInstance.addHostFunction ("void gui_showHighscoreTable ()", asFUNCTION(gui_showHighscoreTable));
 
-	paraScriptInstance.addHostFunction ("void gui_insertNewScore (string &in)", (functionPtr) &gui_insertNewScore);
+	paraScriptInstance.addHostFunction ("void gui_insertNewScore (string &in)", asFUNCTION(gui_insertNewScore));
 }
 
 

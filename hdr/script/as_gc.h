@@ -56,37 +56,24 @@ public:
 	asCGarbageCollector();
 	~asCGarbageCollector();
 
-	int GarbageCollect (asDWORD flags, asUINT iterations);
+	int    GarbageCollect(asDWORD flags, asUINT iterations);
+	void   GetStatistics(asUINT *currentSize, asUINT *totalDestroyed, asUINT *totalDetected, asUINT *newObjects, asUINT *totalNewDestroyed) const;
+	void   GCEnumCallback(void *reference);
+	int    AddScriptObjectToGC(void *obj, asCObjectType *objType);
+	int    GetObjectInGC(asUINT idx, asUINT *seqNbr, void **obj, asITypeInfo **type);
 
-	void GetStatistics (asUINT *currentSize, asUINT *totalDestroyed, asUINT *totalDetected, asUINT *newObjects, asUINT *totalNewDestroyed) const;
-
-	void GCEnumCallback (void *reference);
-
-	int AddScriptObjectToGC (void *obj, asCObjectType *objType);
-
-	int GetObjectInGC (asUINT idx, asUINT *seqNbr, void **obj, asITypeInfo **type);
-
-	int ReportAndReleaseUndestroyedObjects ();
+	int    ReportAndReleaseUndestroyedObjects();
 
 	asCScriptEngine *engine;
 
 	// Callback for when circular reference are detected
 	asCIRCULARREFFUNC_t circularRefDetectCallbackFunc;
-	void                                       *circularRefDetectCallbackParam;
+	void *              circularRefDetectCallbackParam;
 
 protected:
-	struct asSObjTypePair
-	{
-		void          *obj;
-		asCObjectType *type;
-		asUINT        seqNbr;
-	};
-	struct asSIntTypePair
-	{
-		int           i;
-		asCObjectType *type;
-	};
-	typedef asSMapNode<void *, asSIntTypePair> asSMapNode_t;
+	struct asSObjTypePair {void *obj; asCObjectType *type; asUINT seqNbr;};
+	struct asSIntTypePair {int i; asCObjectType *type;};
+	typedef asSMapNode<void*, asSIntTypePair> asSMapNode_t;
 
 	enum egcDestroyState
 	{

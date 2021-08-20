@@ -133,7 +133,7 @@ Uint32 paraLightmap::getAttachedBullet ()
 paraLightmap::paraLightmap (b2Vec2 newWorldPos, int newType, int newWhichBullet)
 //-----------------------------------------------------------------------------------------------------------
 {
-	worldPosInPixels = sys_convertToPixels (newWorldPos);
+	worldPosInPixels = sys_convertMetersToPixels (newWorldPos);
 	type             = newType;
 	textureWidth     = textures.at ("lightmap").getWidth ();
 	textureHeight    = textures.at ("lightmap").getHeight ();
@@ -223,7 +223,7 @@ void paraLightmap::animate ()
 			break;
 
 		case LIGHTMAP_TYPE_BULLET:
-			worldPosInPixels = sys_convertToPixels (bullets[gam_getArrayIndex (bulletLink)].worldPosInMeters);
+			worldPosInPixels = sys_convertMetersToPixels (bullets[gam_getArrayIndex (bulletLink)].worldPosInMeters);
 			colorIndexCounter += 1.0f * colorIndexChangeSpeed;
 			if (colorIndexCounter > 1.0f)
 			{

@@ -10,7 +10,7 @@
 
 #define initialNumReserveNodes 10
 
-#define PATH_TOO_SHORT -1
+#define ASTAR_PATH_TOO_SHORT -1
 #define NO_DROID -1
 
 

@@ -42,7 +42,7 @@ void gam_doDisrupterDamage (int sourceDroid)
 {
 	for (auto &droidItr : g_shipDeckItr->second.droid)
 	{
-		if ((droidItr.visibleToPlayer) && (droidItr.currentMode == DROID_MODE_NORMAL) && (!dataBaseEntry[droidItr.droidType].disrupterImmune))
+		if ((droidItr.visibleToPlayer) && (droidItr.getCurrentMode() == DROID_MODE_NORMAL) && (!dataBaseEntry[droidItr.getDroidType()].disrupterImmune))
 		{
 			gam_damageToDroid (droidItr.userData->dataValue, PHYSIC_DAMAGE_BULLET, sourceDroid);
 		}
@@ -68,12 +68,12 @@ paraBullet gam_createBullet (int bulletSourceIndex, Uint32 bulletID)
 
 	if (-1 == bulletSourceIndex)        // Bullet from player
 	{
-		bulletType     = dataBaseEntry[playerDroid.droidType].bulletType;
-		if (!dataBaseEntry[playerDroid.droidType].canShoot)
+		bulletType     = dataBaseEntry[playerDroid.getDroidType()].bulletType;
+		if (!dataBaseEntry[playerDroid.getDroidType()].canShoot)
 			bulletType = BULLET_TYPE_NORMAL;
 
-		newVelocity         = playerDroid.velocity;
-		newWorldPosInMeters = sys_convertToMeters (playerDroid.worldPosInPixels);
+		newVelocity         = playerDroid.getVelocity();
+		newWorldPosInMeters = sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels());
 		//
 		// Set its direction
 		tempVelocity = newVelocity;
@@ -81,26 +81,26 @@ paraBullet gam_createBullet (int bulletSourceIndex, Uint32 bulletID)
 		tempVelocity *= 50.0f;
 		tempBullet.velocity = tempVelocity;
 
-		tempBullet.worldDestInMeters = tempVelocity + sys_convertToMeters (playerDroid.worldPosInPixels);
+		tempBullet.worldDestInMeters = tempVelocity + sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels());
 	}
 	else        // Bullet from Droid
 	{
-		bulletType = dataBaseEntry[g_shipDeckItr->second.droid[bulletSourceIndex].droidType].bulletType;
+		bulletType = dataBaseEntry[g_shipDeckItr->second.droid[bulletSourceIndex].getDroidType()].bulletType;
 
-		if (g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid () == -1)
+		if (g_shipDeckItr->second.droid[bulletSourceIndex].ai2.getTargetDroid () == -1)
 		{
 			// Aim at player position
-			newVelocity = playerDroid.worldPosInPixels - g_shipDeckItr->second.droid[bulletSourceIndex].worldPosInPixels;
-			tempBullet.worldDestInMeters = sys_convertToMeters(playerDroid.worldPosInPixels);
+			newVelocity = playerDroid.getWorldPosInPixels() - g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels();
+			tempBullet.worldDestInMeters = sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels());
 		}
 		else
 		{
 			// Aim at other droid
-			newVelocity = g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid ()].worldPosInPixels - g_shipDeckItr->second.droid[bulletSourceIndex].worldPosInPixels;
-			tempBullet.worldDestInMeters = sys_convertToMeters(g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai.getTargetDroid ()].worldPosInPixels);
+			newVelocity = g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai2.getTargetDroid ()].getWorldPosInPixels() - g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels();
+			tempBullet.worldDestInMeters = sys_convertPixelsToMeters (g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai2.getTargetDroid ()].getWorldPosInPixels());
 		}
 
-		newWorldPosInMeters = sys_convertToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].worldPosInPixels);
+		newWorldPosInMeters = sys_convertPixelsToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels());
 		//
 		// Set its direction
 		tempVelocity = newVelocity;
@@ -136,8 +136,8 @@ paraBullet gam_createBullet (int bulletSourceIndex, Uint32 bulletID)
 
 		tempBullet.userData->ID              = bulletID;
 		tempBullet.userData->dataValue       = bulletSourceIndex;
-		tempBullet.userData->wallIndexValue  = -1;
-		tempBullet.userData->ignoreCollision = false;
+		tempBullet.userData->wallIndexValue       = -1;
+		tempBullet.userData->ignoreCollisionDroid = false;
 		tempBullet.body->SetUserData (tempBullet.userData);
 
 #ifdef DEBUG_BULLET
@@ -268,9 +268,9 @@ void gam_addBullet (int bulletSourceIndex)
 	Uint32 bulletID;
 
 	if (bulletSourceIndex == -1)
-		playerDroid.weaponCanFire = false;
+		playerDroid.setWeaponCanFire(false);
 	else
-		g_shipDeckItr->second.droid[bulletSourceIndex].weaponCanFire = false;
+		g_shipDeckItr->second.droid[bulletSourceIndex].setWeaponCanFire(false);
 
 	bulletID = SDL_GetTicks ();
 
@@ -281,13 +281,13 @@ void gam_addBullet (int bulletSourceIndex)
 			bulletItr = gam_createBullet (bulletSourceIndex, bulletID);
 			if (bulletSourceIndex < 0)  // Player bullet
 			{
-				gam_addEmitter (sys_convertToMeters (playerDroid.worldPosInPixels), PARTICLE_TYPE_TRAIL, bulletID);
-				gam_addNewLightmap (sys_convertToMeters (playerDroid.worldPosInPixels), LIGHTMAP_TYPE_BULLET, bulletID);
+				gam_addEmitter (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()), PARTICLE_TYPE_TRAIL, bulletID);
+				gam_addNewLightmap (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()), LIGHTMAP_TYPE_BULLET, bulletID);
 			}
 			else
 			{
-				gam_addEmitter(sys_convertToMeters(g_shipDeckItr->second.droid[bulletSourceIndex].worldPosInPixels), PARTICLE_TYPE_TRAIL, bulletID);
-				gam_addNewLightmap(sys_convertToMeters(g_shipDeckItr->second.droid[bulletSourceIndex].worldPosInPixels), LIGHTMAP_TYPE_BULLET, bulletID);
+				gam_addEmitter(sys_convertPixelsToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels()), PARTICLE_TYPE_TRAIL, bulletID);
+				gam_addNewLightmap(sys_convertPixelsToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels()), LIGHTMAP_TYPE_BULLET, bulletID);
 			}
 #ifdef DEBUG_BULLET
 			std::cout << "Bullet with ID : " << bulletID << " added to array position : " << indexCounter << std::endl;
@@ -324,7 +324,7 @@ void gam_removeBullet (Uint32 bulletID)
 
 		if (bullets.at (bulletIndex).userData != nullptr)
 		{
-			free (bullets.at (bulletIndex).userData);
+//			free (bullets.at (bulletIndex).userData);       // Mismatched free
 			bullets.at (bulletIndex).userData = nullptr;
 		}
 
@@ -385,7 +385,7 @@ void gam_renderBullets ()
 			if (bulletItr.type != BULLET_TYPE_DISRUPTER)
 			{
 				bulletItr.worldPosInMeters = bulletItr.body->GetPosition ();
-				tempPosition = sys_convertToPixels (bulletItr.worldPosInMeters);
+				tempPosition = sys_convertMetersToPixels (bulletItr.worldPosInMeters);
 				tempPosition = sys_worldToScreen (tempPosition, SPRITE_SIZE);
 				bulletItr.sprite.render (tempPosition.x, tempPosition.y, 1.0f, bulletItr.angle);
 			}

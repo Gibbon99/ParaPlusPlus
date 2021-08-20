@@ -21,7 +21,7 @@ struct _consoleCommand
 };
 
 //
-// This runs a internal function via function pointer
+// This runs an internal function via function pointer
 struct _consoleFunction
 {
 	void        *functionPtr;
@@ -32,10 +32,10 @@ struct _variables
 {
 	std::string varName;
 	int         varType;
-	int         *varPtrInt    = new int;
-	bool        *varPtrBool   = new bool;
-	float       *varPtrFloat  = new float;
-	std::string *varPtrString = new std::string;
+	int         *varPtrInt; //    = new int;
+	bool        *varPtrBool; //   = new bool;
+	float       *varPtrFloat; //  = new float;
+	std::string *varPtrString; // = new std::string;
 };
 
 struct _consoleLine
@@ -55,6 +55,7 @@ public:
 // Constructor
 	paraConsole(float defaultPosX, int red, int green, int blue, int alpha);
 
+	~paraConsole ();
 //
 // Add things
 
@@ -86,7 +87,7 @@ public:
 
 	void setVarFunc(const std::string &varName, float variablePtr);
 
-	void setVarFunc(const std::string &varName, std::string variablePtr);
+	void setVarFunc(const std::string &varName, const std::string& variablePtr);
 
 	void setVarBool(const std::string &varName, bool variablePtr);
 
@@ -143,7 +144,7 @@ public:
 	int                                         userBufferIndex  = 0;
 	std::vector<_consoleLine>::reverse_iterator consoleItr;
 	std::map<std::string, _consoleCommand>      consoleCommands;
-	std::vector<_variables>                     consoleVariables;
+	std::vector<_variables>                     consoleVariables;       // TODO Go through each variable and free 'new' memory
 	int                                         scrollbackOffset = 0;
 	bool                                        isDrawing        = false;
 
@@ -154,9 +155,9 @@ private:
 	int         defaultBlue;
 	int         defaultAlpha;
 	float       defaultPosX;
-	int         screenWidth;
-	int         screenHeight;
-	int         numVarColumns;
+	int         screenWidth{};
+	int         screenHeight{};
+	int         numVarColumns{};
 };
 
 #endif //PARA_PARACONSOLE_H

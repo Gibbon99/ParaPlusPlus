@@ -58,7 +58,7 @@ void io_processKeyboardState ()
 	if (renderer.currentFadeState != FADE_STATE_NONE)
 		return;
 
-	if (playerDroid.currentMode == DROID_MODE_EXPLODING)
+	if (playerDroid.getCurrentMode() == DROID_MODE_EXPLODING)
 		return;
 
 //io_mapJoyToInput();       // TODO uncomment and calibrate

@@ -5,7 +5,38 @@
 #include <system/physics.h>
 #include <game/doors.h>
 
-class RayCastAnyCallback : public b2RayCastCallback {
+class RayCastWallHitCallback : public b2RayCastCallback
+{
+public:
+	RayCastWallHitCallback ()
+	{
+		m_hit = false;
+	}
+
+	float ReportFixture (b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float) override
+	{
+
+		b2Body *body     = fixture->GetBody ();
+		auto   *userData = static_cast<_userData *>(body->GetUserData ());
+
+		switch (userData->userType)
+		{
+			case PHYSIC_TYPE_WALL:
+				m_hit = true;
+				return 0.0f;
+				break;
+		}
+
+		m_hit = false;
+		return 1.0f;
+	}
+
+	bool   m_hit;
+	b2Vec2 m_point;
+};
+
+class RayCastAnyCallback : public b2RayCastCallback
+{
 public:
 	RayCastAnyCallback ()
 	{
@@ -29,8 +60,7 @@ public:
 			{
 				//
 				// Look through open doors, ignoring the bullet sensor
-				if ((DOOR_ACROSS_OPENED == doorTriggers[userData->dataValue].currentFrame) ||
-				    (DOOR_UP_OPENED == doorTriggers[userData->dataValue].currentFrame))
+				if ((DOOR_ACROSS_OPENED == doorTriggers[userData->dataValue].currentFrame) || (DOOR_UP_OPENED == doorTriggers[userData->dataValue].currentFrame))
 				{
 					m_hit = false;
 					return 1.0f;
@@ -46,7 +76,7 @@ public:
 				break;
 		}
 
-		m_hit            = false;
+		m_hit = false;
 		return 1.0f;
 	}
 

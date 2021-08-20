@@ -529,8 +529,8 @@ void gam_changeToDeck (string deckName, int whichLift)
 	gam_initBulletArray ();
 
 	playerDroid.previousWorldPosInPixels = {-1, -1};
-	playerDroid.worldPosInPixels         = gam_getLiftWorldPosition (whichLift);
-	sys_setPlayerPhysicsPosition (playerDroid.worldPosInPixels);
+	playerDroid.setWorldPosInPixels(gam_getLiftWorldPosition (whichLift));
+	sys_setPlayerPhysicsPosition (playerDroid.getWorldPosInPixels());
 
 	// AI
 	gam_createInfluenceMap ();
@@ -556,13 +556,13 @@ void gam_renderVisibleScreen (double interpolation)
 	SDL_Rect sourceRect;
 	b2Vec2   renderPosition{};
 
-	viewportRect.x = static_cast<int>(playerDroid.worldPosInPixels.x) - (gameWinWidth / 2);
-	viewportRect.y = static_cast<int>(playerDroid.worldPosInPixels.y) - (gameWinHeight / 2);
+	viewportRect.x = static_cast<int>(playerDroid.getWorldPosInPixels().x) - (gameWinWidth / 2);
+	viewportRect.y = static_cast<int>(playerDroid.getWorldPosInPixels().y) - (gameWinHeight / 2);
 	viewportRect.w = gameWinWidth;
 	viewportRect.h = gameWinHeight;
 
-	renderPosition.x = playerDroid.worldPosInPixels.x - playerDroid.previousWorldPosInPixels.x;
-	renderPosition.y = playerDroid.worldPosInPixels.y - playerDroid.previousWorldPosInPixels.y;
+	renderPosition.x = playerDroid.getWorldPosInPixels().x - playerDroid.previousWorldPosInPixels.x;
+	renderPosition.y = playerDroid.getWorldPosInPixels().y - playerDroid.previousWorldPosInPixels.y;
 
 	renderPosition *= static_cast<float>(interpolation);
 	renderPosition.x += playerDroid.previousWorldPosInPixels.x;

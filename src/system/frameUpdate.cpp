@@ -213,7 +213,7 @@ void sys_gameTickRun ()
 				gam_animateLightmaps();
 				gam_processBullets ();
 
-				gam_populateInfluenceMap(playerDroid.worldPosInPixels);
+				gam_populateInfluenceMap(playerDroid.getWorldPosInPixels());
 
 				gam_processAI();
 

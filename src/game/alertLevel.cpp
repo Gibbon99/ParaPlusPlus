@@ -114,7 +114,7 @@ void gam_locateAlertTiles ()
 				tileWorldPos.x = (countX * tileSize);
 				tileWorldPos.y = (countY * tileSize);
 				tileLocationsInPixels.push_back (tileWorldPos);
-				gam_addNewLightmap (sys_convertToMeters (tileWorldPos), LIGHTMAP_TYPE_ALERT, gam_getCurrentAlertLevel());
+				gam_addNewLightmap (sys_convertPixelsToMeters (tileWorldPos), LIGHTMAP_TYPE_ALERT, gam_getCurrentAlertLevel());
 				break;
 
 			default:

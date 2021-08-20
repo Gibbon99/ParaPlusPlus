@@ -20,7 +20,7 @@ public:
 
 	void addScriptFunction (const std::string &funcName, std::string hostCallName);
 
-	void addHostFunction (const std::string &funcName, functionPtr funcPtr);
+	void addHostFunction (const std::string &funcName, asSFuncPtr funcPtr);
 
 	void stop ();
 
@@ -91,7 +91,7 @@ private:
 	struct _hostScriptFunctions
 	{
 		std::string scriptFunctionName{};
-		int        *hostFunctionPtr = nullptr;
+		asSFuncPtr  hostFunctionPtr;
 	};
 
 	struct _hostScriptVariables

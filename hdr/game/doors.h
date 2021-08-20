@@ -75,3 +75,9 @@ void gam_doorCheckTriggerAreas ();
 
 // Render current door frames onto map
 void gam_renderDoorFrames ();
+
+// Free memory used for userData
+void gam_doorFreeSensorMemory();
+
+// Free memory used for door triggers
+void gam_doorFreeTriggerMemory();

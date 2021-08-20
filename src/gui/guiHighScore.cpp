@@ -126,7 +126,6 @@ void gui_readHighScore ()
 	std::sort (highScoreTable.begin (), highScoreTable.end (), &gui_scoreSortFunction);
 }
 
-
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Insert a new score into the highscore table

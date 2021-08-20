@@ -1,9 +1,9 @@
 #pragma once
 
 #include "main.h"
-#include "game/droidClass.h"
+#include "classes/paraDroid.h"
 
-extern droidClass playerDroid;
+extern paraDroid playerDroid;
 extern double     playerFriction;           // From script
 extern float      influenceTimelimit;
 extern float      influenceTimelimtDelay;
@@ -38,9 +38,6 @@ void gam_setInfluenceTimelimit (int targetDroidClass);
 
 // Process how long a droid can be controlled for
 void gam_processInfluenceTime ();
-
-// Return the type of droid for checking access in database view
-int gam_getDroidType ();
 
 // Check and decrement the bump counter
 void gam_checkBumpCounter ();

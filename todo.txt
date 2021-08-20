@@ -11,7 +11,7 @@ Transfer - enemy AI - do based on priority of circuit types
 Droid AI - Attack
 Droid AI - Help
 Check bottom edge of animated tiles in graphics
-Stop droids from continually ramming when on a aStar path
+
 Follow mode ? Droid follows exact tile path that player took? Array to store tile path? Use tiles as waypoints
  - player - track a breadcrumb trail -- do coordinates as tile coords.
  Hunt mode - when in attack mode, and lose sight, go into hunt - check current tile to see if it is one
@@ -150,6 +150,7 @@ FIXED - BUG - Player remained blue after transfer lost
 >Commit
 DONE - Restart briefing after starting new game
 >Commit
+DONE - Stop droids from continually ramming when on a aStar path
 
 
 GUI

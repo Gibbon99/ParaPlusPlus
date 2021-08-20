@@ -5,6 +5,7 @@
 #include <system/gameEvents.h>
 #include <game/particles.h>
 #include <game/audio.h>
+#include <game/lifts.h>
 #include "game/physicsCollisions.h"
 
 #include "game/bullet.h"
@@ -180,8 +181,14 @@ void contactListener::BeginContact (b2Contact *contact)
 	_userData *bodyUserData_B;
 	b2Vec2    renderPosition;
 
-	bodyUserData_A = static_cast<_userData *>(contact->GetFixtureA ()->GetBody ()->GetUserData ());
-	bodyUserData_B = static_cast<_userData *>(contact->GetFixtureB ()->GetBody ()->GetUserData ());
+	b2Fixture* fixtureA = contact->GetFixtureA();
+	b2Fixture* fixtureB = contact->GetFixtureB();
+
+	bodyUserData_A = static_cast<_userData *>(fixtureA->GetBody ()->GetUserData ());
+	bodyUserData_B = static_cast<_userData *>(fixtureB->GetBody ()->GetUserData ());
+
+	if (stopContactPhysicsBugFlag)
+		return;
 
 	switch (bodyUserData_A->userType)
 	{
@@ -259,7 +266,7 @@ void contactListener::BeginContact (b2Contact *contact)
 		case PHYSIC_TYPE_TERMINAL:
 			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
 			{
-				playerDroid.overTerminalTile = true;
+				playerDroid.setOverTerminalTile(true);
 				return;
 			}
 			break;
@@ -267,8 +274,8 @@ void contactListener::BeginContact (b2Contact *contact)
 		case PHYSIC_TYPE_LIFT:
 			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
 			{
-				playerDroid.overLiftTile = true;
-				playerDroid.liftIndex    = bodyUserData_A->dataValue;
+				playerDroid.setOverLiftTile(true);
+				playerDroid.setLiftIndex(bodyUserData_A->dataValue);
 				return;
 			}
 			break;
@@ -276,14 +283,14 @@ void contactListener::BeginContact (b2Contact *contact)
 		case PHYSIC_TYPE_HEALING:
 			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
 			{
-				playerDroid.overHealingTile = true;
+				playerDroid.setOverHealingTile(true);
 				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "energyHeal");
 				return;
 			}
 			break;
 
 		case PHYSIC_TYPE_PLAYER:
-			if (!playerDroid.inTransferMode)
+			if (!playerDroid.getInTransferMode())
 			{
 				if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
 				{
@@ -304,7 +311,7 @@ void contactListener::BeginContact (b2Contact *contact)
 		case PHYSIC_TYPE_ENEMY:
 			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
 			{
-				if (!bodyUserData_B->ignoreCollision)
+				if (!bodyUserData_B->ignoreCollisionDroid)
 					gam_addEvent (EVENT_ACTION_DROID_COLLISION, 0, sys_getString ("%i|", bodyUserData_B->dataValue));
 			}
 			break;
@@ -391,7 +398,7 @@ void contactListener::BeginContact (b2Contact *contact)
 		case PHYSIC_TYPE_TERMINAL:
 			if (bodyUserData_A->userType == PHYSIC_TYPE_TERMINAL)
 			{
-				playerDroid.overTerminalTile = true;
+				playerDroid.setOverTerminalTile(true);
 				return;
 			}
 			break;
@@ -399,8 +406,8 @@ void contactListener::BeginContact (b2Contact *contact)
 		case PHYSIC_TYPE_LIFT:
 			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
 			{
-				playerDroid.overLiftTile = true;
-				playerDroid.liftIndex    = bodyUserData_B->dataValue;
+				playerDroid.setOverLiftTile(true);
+				playerDroid.setLiftIndex(bodyUserData_B->dataValue);
 				return;
 			}
 			break;
@@ -408,14 +415,14 @@ void contactListener::BeginContact (b2Contact *contact)
 		case PHYSIC_TYPE_HEALING:
 			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
 			{
-				playerDroid.overHealingTile = true;
+				playerDroid.setOverHealingTile(true);
 				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "energyHeal");
 				return;
 			}
 			break;
 
 		case PHYSIC_TYPE_PLAYER:
-			if (!playerDroid.inTransferMode)
+			if (!playerDroid.getInTransferMode())
 			{
 				if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
 				{
@@ -435,7 +442,7 @@ void contactListener::BeginContact (b2Contact *contact)
 		case PHYSIC_TYPE_ENEMY:
 			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
 			{
-				if (!bodyUserData_A->ignoreCollision)
+				if (!bodyUserData_A->ignoreCollisionDroid)
 					gam_addEvent (EVENT_ACTION_DROID_COLLISION, 0, sys_getString ("%i|", bodyUserData_A->dataValue));
 			}
 			break;
@@ -454,12 +461,15 @@ void contactListener::EndContact (b2Contact *contact)
 	bodyUserData_A = static_cast<_userData *>(contact->GetFixtureA ()->GetBody ()->GetUserData ());
 	bodyUserData_B = static_cast<_userData *>(contact->GetFixtureB ()->GetBody ()->GetUserData ());
 
+	if (stopContactPhysicsBugFlag)
+		return;
+
 	switch (bodyUserData_A->userType)
 	{
 		case PHYSIC_TYPE_TERMINAL:
 			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
 			{
-				playerDroid.overTerminalTile = false;
+				playerDroid.setOverTerminalTile(false);
 				return;
 			}
 			break;
@@ -467,8 +477,8 @@ void contactListener::EndContact (b2Contact *contact)
 		case PHYSIC_TYPE_LIFT:
 			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
 			{
-				playerDroid.overLiftTile = false;
-				playerDroid.liftIndex    = -1;
+				playerDroid.setOverLiftTile(false);
+				playerDroid.setLiftIndex(-1);
 				return;
 			}
 			break;
@@ -476,7 +486,7 @@ void contactListener::EndContact (b2Contact *contact)
 		case PHYSIC_TYPE_HEALING:
 			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
 			{
-				playerDroid.overHealingTile = false;
+				playerDroid.setOverHealingTile(false);
 				gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
 				return;
 			}
@@ -488,7 +498,7 @@ void contactListener::EndContact (b2Contact *contact)
 		case PHYSIC_TYPE_TERMINAL:
 			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
 			{
-				playerDroid.overTerminalTile = false;
+				playerDroid.setOverTerminalTile(false);
 				return;
 			}
 			break;
@@ -496,8 +506,8 @@ void contactListener::EndContact (b2Contact *contact)
 		case PHYSIC_TYPE_LIFT:
 			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
 			{
-				playerDroid.overLiftTile = false;
-				playerDroid.liftIndex    = -1;
+				playerDroid.setOverLiftTile(false);
+				playerDroid.setLiftIndex(-1);
 				return;
 			}
 			break;
@@ -505,7 +515,7 @@ void contactListener::EndContact (b2Contact *contact)
 		case PHYSIC_TYPE_HEALING:
 			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
 			{
-				playerDroid.overHealingTile = false;
+				playerDroid.setOverHealingTile(false);
 				gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
 				return;
 			}
@@ -527,6 +537,9 @@ void contactListener::PreSolve (b2Contact *contact, const b2Manifold *manifold)
 	bodyUserData_A = static_cast<_userData *>(contact->GetFixtureA ()->GetBody ()->GetUserData ());
 	bodyUserData_B = static_cast<_userData *>(contact->GetFixtureB ()->GetBody ()->GetUserData ());
 
+	if (stopContactPhysicsBugFlag)
+		return;
+
 	switch (bodyUserData_A->userType)
 	{
 		case PHYSIC_TYPE_PLAYER:
@@ -535,14 +548,25 @@ void contactListener::PreSolve (b2Contact *contact, const b2Manifold *manifold)
 				contact->SetEnabled (doWallCollisions);
 				return;
 			}
+
+			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
+			{
+				if (bodyUserData_B->ignoreCollisionPlayer)
+				{
+					contact->SetEnabled (false);
+					return;
+				}
+			}
 			break;
 
 		case PHYSIC_TYPE_ENEMY:
 			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
 			{
-				if (bodyUserData_A->ignoreCollision)
+				if (bodyUserData_A->ignoreCollisionDroid)
+				{
 					contact->SetEnabled (false);
-				return;
+					return;
+				}
 			}
 			break;
 
@@ -593,7 +617,7 @@ void contactListener::PreSolve (b2Contact *contact, const b2Manifold *manifold)
 		case PHYSIC_TYPE_ENEMY:
 			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
 			{
-				if (bodyUserData_B->ignoreCollision)
+				if (bodyUserData_B->ignoreCollisionDroid)
 					contact->SetEnabled (false);
 				return;
 			}

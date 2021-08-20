@@ -24,11 +24,12 @@ enum physicObjects
 
 struct _userData
 {
-	int userType;
-	int dataValue;
+	int    userType;
+	int    dataValue;
 	Uint32 ID;
-	int wallIndexValue;
-	bool ignoreCollision;
+	int    wallIndexValue;
+	bool   ignoreCollisionDroid;
+	bool   ignoreCollisionPlayer;
 };
 
 struct _PHYSIC_OBJECT
@@ -37,11 +38,12 @@ struct _PHYSIC_OBJECT
 	b2CircleShape shape;
 	b2FixtureDef  fixtureDef;
 	b2Body        *body = nullptr;
-	_userData     *userData;
+	_userData     *userData = nullptr;
 };
 
 extern bool   d_showPhysics;
 extern double gravity;         // Set from script
+extern bool   stopContactPhysicsBugFlag;
 
 // Setup Physics engine - run once
 bool sys_setupPhysicsEngine ();
@@ -62,7 +64,7 @@ void sys_setPlayerPhysicsPosition (b2Vec2 newPosition);
 void sys_processPhysics (double tickTime);
 
 // Return a pointer to the current physics world
-b2World *sys_getPhysicsWorld();
+b2World *sys_getPhysicsWorld ();
 
 // Create the solid walls for this level
 void sys_setupSolidWalls (const std::string levelName);
@@ -73,6 +75,6 @@ void sys_freePhysicsEngine ();
 void sys_setupEnemyPhysics (std::string levelName);
 
 // Clear previous level - remove physics objects from droid before changing level name
-void sys_clearDroidPhysics(std::string levelName);
+void sys_clearDroidPhysics (std::string levelName);
 
-void debug_getNumberOfShapes();
+void debug_getNumberOfShapes ();

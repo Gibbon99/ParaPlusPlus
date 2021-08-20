@@ -4,7 +4,7 @@
 
 void debug_showAIValues()
 {
-	shipdecks.at(gam_getCurrentDeckName()).droid[0].ai.showValues();
+	shipdecks.at(gam_getCurrentDeckName()).droid[0].ai2.debugShowValues();
 }
 
 void debug_getCurrentBackingTexture ()

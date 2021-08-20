@@ -3,20 +3,28 @@
 #include "system/util.h"
 #include "game/lineOfSight.h"
 
+#define SHOW_ALL_DROIDS 1
+
 RayCastAnyCallback LOSCallback;
 int                visibleFadeValue;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check each droid to see if the player can see them or not - set visibleToPlayer flag to reflect
-void gam_checkLOS (droidClass &droidItr)
+void gam_checkLOS (paraDroid &droidItr)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	sys_getPhysicsWorld ()->RayCast (&LOSCallback, sys_convertToMeters (droidItr.worldPosInPixels), sys_convertToMeters (playerDroid.worldPosInPixels));
+	sys_getPhysicsWorld ()->RayCast (&LOSCallback, sys_convertPixelsToMeters (droidItr.getWorldPosInPixels()), sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()));
 
 	if (LOSCallback.m_hit)
 	{
+
+#ifdef SHOW_ALL_DROIDS
+		droidItr.visibleState = VISIBLE_STATE_GO_VISIBLE;
+#else
 		droidItr.visibleState = VISIBLE_STATE_GO_NOT_VISIBLE;
+#endif
+
 	}
 	else
 	{

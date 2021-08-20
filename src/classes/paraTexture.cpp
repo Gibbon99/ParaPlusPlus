@@ -107,7 +107,7 @@ bool paraTexture::load (std::string newFileName, std::string newKeyName)
 	loaded  = false;
 
 	fileName = std::move(newFileName);
-	surface  = SDL_LoadBMP_RW (funcLoad (fileName), 0);
+	surface  = SDL_LoadBMP_RW (funcLoad (fileName), 0);     // TODO Free surface - memory leak
 	if (nullptr == surface)
 	{
 		funcOutput (-1, int_getString ("Unable to load texture file [ %s ] - [ %s ]", fileName.c_str (), SDL_GetError ()));
@@ -133,6 +133,8 @@ bool paraTexture::load (std::string newFileName, std::string newKeyName)
 	std::cout << "Loaded file : " << fileName << std::endl;
 #endif
 	sys_freeMemory (fileName);
+
+//	SDL_FreeSurface(surface);
 
 	loaded  = true;
 	return true;

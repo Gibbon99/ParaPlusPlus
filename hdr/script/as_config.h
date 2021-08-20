@@ -59,7 +59,7 @@
 // If the compiler/platform doesn't support atomic instructions
 // then this should be defined to use critical sections instead.
 
-#define AS_DEBUG 1
+// AS_DEBUG
 // This flag can be defined to make the library write some extra output when
 // compiling and executing scripts.
 
@@ -72,7 +72,7 @@
 // Disables the possibility to add class methods. Can increase the
 // portability of the library.
 
-// #define AS_MAX_PORTABILITY 1
+// AS_MAX_PORTABILITY
 // Disables all platform specific code. Only the asCALL_GENERIC calling
 // convention will be available in with this flag set.
 
@@ -177,6 +177,14 @@
 // Oracle Solaris Studio (previously known as Sun CC compiler)
 // __SUNPRO_CC is defined
 
+// Local (or Little) C Compiler
+// __LCC__ is defined
+// __e2k__ is not defined
+
+// MCST eLbrus C Compiler
+// __LCC__ is defined
+// __e2k__ is defined
+
 
 
 //
@@ -208,6 +216,9 @@
 // AS_ARM
 // Use assembler code for the ARM CPU family
 
+// AS_ARM64
+// Use assembler code for the ARM64/AArch64 CPU family
+
 // AS_SOFTFP
 // Use to tell compiler that ARM soft-float ABI
 // should be used instead of ARM hard-float ABI
@@ -226,6 +237,10 @@
 
 // AS_SPARC
 // Define this for SPARC CPU family
+
+// AS_E2K
+// Define this for MCST Elbrus 2000 CPU family
+
 
 
 
@@ -359,6 +374,14 @@
 #define AS_NO_THISCALL_FUNCTOR_METHOD
 
 
+// Emscripten compiler toolchain
+// ref: https://emscripten.org/
+#if defined(__EMSCRIPTEN__)
+  #define AS_MAX_PORTABILITY
+#endif
+
+
+
 // Embarcadero C++Builder
 #if defined(__BORLANDC__)
  #ifndef _Windows
@@ -482,7 +505,7 @@
 			#define AS_CALLEE_DESTROY_OBJ_BY_VAL
 			#define AS_LARGE_OBJS_PASSED_BY_REF
 			#define AS_LARGE_OBJ_MIN_SIZE 3
-			#define COMPLEX_RETURN_MASK (asOBJ_APP_CLASS_CONSTRUCTOR | asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_ASSIGNMENT | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
+			#define COMPLEX_RETURN_MASK (asOBJ_APP_CLASS_CONSTRUCTOR | asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_ASSIGNMENT | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY | asOBJ_APP_CLASS_MORE_CONSTRUCTORS)
 			#define COMPLEX_MASK (asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
 		#endif
 	#endif
@@ -502,12 +525,18 @@
 		#endif
 	#endif
 
+	#if defined(_M_ARM64)
+		#define AS_ARM64
+
+		// TODO: MORE HERE
+	#endif
+
 	#ifndef COMPLEX_MASK
 		#define COMPLEX_MASK (asOBJ_APP_ARRAY)
 	#endif
 
 	#ifndef COMPLEX_RETURN_MASK
-		#define COMPLEX_RETURN_MASK (asOBJ_APP_CLASS_CONSTRUCTOR | asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_ASSIGNMENT | asOBJ_APP_ARRAY)
+		#define COMPLEX_RETURN_MASK (asOBJ_APP_CLASS_CONSTRUCTOR | asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_ASSIGNMENT | asOBJ_APP_ARRAY | asOBJ_APP_CLASS_MORE_CONSTRUCTORS)
 	#endif
 
 	#define UNREACHABLE_RETURN
@@ -864,7 +893,7 @@
 		#elif defined(__ARMEL__) || defined(__arm__) || defined(__aarch64__) || defined(__AARCH64EL__)
 			// arm 
 
-			// The assembler code currently doesn't support arm v4, nor 64bit (v8)
+			// The assembler code currently doesn't support arm v4
 			#if !defined(__ARM_ARCH_4__) && !defined(__ARM_ARCH_4T__) && !defined(__LP64__)
 				#define AS_ARM
 
@@ -901,6 +930,28 @@
 
 				// Tested with both hard float and soft float abi
 				#undef AS_NO_THISCALL_FUNCTOR_METHOD
+			#elif defined(__LP64__) || defined(__aarch64__)
+				#define AS_ARM64
+
+				#undef STDCALL
+				#define STDCALL
+
+				#undef GNU_STYLE_VIRTUAL_METHOD
+				#undef AS_NO_THISCALL_FUNCTOR_METHOD
+
+				#define HAS_128_BIT_PRIMITIVES
+
+				#define CDECL_RETURN_SIMPLE_IN_MEMORY
+				#define STDCALL_RETURN_SIMPLE_IN_MEMORY
+				#define THISCALL_RETURN_SIMPLE_IN_MEMORY
+
+				#undef THISCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE
+				#undef CDECL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE
+				#undef STDCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE
+
+				#define THISCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 5
+				#define CDECL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE    5
+				#define STDCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE  5
 			#endif
 
 		#elif defined(__mips__)
@@ -932,6 +983,17 @@
 			// although use 64bit PPC only uses 32bit pointers.
 			// TODO: Add support for native calling conventions on Linux with PPC 64bit
 			#define AS_MAX_PORTABILITY
+		#elif defined(__e2k__)
+			// 64bit MCST Elbrus 2000
+			// ref: https://en.wikipedia.org/wiki/Elbrus_2000
+			#define AS_E2K
+			// AngelScript currently doesn't support native calling
+			// for MCST Elbrus 2000 processor so it's necessary to turn on
+			// portability mode
+			#define AS_MAX_PORTABILITY
+			// STDCALL is not available on 64bit Linux
+			#undef STDCALL
+			#define STDCALL
 		#else
 			#define AS_MAX_PORTABILITY
 		#endif
@@ -945,192 +1007,195 @@
 
 	// Free BSD
 	#elif defined(__FreeBSD__) || defined(__DragonFly__) || defined(__OpenBSD__)
-#define AS_BSD
-#if (defined(i386) || defined(__i386) || defined(__i386__)) && !defined(__LP64__)
-#undef COMPLEX_MASK
-#define COMPLEX_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
-#undef COMPLEX_RETURN_MASK
-#define COMPLEX_RETURN_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
-#define THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
-#define AS_X86
-#elif defined(__x86_64__)
-#define AS_X64_GCC
-#define HAS_128_BIT_PRIMITIVES
-#define SPLIT_OBJS_BY_MEMBER_TYPES
-#undef COMPLEX_MASK
-#define COMPLEX_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
-#undef COMPLEX_RETURN_MASK
-#define COMPLEX_RETURN_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
-#define AS_LARGE_OBJS_PASSED_BY_REF
-#define AS_LARGE_OBJ_MIN_SIZE 5
-#undef STDCALL
-#define STDCALL
-#else
-#define AS_MAX_PORTABILITY
-#endif
-#define AS_POSIX_THREADS
-#if !( ( (__GNUC__ == 4) && (__GNUC_MINOR__ >= 1) || __GNUC__ > 4) )
-// Only with GCC 4.1 was the atomic instructions available
-#define AS_NO_ATOMIC
-#endif
+		#define AS_BSD
+		#if (defined(i386) || defined(__i386) || defined(__i386__)) && !defined(__LP64__)
+			#undef COMPLEX_MASK
+			#define COMPLEX_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
+			#undef COMPLEX_RETURN_MASK
+			#define COMPLEX_RETURN_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
+			#define THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
+			#define AS_X86
+		#elif defined(__x86_64__)
+			#define AS_X64_GCC
+			#define HAS_128_BIT_PRIMITIVES
+			#define SPLIT_OBJS_BY_MEMBER_TYPES
+			#undef COMPLEX_MASK
+			#define COMPLEX_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
+			#undef COMPLEX_RETURN_MASK
+			#define COMPLEX_RETURN_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
+			#define AS_LARGE_OBJS_PASSED_BY_REF
+			#define AS_LARGE_OBJ_MIN_SIZE 5
+			#undef STDCALL
+			#define STDCALL
+		#else
+			#define AS_MAX_PORTABILITY
+		#endif
+		#define AS_POSIX_THREADS
+		#if !( ( (__GNUC__ == 4) && (__GNUC_MINOR__ >= 1) || __GNUC__ > 4) )
+			// Only with GCC 4.1 was the atomic instructions available
+			#define AS_NO_ATOMIC
+		#endif
 
-// PSP and PS2
-#elif defined(__PSP__) || defined(__psp__) || defined(_EE_) || defined(_PSP) || defined(_PS2)
-// Support native calling conventions on MIPS architecture
-#if (defined(_MIPS_ARCH) || defined(_mips) || defined(__MIPSEL__)) && !defined(__LP64__)
-#define AS_MIPS
-#define AS_USE_DOUBLE_AS_FLOAT
-#else
-#define AS_MAX_PORTABILITY
-#endif
+	// PSP and PS2
+	#elif defined(__PSP__) || defined(__psp__) || defined(_EE_) || defined(_PSP) || defined(_PS2)
+		// Support native calling conventions on MIPS architecture
+		#if (defined(_MIPS_ARCH) || defined(_mips) || defined(__MIPSEL__)) && !defined(__LP64__)
+			#define AS_MIPS
+			#define AS_USE_DOUBLE_AS_FLOAT
+		#else
+			#define AS_MAX_PORTABILITY
+		#endif
 
-// PS3
-#elif (defined(__PPC__) || defined(__ppc__)) && defined(__PPU__)
-// Support native calling conventions on PS3
-#define AS_PS3
-#define AS_PPC_64
-#define SPLIT_OBJS_BY_MEMBER_TYPES
-#define THISCALL_RETURN_SIMPLE_IN_MEMORY
-#define CDECL_RETURN_SIMPLE_IN_MEMORY
-#define STDCALL_RETURN_SIMPLE_IN_MEMORY
-// PS3 doesn't have STDCALL
-#undef STDCALL
-#define STDCALL
+	// PS3
+	#elif (defined(__PPC__) || defined(__ppc__)) && defined(__PPU__)
+		// Support native calling conventions on PS3
+		#define AS_PS3
+		#define AS_PPC_64
+		#define SPLIT_OBJS_BY_MEMBER_TYPES
+		#define THISCALL_RETURN_SIMPLE_IN_MEMORY
+		#define CDECL_RETURN_SIMPLE_IN_MEMORY
+		#define STDCALL_RETURN_SIMPLE_IN_MEMORY
+		// PS3 doesn't have STDCALL
+		#undef STDCALL
+		#define STDCALL
 
-// Dreamcast
-#elif __SH4_SINGLE_ONLY__
-// Support native calling conventions on Dreamcast
-#define AS_DC
-#define AS_SH4
+	// Dreamcast
+	#elif __SH4_SINGLE_ONLY__
+		// Support native calling conventions on Dreamcast
+		#define AS_DC
+		#define AS_SH4
 
-// Wii JWC - Close to PS3 just no PPC_64 and AS_PS3
-#elif defined(EPPC)
-#define AS_WII
-#define THISCALL_RETURN_SIMPLE_IN_MEMORY
-#define CDECL_RETURN_SIMPLE_IN_MEMORY
-#define STDCALL_RETURN_SIMPLE_IN_MEMORY
-#undef STDCALL
-#define STDCALL
+	// Wii JWC - Close to PS3 just no PPC_64 and AS_PS3
+	#elif defined(EPPC)
+		#define AS_WII
+		#define THISCALL_RETURN_SIMPLE_IN_MEMORY
+		#define CDECL_RETURN_SIMPLE_IN_MEMORY
+		#define STDCALL_RETURN_SIMPLE_IN_MEMORY
+		#undef STDCALL
+		#define STDCALL
 
-// Android
-#elif defined(ANDROID) || defined(__ANDROID__)
-#define AS_ANDROID
+	// Android
+	#elif defined(ANDROID) || defined(__ANDROID__)
+		#define AS_ANDROID
 
-// Android 2.3+ supports posix threads
-#define AS_POSIX_THREADS
+		// Android 2.3+ supports posix threads
+		#define AS_POSIX_THREADS
 
-// Common configuration with Android arm and x86
-#define CDECL_RETURN_SIMPLE_IN_MEMORY
-#define STDCALL_RETURN_SIMPLE_IN_MEMORY
-#define THISCALL_RETURN_SIMPLE_IN_MEMORY
+		// Common configuration with Android arm and x86
+		#define CDECL_RETURN_SIMPLE_IN_MEMORY
+		#define STDCALL_RETURN_SIMPLE_IN_MEMORY
+		#define THISCALL_RETURN_SIMPLE_IN_MEMORY
 
-#undef COMPLEX_MASK
-#define COMPLEX_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
-#undef COMPLEX_RETURN_MASK
-#define COMPLEX_RETURN_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
+		#undef COMPLEX_MASK
+		#define COMPLEX_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
+		#undef COMPLEX_RETURN_MASK
+		#define COMPLEX_RETURN_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
 
-#if (defined(_ARM_) || defined(__arm__))
-// Android ARM
+		#if (defined(_ARM_) || defined(__arm__))
+			// Android ARM
 
-// TODO: The stack unwind on exceptions currently fails due to the assembler code in as_callfunc_arm_gcc.S
-#define AS_NO_EXCEPTIONS
+			// TODO: The stack unwind on exceptions currently fails due to the assembler code in as_callfunc_arm_gcc.S
+			#define AS_NO_EXCEPTIONS
 
-#undef THISCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE
-#undef CDECL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE
-#undef STDCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE
+			#undef THISCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE
+			#undef CDECL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE
+			#undef STDCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE
 
-#define THISCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 2
-#define CDECL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 2
-#define STDCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 2
+			#define THISCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 2
+			#define CDECL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 2
+			#define STDCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 2
 
-// The stdcall calling convention is not used on the arm cpu
-#undef STDCALL
-#define STDCALL
+			// The stdcall calling convention is not used on the arm cpu
+			#undef STDCALL
+			#define STDCALL
 
-#undef GNU_STYLE_VIRTUAL_METHOD
+			#undef GNU_STYLE_VIRTUAL_METHOD
 
-#define AS_ARM
-#undef AS_NO_THISCALL_FUNCTOR_METHOD
-#define AS_SOFTFP
-#define AS_CALLEE_DESTROY_OBJ_BY_VAL
-#elif (defined(i386) || defined(__i386) || defined(__i386__)) && !defined(__LP64__)
-// Android Intel x86 (same config as Linux x86). Tested with Intel x86 Atom System Image.
+			#define AS_ARM
+			#undef AS_NO_THISCALL_FUNCTOR_METHOD
+			#define AS_SOFTFP
+			#define AS_CALLEE_DESTROY_OBJ_BY_VAL
+		#elif (defined(i386) || defined(__i386) || defined(__i386__)) && !defined(__LP64__)
+			// Android Intel x86 (same config as Linux x86). Tested with Intel x86 Atom System Image.
 
-// Support native calling conventions on Intel 32bit CPU
-#define THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
-#define AS_X86
-#undef AS_NO_THISCALL_FUNCTOR_METHOD
-#elif defined(__mips__)
-#define AS_MIPS
-#undef STDCALL
-#define STDCALL
+			// Support native calling conventions on Intel 32bit CPU
+			#define THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
+			#define AS_X86
+			#undef AS_NO_THISCALL_FUNCTOR_METHOD
+		#elif defined(__mips__)
+			#define AS_MIPS
+			#undef STDCALL
+			#define STDCALL
 
-#ifdef _ABIO32
-#define AS_MIPS
+			#ifdef _ABIO32
+				#define AS_MIPS
 
-	// All structures are returned in memory regardless of size or complexity
-#define THISCALL_RETURN_SIMPLE_IN_MEMORY
-#define	THISCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 0
-#define CDECL_RETURN_SIMPLE_IN_MEMORY
-#define CDECL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 0
-#define STDCALL_RETURN_SIMPLE_IN_MEMORY
-#define CDECL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 0
-#undef AS_NO_THISCALL_FUNCTOR_METHOD
-#else
-	// For other ABIs the native calling convention is not available (yet)
-#define AS_MAX_PORTABILITY
-#endif
-#endif
+				// All structures are returned in memory regardless of size or complexity
+				#define THISCALL_RETURN_SIMPLE_IN_MEMORY
+				#define	THISCALL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 0
+				#define CDECL_RETURN_SIMPLE_IN_MEMORY
+				#define CDECL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 0
+				#define STDCALL_RETURN_SIMPLE_IN_MEMORY
+				#define CDECL_RETURN_SIMPLE_IN_MEMORY_MIN_SIZE 0
+				#undef AS_NO_THISCALL_FUNCTOR_METHOD
+			#else
+				// For other ABIs the native calling convention is not available (yet)
+				#define AS_MAX_PORTABILITY
+			#endif
+		#endif
 
-// Haiku OS
-#elif __HAIKU__
-#define AS_HAIKU
-// Only x86-32 is currently supported by Haiku, but they do plan to support
-// x86-64 and PowerPC in the future, so should go ahead and check the platform
-// for future compatibility
-#if (defined(i386) || defined(__i386) || defined(__i386__)) && !defined(__LP64__)
-#define AS_X86
-#define THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
-#define THISCALL_RETURN_SIMPLE_IN_MEMORY
-#define CDECL_RETURN_SIMPLE_IN_MEMORY
-#define STDCALL_RETURN_SIMPLE_IN_MEMORY
-#else
-#define AS_MAX_PORTABILITY
-#endif
+	// Haiku OS
+	#elif __HAIKU__
+		#define AS_HAIKU
+		#if (defined(i386) || defined(__i386) || defined(__i386__)) && !defined(__LP64__)
+			#define AS_X86
+			#define THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
+			#define THISCALL_RETURN_SIMPLE_IN_MEMORY
+			#define CDECL_RETURN_SIMPLE_IN_MEMORY
+			#define STDCALL_RETURN_SIMPLE_IN_MEMORY
+		#elif defined(__x86_64__)
+			#define AS_X64_GCC
+			#define HAS_128_BIT_PRIMITIVES
+			#define SPLIT_OBJS_BY_MEMBER_TYPES
+			#undef COMPLEX_MASK
+			#define COMPLEX_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
+			#undef COMPLEX_RETURN_MASK
+			#define COMPLEX_RETURN_MASK (asOBJ_APP_CLASS_DESTRUCTOR | asOBJ_APP_CLASS_COPY_CONSTRUCTOR | asOBJ_APP_ARRAY)
+			#define AS_LARGE_OBJS_PASSED_BY_REF
+			#define AS_LARGE_OBJ_MIN_SIZE 5
+			#undef STDCALL
+			#define STDCALL
+		#else
+			#define AS_MAX_PORTABILITY
+		#endif
 
-#define AS_POSIX_THREADS
-#if !( ( (__GNUC__ == 4) && (__GNUC_MINOR__ >= 1) || __GNUC__ > 4) )
-// Only with GCC 4.1 was the atomic instructions available
-#define AS_NO_ATOMIC
-#endif
+	// Illumos
+	#elif defined(__sun)
+		#if (defined(i386) || defined(__i386) || defined(__i386__)) && !defined(__LP64__)
+			#define THISCALL_RETURN_SIMPLE_IN_MEMORY
+			#define CDECL_RETURN_SIMPLE_IN_MEMORY
+			#define STDCALL_RETURN_SIMPLE_IN_MEMORY
 
-// Illumos
-#elif defined(__sun)
-#if (defined(i386) || defined(__i386) || defined(__i386__)) && !defined(__LP64__)
-#define THISCALL_RETURN_SIMPLE_IN_MEMORY
-#define CDECL_RETURN_SIMPLE_IN_MEMORY
-#define STDCALL_RETURN_SIMPLE_IN_MEMORY
+			// Support native calling conventions on Intel 32bit CPU
+			#define THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
+			#define AS_X86
+		#elif defined(__x86_64__)
+			#define AS_X64_GCC
+			#define HAS_128_BIT_PRIMITIVES
+			#define SPLIT_OBJS_BY_MEMBER_TYPES
+			// STDCALL is not available on 64bit Linux
+			#undef STDCALL
+			#define STDCALL
+		#else
+			#define AS_MAX_PORTABILITY
+		#endif
+		#define AS_ILLUMOS
+		#define AS_POSIX_THREADS
 
-// Support native calling conventions on Intel 32bit CPU
-#define THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
-#define AS_X86
-#elif defined(__x86_64__)
-#define AS_X64_GCC
-#define HAS_128_BIT_PRIMITIVES
-#define SPLIT_OBJS_BY_MEMBER_TYPES
-// STDCALL is not available on 64bit Linux
-#undef STDCALL
-#define STDCALL
-#else
-#define AS_MAX_PORTABILITY
-#endif
-#define AS_ILLUMOS
-#define AS_POSIX_THREADS
-
-#if !( ( (__GNUC__ == 4) && (__GNUC_MINOR__ >= 1) || __GNUC__ > 4) )
-// Only with GCC 4.1 was the atomic instructions available
-#define AS_NO_ATOMIC
-#endif
+		#if !( ( (__GNUC__ == 4) && (__GNUC_MINOR__ >= 1) || __GNUC__ > 4) )
+			// Only with GCC 4.1 was the atomic instructions available
+			#define AS_NO_ATOMIC
+		#endif
 	#endif
 
 	#define UNREACHABLE_RETURN
@@ -1193,7 +1258,7 @@
 
 // If there are no current support for native calling
 // conventions, then compile with AS_MAX_PORTABILITY
-#if (!defined(AS_X86) && !defined(AS_SH4) && !defined(AS_MIPS) && !defined(AS_PPC) && !defined(AS_PPC_64) && !defined(AS_XENON) && !defined(AS_X64_GCC) && !defined(AS_X64_MSVC) && !defined(AS_ARM) && !defined(AS_X64_MINGW))
+#if (!defined(AS_X86) && !defined(AS_SH4) && !defined(AS_MIPS) && !defined(AS_PPC) && !defined(AS_PPC_64) && !defined(AS_XENON) && !defined(AS_X64_GCC) && !defined(AS_X64_MSVC) && !defined(AS_ARM) && !defined(AS_ARM64) && !defined(AS_X64_MINGW))
 	#ifndef AS_MAX_PORTABILITY
 		#define AS_MAX_PORTABILITY
 	#endif

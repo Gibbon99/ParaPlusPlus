@@ -90,10 +90,10 @@ void trn_processEndOfTransferGame ()
 	//
 	// If less and player is 001 - explode
 	//
-	if ((playerDroid.droidType == 0) && (playerCount < static_cast<int>(transferRows.size ()) / 2))
+	if ((playerDroid.getDroidType() == 0) && (playerCount < static_cast<int>(transferRows.size ()) / 2))
 	{
-		playerDroid.inTransferMode = false;
-		playerDroid.currentHealth = -1;
+		playerDroid.setInTransferMode(false);
+		playerDroid.setCurrentHealth(-1);
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferBurntout");
 		sys_setNewMode (MODE_TRANSFER_RESULT, false);
 		gam_setHudText ("burntout");
@@ -103,10 +103,10 @@ void trn_processEndOfTransferGame ()
 	//
 	// If less and player is > 001 - drop health, back to game
 	//
-	if ((playerDroid.droidType > 0) && (playerCount < static_cast<int>(transferRows.size ()) / 2))
+	if ((playerDroid.getDroidType() > 0) && (playerCount < static_cast<int>(transferRows.size ()) / 2))
 	{
-		playerDroid.inTransferMode = false;
-		g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth = -1;
+		playerDroid.setInTransferMode(false);
+		g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].setCurrentHealth(-1);
 		playerDroid.transferTargetDroidType = 0;    // Transfer back into 001 droid
 		trn_transferIntoDroid();    // Drop back to 001 stats and sprite
 		sys_setNewMode(MODE_TRANSFER_RESULT, false);
@@ -130,7 +130,7 @@ void trn_processEndOfTransferGame ()
 	// explode other droid - do score - call damageToDroid ?
 	// back to game after delay timer after showing transfer result
 	//
-	playerDroid.inTransferMode = false;
+	playerDroid.setInTransferMode(false);
 	trn_transferIntoDroid ();
 	sys_setNewMode (MODE_TRANSFER_RESULT, false);
 	gam_setHudText ("transferred");
@@ -240,7 +240,7 @@ void trn_transferLostGame ()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	gam_setupPlayerDroid ();        // reset back to 001
-	playerDroid.currentHealth = dataBaseEntry[playerDroid.droidType].maxHealth / 4;   // Not in a good way
+	playerDroid.setCurrentHealth(dataBaseEntry[playerDroid.getDroidType()].maxHealth / 4);   // Not in a good way
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -249,22 +249,22 @@ void trn_transferLostGame ()
 void trn_transferIntoDroid ()
 //---------------------------------------------------------------------------------------------------------------------
 {
-	playerDroid.velocity      = {0, 0};
+	playerDroid.setVelocity(b2Vec2{0, 0});
 
 	if (playerDroid.transferTargetDroidType > 0)
 	{
 		gam_setInfluenceTimelimit (playerDroid.transferTargetDroidType);
-		playerDroid.droidType     = playerDroid.transferTargetDroidType;
-		playerDroid.currentHealth = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth;
-		playerDroid.droidName     = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].droidName;
+		playerDroid.setDroidType(playerDroid.transferTargetDroidType);
+		playerDroid.setCurrentHealth(g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].getCurrentHealth());
+		playerDroid.setDroidName(g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].getDroidName());
 		playerDroid.sprite        = g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].sprite;
 
-		playerDroid.ai.setAcceleration (dataBaseEntry[playerDroid.droidType].accelerate);
-		playerDroid.ai.setMaxSpeed (dataBaseEntry[playerDroid.droidType].maxSpeed);
+		playerDroid.ai2.setAcceleration (dataBaseEntry[playerDroid.getDroidType()].accelerate);
+		playerDroid.ai2.setMaxSpeed (dataBaseEntry[playerDroid.getDroidType()].maxSpeed);
 
 		//
 		// Destroy the droid
-		g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].currentHealth = -10;
+		g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].setCurrentHealth(-10);
 
 		gam_checkActionWitness();
 
@@ -274,7 +274,7 @@ void trn_transferIntoDroid ()
 	{
 		// Drop back to 001
 		gam_setupPlayerDroid ();
-		playerDroid.currentHealth = dataBaseEntry[0].maxHealth / 4;
+		playerDroid.setCurrentHealth(dataBaseEntry[0].maxHealth / 4);
 		gam_checkPlayerHealth();    // Set animation speed
 		gam_resetInfluenceTimeLeftFlag();   // Don't draw in blue if in low influence time and fail transfer
 	}

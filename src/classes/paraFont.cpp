@@ -6,6 +6,29 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Constructor
+paraFont::paraFont()
+//----------------------------------------------------------------------------------------------------------------------
+= default;
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Deconstructor
+paraFont::~paraFont()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	auto fontItr = fonts.begin();
+
+	while (fontItr != fonts.end())
+	{
+		TTF_CloseFont(fontItr->second.handle);
+
+		fontItr++;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Set a function to call when displaying any output
 void paraFont::setOutputFunction(funcPtrIntStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
@@ -92,7 +115,7 @@ bool paraFont::load (int fontSize, std::string keyName, std::string fileName)
 //	tempFont.handle = TTF_OpenFont(fileName.c_str(), fontSize);
 //
 // Load from packfile rather than filesystem - should be done via load function redirect like texture class
-	tempFont.handle = TTF_OpenFontRW(io_loadRawFile (fileName.c_str()), 0, fontSize);
+	tempFont.handle = TTF_OpenFontRW(io_loadRawFile (fileName.c_str()), 0, fontSize);       // Font closed in class deconstructor
 
 	if (nullptr == tempFont.handle)
 	{
@@ -236,5 +259,5 @@ void paraFont::render(SDL_Renderer *whichRenderer, double posX, double posY, int
 	}
 
 	SDL_RenderCopyF (whichRenderer, tempTexture, nullptr, &pos);
-	SDL_DestroyTexture (tempTexture);
+//	SDL_DestroyTexture (tempTexture);       // TODO Causing corrupt memory when running lots of threads?? Drawing status of AI on droids ?
 }
