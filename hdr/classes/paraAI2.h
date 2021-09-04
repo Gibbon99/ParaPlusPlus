@@ -2,10 +2,13 @@
 #define PARA_PARAAI2_H
 
 #include <b2_math.h>
+#include "paraAStar.h"
 
-extern SDL_Thread  *sdlThreadID;
+extern SDL_Thread *sdlThreadID;
 
-enum _AI2_PATROL_ACTIONS
+//
+// Use strongly typed enumeration type
+enum class AI2_PATROL_ACTIONS
 {
 	AI2_NORMAL_PATROL = 0,
 	AI2_FIND_WAYPOINT,
@@ -23,10 +26,10 @@ enum _AI2_MODES
 	AI2_MODE_NUMBER
 };
 
-enum PATROL_WAYPOINT_DIRECTION
+enum class PATROL_WAYPOINT_DIRECTION
 {
-	PATROL_WAYPOINT_DIRECTION_UP = 0,
-	PATROL_WAYPOINT_DIRECTION_DOWN
+	UP = 0,
+	DOWN
 };
 
 class paraAI2
@@ -49,13 +52,15 @@ public:
 
 	void attack ();
 
+	void hunt ();
+
 	b2Vec2 findFleeTile ();
 
 	b2Vec2 findHealingTile ();
 
 	b2Vec2 findOpenWaypoint ();
 
-	b2Vec2 findLocationWithLOS (int locationType);
+	b2Vec2 findLocationWithLOS (AI2_PATROL_ACTIONS locationType);
 
 	void reachedDestination ();
 
@@ -66,6 +71,8 @@ public:
 	int checkPotentialCollision ();
 
 	void getNextDestination ();
+
+	void runAStarCode (b2Vec2 destinationTile);
 
 	void processVelocity ();
 
@@ -89,7 +96,7 @@ public:
 
 	void setWaypointIndex (int newIndex);
 
-	void setWaypointDirection (int newDirection);
+	void setWaypointDirection (PATROL_WAYPOINT_DIRECTION newDirection);
 
 	void switchWaypointDirection ();
 
@@ -103,30 +110,36 @@ public:
 
 	double getMaxSpeed ();
 
-	float     desiredAttackDistance2 = 6;    // meters
-	float     paddingSize2           = 2;
+	int getPatrolWaypointIndex ();
+
+	void checkAttackVisibility ();
+
+	float     desiredAttackDistance2                      = 6;    // meters
+	float     paddingSize2                                = 2;
 	paraAStar aStar;
 
 private:
 
-	int       currentAIMode               = AI2_MODE_PATROL;
-	int       previousAIMode              = AI2_MODE_PATROL;
-	int       patrolWaypointDirection     = PATROL_WAYPOINT_DIRECTION_DOWN;
-	int       patrolWayPointIndex         = 0;
-	int       arrayIndex                  = -1;
-	int       targetDroid                 = NO_ATTACK_TARGET;
-	float     currentSpeed                = 0.0f;
-	float     acceleration                = 0.0f;
-	float     maxSpeed                    = 0.0f;
-	float     currentAttackDistance       = 0.0f;
-	b2Vec2    directionAttackVector       = {0, 0};
-	b2Vec2    currentVelocity             = {0, 0};
-	b2Vec2    destinationCoordsInMeters   = {0, 0};
-	b2Vec2    previousDestinationInMeters = {0, 0};
-	b2Vec2    worldPositionInMeters       = {0, 0};
-	b2Vec2    lookAheadVelocity           = {0, 0};                 // How far ahead does the droid look for a player collision
-	b2Fixture *droidFixture               = nullptr;                        // Used to determine if the droid will run into the player on current velocity
-	int       ai[AI2_MODE_NUMBER]{};
+	int                       currentAIMode{AI2_MODE_PATROL};
+	int                       previousAIMode{AI2_MODE_PATROL};
+	int                       patrolWayPointIndex{};
+	int                       arrayIndex{-1};
+	int                       targetDroid{NO_ATTACK_TARGET};
+	float                     currentSpeed{};
+	float                     acceleration{};
+	float                     maxSpeed{};
+	float                     currentAttackDistance{};
+	float                     huntCountdownValue{};
+	float                     huntCountdownModifier{0.2f};
+	b2Vec2                    directionAttackVector       = {0, 0};
+	b2Vec2                    currentVelocity             = {0, 0};
+	b2Vec2                    destinationCoordsInMeters   = {0, 0};
+	b2Vec2                    previousDestinationInMeters = {0, 0};
+	b2Vec2                    worldPositionInMeters       = {0, 0};
+	b2Vec2                    lookAheadVelocity           = {0, 0};                 // How far ahead does the droid look for a player collision
+	b2Fixture                 *droidFixture               = nullptr;                        // Used to determine if the droid will run into the player on current velocity
+	int                       ai[AI2_MODE_NUMBER]{};
+	PATROL_WAYPOINT_DIRECTION patrolWaypointDirection;
 };
 
 

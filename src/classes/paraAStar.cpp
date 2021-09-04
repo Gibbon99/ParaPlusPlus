@@ -58,7 +58,7 @@ void paraAStar::debugNodes ()
 
 	b2Vec2 coordPosition;
 
-	for (auto foundItr : wayPoints)
+	for (auto foundItr: wayPoints)
 	{
 //		drawPosition = sys_convertToPixels (foundItr.tileLocation);
 //		drawPosition.x = foundItr.tileLocation.x * tileSize;
@@ -76,7 +76,7 @@ void paraAStar::debugNodes ()
 
 	return;
 
-	for (auto openItr : openNodes)
+	for (auto openItr: openNodes)
 	{
 		drawPosition.x = openItr.tileLocation.x * tileSize;
 		drawPosition.y = openItr.tileLocation.y * tileSize;
@@ -86,7 +86,7 @@ void paraAStar::debugNodes ()
 		boxRGBA (renderer.renderer, static_cast<Sint16>(drawPosition.x), static_cast<Sint16>(drawPosition.y), static_cast<Sint16>(drawPosition.x + tileSize), static_cast<Sint16>(drawPosition.y + tileSize), 0, 150, 0, 128);
 	}
 
-	for (auto closedItr : closedNodes)
+	for (auto closedItr: closedNodes)
 	{
 		drawPosition.x = closedItr.tileLocation.x * tileSize;
 		drawPosition.y = closedItr.tileLocation.y * tileSize;
@@ -134,26 +134,26 @@ void paraAStar::debugWayPoints ()
 
 		lineStart.x = wayPoints[i].x;
 		lineStart.y = wayPoints[i].y;
-		lineStart.x += (tileSize / 2);
-		lineStart.y += (tileSize / 2);
+//		lineStart.x += (tileSize / 2);
+//		lineStart.y += (tileSize / 2);
 
 		lineFinish.x = wayPoints[i + 1].x;
 		lineFinish.y = wayPoints[i + 1].y;
-		lineFinish.x += (tileSize / 2);
-		lineFinish.y += (tileSize / 2);
+//		lineFinish.x += (tileSize / 2);
+//		lineFinish.y += (tileSize / 2);
 
 		debugDraw (lineStart, lineFinish);
 	}
 
 	lineStart.x = wayPoints[i].x;
 	lineStart.y = wayPoints[i].y;
-	lineStart.x += (tileSize / 2);
-	lineStart.y += (tileSize / 2);
+//	lineStart.x += (tileSize / 2);
+//	lineStart.y += (tileSize / 2);
 
 	lineFinish.x = wayPoints[i + 1].x;
 	lineFinish.y = wayPoints[i + 1].y;
-	lineFinish.x += (tileSize / 2);
-	lineFinish.y += (tileSize / 2);
+//	lineFinish.x += (tileSize / 2);
+//	lineFinish.y += (tileSize / 2);
 
 	debugDraw (lineStart, lineFinish);
 }
@@ -293,7 +293,7 @@ int paraAStar::findLowestCostNode ()
 	printf ("Thread [ %i ]: Search the open nodes and find the one with the lowest total cost.\n", ID);
 #endif
 
-	for (auto itr : openNodes)
+	for (auto itr: openNodes)
 	{
 		if (itr.f_score < lowestCost)
 		{
@@ -341,7 +341,7 @@ void paraAStar::moveNodeToClosedList (int whichNodeIndex)
 bool paraAStar::isNodeInOpenList (b2Vec2 whichNode)
 //--------------------------------------------------------------------------------------------------------
 {
-	for (auto itr : openNodes)
+	for (auto itr: openNodes)
 	{
 		if ((whichNode.x == itr.tileLocation.x) && (whichNode.y == itr.tileLocation.y))
 			return true;
@@ -355,7 +355,7 @@ bool paraAStar::isNodeInOpenList (b2Vec2 whichNode)
 bool paraAStar::isNodeInClosedList (b2Vec2 whichNode)
 //--------------------------------------------------------------------------------------------------------
 {
-	for (auto itr : closedNodes)
+	for (auto itr: closedNodes)
 	{
 		if ((whichNode.x == itr.tileLocation.x) && (whichNode.y == itr.tileLocation.y))
 			return true;
@@ -453,14 +453,14 @@ bool paraAStar::generateNewNode (int whichDirection)
 //
 // See if the node is on the closed list or not
 //
-if (isNodeInClosedList (tempNode.tileLocation))
+	if (isNodeInClosedList (tempNode.tileLocation))
 	{
 		return false; // Already in closed list - do not use
 	}
 //
 // If it isn't on the open list - add it
 //
-if (!isNodeInOpenList (tempNode.tileLocation))
+	if (!isNodeInOpenList (tempNode.tileLocation))
 	{
 		addTileToOpenNode (tempNode.tileLocation, moveTileCost, currentNodePtrClosedList);
 		return false;
@@ -483,7 +483,7 @@ if (!isNodeInOpenList (tempNode.tileLocation))
 
 		if (nodeIndex == 0)
 		{
-			printf("ERROR: nodeIndex is 0\n\n");
+			printf ("ERROR: nodeIndex is 0\n\n");
 			return false;
 		}
 
@@ -519,7 +519,7 @@ void paraAStar::extractPath ()
 
 	if (currentNodePtrClosedList == 0)
 	{
-		printf("node pointer is 0\n\n");
+		printf ("node pointer is 0\n\n");
 		return;
 	}
 
@@ -533,16 +533,15 @@ void paraAStar::extractPath ()
 	// While we haven't reached the starting tile ( no parent )
 	while (-1 != nodeParent)
 	{
-//		tempNode = closedNodes[nodeParent];
-tempNode.tileLocation   = closedNodes[nodeParent].tileLocation;
-tempNode.f_score        = closedNodes[nodeParent].f_score;
-tempNode.g_movementCost = closedNodes[nodeParent].g_movementCost;
-tempNode.h_estMoveCost  = closedNodes[nodeParent].h_estMoveCost;
-tempNode.parent         = closedNodes[nodeParent].parent;
+		tempNode.tileLocation   = closedNodes[nodeParent].tileLocation;
+		tempNode.f_score        = closedNodes[nodeParent].f_score;
+		tempNode.g_movementCost = closedNodes[nodeParent].g_movementCost;
+		tempNode.h_estMoveCost  = closedNodes[nodeParent].h_estMoveCost;
+		tempNode.parent         = closedNodes[nodeParent].parent;
 
-foundPath.push_back (tempNode);
+		foundPath.push_back (tempNode);
 
-nodeParent = closedNodes[nodeParent].parent;
+		nodeParent = closedNodes[nodeParent].parent;
 
 		if ((tempNode.tileLocation.x == startTile.x) && (tempNode.tileLocation.y == startTile.y))
 		{
@@ -558,9 +557,9 @@ nodeParent = closedNodes[nodeParent].parent;
 void paraAStar::compressWaypoints ()
 //--------------------------------------------------------------------------------------------------------
 {
-	int                 current = 1;
-	std::vector<b2Vec2> newPoints;
-	b2Vec2              tempPoint;
+	int                 current{1};
+	std::vector<b2Vec2> newPoints{};
+	b2Vec2              tempPoint{};
 
 	newPoints.clear ();
 	tempPoint = wayPoints[0];
@@ -585,7 +584,7 @@ void paraAStar::compressWaypoints ()
 	// Copy back into structure
 	wayPoints.clear ();
 
-	for (auto itr : newPoints)
+	for (auto itr: newPoints)
 	{
 		wayPoints.push_back (itr);
 	}
@@ -599,14 +598,14 @@ void paraAStar::convertToCoords ()
 {
 	b2Vec2 tempWaypoint;
 
-	for (auto itr : foundPath)
+	for (auto itr: foundPath)
 	{
 		tempWaypoint = itr.tileLocation;
 
 		tempWaypoint = sys_convertTilesToPixels (tempWaypoint);
 
-//		tempWaypoint.x += tileSize / 2;
-//		tempWaypoint.y += tileSize / 2;
+		tempWaypoint.x += tileSize / 2;
+		tempWaypoint.y += tileSize / 2;
 
 		wayPoints.push_back (tempWaypoint);
 	}
@@ -632,37 +631,66 @@ void paraAStar::convertToCoords ()
 	if (wayPoints.size () > 4)
 		compressWaypoints ();
 #endif
-
-	wayPointsIndex = 0;
 }
 
 //--------------------------------------------------------------------------------------------------------
 //
-// Get the waypoint pointed to by the wayPointIndex
-b2Vec2 paraAStar::getWaypoint (int waypointDirection)
+// Swap the direction flag
+void paraAStar::switchTravelDirection ()
 //--------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 returnValue;
+	if (aStarDirection == ASTAR_DIRECTION::UP)
+		aStarDirection = ASTAR_DIRECTION::DOWN;
+	else
+		aStarDirection = ASTAR_DIRECTION::UP;
+}
 
-	switch (waypointDirection)
+//--------------------------------------------------------------------------------------------------------
+//
+// Get the aStar direction
+ASTAR_DIRECTION paraAStar::getAStarDirection ()
+//--------------------------------------------------------------------------------------------------------
+{
+	return aStarDirection;
+}
+
+//--------------------------------------------------------------------------------------------------------
+//
+// Get the waypoint pointed to by the wayPointsIndex
+b2Vec2 paraAStar::getWaypoint ()
+//--------------------------------------------------------------------------------------------------------
+{
+	if (wayPoints.size () == 0)
 	{
-		case PATROL_WAYPOINT_DIRECTION_DOWN:
+		printf ("STOP: Waypoint array is empty.\n\n");
+		aStarDirection = ASTAR_DIRECTION::ERROR;
+		return b2Vec2{};
+	}
+
+	switch (aStarDirection)
+	{
+		case ASTAR_DIRECTION::DESTINATION:
+			break;
+
+		case ASTAR_DIRECTION::START:
+			wayPointsIndex = 0;
+			break;
+
+		case ASTAR_DIRECTION::DOWN:
 			wayPointsIndex--;
 			if (wayPointsIndex < 0)
 			{
 				wayPointsIndex = 0;
-				returnValue.x = PATROL_WAYPOINT_DIRECTION_DOWN;
-				return returnValue;
+				aStarDirection = ASTAR_DIRECTION::START;   // Reverse direction as reached start of waypoint array
 			}
 			break;
 
-		case PATROL_WAYPOINT_DIRECTION_UP:
+		case ASTAR_DIRECTION::UP:
 			wayPointsIndex++;
 			if (wayPointsIndex > static_cast<int>(wayPoints.size ()) - 1)
 			{
 				wayPointsIndex = static_cast<int>(wayPoints.size ()) - 1;
-				returnValue.x = PATROL_WAYPOINT_DIRECTION_UP;
-				return returnValue;
+				aStarDirection = ASTAR_DIRECTION::DESTINATION;
 			}
 			break;
 	}
@@ -680,14 +708,23 @@ int paraAStar::getPathStatus ()
 
 //--------------------------------------------------------------------------------------------------------
 //
+// Return the current wayPointIndex - debug
+int paraAStar::getWayPointsIndex ()
+//--------------------------------------------------------------------------------------------------------
+{
+	return wayPointsIndex;
+}
+
+//--------------------------------------------------------------------------------------------------------
+//
 // A thread to run the aStar searching function
 //void paraAStar::searchThread ()
 int paraAStar::searchThread ()
 //--------------------------------------------------------------------------------------------------------
 {
-	printf("Starting searchThread...\n");
+	printf ("Starting searchThread...\n");
 
-	printf("Address of isRunning is : %p\n", &isRunning);
+	printf ("Address of isRunning is : %p\n", &isRunning);
 
 	if (isRunning)
 		return ASTAR_STATUS_NOT_READY;
@@ -730,6 +767,7 @@ int paraAStar::searchThread ()
 	isRunning      = false;
 	pathStatus     = ASTAR_STATUS_READY;
 	wayPointsIndex = 0;
+	aStarDirection = ASTAR_DIRECTION::UP;
 
 #ifdef ASTAR_DEBUG
 	printf ("\nThread [ %i ]: AStar found a valid path.\n", ID);
@@ -755,6 +793,8 @@ void paraAStar::stopUsingPath ()
 	pathStatus               = ASTAR_STATUS_NOT_READY;
 	wayPointsReady           = false;
 	isRunning                = false;
+	wayPointsIndex           = 0;
+	aStarDirection           = ASTAR_DIRECTION::UP;
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -807,6 +847,6 @@ int paraAStar::requestNewPath (b2Vec2 start, b2Vec2 destination)
 
 int paraAStar::startThread (void *Param)
 {
-	auto* This = (paraAStar*) Param;
+	auto *This = (paraAStar *) Param;
 	return This->searchThread ();
 }

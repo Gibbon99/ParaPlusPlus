@@ -3,8 +3,6 @@
 
 #include <box2d/b2_body.h>
 #include <box2d/box2d.h>
-#include <classes/paraAStar.h>
-#include "classes/paraAI.h"
 #include "system/physics.h"
 #include "classes/paraAI2.h"
 

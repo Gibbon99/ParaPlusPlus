@@ -5,7 +5,6 @@
 
 #define SHOW_ALL_DROIDS 1
 
-RayCastAnyCallback LOSCallback;
 int                visibleFadeValue;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -14,7 +13,9 @@ int                visibleFadeValue;
 void gam_checkLOS (paraDroid &droidItr)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	sys_getPhysicsWorld ()->RayCast (&LOSCallback, sys_convertPixelsToMeters (droidItr.getWorldPosInPixels()), sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()));
+	RayCastAnyCallback LOSCallback;
+
+	sys_getPhysicsWorld ()->RayCast (&LOSCallback, sys_convertPixelsToMeters (droidItr.getWorldPosInPixels ()), sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ()));
 
 	if (LOSCallback.m_hit)
 	{

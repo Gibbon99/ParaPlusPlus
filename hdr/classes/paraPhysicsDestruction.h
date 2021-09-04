@@ -20,7 +20,7 @@ class destructionListener : public b2DestructionListener
 	void SayGoodbye (b2Fixture *fixture)
 	{
 		// remove all references to fixture.
-		printf ("Fixture is being destroyed.\n");
+//		printf ("Fixture is being destroyed.\n");
 	}
 };
 

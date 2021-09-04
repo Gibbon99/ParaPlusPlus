@@ -2,6 +2,8 @@ BUGS
 --------
 BUG - Transfer screen one - shows player droid at wrong position on start
 
+Waypoint index for aStar is changing based on a collision ??
+
 TO DO
 -------
 
@@ -20,7 +22,8 @@ Follow mode ? Droid follows exact tile path that player took? Array to store til
 Need debug mode to show path destination to track why aStar isn't working sometimes
 Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
 Deck view - Player icon location wrong on observation, airlock
-
+If a droid is currently a target and is destroyed - tell targeting droid about it
+Add "difficulty" value to AI adjustments  - ie: modifyAIValue(MODE_ATTACK, 20 + difficultyValue)
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more

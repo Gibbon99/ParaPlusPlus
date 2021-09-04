@@ -196,7 +196,7 @@ void sys_renderFrame (double interpolation)
 			gam_renderBullets ();
 			gam_renderParticles ();
 
-//			gam_debugShowPlayerTrail();
+			gam_debugShowPlayerTrail ();
 
 			if (d_showWaypoints)
 				gam_showWayPoints (gam_getCurrentDeckName ());

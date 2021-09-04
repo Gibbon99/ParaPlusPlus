@@ -3,7 +3,7 @@
 
 #include <b2_math.h>
 #include "main.h"
-#include <future>
+#include "paraAI2.h"
 
 #define NODE_UP             0x0
 #define NODE_DOWN           0x1
@@ -13,6 +13,16 @@
 #define ASTAR_STATUS_READY      0x0
 #define ASTAR_STATUS_NOT_READY  0x1
 #define ASTAR_STATUS_ERROR      0x2
+#define ASTAR_STATUS_TOO_SHORT  0x4
+
+enum class ASTAR_DIRECTION
+{
+	DOWN = 0,
+	UP,
+	DESTINATION,
+	START,
+	ERROR
+};
 
 struct _pathNode2
 {
@@ -61,6 +71,8 @@ public:
 
 	static int startThread (void *Param);
 
+	void switchTravelDirection ();
+
 	void stopUsingPath ();
 
 	int requestNewPath (b2Vec2 start, b2Vec2 destination);
@@ -84,7 +96,9 @@ public:
 
 	bool areWaypointsReady ();
 
-	b2Vec2 getWaypoint (int waypointDirection);
+	b2Vec2 getWaypoint ();
+
+	ASTAR_DIRECTION getAStarDirection ();
 
 	int getPathStatus ();
 
@@ -117,17 +131,20 @@ public:
 
 	void setID (int newID);
 
+	int getWayPointsIndex ();
+
 private:
 
-	int    ID                       = -1;
-	int    currentNodePtrClosedList = -1;
-	int    pathStatus               = -1;
-	int    wayPointsIndex           = 0;
-	int    currentNodeIndex         = 0;
-	bool   wayPointsReady           = false;
-	bool   isRunning                = false;
-	b2Vec2 startTile                = {0, 0};
-	b2Vec2 destTile                 = {0, 0};
+	int             ID                       = -1;
+	int             currentNodePtrClosedList = -1;
+	int             pathStatus               = -1;
+	int             wayPointsIndex           = 0;
+	int             currentNodeIndex         = 0;
+	bool            wayPointsReady           = false;
+	bool            isRunning                = false;
+	b2Vec2          startTile                = {0, 0};
+	b2Vec2          destTile                 = {0, 0};
+	ASTAR_DIRECTION aStarDirection           = ASTAR_DIRECTION::DOWN;
 
 	std::vector<_pathNode3> openNodes{};
 	std::vector<_pathNode3> closedNodes{};
