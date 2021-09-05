@@ -5,7 +5,7 @@
 #define AXIS_X 0
 #define AXIS_Y 1
 
-int joystickDeadzone = 200;
+int joystickDeadzone = 400;
 
 struct __JOYSTICK_STATE
 {
@@ -66,23 +66,38 @@ void io_closeJoystick ()
 void io_joyMovement (SDL_JoystickID whichJoystick, Uint8 whichAxis, Sint16 axisValue)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	static float joystickRateLimit{1.0f};
+
 	joystickState.joyAxisY = 0;
 	joystickState.joyAxisX = 0;
 
-	if (whichAxis == AXIS_X)
+	joystickRateLimit -= 1.0f * 0.1f;
+	if (joystickRateLimit < 0.0f)
 	{
-		if (axisValue < (0 - joystickDeadzone))  // Move Left
-			joystickState.joyAxisX = -1;
-		else if (axisValue > (0 + joystickDeadzone))
-			joystickState.joyAxisX = 1;
-	}
+		if (axisValue == 0)
+			return;
 
-	if (whichAxis == AXIS_Y)
-	{
-		if (axisValue < (0 - joystickDeadzone))     // Move Up
-			joystickState.joyAxisY = -1;
-		else if (axisValue > (0 + joystickDeadzone))
-			joystickState.joyAxisY = 1;
+		printf ("Axis value [ %i ]\n", axisValue);
+
+		if (whichAxis == AXIS_X)
+		{
+			joystickRateLimit = 1.0f;
+
+			if (axisValue < (0 - joystickDeadzone))  // Move Left
+				joystickState.joyAxisX = -1;
+			else if (axisValue > (0 + joystickDeadzone))
+				joystickState.joyAxisX = 1;
+		}
+
+		if (whichAxis == AXIS_Y)
+		{
+			joystickRateLimit = 1.0f;
+
+			if (axisValue < (0 - joystickDeadzone))     // Move Up
+				joystickState.joyAxisY = -1;
+			else if (axisValue > (0 + joystickDeadzone))
+				joystickState.joyAxisY = 1;
+		}
 	}
 }
 

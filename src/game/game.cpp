@@ -49,6 +49,8 @@ void gam_startNewGame ()
 	gam_initScoreValues ();
 	gam_setAlertLevel (ALERT_GREEN_TILE);
 
+	backgroundStarfield.init (renderer, 40, 7, 50, windowHeight, windowWidth);
+
 	gam_changeToDeck (gam_returnStartingDeck (), 0);
 }
 

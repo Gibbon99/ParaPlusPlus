@@ -13,12 +13,12 @@ _basicTunnel        tunnel[NUM_OF_TUNNELS];
 _sideviewBasicLevel sideviewLevels[MAX_LEVELS];
 _sideviewColors     sideviewColors[SIDEVIEW_NUM_COLORS];
 
-std::vector<_star>        stars;
-std::vector<__PARA_COLOR> depthColor;
-int                       boundaryTopY;
-int                       boundaryBottomY;
-int                       depthSpread;
-int                       depthNumber = 7;
+std::vector<_star> stars;
+//std::vector<__PARA_COLOR> depthColor;
+int                boundaryTopY;
+int                boundaryBottomY;
+int                depthSpread;
+int                depthNumber = 7;
 
 float sideviewDrawScale;        // From config file
 
@@ -398,7 +398,7 @@ void gui_renderStarfield ()
 {
 	try
 	{
-		for (auto starItr : stars)
+		for (auto starItr: stars)
 		{
 			if (textures.at ("planet").pixelColor (starItr.pos.x, starItr.pos.y) == 1)
 				filledCircleRGBA (renderer.renderer, starItr.pos.x, starItr.pos.y, 2, starItr.depth * depthSpread, starItr.depth * depthSpread, starItr.depth * depthSpread, SDL_ALPHA_OPAQUE);
@@ -420,7 +420,7 @@ void gui_animateStarfield ()
 	double moveSpeed;
 	double topSpeed = 4.0;
 
-	for (auto &starItr : stars)
+	for (auto &starItr: stars)
 	{
 		speedPercent = (double) starItr.depth / (double) depthNumber;
 		moveSpeed    = topSpeed * speedPercent;

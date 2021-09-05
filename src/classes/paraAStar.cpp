@@ -173,6 +173,8 @@ bool paraAStar::stillRunning ()
 bool paraAStar::areWaypointsReady ()
 //--------------------------------------------------------------------------------------------------------
 {
+	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
+
 	return wayPointsReady;
 }
 
@@ -722,9 +724,12 @@ int paraAStar::getWayPointsIndex ()
 int paraAStar::searchThread ()
 //--------------------------------------------------------------------------------------------------------
 {
-	printf ("Starting searchThread...\n");
 
-	printf ("Address of isRunning is : %p\n", &isRunning);
+	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
+
+	printf ("Index %i Starting searchThread...\n", ID);
+
+//	printf ("Address of isRunning is : %p\n", &isRunning);
 
 	if (isRunning)
 		return ASTAR_STATUS_NOT_READY;
@@ -763,11 +768,11 @@ int paraAStar::searchThread ()
 	}
 	extractPath ();
 	convertToCoords ();
-	wayPointsReady = true;
-	isRunning      = false;
-	pathStatus     = ASTAR_STATUS_READY;
 	wayPointsIndex = 0;
 	aStarDirection = ASTAR_DIRECTION::UP;
+	pathStatus     = ASTAR_STATUS_READY;
+	wayPointsReady = true;
+	isRunning      = false;
 
 #ifdef ASTAR_DEBUG
 	printf ("\nThread [ %i ]: AStar found a valid path.\n", ID);
@@ -777,7 +782,6 @@ int paraAStar::searchThread ()
 
 	return ASTAR_STATUS_READY;
 }
-
 
 //--------------------------------------------------------------------------------------------------------
 //
@@ -803,6 +807,8 @@ void paraAStar::stopUsingPath ()
 int paraAStar::requestNewPath (b2Vec2 start, b2Vec2 destination)
 //--------------------------------------------------------------------------------------------------------
 {
+	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
+
 	float distanceTestResult = 0.0f;
 
 	//

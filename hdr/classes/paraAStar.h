@@ -42,15 +42,6 @@ struct _pathNode3
 	int    f_score        = 0;
 };
 
-struct _pathNode4
-{
-	b2Vec2 tileLocation   = {0, 0};
-	int    parent         = -1;
-	int    g_movementCost = 0;
-	int    h_estMoveCost  = 0;
-	int    f_score        = 0;
-};
-
 struct _pathNode5
 {
 	b2Vec2 tileLocation   = {0, 0};
@@ -151,6 +142,5 @@ private:
 	std::vector<_pathNode5> foundPath{};
 	std::vector<b2Vec2>     wayPoints{};        // In world ( pixel ) coordinates
 };
-
 
 #endif //PARA_PARAASTAR_H

@@ -154,7 +154,8 @@ FIXED - BUG - Player remained blue after transfer lost
 DONE - Restart briefing after starting new game
 >Commit
 DONE - Stop droids from continually ramming when on a aStar path
-
+>Commit
+DONE - Added background to main scrolling screen
 
 GUI
 ------

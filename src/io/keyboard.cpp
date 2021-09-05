@@ -16,16 +16,16 @@ static int previousGuiMode;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Called when a key is pressed on the keyboard while in keyinput mode
-void io_setNewKeycodeValue(int newKeyCode)
+void io_setNewKeycodeValue (int newKeyCode)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	gui.setScancode(settingCurrentKeyIndex, newKeyCode);
+	gui.setScancode (settingCurrentKeyIndex, newKeyCode);
 
-	sys_setNewMode(previousGuiMode, false);
+	sys_setNewMode (previousGuiMode, false);
 
-	gam_setHudText("optionsMenu.controlsButton");
-	gui.setCurrentScreen(gui.getIndex(GUI_OBJECT_SCREEN, "controlsMenu"));
-	gui.setActiveObject(gui.getCurrentScreen(), GUI_OBJECT_BUTTON, "controlsMenu.backButton");
+	gam_setHudText ("optionsMenu.controlsButton");
+	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "controlsMenu"));
+	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "controlsMenu.backButton");
 
 	paraScriptInstance.run ("as_refreshControlLabels", "");
 }
@@ -33,7 +33,7 @@ void io_setNewKeycodeValue(int newKeyCode)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Function called from the GUI script to change the mode to input a new key value
-void io_initNewKeycodeValue(int whichKey)
+void io_initNewKeycodeValue (int whichKey)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((whichKey < 0) || (whichKey > KEY_NUMBER_ACTIONS))
@@ -43,8 +43,8 @@ void io_initNewKeycodeValue(int whichKey)
 	}
 
 	settingCurrentKeyIndex = whichKey;
-	previousGuiMode = currentMode;
-	sys_setNewMode(MODE_GUI_KEYCODE_ENTRY, false);
+	previousGuiMode        = currentMode;
+	sys_setNewMode (MODE_GUI_KEYCODE_ENTRY, false);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -58,10 +58,10 @@ void io_processKeyboardState ()
 	if (renderer.currentFadeState != FADE_STATE_NONE)
 		return;
 
-	if (playerDroid.getCurrentMode() == DROID_MODE_EXPLODING)
+	if (playerDroid.getCurrentMode () == DROID_MODE_EXPLODING)
 		return;
 
-//io_mapJoyToInput();       // TODO uncomment and calibrate
+	io_mapJoyToInput ();       // TODO uncomment and calibrate
 
 	switch (currentMode)
 	{
@@ -118,7 +118,7 @@ void io_processKeyboardState ()
 			break;
 
 		case MODE_GAME:
-			if (gui.getCurrentDialogbox() == NO_DIALOG_BOX)
+			if (gui.getCurrentDialogbox () == NO_DIALOG_BOX)
 			{
 				if (!gam_pauseModeOn ())
 				{

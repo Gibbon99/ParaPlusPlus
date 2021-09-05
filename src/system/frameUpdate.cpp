@@ -1,4 +1,3 @@
-
 #include <game/droids.h>
 #include <game/bullet.h>
 #include <game/particles.h>
@@ -91,13 +90,13 @@ void sys_processInputEvents ()
 			case SDL_KEYDOWN:
 				if (currentMode == MODE_SHOW_SPLASH)
 				{
-					sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
+					sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string (MODE_GUI_MAINMENU) + "|" + to_string (true));
 					return;
 				}
 
 				if (currentMode == MODE_GUI_KEYCODE_ENTRY)
 				{
-					io_setNewKeycodeValue(evt.key.keysym.scancode);
+					io_setNewKeycodeValue (evt.key.keysym.scancode);
 					return;
 				}
 
@@ -132,7 +131,7 @@ void sys_processInputEvents ()
 					sys_setNewMode (MODE_SHOW_SPLASH, true);
 
 				if (evt.key.keysym.sym == SDLK_F3)
-					gui_showHighscoreEntry();
+					gui_showHighscoreEntry ();
 
 				if (evt.key.keysym.sym == SDLK_F5)
 				{
@@ -181,7 +180,7 @@ void sys_gameTickRun ()
 
 	sys_processInputEvents ();
 
-	gam_processGameEventQueue();
+	gam_processGameEventQueue ();
 
 	io_processKeyboardState ();
 
@@ -193,47 +192,49 @@ void sys_gameTickRun ()
 			break;
 
 		case MODE_GAME:
-			if (gui.getCurrentDialogbox() != NO_DIALOG_BOX)
+			if (gui.getCurrentDialogbox () != NO_DIALOG_BOX)
 			{
 				io_mapMouseToInput ();
-				gui.processGuiInput();
+				gui.processGuiInput ();
 				return;
 			}
 
-			if (!gam_pauseModeOn())
+			if (!gam_pauseModeOn ())
 			{
 				sys_processPhysics (TICKS_PER_SECOND);
 				gam_animateHealing ();
 				playerDroid.sprite.animate ();
-				gam_animateDroids();
+				gam_animateDroids ();
 				gam_doorCheckTriggerAreas ();
 				gam_doorProcessActions ();
-				gam_animateParticles();
-				gam_removeDeadEmitters();
-				gam_animateLightmaps();
+				gam_animateParticles ();
+				gam_removeDeadEmitters ();
+				gam_animateLightmaps ();
 				gam_processBullets ();
 
-				gam_populateInfluenceMap(playerDroid.getWorldPosInPixels());
+				gam_populateInfluenceMap (playerDroid.getWorldPosInPixels ());
 
-				gam_processAI();
+				gam_processAI ();
 
 				gam_removeDroids (false);
-				gam_processScore();
-				gam_processHealingTile();
+				gam_processScore ();
+				gam_processHealingTile ();
 				gam_processInfluenceTime ();
 
 				gam_checkPlayerHealth ();
 				gam_weaponRechargePlayer ();
-				gam_checkBumpCounter();
+				gam_checkBumpCounter ();
 
 				gam_createTrail ();
+
+				backgroundStarfield.animate ();
 
 //				debug_getNumberOfShapes();
 			}
 			else
 			{
-				gam_animateDroids();
-				gam_animateLightmaps();
+				gam_animateDroids ();
+				gam_animateLightmaps ();
 				gam_animateHealing ();
 				playerDroid.sprite.animate ();
 			}
@@ -279,31 +280,31 @@ void sys_gameTickRun ()
 			break;
 
 		case MODE_TRANSFER_CHOOSE_SIDE:
-			trn_processTransferCountDown();
+			trn_processTransferCountDown ();
 			break;
 
 		case MODE_PRE_TRANSFER_GAME:
-			trn_prepareTransferGame();
+			trn_prepareTransferGame ();
 			break;
 
 		case MODE_TRANSFER_GAME:
-			trn_processTransferGame();
+			trn_processTransferGame ();
 			break;
 
 		case MODE_TRANSFER_DEADLOCK:
-			trn_processDeadlock();
+			trn_processDeadlock ();
 			break;
 
 		case MODE_END_PRE_LOST_SCREEN:
-			gui_preRenderLostScreen();
+			gui_preRenderLostScreen ();
 			break;
 
 		case MODE_END_LOST_SCREEN:
-			gui_processLostScreen();
+			gui_processLostScreen ();
 			break;
 
 		case MODE_GAME_OVER:
-			gam_processGameOver();
+			gam_processGameOver ();
 			break;
 
 		default:

@@ -12,6 +12,7 @@ paraConsole    console (1, 255, 255, 255, 255);
 paraRenderer   renderer;
 paraAudio      audio;
 paraGui        gui;
+paraStarfield  backgroundStarfield{};
 
 paraSprite databaseSprite;
 
@@ -36,7 +37,7 @@ double baseGameSpeed;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the current game time
-Uint32 sys_getCurrentTime()
+Uint32 sys_getCurrentTime ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return currentTime;

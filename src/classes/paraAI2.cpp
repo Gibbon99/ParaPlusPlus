@@ -109,6 +109,8 @@ std::string paraAI2::getAIActionString (int whichMode)
 void paraAI2::attack ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
+	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+
 	if (targetDroid == NO_ATTACK_TARGET)
 	{
 		modifyAIScore (AI2_MODE_ATTACK, -50);
@@ -372,6 +374,8 @@ void paraAI2::getNextDestination ()
 {
 	b2Vec2 nextDestinationInPixels{};
 
+	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+
 	previousDestinationInMeters = destinationCoordsInMeters;
 
 	switch (currentAIMode)
@@ -453,6 +457,9 @@ void paraAI2::getNextDestination ()
 void paraAI2::doMovement (b2Vec2 newWorldPosInMeters)
 //-----------------------------------------------------------------------------------------------------------------------
 {
+
+	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+
 //	int potentialCollideResult = COLLIDE_WITH_NOTHING;
 
 	worldPositionInMeters = newWorldPosInMeters;
@@ -464,6 +471,9 @@ void paraAI2::doMovement (b2Vec2 newWorldPosInMeters)
 			break;
 
 		case AI2_MODE_ATTACK:
+
+			std::cout << sys_getString ("Index %i Function : %s Check targetDroid == -1", arrayIndex, __func__) << std::endl;
+
 			if (targetDroid == -1)      // Get distance and direction to the player
 			{
 				currentAttackDistance = b2Distance (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ()), worldPositionInMeters);
@@ -471,9 +481,14 @@ void paraAI2::doMovement (b2Vec2 newWorldPosInMeters)
 			}
 			else if (targetDroid != NO_ATTACK_TARGET)                        // Get distance and direction to the other droid
 			{
+
+				std::cout << sys_getString ("Index %i Function : %s Check targetDroid != NO_ATTACK_TARGET", arrayIndex, __func__) << std::endl;
+
 				currentAttackDistance = b2Distance (sys_convertPixelsToMeters (g_shipDeckItr->second.droid[targetDroid].getWorldPosInPixels ()), worldPositionInMeters);
 				directionAttackVector = sys_convertPixelsToMeters (g_shipDeckItr->second.droid[targetDroid].getWorldPosInPixels ()) - worldPositionInMeters;
 			}
+
+			std::cout << sys_getString ("Index %i Function : %s currentAttackDistance > desiredAttackDistance2", arrayIndex, __func__) << std::endl;
 
 			if (currentAttackDistance > desiredAttackDistance2)    // Droid is too far away - move closer
 			{
@@ -485,6 +500,9 @@ void paraAI2::doMovement (b2Vec2 newWorldPosInMeters)
 
 			if (currentAttackDistance < desiredAttackDistance2)     // Too close - move away - but check that path is clear ?
 			{
+
+				std::cout << sys_getString ("Index %i Function : %s currentAttackDistance < desiredAttackDistance2", arrayIndex, __func__) << std::endl;
+
 				directionAttackVector = -directionAttackVector;
 				directionAttackVector.Normalize ();
 				directionAttackVector *= currentSpeed;
@@ -541,6 +559,8 @@ void paraAI2::setWaypointIndex (int newIndex)
 int paraAI2::checkPotentialCollision ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
+	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+
 	lookAheadVelocity *= LOOK_AHEAD_DISTANCE + (g_shipDeckItr->second.droid[arrayIndex].getDroidType () / 10);
 	//
 	// Change direction if going to run into player
@@ -616,6 +636,8 @@ void paraAI2::setWaypointDirection (PATROL_WAYPOINT_DIRECTION newDirection)
 void paraAI2::processVelocity ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
+	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+
 	//
 	// Reduce speed as approaching destination
 	//
@@ -757,6 +779,8 @@ int paraAI2::getPatrolWaypointIndex ()
 void paraAI2::modifyAIScore (int whichScore, int modifyAmount)
 //-----------------------------------------------------------------------------------------------------------------------
 {
+	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+
 	if ((whichScore < 0) || (whichScore > AI2_MODE_NUMBER))
 		return;
 
@@ -772,6 +796,9 @@ void paraAI2::modifyAIScore (int whichScore, int modifyAmount)
 void paraAI2::checkAIScores ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
+
+	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+
 	int highestScore = 0;
 	int newAIAction  = 0;
 
@@ -854,6 +881,7 @@ void paraAI2::changeAIModeTo (int newAIMode)
 
 	std::thread aStarThread2;
 
+	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
 
 	if (aStar.stillRunning ())
 		return;     // Wait for thread to finish before changing mode
@@ -1029,6 +1057,8 @@ void paraAI2::checkAttackVisibility ()
 {
 	RayCastAnyCallback LOSDroidToDroidCallback;
 
+	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+
 	if (targetDroid == TARGET_PLAYER)
 	{
 		if (!g_shipDeckItr->second.droid[arrayIndex].visibleToPlayer)
@@ -1062,6 +1092,8 @@ void paraAI2::checkAttackVisibility ()
 void paraAI2::process (b2Vec2 newWorldPosInMeters)
 //-----------------------------------------------------------------------------------------------------------------------
 {
+	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+
 	worldPositionInMeters = newWorldPosInMeters;
 
 	checkAIScores ();

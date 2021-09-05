@@ -129,7 +129,7 @@ void paraSprite::render (double posX, double posY, double scale, double angle)
 			SDL_SetTextureColorMod (textures.at (textureKeyName).getTexture (), tintColor.r, tintColor.g, tintColor.b);
 		}
 
-		if (textureItr->second.isLoaded())
+		if (textureItr->second.isLoaded ())
 			SDL_RenderCopyExF (renderer.renderer, texturePtr, &srcRect, &destRect, angle, nullptr, SDL_FLIP_NONE);
 	}
 
@@ -202,7 +202,7 @@ void paraSprite::setLowHealth (bool newState)
 void paraSprite::animateLowHealth ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	static int   lowHealthColorFade  = 255;
+	static int   lowHealthColorFade = 255;
 	static float lowHealthDelay     = 1.8f;
 	static float lowHealthCounter   = 1.0f;
 	static bool  lowHealthDirection = false;
@@ -216,7 +216,7 @@ void paraSprite::animateLowHealth ()
 			lowHealthColorFade -= 10.0f;
 			if (lowHealthColorFade < 100)
 			{
-				lowHealthColorFade  = 0;
+				lowHealthColorFade = 0;
 				lowHealthDirection = !lowHealthDirection;
 			}
 		}
@@ -225,7 +225,7 @@ void paraSprite::animateLowHealth ()
 			lowHealthColorFade += 10.0f;
 			if (lowHealthColorFade > 254)
 			{
-				lowHealthColorFade  = 254;
+				lowHealthColorFade = 254;
 				lowHealthDirection = !lowHealthDirection;
 			}
 		}

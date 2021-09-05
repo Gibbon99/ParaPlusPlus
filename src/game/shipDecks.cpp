@@ -57,33 +57,33 @@ void gam_setInfluenceValues (b2Vec2 startPos, int value, int size)
 
 	finalSize = size * 2;
 
-	influenceMap[(unsigned int)startPos.y * (unsigned int)(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int)startPos.x] = value;
+	influenceMap[(unsigned int) startPos.y * (unsigned int) (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int) startPos.x] = value;
 
-	topRight.x = startPos.x + (float)size;
-	topRight.y = startPos.y + (float)size;
+	topRight.x = startPos.x + (float) size;
+	topRight.y = startPos.y + (float) size;
 
 	for (auto i = 0; i != finalSize; i++)
 	{
 		topRight.y--;
-		influenceMap[(unsigned int)topRight.y * (unsigned int)(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int)topRight.x] = value;
+		influenceMap[(unsigned int) topRight.y * (unsigned int) (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int) topRight.x] = value;
 	}
 
 	for (auto i = 0; i != finalSize; i++)
 	{
 		topRight.x--;
-		influenceMap[(unsigned int)topRight.y * (unsigned int)(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int)topRight.x] = value;
+		influenceMap[(unsigned int) topRight.y * (unsigned int) (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int) topRight.x] = value;
 	}
 
 	for (auto i = 0; i != finalSize; i++)
 	{
 		topRight.y++;
-		influenceMap[(unsigned int)topRight.y * (unsigned int)(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int)topRight.x] = value;
+		influenceMap[(unsigned int) topRight.y * (unsigned int) (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int) topRight.x] = value;
 	}
 
 	for (auto i = 0; i != finalSize; i++)
 	{
 		topRight.x++;
-		influenceMap[(unsigned int)topRight.y * (unsigned int)(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int)topRight.x] = value;
+		influenceMap[(unsigned int) topRight.y * (unsigned int) (shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + (unsigned int) topRight.x] = value;
 	}
 }
 
@@ -137,7 +137,9 @@ void gam_debugInfluenceMap ()
 
 				drawPosition = sys_worldToScreen (drawPosition, tileSize);
 
-				boxRGBA (renderer.renderer, static_cast<short int>(drawPosition.x), static_cast<short int>(drawPosition.y), static_cast<short int>(drawPosition.x + static_cast<float>(tileSize)), static_cast<short int>(drawPosition.y + static_cast<float>(tileSize)), 30 + ((influenceValue / 10) * 40), 0, 0, 60);
+				boxRGBA (renderer.renderer, static_cast<short int>(drawPosition.x), static_cast<short int>(drawPosition.y), static_cast<short int>(drawPosition.x + static_cast<float>(tileSize)), static_cast<short int>(drawPosition.y +
+				                                                                                                                                                                                                          static_cast<float>(tileSize)),
+				         30 + ((influenceValue / 10) * 40), 0, 0, 60);
 			}
 		}
 	}
@@ -158,13 +160,13 @@ PARA_Texture *gam_getPlayfieldTexture ()
 int gam_getCurrentDeckIndex ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto deckItr : shipdecks)
+	for (auto deckItr: shipdecks)
 	{
 		if (deckItr.first == currentDeckName)
 			return deckItr.second.deckNumber;
 	}
 
-	sys_shutdownWithError("Unable to find current deck index.");
+	sys_shutdownWithError ("Unable to find current deck index.");
 	return -1;
 }
 
@@ -436,17 +438,16 @@ void gam_createDeckTexture (std::string deckName)
 {
 	int tileIndex;
 
-	static bool writeFile = false;
-
 	if (playfieldTexture != nullptr)
 		SDL_DestroyTexture (playfieldTexture);
 
-	playfieldTexture = SDL_CreateTexture (renderer.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, static_cast<int>(shipdecks.at (deckName).levelDimensions.x * tileSize), static_cast<int>(shipdecks.at (deckName).levelDimensions.y * tileSize));
+	playfieldTexture = SDL_CreateTexture (renderer.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, static_cast<int>(shipdecks.at (deckName).levelDimensions.x * tileSize), static_cast<int>(
+			shipdecks.at (deckName).levelDimensions.y * tileSize));
 	if (nullptr == playfieldTexture)
 		sys_shutdownWithError (sys_getString ("Unable to create playfield texture [ %s ].", SDL_GetError ()));
 
 	SDL_SetRenderTarget (renderer.renderer, playfieldTexture);
-	SDL_SetRenderDrawColor (renderer.renderer, 0x00, 0x00, 0x00, 0x00);
+	SDL_SetRenderDrawColor (renderer.renderer, 0x00, 0x00, 0x00, SDL_ALPHA_TRANSPARENT);
 	SDL_RenderClear (renderer.renderer);
 
 	for (auto countY = 0; countY != static_cast<int>(shipdecks.at (deckName).levelDimensions.y); countY++)
@@ -471,7 +472,7 @@ std::string gam_returnLevelNameFromDeck (int deckNumber)
 // Using   for (auto levelItr : shipdecks)
 // Results in massive FPS drop
 //
-	for (auto const &levelItr : shipdecks)
+	for (auto const &levelItr: shipdecks)
 	{
 		if (deckNumber == levelItr.second.deckNumber)
 		{
@@ -494,7 +495,7 @@ void gam_changeToDeck (string deckName, int whichLift)
 
 	tempTiles = "tiles";
 
-	if (deckName.empty())
+	if (deckName.empty ())
 		deckName = "Staterooms";
 
 	gam_clearGameEvents ();
@@ -529,8 +530,8 @@ void gam_changeToDeck (string deckName, int whichLift)
 	gam_initBulletArray ();
 
 	playerDroid.previousWorldPosInPixels = {-1, -1};
-	playerDroid.setWorldPosInPixels(gam_getLiftWorldPosition (whichLift));
-	sys_setPlayerPhysicsPosition (playerDroid.getWorldPosInPixels());
+	playerDroid.setWorldPosInPixels (gam_getLiftWorldPosition (whichLift));
+	sys_setPlayerPhysicsPosition (playerDroid.getWorldPosInPixels ());
 
 	// AI
 	gam_createInfluenceMap ();
@@ -539,7 +540,7 @@ void gam_changeToDeck (string deckName, int whichLift)
 	gam_startAlertLevelSound (gam_getCurrentAlertLevel ());
 
 	// Player
-	gam_clearPlayerTrail();
+	gam_clearPlayerTrail ();
 
 	// TEST
 //	gam_resetAllPaths ();
@@ -553,16 +554,27 @@ void gam_changeToDeck (string deckName, int whichLift)
 void gam_renderVisibleScreen (double interpolation)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_Rect sourceRect;
-	b2Vec2   renderPosition{};
+	SDL_Rect        sourceRect;
+	b2Vec2          renderPosition{};
+	static SDL_Rect renderPositionBackground{};
 
-	viewportRect.x = static_cast<int>(playerDroid.getWorldPosInPixels().x) - (gameWinWidth / 2);
-	viewportRect.y = static_cast<int>(playerDroid.getWorldPosInPixels().y) - (gameWinHeight / 2);
+	//
+	// Only get texture sizes the first time
+	if (renderPositionBackground.w == 0)
+	{
+		renderPositionBackground.x = 0;
+		renderPositionBackground.y = 0;
+		renderPositionBackground.w = textures.at ("universe").getWidth ();
+		renderPositionBackground.h = textures.at ("universe").getHeight ();
+	}
+
+	viewportRect.x = static_cast<int>(playerDroid.getWorldPosInPixels ().x) - (gameWinWidth / 2);
+	viewportRect.y = static_cast<int>(playerDroid.getWorldPosInPixels ().y) - (gameWinHeight / 2);
 	viewportRect.w = gameWinWidth;
 	viewportRect.h = gameWinHeight;
 
-	renderPosition.x = playerDroid.getWorldPosInPixels().x - playerDroid.previousWorldPosInPixels.x;
-	renderPosition.y = playerDroid.getWorldPosInPixels().y - playerDroid.previousWorldPosInPixels.y;
+	renderPosition.x = playerDroid.getWorldPosInPixels ().x - playerDroid.previousWorldPosInPixels.x;
+	renderPosition.y = playerDroid.getWorldPosInPixels ().y - playerDroid.previousWorldPosInPixels.y;
 
 	renderPosition *= static_cast<float>(interpolation);
 	renderPosition.x += playerDroid.previousWorldPosInPixels.x;
@@ -574,6 +586,13 @@ void gam_renderVisibleScreen (double interpolation)
 	sourceRect.h = gameWinHeight;
 
 	renderer.setCurrentBackingTexture (GAME_BACKING_TEXTURE);
+
+	textures.at ("universe").render (&renderPositionBackground);
+
+	backgroundStarfield.render ();
+	//
+	// Don't blit over parts of texture with transparent alpha set
+	SDL_SetTextureBlendMode (playfieldTexture, SDL_BLENDMODE_BLEND);
 	//
 	// Rendercopy Float still uses Integer values for source...
 	SDL_RenderCopyF (renderer.renderer, playfieldTexture, &sourceRect, nullptr);
@@ -626,9 +645,11 @@ void gam_showWayPoints (const std::string levelName)
 
 		thickLineRGBA (renderer.renderer, static_cast<short int>(wallStartDraw.x), static_cast<short int>(wallStartDraw.y), static_cast<short int>(wallFinishDraw.x), static_cast<short int>(wallFinishDraw.y), 3, 0, 0, 200, 55);
 
-		roundedRectangleRGBA (renderer.renderer, static_cast<short int>(wallStartDraw.x) - 8, static_cast<short int>(wallStartDraw.y) - 8, static_cast<short int>(wallStartDraw.x) + 8, static_cast<short int>(wallStartDraw.y) + 8, 2, 0, 200, 0, 55);
+		roundedRectangleRGBA (renderer.renderer,
+		                      static_cast<short int>(wallStartDraw.x) - 8, static_cast<short int>(wallStartDraw.y) - 8, static_cast<short int>(wallStartDraw.x) + 8, static_cast<short int>(wallStartDraw.y) + 8, 2, 0, 200, 0, 55);
 
-		roundedRectangleRGBA (renderer.renderer, static_cast<short int>(wallFinishDraw.x) - 4, static_cast<short int>(wallFinishDraw.y) - 4, static_cast<short int>(wallFinishDraw.x) + 4, static_cast<short int>(wallFinishDraw.y) + 4, 2, 0, 200, 0, 55);
+		roundedRectangleRGBA (renderer.renderer,
+		                      static_cast<short int>(wallFinishDraw.x) - 4, static_cast<short int>(wallFinishDraw.y) - 4, static_cast<short int>(wallFinishDraw.x) + 4, static_cast<short int>(wallFinishDraw.y) + 4, 2, 0, 200, 0, 55);
 
 		indexCount++;
 	}
@@ -656,22 +677,22 @@ void gam_setDeckIsDead ()
 		gam_createDeckTexture (gam_getCurrentDeckName ());      // Recreate the deck texture with new tileset
 		gam_renderAlertTiles ();
 		g_shipDeckItr->second.deckIsDead = true;
-		gam_addEvent(EVENT_ACTION_GAME_CHECK_DECK_CLEAR, 20, "");    // Check all decks
+		gam_addEvent (EVENT_ACTION_GAME_CHECK_DECK_CLEAR, 20, "");    // Check all decks
 	}
 }
 
 //-------------------------------------------------------------------------------------------------------------------------
 //
 // Check if all the levels are dead - Game Won
-void gam_checkAllLevels()
+void gam_checkAllLevels ()
 //-------------------------------------------------------------------------------------------------------------------------
 {
-	for (auto deckItr : shipdecks)
+	for (auto deckItr: shipdecks)
 	{
 		if (!deckItr.second.deckIsDead)
 			return;     // One still got droids on it
 	}
 	//
 	// All the decks are clear
-	gam_addEvent(EVENT_ACTION_GAME_WON, 20, "");
+	gam_addEvent (EVENT_ACTION_GAME_WON, 20, "");
 }

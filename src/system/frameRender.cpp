@@ -1,6 +1,7 @@
 #include <gui/guiLostScreen.h>
 #include <gui/guiHighScore.h>
 #include <system/util.h>
+#include <classes/paraStarfield.h>
 #include "gui/guiScrollbox.h"
 #include "system/startup.h"
 #include "game/shipDecks.h"
@@ -26,8 +27,6 @@ bool          d_showWaypoints   = false;
 
 Uint8         r, g, b, a;
 SDL_BlendMode tempMode;
-
-
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -179,11 +178,11 @@ void sys_renderFrame (double interpolation)
 			gam_renderHealingFrames ();
 			gam_renderDoorFrames ();
 
-			if (playerDroid.getInTransferMode())
+			if (playerDroid.getInTransferMode ())
 				playerDroid.sprite.setTintColor (0, 0, 255);
 
-			else if (playerDroid.getLowInfluenceTimeLeft())
-				playerDroid.sprite.setTintColor (static_cast<Uint8>(playerDroid.getInfluenceFade()), static_cast<Uint8>(playerDroid.getInfluenceFade()), 255);
+			else if (playerDroid.getLowInfluenceTimeLeft ())
+				playerDroid.sprite.setTintColor (static_cast<Uint8>(playerDroid.getInfluenceFade ()), static_cast<Uint8>(playerDroid.getInfluenceFade ()), 255);
 
 			else
 				playerDroid.sprite.setTintColor (255, 255, 255);
@@ -216,7 +215,7 @@ void sys_renderFrame (double interpolation)
 			if (gui.getCurrentDialogbox () != NO_DIALOG_BOX)
 				gui_renderActiveDialogbox ();
 
-			for (auto itr : shipdecks.at(gam_getCurrentDeckName()).droid)
+			for (auto itr: shipdecks.at (gam_getCurrentDeckName ()).droid)
 			{
 //				itr.ai2.aStar.debugNodes();
 //				itr.ai2.aStar.debugWayPoints();

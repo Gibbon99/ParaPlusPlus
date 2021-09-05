@@ -8,6 +8,7 @@
 #include <classes/paraTexture.h>
 #include <classes/paraGui.h>
 #include <classes/paraSprite.h>
+#include <classes/paraStarfield.h>
 
 #ifdef WIN32
 #include "SDL.h"
@@ -69,6 +70,7 @@ extern paraConsole    console;
 extern paraRenderer   renderer;
 extern paraAudio      audio;
 extern paraGui        gui;
+extern paraStarfield  backgroundStarfield;
 
 extern paraSprite databaseSprite;
 
@@ -88,4 +90,4 @@ extern double baseGameSpeed;
 
 extern unsigned long g_debugDroidCount;
 
-extern Uint32 sys_getCurrentTime();
+extern Uint32 sys_getCurrentTime ();
