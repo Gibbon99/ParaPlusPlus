@@ -125,27 +125,27 @@ void sys_startSystems ()
 
 	evt_registerMutex (GAME_MUTEX_NAME);
 
-	setupBulletLightmapColors();
+	setupBulletLightmapColors ();
 
 	sys_setNewMode (MODE_CONSOLE_INIT, false);
 
-	gui_readHighScore();
+	gui_readHighScore ();
 
 	SDL_Thread *initThread;
 
-	initThread = SDL_CreateThread(sys_startInit, "InitThread", (void *)nullptr);
+	initThread = SDL_CreateThread (sys_startInit, "InitThread", (void *) nullptr);
 	if (nullptr == initThread)
-		sys_shutdownWithError(sys_getString("Unable to start init thread - [ %s ]", SDL_GetError()));
+		sys_shutdownWithError (sys_getString ("Unable to start init thread - [ %s ]", SDL_GetError ()));
 
-	SDL_Delay(100);
+	SDL_Delay (100);
 
-	SDL_DetachThread(initThread);
+	SDL_DetachThread (initThread);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start to load and prepare everything else
-static int sys_startInit(void *ptr)
+static int sys_startInit (void *ptr)
 //----------------------------------------------------------------------------------------------------------------------
 {
 //
@@ -160,7 +160,7 @@ static int sys_startInit(void *ptr)
 	io_getScriptFileNames ("scripts");
 	if (!paraScriptInstance.loadAndCompile ())
 	{
-		sys_shutdownWithError("Error: Could not compile scripts.");
+		sys_shutdownWithError ("Error: Could not compile scripts.");
 	}
 	paraScriptInstance.cacheFunctions ();
 
@@ -173,18 +173,18 @@ static int sys_startInit(void *ptr)
 	gam_initAudio ();
 
 	gam_setTileType (false);
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, tileFilename+"|tiles| ");
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, tileFilename + "|tiles| ");
 //
 // Textures are done from the same thread as window creation - put on the Game Event queue
 	paraScriptInstance.run ("as_loadTextureResources", "");
 	paraScriptInstance.run ("as_loadAllDecks", "");
 //
 // Load fonts via Game Event thread
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName+"|guiFont|"+to_string(guiFontSize));
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName+"|guiFont28|"+to_string(28));
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, introFontFileName+"|introFont|"+to_string(introFontSize));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName + "|guiFont|" + to_string (guiFontSize));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName + "|guiFont28|" + to_string (28));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, introFontFileName + "|introFont|" + to_string (introFontSize));
 
-	SDL_Delay(100);
+	SDL_Delay (100);
 
 	gui.init (con_addEvent, reinterpret_cast<funcStrIn>(gui_getString), windowWidth, windowHeight, gameWinWidth, gameWinHeight, "keybinding.para");
 	gui_loadSideViewData ("sideview.dat");
@@ -199,15 +199,27 @@ static int sys_startInit(void *ptr)
 	gam_getDBInformation ();
 
 	databaseSprite.create ("db_droid", 32, 0.6);
+
 // TODO do as an event with delay
 // SDL_SetTextureBlendMode (textures.at ("screen").getTexture (), SDL_BLENDMODE_MOD);
 
 	gam_setupPlayerDroid ();
 
-	createLookupTable();
+	createLookupTable ();
 
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 100, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_SHOW_SPLASH)+"|"+to_string(true));
+	//
+	// Setup the starfield - guess the HUD height if the texture isn't loaded yet
+	try
+	{
+		sideviewStarfield.init (renderer, 40, 7, textures.at ("hudNew").getHeight (), windowHeight, windowWidth);
+	}
+	catch (std::out_of_range &outOfRange)
+	{
+		sideviewStarfield.init (renderer, 40, 7, 55, windowHeight, windowWidth);
+	}
+
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 100, to_string (MODE_GUI_MAINMENU) + "|" + to_string (true));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string (MODE_SHOW_SPLASH) + "|" + to_string (true));
 
 	return 0;
 }

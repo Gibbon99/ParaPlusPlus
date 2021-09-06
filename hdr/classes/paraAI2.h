@@ -4,7 +4,9 @@
 #include <b2_math.h>
 #include "paraAStar.h"
 
-extern SDL_Thread *sdlThreadID;
+#define DBGVAR(os, var) \
+  (os) << "DBG: " << __func__ << "(" << __LINE__ << ") "\
+       << #var << " = [" << (var) << "]" << std::endl
 
 //
 // Use strongly typed enumeration type
@@ -140,6 +142,7 @@ private:
 	b2Fixture                 *droidFixture               = nullptr;                        // Used to determine if the droid will run into the player on current velocity
 	int                       ai[AI2_MODE_NUMBER]{};
 	PATROL_WAYPOINT_DIRECTION patrolWaypointDirection;
+	SDL_Thread                *sdlThreadID;
 };
 
 

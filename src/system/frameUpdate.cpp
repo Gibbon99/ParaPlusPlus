@@ -247,7 +247,8 @@ void sys_gameTickRun ()
 
 		case MODE_GUI_SHIPVIEW:
 		case MODE_GUI_LIFTVIEW:
-			gui_animateStarfield ();
+			sideviewStarfield.animate ();
+//			gui_animateStarfield ();
 			break;
 
 		case MODE_GUI_INTROSCROLL:

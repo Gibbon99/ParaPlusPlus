@@ -84,9 +84,9 @@ void con_processConsoleEventQueue (void *data)
 void con_addEvent (int newAction, string newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	static PARA_Mutex       *tempMutex = nullptr;
-	int                     mutexStatus;
-	paraEventConsole        *tempEventConsole; //(newAction, newLine);
+	static PARA_Mutex *tempMutex = nullptr;
+	int               mutexStatus;
+	paraEventConsole  *tempEventConsole; //(newAction, newLine);
 
 	if (nullptr == tempMutex)
 	{
@@ -95,11 +95,10 @@ void con_addEvent (int newAction, string newLine)
 			sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
 	}
 
-	mutexStatus = SDL_TryLockMutex(tempMutex);
+	mutexStatus = SDL_TryLockMutex (tempMutex);
 
 	if (mutexStatus == 0)
 	{
-//		printf("Console mutex has been locked\n");
 		if (newAction == -1)
 			newAction = EVENT_ACTION_CONSOLE_ADD_LINE;
 
@@ -110,11 +109,11 @@ void con_addEvent (int newAction, string newLine)
 	}
 	else if (mutexStatus == SDL_MUTEX_TIMEDOUT)
 	{
-		printf ("Timed out waiting for console mutex to unlock\n");
+		printf ("Timed out waiting for console mutex to unlock [ %s ] [ %s ]\n", CONSOLE_MUTEX_NAME, SDL_GetError ());
 	}
 	else
 	{
-		printf("Unable to lock mutex\n");
+		printf ("Unable to lock mutex [ %s ] [ %s ]\n", CONSOLE_MUTEX_NAME, SDL_GetError ());
 		logFile.write (sys_getString ("Unable to lock mutex [ %s ] [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
 	}
 }
@@ -129,9 +128,9 @@ void con_renderConsole ()
 	PARA_Texture      *tempTexture  = nullptr;
 	static PARA_Mutex *consoleMutex = nullptr;
 
-	static int  errorCount = 0;
+	static int errorCount = 0;
 
-	SDL_Delay(100);     // Slow down the mutex locking a bit
+	SDL_Delay (100);     // Slow down the mutex locking a bit
 
 	if (console.consoleText.size () == 0)
 		return;
@@ -158,7 +157,7 @@ void con_renderConsole ()
 		{
 			log_addEvent (sys_getString ("%s", "1. Unable to create temp surface when rendering console."));
 
-			printf("Temp surface error count [ %i ]\n", errorCount);
+			printf ("Temp surface error count [ %i ]\n", errorCount);
 			errorCount++;
 			return;
 		}
@@ -237,16 +236,16 @@ void con_initConsole ()
 	console.addCommand ("d_showCurrentRendererInfo", "Show available renderer information.", debug_getRenderInfo);
 	console.addCommand ("d_showAllRenderers", "Shows information on all renderers available", debug_getAllRenderers);
 
-	console.addCommand("d_showAIValues", "Show AI Values for all droids", debug_showAIValues);
+	console.addCommand ("d_showAIValues", "Show AI Values for all droids", debug_showAIValues);
 
-	console.addCommand("d_bullets", "Show info on bullet array", gam_debugBullets);
+	console.addCommand ("d_bullets", "Show info on bullet array", gam_debugBullets);
 
 	console.addCommand ("d_useRenderer", "Use a new renderer - pass in index", "as_useNewRenderer");
 	console.addCommand ("d_audioSpecs", "Show the audio device specs in use.", "as_getAudioSpecs");
 	console.addCommand ("loadAudioResources", "Load all the audio files.", "as_loadAudioResources");
 	console.addCommand ("setVolume", "Change Volume level.", "as_setVolume");
 	console.addCommand ("getVolume", "View the current Volume level.", "as_getVolume");
-	
+
 	console.addCommand ("d_getOS", "Show which OS is in use.", sys_getOS);
 
 	console.addCommand ("testScript", "test", "as_testFunction");
@@ -275,9 +274,9 @@ void con_showHelp ()
 {
 	std::string allCommands;
 
-	for (const auto &consoleListItr : console.consoleCommands)
+	for (const auto &consoleListItr: console.consoleCommands)
 	{
 		allCommands = "[ " + consoleListItr.second.commandName + " ] : [ " + consoleListItr.second.commandHelp + " ]";
-		console.add(allCommands);
+		console.add (allCommands);
 	}
 }

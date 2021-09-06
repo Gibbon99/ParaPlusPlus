@@ -5,7 +5,7 @@
 #define AXIS_X 0
 #define AXIS_Y 1
 
-int joystickDeadzone = 400;
+int joystickDeadzone = 8000;
 
 struct __JOYSTICK_STATE
 {
@@ -71,8 +71,8 @@ void io_joyMovement (SDL_JoystickID whichJoystick, Uint8 whichAxis, Sint16 axisV
 	joystickState.joyAxisY = 0;
 	joystickState.joyAxisX = 0;
 
-	joystickRateLimit -= 1.0f * 0.1f;
-	if (joystickRateLimit < 0.0f)
+//	joystickRateLimit -= 1.0f * 0.1f;
+//	if (joystickRateLimit < 0.0f)
 	{
 		if (axisValue == 0)
 			return;
@@ -83,9 +83,9 @@ void io_joyMovement (SDL_JoystickID whichJoystick, Uint8 whichAxis, Sint16 axisV
 		{
 			joystickRateLimit = 1.0f;
 
-			if (axisValue < (0 - joystickDeadzone))  // Move Left
+			if (axisValue < joystickDeadzone)  // Move Left
 				joystickState.joyAxisX = -1;
-			else if (axisValue > (0 + joystickDeadzone))
+			else if (axisValue > joystickDeadzone)
 				joystickState.joyAxisX = 1;
 		}
 
@@ -93,9 +93,9 @@ void io_joyMovement (SDL_JoystickID whichJoystick, Uint8 whichAxis, Sint16 axisV
 		{
 			joystickRateLimit = 1.0f;
 
-			if (axisValue < (0 - joystickDeadzone))     // Move Up
+			if (axisValue < joystickDeadzone)     // Move Up
 				joystickState.joyAxisY = -1;
-			else if (axisValue > (0 + joystickDeadzone))
+			else if (axisValue > joystickDeadzone)
 				joystickState.joyAxisY = 1;
 		}
 	}
@@ -107,22 +107,29 @@ void io_joyMovement (SDL_JoystickID whichJoystick, Uint8 whichAxis, Sint16 axisV
 void io_mapJoyToInput ()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	/*
+	gui.setState (KEY_LEFT, false, KEY_ACTION_JOYSTICK);
+	gui.setState (KEY_RIGHT, false, KEY_ACTION_JOYSTICK);
+	gui.setState (KEY_UP, false, KEY_ACTION_JOYSTICK);
+	gui.setState (KEY_DOWN, false, KEY_ACTION_JOYSTICK);
+*/
+
 	if (joystickState.joyAxisX != 0)
 	{
 		if (joystickState.joyAxisX < 0)
-			gui.setState (KEY_LEFT, true, KEY_ACTION_NO_SOURCE);
+			gui.setState (KEY_LEFT, true, KEY_ACTION_JOYSTICK);
 
 		if (joystickState.joyAxisX > 0)
-			gui.setState (KEY_RIGHT, true, KEY_ACTION_NO_SOURCE);
+			gui.setState (KEY_RIGHT, true, KEY_ACTION_JOYSTICK);
 	}
 
 	if (joystickState.joyAxisY != 0)
 	{
 		if (joystickState.joyAxisY < 0)
-			gui.setState (KEY_UP, true, KEY_ACTION_NO_SOURCE);
+			gui.setState (KEY_UP, true, KEY_ACTION_JOYSTICK);
 
 		if (joystickState.joyAxisY > 0)
-			gui.setState (KEY_DOWN, true, KEY_ACTION_NO_SOURCE);
+			gui.setState (KEY_DOWN, true, KEY_ACTION_JOYSTICK);
 	}
 
 	if (SDL_JoystickGetButton (joy, 0) == 1)     // Only update if actually down

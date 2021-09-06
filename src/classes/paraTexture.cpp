@@ -17,7 +17,7 @@ void paraTexture::ReleaseRef ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Constructor
-paraTexture::paraTexture(textureFunctionPtrStr outputFunction, textureFunctionPtrLoad loadFunction)
+paraTexture::paraTexture (textureFunctionPtrStr outputFunction, textureFunctionPtrLoad loadFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraTexture::funcOutput = outputFunction;
@@ -27,7 +27,7 @@ paraTexture::paraTexture(textureFunctionPtrStr outputFunction, textureFunctionPt
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return a pointer to the texture
-PARA_Texture *paraTexture::getTexture()
+PARA_Texture *paraTexture::getTexture ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return texture;
@@ -65,7 +65,7 @@ std::string paraTexture::int_getString (std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the filename for a texture
-void paraTexture::setFileName(std::string newFilename)
+void paraTexture::setFileName (std::string newFilename)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	fileName = newFilename;
@@ -74,11 +74,11 @@ void paraTexture::setFileName(std::string newFilename)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Destroy this texture
-void paraTexture::destroy()
+void paraTexture::destroy ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_DestroyTexture(texture);
-	SDL_FreeSurface(surface);
+	SDL_DestroyTexture (texture);
+	SDL_FreeSurface (surface);
 	texture = nullptr;
 	surface = nullptr;
 }
@@ -104,9 +104,9 @@ bool paraTexture::load (std::string newFileName, std::string newKeyName)
 		return false;
 	}
 
-	loaded  = false;
+	loaded = false;
 
-	fileName = std::move(newFileName);
+	fileName = std::move (newFileName);
 	surface  = SDL_LoadBMP_RW (funcLoad (fileName), 0);     // TODO Free surface - memory leak
 	if (nullptr == surface)
 	{
@@ -121,7 +121,7 @@ bool paraTexture::load (std::string newFileName, std::string newKeyName)
 		return false;
 	}
 
-	keyName = std::move(newKeyName);
+	keyName = std::move (newKeyName);
 	if (SDL_QueryTexture (texture, nullptr, nullptr, &width, &height) < 0)
 	{
 		funcOutput (-1, int_getString ("Failed to query next texture [ %s ] - [ %s ]", fileName.c_str (), SDL_GetError ()));
@@ -136,7 +136,7 @@ bool paraTexture::load (std::string newFileName, std::string newKeyName)
 
 //	SDL_FreeSurface(surface);
 
-	loaded  = true;
+	loaded = true;
 	return true;
 }
 
@@ -164,6 +164,7 @@ int paraTexture::getWidth ()
 void paraTexture::render ()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	SDL_SetTextureBlendMode (texture, SDL_BLENDMODE_BLEND);
 	if (SDL_RenderCopy (renderer.renderer, texture, nullptr, nullptr) < 0)
 	{
 		funcOutput (-1, int_getString ("Unable to render texture [ %s ] - [ %s ]", keyName.c_str (), SDL_GetError ()));
@@ -192,9 +193,9 @@ void paraTexture::render (SDL_Rect *destination)
 char paraTexture::pixelColor (int posX, int posY)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if ((posY * surface->w + posX) > static_cast<int>(collisionMap.size()))
+	if ((posY * surface->w + posX) > static_cast<int>(collisionMap.size ()))
 	{
-		sys_shutdownWithError("Attempted out of bound access on collision map.");
+		sys_shutdownWithError ("Attempted out of bound access on collision map.");
 	}
 	return collisionMap[posY * surface->w + posX];
 }

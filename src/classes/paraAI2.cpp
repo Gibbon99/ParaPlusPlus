@@ -19,7 +19,7 @@
 #define COLLIDE_WITH_PLAYER -1
 #define COLLIDE_WITH_NOTHING -2
 
-SDL_Thread *sdlThreadID;
+//SDL_Thread *sdlThreadID;
 
 float LOOK_AHEAD_DISTANCE = {2.5};
 
@@ -109,7 +109,9 @@ std::string paraAI2::getAIActionString (int whichMode)
 void paraAI2::attack ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+	DBGVAR(std::cout, arrayIndex);
+
+//	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
 
 	if (targetDroid == NO_ATTACK_TARGET)
 	{
@@ -374,7 +376,9 @@ void paraAI2::getNextDestination ()
 {
 	b2Vec2 nextDestinationInPixels{};
 
-	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+	DBGVAR(std::cout, arrayIndex);
+
+	//std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
 
 	previousDestinationInMeters = destinationCoordsInMeters;
 
@@ -457,8 +461,9 @@ void paraAI2::getNextDestination ()
 void paraAI2::doMovement (b2Vec2 newWorldPosInMeters)
 //-----------------------------------------------------------------------------------------------------------------------
 {
+	DBGVAR(std::cout, arrayIndex);
 
-	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+//	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
 
 //	int potentialCollideResult = COLLIDE_WITH_NOTHING;
 
@@ -559,7 +564,9 @@ void paraAI2::setWaypointIndex (int newIndex)
 int paraAI2::checkPotentialCollision ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+	DBGVAR(std::cout, arrayIndex);
+
+	//std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
 
 	lookAheadVelocity *= LOOK_AHEAD_DISTANCE + (g_shipDeckItr->second.droid[arrayIndex].getDroidType () / 10);
 	//
@@ -636,7 +643,9 @@ void paraAI2::setWaypointDirection (PATROL_WAYPOINT_DIRECTION newDirection)
 void paraAI2::processVelocity ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+	DBGVAR(std::cout, arrayIndex);
+
+	//std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
 
 	//
 	// Reduce speed as approaching destination
@@ -779,9 +788,11 @@ int paraAI2::getPatrolWaypointIndex ()
 void paraAI2::modifyAIScore (int whichScore, int modifyAmount)
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+	DBGVAR(std::cout, arrayIndex);
 
-	if ((whichScore < 0) || (whichScore > AI2_MODE_NUMBER))
+	//std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+
+	if ((whichScore < 0) || (whichScore > AI2_MODE_PATROL))
 		return;
 
 	ai[whichScore] += modifyAmount;
@@ -796,8 +807,9 @@ void paraAI2::modifyAIScore (int whichScore, int modifyAmount)
 void paraAI2::checkAIScores ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
+	DBGVAR(std::cout, arrayIndex);
 
-	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+	//std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
 
 	int highestScore = 0;
 	int newAIAction  = 0;
@@ -863,7 +875,12 @@ void paraAI2::runAStarCode (b2Vec2 destinationTile)
 #ifdef NO_THREAD
 	aStar.searchThread ();
 #else
-	sdlThreadID = SDL_CreateThread (aStar.startThread, "healThread", &aStar);
+	sdlThreadID = SDL_CreateThread (aStar.startThread, "aStarThread", &aStar);
+	if (nullptr == sdlThreadID)
+	{
+		printf ("[ %i ] Unable to create thread. [ %s ]\n", arrayIndex, SDL_GetError ());
+		return;
+	}
 	SDL_DetachThread (sdlThreadID);
 #endif
 
@@ -1026,7 +1043,6 @@ void paraAI2::changeAIModeTo (int newAIMode)
 void paraAI2::reachedDestination ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
-
 	switch (currentAIMode)
 	{
 		case AI2_MODE_HEAL:
@@ -1057,7 +1073,9 @@ void paraAI2::checkAttackVisibility ()
 {
 	RayCastAnyCallback LOSDroidToDroidCallback;
 
-	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+	DBGVAR(std::cout, arrayIndex);
+
+	//std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
 
 	if (targetDroid == TARGET_PLAYER)
 	{
@@ -1092,7 +1110,9 @@ void paraAI2::checkAttackVisibility ()
 void paraAI2::process (b2Vec2 newWorldPosInMeters)
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+	DBGVAR(std::cout, arrayIndex);
+
+	//std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
 
 	worldPositionInMeters = newWorldPosInMeters;
 

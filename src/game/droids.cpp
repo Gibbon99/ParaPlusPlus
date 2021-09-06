@@ -507,7 +507,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 			//
 			std::cout << "Damage to Droid " << targetDroid << " from BULLET " << " from " << sourceDroid << std::endl;
 
-			if ((targetDroid != TARGET_PLAYER) && (sourceDroid != TARGET_PLAYER))     // Droids shot this at another droid
+			if ((targetDroid != TARGET_PLAYER) && (sourceDroid != TARGET_PLAYER) && (targetDroid != NO_ATTACK_TARGET))     // Droids shot this at another droid
 			{
 				//
 				// Set the target to the bullets source

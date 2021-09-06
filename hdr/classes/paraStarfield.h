@@ -1,14 +1,19 @@
 #ifndef PARA_PARASTARFIELD_H
 #define PARA_PARASTARFIELD_H
 
-#include <SDL_rect.h>
 #include <vector>
-#include "paraRandom.h"
+#include <random>
 #include "paraRenderer.h"
+
+struct starPoint
+{
+	int x;
+	int y;
+};
 
 struct backgroundStar
 {
-	SDL_Point pos;
+	starPoint pos;
 	int       depth;
 };
 
@@ -34,7 +39,7 @@ private:
 	int                         m_depthRender{};
 	paraRenderer                m_starRenderer{};
 	std::vector<backgroundStar> stars;
-	paraRandom                  randomBackgroundStar;
+	std::random_device          randomDevice;
 };
 
 #endif //PARA_PARASTARFIELD_H

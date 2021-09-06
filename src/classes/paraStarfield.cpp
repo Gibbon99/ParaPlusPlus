@@ -1,6 +1,4 @@
 #include "classes/paraStarfield.h"
-
-#include <utility>
 #include <SDL2_gfxPrimitives.h>
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -26,6 +24,7 @@ void paraStarfield::init (paraRenderer starRenderer, int numOfStars, int starDep
 //----------------------------------------------------------------------------------------------------------------------
 {
 	backgroundStar tempStar{};
+	std::mt19937   gen (randomDevice ());
 
 	m_boundaryBottomY = starBottom;
 	m_boundaryTopY    = starTop; // Get height of HUD here
@@ -34,11 +33,15 @@ void paraStarfield::init (paraRenderer starRenderer, int numOfStars, int starDep
 	m_starRenderer    = std::move (starRenderer);
 	m_depthRender     = 255 / starDepth;
 
+	std::uniform_int_distribution<int> rnd_startScreenWidth (0, starScreenWidth);
+	std::uniform_int_distribution<int> rnd_boundaryTopBottom (m_boundaryTopY, m_boundaryBottomY);
+	std::uniform_int_distribution<int> rnd_depthSpread (1, m_depthSpread);
+
 	for (auto counter = 0; counter != numOfStars; counter++)
 	{
-		tempStar.pos.x = randomBackgroundStar.get (0, starScreenWidth);
-		tempStar.pos.y = randomBackgroundStar.get (m_boundaryTopY, m_boundaryBottomY);
-		tempStar.depth = randomBackgroundStar.get (1, m_depthSpread);
+		tempStar.pos.x = rnd_startScreenWidth (gen);
+		tempStar.pos.y = rnd_boundaryTopBottom (gen);
+		tempStar.depth = rnd_depthSpread (gen);
 		stars.push_back (tempStar);
 	}
 }
@@ -53,6 +56,10 @@ void paraStarfield::animate ()
 	double moveSpeed;
 	double topSpeed = 4.0;
 
+	std::mt19937                       gen (randomDevice ());
+	std::uniform_int_distribution<int> rnd_boundaryTopBottom (m_boundaryTopY, m_boundaryBottomY);
+	std::uniform_int_distribution<int> rnd_depthSpread (1, m_depthSpread);
+
 	for (auto &starItr: stars)
 	{
 		speedPercent = (double) starItr.depth / (double) m_depthSpread;
@@ -61,8 +68,8 @@ void paraStarfield::animate ()
 		if (starItr.pos.x <= 0)
 		{
 			starItr.pos.x = m_starScreenWidth;
-			starItr.pos.y = randomBackgroundStar.get (m_boundaryTopY, m_boundaryBottomY);
-			starItr.depth = randomBackgroundStar.get (1, m_depthSpread);
+			starItr.pos.y = rnd_boundaryTopBottom (gen);
+			starItr.depth = rnd_depthSpread (gen);
 		}
 	}
 }

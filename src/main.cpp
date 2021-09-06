@@ -13,6 +13,7 @@ paraRenderer   renderer;
 paraAudio      audio;
 paraGui        gui;
 paraStarfield  backgroundStarfield{};
+paraStarfield  sideviewStarfield{};
 
 paraSprite databaseSprite;
 

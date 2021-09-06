@@ -156,6 +156,13 @@ DONE - Restart briefing after starting new game
 DONE - Stop droids from continually ramming when on a aStar path
 >Commit
 DONE - Added background to main scrolling screen
+DONE - Added starfield to main game screen
+>Commit
+Removed dependency on randomClass from starField class
+Removed collision map image and functions from sideview - use starField class instead
+More attempts to get threading working
+
+
 
 GUI
 ------

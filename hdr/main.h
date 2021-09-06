@@ -71,6 +71,7 @@ extern paraRenderer   renderer;
 extern paraAudio      audio;
 extern paraGui        gui;
 extern paraStarfield  backgroundStarfield;
+extern paraStarfield  sideviewStarfield;
 
 extern paraSprite databaseSprite;
 

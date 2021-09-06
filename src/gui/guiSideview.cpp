@@ -1,26 +1,15 @@
 #include <io/fileSystem.h>
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
 #include <io/logFile.h>
-#include <classes/paraRandom.h>
 #include <system/util.h>
 #include <game/lifts.h>
 #include <game/alertLevel.h>
 #include "gui/guiSideview.h"
 
-paraRandom randomStar;
-
 _basicTunnel        tunnel[NUM_OF_TUNNELS];
 _sideviewBasicLevel sideviewLevels[MAX_LEVELS];
 _sideviewColors     sideviewColors[SIDEVIEW_NUM_COLORS];
-
-std::vector<_star> stars;
-//std::vector<__PARA_COLOR> depthColor;
-int                boundaryTopY;
-int                boundaryBottomY;
-int                depthSpread;
-int                depthNumber = 7;
-
-float sideviewDrawScale;        // From config file
+float               sideviewDrawScale;        // From config file
 
 // ----------------------------------------------------------------------------
 //
@@ -199,8 +188,6 @@ bool gui_loadSideViewData (std::string sideviewFileName)
 
 	gui_setupTunnels ();
 
-	gui_prepareStarfield (50, depthNumber);
-
 	return true;
 }
 
@@ -232,16 +219,18 @@ void gui_renderSideView ()
 //	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
 //	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
 
+	sideviewStarfield.render ();
+
 	try
 	{
-		textures.at ("planet").render ();
+		textures.at ("planetAlpha").render ();
 	}
 	catch (std::out_of_range &outOfRange)
 	{
-		std::cout << "Can not find texture [ planet ] to render." << std::endl;
+		std::cout << "Can not find texture [ planetAlpha ] to render." << std::endl;
 	}
 
-	gui_renderStarfield ();
+
 
 	//
 	// Draw hold level
@@ -364,72 +353,4 @@ void gui_renderSideView ()
 
 //	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
 //	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
-}
-
-// ----------------------------------------------------------------------------
-//
-// Prepare the starfield
-void gui_prepareStarfield (int numStars, int numDepth)
-// ----------------------------------------------------------------------------
-{
-	_star tempStar;
-
-	boundaryBottomY = renderer.renderHeight () - (fontClass.height () + 10);
-	boundaryTopY    = 50; // Get height of HUD here
-	//
-	// Setup the depth values
-	//
-	depthSpread     = 255 / numDepth;
-
-	for (auto counter = 0; counter != numStars; counter++)
-	{
-		tempStar.pos.x = randomStar.get (0, renderer.renderWidth ());
-		tempStar.pos.y = randomStar.get (boundaryTopY, boundaryBottomY);
-		tempStar.depth = randomStar.get (1, numDepth);
-		stars.push_back (tempStar);
-	}
-}
-
-// ----------------------------------------------------------------------------
-//
-// Render the starfield
-void gui_renderStarfield ()
-// ----------------------------------------------------------------------------
-{
-	try
-	{
-		for (auto starItr: stars)
-		{
-			if (textures.at ("planet").pixelColor (starItr.pos.x, starItr.pos.y) == 1)
-				filledCircleRGBA (renderer.renderer, starItr.pos.x, starItr.pos.y, 2, starItr.depth * depthSpread, starItr.depth * depthSpread, starItr.depth * depthSpread, SDL_ALPHA_OPAQUE);
-		}
-	}
-	catch (std::out_of_range outOfRange)
-	{
-		sys_shutdownWithError (sys_getString ("Out of range error"));
-	}
-}
-
-// ----------------------------------------------------------------------------
-//
-// Animate the starfield
-void gui_animateStarfield ()
-// ----------------------------------------------------------------------------
-{
-	double speedPercent;
-	double moveSpeed;
-	double topSpeed = 4.0;
-
-	for (auto &starItr: stars)
-	{
-		speedPercent = (double) starItr.depth / (double) depthNumber;
-		moveSpeed    = topSpeed * speedPercent;
-		starItr.pos.x -= moveSpeed;
-		if (starItr.pos.x <= 0)
-		{
-			starItr.pos.x = renderer.renderWidth ();
-			starItr.pos.y = randomStar.get (boundaryTopY, boundaryBottomY);
-			starItr.depth = randomStar.get (1, depthNumber);
-		}
-	}
 }
