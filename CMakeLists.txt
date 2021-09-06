@@ -179,7 +179,7 @@ set(CXX_SRCS
 
 # SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa")
 
 
 # Add source to this project's executable.
@@ -205,13 +205,14 @@ if (WIN32)
 				SDL2_mixer
 				SDL2_ttf
 				#asan_dynamic-i386
-				clang_rt.asan_dynamic_runtime_thunk-i386
+				#clang_rt.asan_dynamic_runtime_thunk-i386
 		)
 
 		message("-")
 		message("Doing DEBUG build")
 		message("-")
 		add_executable(Win32_ParaPlusPlus_debug ${CXX_SRCS} src/classes/paraAStar.cpp hdr/classes/paraAStar.h src/classes/paraAI2.cpp hdr/classes/paraAI2.h src/classes/paraDroid.cpp src/classes/paraDroid.cpp hdr/classes/paraDroid.h src/classes/paraPhysicsDestruction.cpp hdr/classes/paraPhysicsDestruction.h src/classes/paraStarfield.cpp hdr/classes/paraStarfield.h)
+
 	elseif (CMAKE_BUILD_TYPE MATCHES Release)
 
 		link_libraries(

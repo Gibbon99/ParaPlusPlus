@@ -414,7 +414,7 @@ void paraAI2::getNextDestination ()
 #endif
 			switch (aStar.getAStarDirection ())
 			{
-				case ASTAR_DIRECTION::ERROR:
+				case ASTAR_DIRECTION::ASTAR_ERROR:
 					break;
 
 				case ASTAR_DIRECTION::DESTINATION:

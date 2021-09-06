@@ -665,7 +665,7 @@ b2Vec2 paraAStar::getWaypoint ()
 	if (wayPoints.size () == 0)
 	{
 		printf ("STOP: Waypoint array is empty.\n\n");
-		aStarDirection = ASTAR_DIRECTION::ERROR;
+		aStarDirection = ASTAR_DIRECTION::ASTAR_ERROR;
 		return b2Vec2{};
 	}
 

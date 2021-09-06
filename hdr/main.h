@@ -10,17 +10,14 @@
 #include <classes/paraSprite.h>
 #include <classes/paraStarfield.h>
 
-#ifdef WIN32
+#ifdef __WIN32__
 #include "SDL.h"
 #else
-
 #include "SDL2/SDL.h"
-
 #endif
 
 #define APP_NAME    "Para++"
 
-//#include "../data/scripts/enum.h"
 #include "classes/paraScript.h"
 #include "classes/paraLogFile.h"
 #include "classes/paraFileSystem.h"
@@ -29,7 +26,6 @@
 #include "classes/paraAudio.h"
 #include "system/eventsEngine.h"
 #include "system/shutdown.h"
-//#include "system/util.h"
 #include "physfs/physfs.h"
 #include "classes/paraRenderer.h"
 

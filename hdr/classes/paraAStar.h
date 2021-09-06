@@ -21,7 +21,7 @@ enum class ASTAR_DIRECTION
 	UP,
 	DESTINATION,
 	START,
-	ERROR
+	ASTAR_ERROR
 };
 
 struct _pathNode2
