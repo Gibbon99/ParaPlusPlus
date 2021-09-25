@@ -129,8 +129,6 @@ void sys_startSystems ()
 
 	sys_setNewMode (MODE_CONSOLE_INIT, false);
 
-	gui_readHighScore ();
-
 	SDL_Thread *initThread;
 
 	initThread = SDL_CreateThread (sys_startInit, "InitThread", (void *) nullptr);

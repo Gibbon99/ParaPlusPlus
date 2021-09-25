@@ -164,7 +164,7 @@ int paraTexture::getWidth ()
 void paraTexture::render ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_SetTextureBlendMode (texture, SDL_BLENDMODE_BLEND);
+	SDL_SetTextureBlendMode (static_cast<PARA_Texture *>(texture), SDL_BLENDMODE_BLEND);
 	if (SDL_RenderCopy (renderer.renderer, texture, nullptr, nullptr) < 0)
 	{
 		funcOutput (-1, int_getString ("Unable to render texture [ %s ] - [ %s ]", keyName.c_str (), SDL_GetError ()));

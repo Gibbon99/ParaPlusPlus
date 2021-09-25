@@ -29,20 +29,20 @@ public:
 
 	void setLowHealth (bool newState);
 
-	void animateLowHealth();
+	void animateLowHealth ();
 
 private:
-	int         numFrames      = -1;
-	int         currentFrame   = -1;
-	int         frameWidth     = -1;
-	int         frameHeight    = -1;
-	bool        lowHealth      = false;
-	double      animateSpeed   = -1.0;
-	double      animateCounter = -1.0;
-	std::string textureKeyName = "";
-	PARA_Texture *texturePtr   = nullptr;
-	PARA_Color   tintColor;
-	PARA_Color   lowHealthColor;
+	int         numFrames {-1};
+	int         currentFrame {-1};
+	int         frameWidth {-1};
+	int         frameHeight {-1};
+	bool        lowHealth {false};
+	double      animateSpeed {-1.0};
+	double      animateCounter {-1.0};
+	std::string textureKeyName {};
+	PARA_Texture *texturePtr {nullptr};
+	PARA_Color   tintColor {};
+	PARA_Color   lowHealthColor {};
 };
 
 

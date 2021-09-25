@@ -4,7 +4,7 @@
 #include "system/physics.h"
 #include "system/util.h"
 #include "classes/paraEvent.h"
-#include "game/bullet.h"
+#include "classes/paraBullet.h"
 #include "io/logFile.h"
 #include "io/consoleFunctions.h"
 

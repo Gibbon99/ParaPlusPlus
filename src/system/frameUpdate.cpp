@@ -1,5 +1,5 @@
 #include <game/droids.h>
-#include <game/bullet.h>
+#include <classes/paraBullet.h>
 #include <game/particles.h>
 #include <game/lightMaps.h>
 #include <game/transfer.h>

@@ -1,6 +1,6 @@
 #include <main.h>
 #include <system/util.h>
-#include <game/bullet.h>
+#include <classes/paraBullet.h>
 #include "classes/paraLightmap.h"
 
 std::vector<PARA_Color> bulletColors;
@@ -59,7 +59,7 @@ void setupBulletLightmapColors ()
 //-----------------------------------------------------------------------------------------------------------
 //
 // Set the color for the lightmap
-void paraLightmap::setColor(int newColorType)
+void paraLightmap::setColor (int newColorType)
 //-----------------------------------------------------------------------------------------------------------
 {
 	switch (newColorType)
@@ -90,7 +90,7 @@ void paraLightmap::setColor(int newColorType)
 //-----------------------------------------------------------------------------------------------------------
 //
 // Return the type of lightmap
-int paraLightmap::getType()
+int paraLightmap::getType ()
 //-----------------------------------------------------------------------------------------------------------
 {
 	return type;
@@ -190,8 +190,8 @@ paraLightmap::paraLightmap (b2Vec2 newWorldPos, int newType, int newWhichBullet)
 			}
 
 			color.a = 32;
-			worldPosInPixels.x +=  (tileSize / 2);
-			worldPosInPixels.y +=  (tileSize / 2);
+			worldPosInPixels.x += (tileSize / 2);
+			worldPosInPixels.y += (tileSize / 2);
 			break;
 	}
 

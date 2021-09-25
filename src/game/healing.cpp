@@ -25,7 +25,7 @@ void gam_renderHealingFrames ()
 
 	SDL_SetRenderTarget (renderer.renderer, gam_getPlayfieldTexture ());
 
-	for (const auto &healingItr : g_shipDeckItr->second.healing)
+	for (const auto &healingItr: g_shipDeckItr->second.healing)
 	{
 		if (currentMode != MODE_GUI_DECKVIEW)
 		{
@@ -71,10 +71,13 @@ void gam_animateHealing ()
 void gam_clearHealing ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &healingItr : healingTiles)
+	for (auto &healingItr: healingTiles)
 	{
 		if (healingItr.userData != nullptr)
-			delete (healingItr.userData);
+		{
+			sys_freeMemory (sys_getString ("%s-%i", "heal", healingItr.userData->dataValue));
+			healingItr.userData = nullptr;
+		}
 
 		if (healingItr.body != nullptr)
 			sys_getPhysicsWorld ()->DestroyBody (healingItr.body);
@@ -92,7 +95,7 @@ void gam_createHealingSensor (unsigned long whichHealingTile, int index)
 	healingTiles[whichHealingTile].bodyDef.position.Set (healingTiles[whichHealingTile].worldPosition.x / pixelsPerMeter, healingTiles[whichHealingTile].worldPosition.y / pixelsPerMeter);
 	healingTiles[whichHealingTile].body = sys_getPhysicsWorld ()->CreateBody (&healingTiles[whichHealingTile].bodyDef);
 
-	healingTiles[whichHealingTile].userData            = new _userData;
+	healingTiles[whichHealingTile].userData            = reinterpret_cast<_userData *>(sys_malloc (sizeof (_userData), sys_getString ("%s-%i", "heal", index)));
 	healingTiles[whichHealingTile].userData->userType  = PHYSIC_TYPE_HEALING;
 	healingTiles[whichHealingTile].userData->dataValue = (int) index;
 	healingTiles[whichHealingTile].body->SetUserData (healingTiles[whichHealingTile].userData);
@@ -109,11 +112,11 @@ void gam_createHealingSensor (unsigned long whichHealingTile, int index)
 void gam_findHealingTilesPhysics ()
 // --------------------------------------------------------------------------------------------------------------------------
 {
-	int           index;
-	int           currentTile;
-	int           countX, countY;
-	int           countHealing;
-	__tileSensor  tempHealingPhysics;
+	int          index;
+	int          currentTile;
+	int          countX, countY;
+	int          countHealing;
+	__tileSensor tempHealingPhysics;
 
 	if (!healingTiles.empty ())
 	{
@@ -224,7 +227,7 @@ void gam_processHealingTile ()
 {
 	static float healingDelay = 1.0f;
 
-	if (!playerDroid.getOverHealingTile())
+	if (!playerDroid.getOverHealingTile ())
 		return;
 
 	healingDelay -= 1.0f * healingDelayCounter;
@@ -233,12 +236,12 @@ void gam_processHealingTile ()
 		healingDelay = 1.0f;
 		playerDroid.setCurrentHealth (playerDroid.getCurrentHealth () + 1);
 		gam_modifyScore (-1);
-		if (playerDroid.getCurrentHealth() > dataBaseEntry[playerDroid.getDroidType()].maxHealth)
+		if (playerDroid.getCurrentHealth () > dataBaseEntry[playerDroid.getDroidType ()].maxHealth)
 		{
-			playerDroid.setCurrentHealth(dataBaseEntry[playerDroid.getDroidType()].maxHealth);
+			playerDroid.setCurrentHealth (dataBaseEntry[playerDroid.getDroidType ()].maxHealth);
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
-			playerDroid.setOverHealingTile(false);
+			playerDroid.setOverHealingTile (false);
 		}
-		gam_checkPlayerHealth();
+		gam_checkPlayerHealth ();
 	}
 }

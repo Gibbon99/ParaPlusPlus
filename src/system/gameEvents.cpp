@@ -3,7 +3,7 @@
 #include <game/texture.h>
 #include <game/shipDecks.h>
 #include <system/util.h>
-#include <game/bullet.h>
+#include <classes/paraBullet.h>
 #include <game/particles.h>
 #include <game/lightMaps.h>
 #include <game/transfer.h>
@@ -65,10 +65,10 @@ void gam_addEvent (int newAction, int newCounter, const string &newLine)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Returns the current size of the game event queue
-int gam_gameEventQueueSize()
+int gam_gameEventQueueSize ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	return gameEvents.size();
+	return gameEvents.size ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -89,8 +89,8 @@ void gam_processGameEventQueue ()
 	{
 
 #ifdef MY_DEBUG
-//		if (gameEvents.size() > 60)
-//			sys_shutdownWithError(sys_getString("Too many events on the game event queue [ %i ].", gameEvents.size()));
+		//		if (gameEvents.size() > 60)
+		//			sys_shutdownWithError(sys_getString("Too many events on the game event queue [ %i ].", gameEvents.size()));
 #endif
 		if (nullptr == gameMutex)
 		{
@@ -105,7 +105,7 @@ void gam_processGameEventQueue ()
 		if (tempEvent->counter > 0)  // If not 0 - re-add to the queue with the reduced count
 		{
 			tempEvent->counter--;
-			gam_addEvent (tempEvent->action, tempEvent->counter, tempEvent->gameText1+"|"+tempEvent->gameText2+"|"+tempEvent->gameText3);
+			gam_addEvent (tempEvent->action, tempEvent->counter, tempEvent->gameText1 + "|" + tempEvent->gameText2 + "|" + tempEvent->gameText3);
 
 			PARA_LockMutex (gameMutex);           // Blocks if the mutex is locked by another thread
 			delete (gameEvents.front ());         // Free memory
@@ -162,27 +162,27 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_REMOVE_BULLET:
-					gam_removeBullet(sys_convertToInt(tempEvent->gameText1));
+					gam_removeBullet (sys_convertToInt (tempEvent->gameText1));
 					break;
 
 				case EVENT_ACTION_ADD_EMITTER:
-					gam_addEmitter(b2Vec2(sys_convertToInt(tempEvent->gameText1), sys_convertToInt(tempEvent->gameText2)), sys_convertToInt(tempEvent->gameText3), 0);
+					gam_addEmitter (b2Vec2 (sys_convertToInt (tempEvent->gameText1), sys_convertToInt (tempEvent->gameText2)), sys_convertToInt (tempEvent->gameText3), 0);
 					break;
 
 				case EVENT_ACTION_ADD_LIGHTMAP:
-					gam_addNewLightmap(b2Vec2(sys_convertToInt(tempEvent->gameText1), sys_convertToInt(tempEvent->gameText2)), sys_convertToInt(tempEvent->gameText3), 0);
+					gam_addNewLightmap (b2Vec2 (sys_convertToInt (tempEvent->gameText1), sys_convertToInt (tempEvent->gameText2)), sys_convertToInt (tempEvent->gameText3), 0);
 					break;
 
 				case EVENT_ACTION_INIT_TRANSFER_MODE:
-					trn_initTransferValues(sys_convertToInt(tempEvent->gameText1));
+					trn_initTransferValues (sys_convertToInt (tempEvent->gameText1));
 					break;
 
 				case EVENT_ACTION_INIT_TRANSFER_TWO:
-					trn_initTransferScreenTwo();
+					trn_initTransferScreenTwo ();
 					break;
 
 				case EVENT_ACTION_GAME_CHECK_DECK_CLEAR:
-					gam_checkAllLevels();
+					gam_checkAllLevels ();
 					break;
 
 				case EVENT_ACTION_AUDIO_START_BACKGROUND:
@@ -190,7 +190,7 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_GAME_WON:
-					gui_prepareWonScreen();
+					gui_prepareWonScreen ();
 					break;
 
 				case EVENT_ACTION_GAME_OVER:
@@ -203,24 +203,24 @@ void gam_processGameEventQueue ()
 					break;
 
 				case MODE_END_PRE_LOST_SCREEN:
-					sys_setNewMode(MODE_END_LOST_SCREEN, true);
+					sys_setNewMode (MODE_END_LOST_SCREEN, true);
 					break;
 
 				case EVENT_ACTION_END_LOST_SCREEN:
-					audio.stopAllChannels();
-					gam_decideScoreAction();
+					audio.stopAllChannels ();
+					gam_decideScoreAction ();
 					break;
 
 				case EVENT_ACTION_STOP_BLINK_TIMER:
-					gui_stopBlinkTimer();
+					gui_stopBlinkTimer ();
 					break;
 
 				case EVENT_ACTION_START_BLINK_TIMER:
-					gui_startBlinkTimer(500);
+					gui_startBlinkTimer (500);
 					break;
 
 				case EVENT_ACTION_START_BACKGROUND_SOUND:
-					gam_startAlertLevelSound (gam_getCurrentAlertLevel());
+					gam_startAlertLevelSound (gam_getCurrentAlertLevel ());
 					break;
 			}
 
@@ -235,7 +235,7 @@ void gam_processGameEventQueue ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Changing decks, to clear all the events from previous deck
-void gam_clearGameEvents()
+void gam_clearGameEvents ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static PARA_Mutex *gameMutex = nullptr;
@@ -248,7 +248,7 @@ void gam_clearGameEvents()
 	}
 
 	PARA_LockMutex (gameMutex);
-	while (!gameEvents.empty())
+	while (!gameEvents.empty ())
 	{
 		delete (gameEvents.front ());         // Free memory
 		gameEvents.pop ();

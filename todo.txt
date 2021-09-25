@@ -14,16 +14,8 @@ Droid AI - Attack
 Droid AI - Help
 Check bottom edge of animated tiles in graphics
 
-Follow mode ? Droid follows exact tile path that player took? Array to store tile path? Use tiles as waypoints
- - player - track a breadcrumb trail -- do coordinates as tile coords.
- Hunt mode - when in attack mode, and lose sight, go into hunt - check current tile to see if it is one
- in the player trail or not, if so, follow to player - until attack timer runs out
-
-Need debug mode to show path destination to track why aStar isn't working sometimes
 Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
 Deck view - Player icon location wrong on observation, airlock
-If a droid is currently a target and is destroyed - tell targeting droid about it
-Add "difficulty" value to AI adjustments  - ie: modifyAIValue(MODE_ATTACK, 20 + difficultyValue)
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
@@ -158,11 +150,15 @@ DONE - Stop droids from continually ramming when on a aStar path
 DONE - Added background to main scrolling screen
 DONE - Added starfield to main game screen
 >Commit
-Removed dependency on randomClass from starField class
-Removed collision map image and functions from sideview - use starField class instead
-More attempts to get threading working
-
-
+DONE - Removed dependency on randomClass from starField class
+DONE - Removed collision map image and functions from sideview - use starField class instead
+DONE - More attempts to get threading working
+DONE - Add "difficulty" value to AI adjustments  - ie: modifyAIValue(MODE_ATTACK, 20 + difficultyValue)
+DONE - Fixed mismatched memory allocation
+DONE - Need debug mode to show path destination to track why aStar isn't working sometimes
+DONE - Hunt mode - when in attack mode, and lose sight, go into hunt - check current tile to see if it is one in the player trail or not, if so, follow to player - until attack timer runs out
+DONE - Made highScore into a proper class
+>Commit
 
 GUI
 ------

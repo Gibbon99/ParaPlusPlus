@@ -49,7 +49,7 @@ void sys_processPhysics (double tickTime)
 
 	if ((g_shipDeckItr->second.droidPhysicsCreated) || (!g_shipDeckItr->second.deckIsDead))
 	{
-		for (auto &droidItr : shipdecks.at (gam_getCurrentDeckName ()).droid)
+		for (auto &droidItr: shipdecks.at (gam_getCurrentDeckName ()).droid)
 		{
 			if (droidItr.getCurrentMode () == DROID_MODE_NORMAL)
 			{
@@ -137,18 +137,20 @@ void sys_setupPlayerPhysics ()
 		return;
 
 	playerDroid.setBodyDefType (b2_dynamicBody);
-	playerDroid.setBodyPosition (b2Vec2{2, 3});
+	playerDroid.setBodyPosition (b2Vec2 {2, 3});
 	playerDroid.setBodyAngle (0);
 	playerDroid.body = physicsWorld->CreateBody (playerDroid.getBodyDef ());
 
-	playerDroid.userData                       = new _userData;
+	//std::unique_ptr<_userData> tempUserData (new _userData);
+
+	playerDroid.userData                       = reinterpret_cast<_userData *>(sys_malloc (sizeof (_userData), "playerPhysics")); //   = (new _userData);
 	playerDroid.userData->userType             = PHYSIC_TYPE_PLAYER;
 	playerDroid.userData->dataValue            = -1;
 	playerDroid.userData->ignoreCollisionDroid = false;
 	playerDroid.body->SetUserData (playerDroid.userData);
 
 	playerDroid.setShapeRadius ((SPRITE_SIZE / 2) / pixelsPerMeter);
-	playerDroid.setShapePosition (b2Vec2{0, 0});
+	playerDroid.setShapePosition (b2Vec2 {0, 0});
 
 	playerDroid.setFixtureDefShape (playerDroid.getShape ());
 	playerDroid.setFixtureDefDensity (1.0f);
@@ -169,7 +171,7 @@ void sys_clearSolidWalls ()
 {
 	stopContactPhysicsBugFlag = true;
 
-	for (auto &wallItr : solidWalls)
+	for (auto &wallItr: solidWalls)
 	{
 		if (wallItr.userData != nullptr)
 		{
@@ -262,11 +264,12 @@ void sys_clearDroidPhysics (std::string levelName)
 
 	stopContactPhysicsBugFlag                    = true;
 
-	for (auto &droidItr : shipdecks.at (levelName).droid)
+	for (auto &droidItr: shipdecks.at (levelName).droid)
 	{
 		if (droidItr.userData != nullptr)
 		{
-			delete (droidItr.userData);
+			sys_freeMemory (sys_getString ("%s-%i", levelName.c_str (), droidItr.ai2.getArrayIndex ()));
+			//free (droidItr.userData);
 			droidItr.userData = nullptr;
 		}
 
@@ -287,7 +290,7 @@ void sys_clearDroidPhysics (std::string levelName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create the physics bodies and shapes for the enemy droids
-void sys_setupEnemyPhysics (std::string levelName)
+void sys_setupDroidPhysics (std::string levelName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 #ifdef MY_DEBUG
@@ -313,7 +316,7 @@ void sys_setupEnemyPhysics (std::string levelName)
 		return;
 	}
 
-	for (auto &droidItr : shipdecks.at (levelName).droid)
+	for (auto &droidItr: shipdecks.at (levelName).droid)
 	{
 		if (droidItr.getCurrentMode () == DROID_MODE_NORMAL)
 		{
@@ -324,7 +327,7 @@ void sys_setupEnemyPhysics (std::string levelName)
 				droidItr.setBodyAngle (0);
 				droidItr.body = physicsWorld->CreateBody (droidItr.getBodyDef ());
 
-				droidItr.userData                        = new _userData;     // TODO Free this on shutdown
+				droidItr.userData                        = reinterpret_cast<_userData *>(sys_malloc (sizeof (_userData), sys_getString ("%s-%i", levelName.c_str (), droidItr.ai2.getArrayIndex ()))); //new _userData;     // TODO Free this on shutdown
 				droidItr.userData->userType              = PHYSIC_TYPE_ENEMY;
 				droidItr.userData->dataValue             = droidItr.ai2.getArrayIndex ();
 				droidItr.userData->ID                    = 0;
@@ -334,7 +337,7 @@ void sys_setupEnemyPhysics (std::string levelName)
 				droidItr.body->SetUserData (droidItr.userData);
 
 				droidItr.setShapeRadius (static_cast<float>((SPRITE_SIZE * 0.5) / pixelsPerMeter));
-				droidItr.setShapePosition (b2Vec2{0, 0});
+				droidItr.setShapePosition (b2Vec2 {0, 0});
 
 				droidItr.setFixtureDefShape (droidItr.getShape ());
 				droidItr.setFixtureDefDensity (1);

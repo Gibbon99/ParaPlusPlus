@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "../main.h"
 #include "box2d.h"
 #include "game/physicsCollisions.h"
@@ -37,7 +38,7 @@ struct _PHYSIC_OBJECT
 	b2BodyDef     bodyDef;            // Used for physics and collisions
 	b2CircleShape shape;
 	b2FixtureDef  fixtureDef;
-	b2Body        *body = nullptr;
+	b2Body        *body     = nullptr;
 	_userData     *userData = nullptr;
 };
 
@@ -72,7 +73,7 @@ void sys_setupSolidWalls (const std::string levelName);
 void sys_freePhysicsEngine ();
 
 // Create the physics bodies and shapes for the enemy droids
-void sys_setupEnemyPhysics (std::string levelName);
+void sys_setupDroidPhysics (std::string levelName);
 
 // Clear previous level - remove physics objects from droid before changing level name
 void sys_clearDroidPhysics (std::string levelName);

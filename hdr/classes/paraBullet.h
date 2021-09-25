@@ -8,23 +8,23 @@
 class paraBullet
 {
 public:
-	int            type;
-	Uint32         ID;                              // Unique ID for each bullet created
-	bool           inUse     = false;
-	float          angle     = 0.0;
-	b2Vec2         worldPosInMeters;
-	b2Vec2         worldDestInMeters;
-	b2Vec2         velocity;
+
+	int            type {};
+	bool           inUse {false};
+	float          angle {0.0};
+	float          disrupterFadeAmount {};
+	float          disrupterFade {};
+	Uint32         ID {};                              // Unique ID for each bullet created
+	b2Vec2         worldPosInMeters {};
+	b2Vec2         worldDestInMeters {};
+	b2Vec2         velocity {};
 	b2BodyDef      bodyDef;                      // Used for physics and collisions
 	b2PolygonShape shape;
 	b2FixtureDef   fixtureDef;
-	b2Body         *body     = nullptr;
-	_userData      *userData = nullptr;
-	paraSprite     sprite;
-	float          disrupterFadeAmount;
-	float          disrupterFade;
+	b2Body         *body {nullptr};
+	_userData      *userData {nullptr};
+	paraSprite     sprite {};
 private:
-
 
 };
 
@@ -54,5 +54,4 @@ void gam_debugBullets ();
 // Preallocate the bullet array - clear out on level change
 void gam_initBulletArray ();
 
-// Return the index of a bullet using its ID
-int gam_getArrayIndex(Uint32 bulletID);
+int gam_getArrayIndex (Uint32 bulletID);        // Return the index of a bullet using its ID

@@ -1,39 +1,38 @@
-﻿#include "../hdr/main.h"
+﻿#include "classes/paraBullet.h"
 #include "../hdr/system/startup.h"
 #include "../hdr/system/frameUpdate.h"
 #include "../hdr/system/frameRender.h"
-#include "system/gameEvents.h"
 
-paraScript     paraScriptInstance;
-paraLogFile    logFile;
-paraFileSystem fileSystem;
-paraFont       fontClass;
+paraScript     paraScriptInstance {};
+paraLogFile    logFile {};
+paraFileSystem fileSystem {};
+paraFont       fontClass {};
 paraConsole    console (1, 255, 255, 255, 255);
-paraRenderer   renderer;
-paraAudio      audio;
-paraGui        gui;
-paraStarfield  backgroundStarfield{};
-paraStarfield  sideviewStarfield{};
-
-paraSprite databaseSprite;
+paraRenderer   renderer {};
+paraAudio      audio {};
+paraGui        gui {};
+paraStarfield  backgroundStarfield {};
+paraStarfield  sideviewStarfield {};
+paraSprite     databaseSprite {};
+paraHighScore  highScores {"data/highscore.dat", NUM_HIGHSCORE_ROWS, "DAB", 600, 100};
 
 std::map<std::string, paraTexture> textures;
 
-bool   quitLoop             = false;
-Uint32 maxNumUpdateLoops    = 0;
-Uint32 fps                  = 0;
-Uint32 fpsPrint             = 0;
-Uint32 thinkFPS             = 0;
-Uint32 thinkFPSPrint        = 0;
-double percentIntoNextFrame = 0.0f;
-int    currentMode;
-double pixelsPerMeter;          // From script
-Uint32 currentTime          = 0;
-
+bool   quitLoop {false};
+int    currentMode {0};
+double percentIntoNextFrame {0.0};
+double pixelsPerMeter {0.0};          // From script
+Uint32 maxNumUpdateLoops {0};
+Uint32 fps {0};
+Uint32 fpsPrint {0};
+Uint32 thinkFPS {0};
+Uint32 thinkFPSPrint {0};
+Uint32 currentTime {0};
 //
 // Game levers
 //
-double baseGameSpeed;
+double baseGameSpeed {0};
+Uint8  difficultyValue {0};
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -54,6 +53,7 @@ Uint32 fpsCallback (Uint32 interval, void *param)
 	fpsPrint      = fps;
 	thinkFPS      = 0;
 	fps           = 0;
+
 	return (interval);
 }
 

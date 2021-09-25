@@ -15,7 +15,7 @@
 
 float explosionAnimationSpeed;
 
-#define MY_DEBUG 1
+//#define MY_DEBUG 1
 
 //-------------------------------------------------------------------------------------------------------------
 //
@@ -139,7 +139,7 @@ void gam_initDroids (const std::string &levelName)
 		if (whichDirection < 5)
 			tempDroid.ai2.setWaypointDirection (PATROL_WAYPOINT_DIRECTION::UP);
 
-		tempDroid.setWorldPosInPixels (b2Vec2{shipdecks.at (levelName).wayPoints[wayPointStartIndex].x, shipdecks.at (levelName).wayPoints[wayPointStartIndex].y});
+		tempDroid.setWorldPosInPixels (b2Vec2 {shipdecks.at (levelName).wayPoints[wayPointStartIndex].x, shipdecks.at (levelName).wayPoints[wayPointStartIndex].y});
 
 		tempDroid.ai2.setDestinationInMeters (sys_convertPixelsToMeters (tempDroid.getWorldPosInPixels ()));
 
@@ -185,8 +185,7 @@ void gam_resetDroids ()
 void gam_renderDroids (const std::string &levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 droidScreenPosition{};
-	b2Vec2 worldPosInMeters;
+	b2Vec2 droidScreenPosition {};
 
 	for (auto droidItr: g_shipDeckItr->second.droid)
 	{
@@ -194,15 +193,19 @@ void gam_renderDroids (const std::string &levelName)
 		{
 			if ((droidItr.getCurrentMode () == DROID_MODE_EXPLODING) || (droidItr.getCurrentMode () == DROID_MODE_NORMAL))
 			{
-				worldPosInMeters = droidItr.body->GetPosition ();
-				droidItr.setWorldPosInPixels (sys_convertMetersToPixels (worldPosInMeters));
+				droidItr.setWorldPosInPixels (sys_convertMetersToPixels (droidItr.body->GetPosition ()));
 
 				droidScreenPosition = sys_worldToScreen (droidItr.getWorldPosInPixels (), 24);
 
 				if (droidItr.visibleToPlayer)
 				{
 					droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0, static_cast<Uint8>(droidItr.visibleValue));
+
 #ifdef MY_DEBUG
+					b2Vec2 debugDestinationPosition;
+
+					debugDestinationPosition = droidItr.ai2.debugGetDestinationCoordsInMeters ();
+
 					droidItr.ai2.debugShowDestination ();
 					fontClass.use ("consoleFont");
 
@@ -214,7 +217,8 @@ void gam_renderDroids (const std::string &levelName)
 						debugIndex = droidItr.ai2.aStar.getWayPointsIndex ();
 
 					fontClass.render (renderer.renderer, droidScreenPosition.x, droidScreenPosition.y, 200, 200, 250, 255,
-					                  droidItr.getDroidName () + " " + droidItr.ai2.getAIActionString (droidItr.ai2.getCurrentAIMode ()) + " Index: " + sys_getString ("%i", debugIndex));
+									  sys_getString ("%3.3f %3.3f", debugDestinationPosition.x, debugDestinationPosition.y) + " " + droidItr.ai2.getAIActionString (droidItr.ai2.getCurrentAIMode ()) + " Index: " +
+									  sys_getString ("%i", debugIndex));
 					gam_debugShowTarget (droidItr);
 					droidItr.ai2.aStar.debugWayPoints ();
 #endif
@@ -330,7 +334,7 @@ void gam_processCollision (int droidA)
 		if (g_shipDeckItr->second.droid[droidA].userData->ignoreCollisionDroid)
 			return;
 
-		g_shipDeckItr->second.droid[droidA].setVelocity (b2Vec2{g_shipDeckItr->second.droid[droidA].getVelocity ().x * 0.5f, g_shipDeckItr->second.droid[droidA].getVelocity ().y * 0.5f});
+		g_shipDeckItr->second.droid[droidA].setVelocity (b2Vec2 {g_shipDeckItr->second.droid[droidA].getVelocity ().x * 0.5f, g_shipDeckItr->second.droid[droidA].getVelocity ().y * 0.5f});
 		g_shipDeckItr->second.droid[droidA].ai2.switchWaypointDirection ();
 		g_shipDeckItr->second.droid[droidA].collisionCounterDroid++;
 		if (g_shipDeckItr->second.droid[droidA].collisionCounterDroid > collisionLimit)
@@ -349,7 +353,7 @@ void gam_explodeDroid (paraDroid *whichDroid)
 {
 	whichDroid->ai2.aStar.stopUsingPath ();
 
-	whichDroid->setVelocity (b2Vec2{0, 0});
+	whichDroid->setVelocity (b2Vec2 {0, 0});
 	whichDroid->setCurrentMode (DROID_MODE_EXPLODING);
 	whichDroid->sprite.create ("explosion", 25, explosionAnimationSpeed);
 	whichDroid->sprite.setAnimateSpeed (explosionAnimationSpeed);      // Set for explosion animation
@@ -418,14 +422,14 @@ void gam_checkActionWitness ()
 		{
 			if (dataBaseEntry[droidItr.getDroidType ()].canShoot)
 			{
-				droidItr.ai2.modifyAIScore (AI2_MODE_ATTACK, +40);
+				droidItr.ai2.modifyAIScore (AI2_MODE_ATTACK, 40 + difficultyValue);
 
 #ifdef MY_DEBUG
 				printf ("Droid witness an action - increase ATTACK.\n");
 #endif
 			}
 			else
-				droidItr.ai2.modifyAIScore (AI2_MODE_FLEE, +40);
+				droidItr.ai2.modifyAIScore (AI2_MODE_FLEE, 40 + difficultyValue);
 		}
 	}
 }
@@ -473,7 +477,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 				if (targetDroid < 0)
 					return;
 
-				g_shipDeckItr->second.droid[targetDroid].ai2.modifyAIScore (AI2_MODE_ATTACK, 3);
+				g_shipDeckItr->second.droid[targetDroid].ai2.modifyAIScore (AI2_MODE_ATTACK, 3 + difficultyValue);
 				g_shipDeckItr->second.droid[targetDroid].ai2.setTargetDroid (sourceDroid);
 				g_shipDeckItr->second.droid[targetDroid].setCurrentHealth (g_shipDeckItr->second.droid[targetDroid].getCurrentHealth () - dataBaseEntry[playerDroid.getDroidType ()].bounceDamage);
 				gam_checkDroidHealth (targetDroid);
@@ -487,6 +491,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 				if (g_shipDeckItr->second.droid[targetDroid].getCurrentMode () == DROID_MODE_EXPLODING)
 				{
 					gam_damageToPlayer (PHYSIC_DAMAGE_EXPLOSION, targetDroid);
+					return;
 				}
 				//
 				// Ignore too many collision with player
@@ -514,7 +519,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 				if (dataBaseEntry[g_shipDeckItr->second.droid[targetDroid].getDroidType ()].canShoot)
 				{
 					g_shipDeckItr->second.droid[targetDroid].ai2.setTargetDroid (sourceDroid);
-					g_shipDeckItr->second.droid[targetDroid].ai2.modifyAIScore (AI2_MODE_ATTACK, 40);
+					g_shipDeckItr->second.droid[targetDroid].ai2.modifyAIScore (AI2_MODE_ATTACK, 40 + difficultyValue);
 				}
 				else    // Can't shoot back
 				{
@@ -546,7 +551,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 				//
 				// Target player droid
 				g_shipDeckItr->second.droid[targetDroid].ai2.setTargetDroid (sourceDroid);
-				g_shipDeckItr->second.droid[targetDroid].ai2.modifyAIScore (AI2_MODE_ATTACK, 40);
+				g_shipDeckItr->second.droid[targetDroid].ai2.modifyAIScore (AI2_MODE_ATTACK, 40 + difficultyValue);
 			}
 			break;
 	}
@@ -587,17 +592,8 @@ void gam_removeDroids (bool clearAll)
 				droidItr.body = nullptr;
 				//
 				// Free memory
-				delete droidItr.userData;
+				sys_freeMemory (sys_getString ("%s-%i", gam_getCurrentDeckName ().c_str (), droidItr.ai2.getArrayIndex ()));
 				droidItr.userData = nullptr;
-			}
-			//
-			// Remove any path it may have been following
-//			gam_removeWhichDroidPath (droidItr.ai2.getArrayIndex ());
-
-			if (droidItr.aStarIndex > -1)
-			{
-				std::cout << "Removing aStar path from removed droid : " << droidItr.aStarIndex << std::endl;
-//				gam_AStarRemovePath (droidItr.aStarIndex);
 			}
 			//
 			// add to score
@@ -618,8 +614,8 @@ void gam_removeDroids (bool clearAll)
 void gam_debugShowTarget (paraDroid whichDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 startPos{};
-	b2Vec2 endPos{};
+	b2Vec2 startPos {};
+	b2Vec2 endPos {};
 
 	if (dataBaseEntry[whichDroid.getDroidType ()].canShoot)
 	{

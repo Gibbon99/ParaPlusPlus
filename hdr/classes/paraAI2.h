@@ -4,9 +4,15 @@
 #include <b2_math.h>
 #include "paraAStar.h"
 
+#define IGNORE_SWAP_DIRECTION_LIMIT 5
+
+/*
 #define DBGVAR(os, var) \
   (os) << "DBG: " << __func__ << "(" << __LINE__ << ") "\
        << #var << " = [" << (var) << "]" << std::endl
+*/
+
+#define DBGVAR
 
 //
 // Use strongly typed enumeration type
@@ -106,6 +112,8 @@ public:
 
 	void setDestinationInMeters (b2Vec2 newDestination);
 
+	b2Vec2 debugGetDestinationCoordsInMeters ();
+
 	void debugShowValues ();
 
 	double getAcceleration ();
@@ -116,23 +124,24 @@ public:
 
 	void checkAttackVisibility ();
 
-	float     desiredAttackDistance2                      = 6;    // meters
-	float     paddingSize2                                = 2;
+	float     desiredAttackDistance2 {6};    // meters
+	float     paddingSize2 {2};
 	paraAStar aStar;
 
 private:
 
-	int                       currentAIMode{AI2_MODE_PATROL};
-	int                       previousAIMode{AI2_MODE_PATROL};
-	int                       patrolWayPointIndex{};
-	int                       arrayIndex{-1};
-	int                       targetDroid{NO_ATTACK_TARGET};
-	float                     currentSpeed{};
-	float                     acceleration{};
-	float                     maxSpeed{};
-	float                     currentAttackDistance{};
-	float                     huntCountdownValue{};
-	float                     huntCountdownModifier{0.2f};
+	int                       currentAIMode {AI2_MODE_PATROL};
+	int                       previousAIMode {AI2_MODE_PATROL};
+	int                       patrolWayPointIndex {};
+	int                       arrayIndex {-1};
+	int                       targetDroid {NO_ATTACK_TARGET};
+	int                       swapDirectionCounter {};
+	float                     currentSpeed {};
+	float                     acceleration {};
+	float                     maxSpeed {};
+	float                     currentAttackDistance {};
+	float                     huntCountdownValue {};
+	float                     huntCountdownModifier {0.2f};
 	b2Vec2                    directionAttackVector       = {0, 0};
 	b2Vec2                    currentVelocity             = {0, 0};
 	b2Vec2                    destinationCoordsInMeters   = {0, 0};
@@ -140,10 +149,8 @@ private:
 	b2Vec2                    worldPositionInMeters       = {0, 0};
 	b2Vec2                    lookAheadVelocity           = {0, 0};                 // How far ahead does the droid look for a player collision
 	b2Fixture                 *droidFixture               = nullptr;                        // Used to determine if the droid will run into the player on current velocity
-	int                       ai[AI2_MODE_NUMBER]{};
+	int                       ai[AI2_MODE_NUMBER] {};
 	PATROL_WAYPOINT_DIRECTION patrolWaypointDirection;
-	SDL_Thread                *sdlThreadID;
 };
-
 
 #endif //PARA_PARAAI2_H

@@ -4,6 +4,7 @@
 #include <string>
 #include <wrapper.h>
 #include <map>
+#include <memory>
 
 typedef void      (*textureFunctionPtrStr) (int, std::string);
 
@@ -17,33 +18,33 @@ public:
 
 	void AddRef ();
 
-	paraTexture(textureFunctionPtrStr outputFunction, textureFunctionPtrLoad loadFunction);
+	paraTexture (textureFunctionPtrStr outputFunction, textureFunctionPtrLoad loadFunction);
 
 	std::string int_getString (std::string format, ...);
 
 	bool load (std::string newFileName, std::string newKeyName);
 
-	void destroy();
+	void destroy ();
 
 	void render ();
 
 	void render (SDL_Rect *destination);
 
-	int getWidth();
+	int getWidth ();
 
-	int getHeight();
+	int getHeight ();
 
-	bool createMap();
+	bool createMap ();
 
-	void loadMap();
+	void loadMap ();
 
 	char pixelColor (int posX, int posY);
 
-	void setFileName(std::string newFilename);
+	void setFileName (std::string newFilename);
 
-	bool isLoaded();
+	bool isLoaded ();
 
-	PARA_Texture    *getTexture();
+	PARA_Texture *getTexture ();
 
 private:
 	bool              loaded   = false;
@@ -55,8 +56,8 @@ private:
 	PARA_Texture *texture      = nullptr;
 	PARA_Surface *surface      = nullptr;
 
-	textureFunctionPtrStr            funcOutput{};
-	textureFunctionPtrLoad           funcLoad{};
+	textureFunctionPtrStr  funcOutput {};
+	textureFunctionPtrLoad funcLoad {};
 };
 
 #endif //PARA_PARATEXTURE_H

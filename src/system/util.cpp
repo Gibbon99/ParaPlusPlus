@@ -21,20 +21,20 @@ float sinTable[360];
 //-----------------------------------------------------------------------------------------------------------
 //
 // Create the sin/cos tables
-void createLookupTable()
+void createLookupTable ()
 //-----------------------------------------------------------------------------------------------------------
 {
 	for (int i = 0; i != 360; i++)
 	{
-		cosTable[i] = cos(i);
-		sinTable[i] = sin(i);
+		cosTable[i] = cos (i);
+		sinTable[i] = sin (i);
 	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Look up a value from the COS table
-float sys_getCosValue(int angle)
+float sys_getCosValue (int angle)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((angle < 0) || (angle > 360))
@@ -46,7 +46,7 @@ float sys_getCosValue(int angle)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Look up a value from the SIN table
-float sys_getSinValue(int angle)
+float sys_getSinValue (int angle)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((angle < 0) || (angle > 360))
@@ -205,9 +205,9 @@ void sys_setNewMode (int newMode, bool doFade)
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 
-			audio.stopAllChannels();
-			gui.setCurrentScreen(gui.getIndex(GUI_OBJECT_SCREEN, "mainMenu"));
-			gui.setActiveObject(gui.getCurrentScreen(), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+			audio.stopAllChannels ();
+			gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
+			gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
 			break;
 
 		case MODE_GUI_HIGHSCORE_DISPLAY:
@@ -465,16 +465,19 @@ void sys_freeMemory ()
 	if (memoryMap.size () == 0)
 		return;
 
-	for (auto &memoryItr : memoryMap)
+	for (auto &memoryItr: memoryMap)
 	{
 		logFile.write (sys_getString ("Free memory [ %i bytes ] - [ %s ]", memoryItr.second.size, memoryItr.first.c_str ()));
 
 		if (memoryItr.second.pointer != nullptr)
+		{
 			free (memoryItr.second.pointer);
+			memoryItr.second.pointer = nullptr;
+		}
 	}
 
-	gam_doorFreeSensorMemory();
-	gam_doorFreeTriggerMemory();
+	gam_doorFreeSensorMemory ();
+	gam_doorFreeTriggerMemory ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -573,7 +576,7 @@ b2Vec2 sys_convertPixelsToTiles (b2Vec2 convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Convert from tiles to pixels coordinates
-b2Vec2 sys_convertTilesToPixels(b2Vec2 convertFrom)
+b2Vec2 sys_convertTilesToPixels (b2Vec2 convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	b2Vec2 returnValue;
@@ -583,6 +586,7 @@ b2Vec2 sys_convertTilesToPixels(b2Vec2 convertFrom)
 
 	return returnValue;
 }
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Convert a string to an integer value

@@ -4,7 +4,7 @@
 #include <game/healing.h>
 #include <game/player.h>
 #include <system/util.h>
-#include <game/bullet.h>
+#include <classes/paraBullet.h>
 #include <game/lineOfSight.h>
 #include <game/score.h>
 #include <game/transferRender.h>
@@ -63,10 +63,8 @@ void sys_scriptInitScriptFunctions ()
 	paraScriptInstance.addScriptFunction ("void as_handleDialogBoxes ()", "as_handleDialogBoxes");
 
 	paraScriptInstance.addScriptFunction ("void as_handleHighscoreDisplay()", "as_handleHighscoreDisplay");
-
-	paraScriptInstance.addScriptFunction ("void as_refreshControlLabels()", "as_refreshControlLabels");
 	paraScriptInstance.addScriptFunction ("void as_refreshHighscoreLabels()", "as_refreshHighscoreLabels");
-
+	paraScriptInstance.addScriptFunction ("void as_refreshControlLabels()", "as_refreshControlLabels");
 }
 
 //----------------------------------------------------------------------------------------------------------------------

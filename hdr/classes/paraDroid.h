@@ -110,53 +110,52 @@ public:
 
 	b2Shape *getShape ();
 
-	void setWorldPosInPixels(b2Vec2 newWorldPosInPixels);
+	void setWorldPosInPixels (b2Vec2 newWorldPosInPixels);
 
-	b2Vec2 getWorldPosInPixels();
+	b2Vec2 getWorldPosInPixels ();
 
 	// ----------------- Vars Public ----------------------
 
-	bool visibleToPlayer   = true;
-	bool influenceFadeFlag = false;
+	bool visibleToPlayer {true};
+	bool influenceFadeFlag {false};
 
-	int visibleValue = 255;
-	int visibleState = VISIBLE_STATE_IS_VISIBLE;
-	int transferTargetDroidIndex;
-	int transferTargetDroidType;
+	int visibleValue {255};
+	int visibleState {VISIBLE_STATE_IS_VISIBLE};
+	int transferTargetDroidIndex {};
+	int transferTargetDroidType {};
 
-	b2Body    *body                        = nullptr;
-	_userData *userData                    = nullptr;
+	b2Body    *body {nullptr};
+	_userData *userData {nullptr};
 
-	b2Vec2 previousWorldPosInPixels;
+	b2Vec2 previousWorldPosInPixels {};
 
 	paraSprite sprite;
 	paraAI2    ai2;
 	//
 	// Enemy droid fields
-	int        aStarIndex                  = -1;
-	int        collisionCounterDroid       = 0;
-	int        collisionCounterPlayer      = 0;
-	float      collisionCounterDelayDroid  = 0.0f;
-	float      collisionCounterDelayPlayer = 0.0f;
+	int        collisionCounterDroid {0};
+	int        collisionCounterPlayer {0};
+	float      collisionCounterDelayDroid {0.0};
+	float      collisionCounterDelayPlayer {0.0};
 
 private:
-	bool          lowInfluenceTimeleft = false;
-	bool          weaponCanFire        = true;
-	bool          overHealingTile      = false;
-	bool          overTerminalTile     = false;
-	bool          inTransferMode       = false;
-	bool          overLiftTile         = false;
-	int           currentMode;                // What is the droid doing; transfer, healing, terminal etc
-	int           droidType;
-	int           currentHealth;
-	int           index;                      // Used in physics callback
-	int           liftIndex            = -1;
-	float         weaponDelay;
-	float         influenceTimeLeft;
-	float         influenceFade;
-	std::string   droidName;
-	b2Vec2        velocity;
-	b2Vec2        worldPosInPixels;
+	bool          lowInfluenceTimeleft {false};
+	bool          weaponCanFire {true};
+	bool          overHealingTile {false};
+	bool          overTerminalTile {false};
+	bool          inTransferMode {false};
+	bool          overLiftTile {false};
+	int           currentMode {};                // What is the droid doing; transfer, healing, terminal etc
+	int           droidType {};
+	int           currentHealth {};
+	int           index {};                      // Used in physics callback
+	int           liftIndex {-1};
+	float         weaponDelay {};
+	float         influenceTimeLeft {};
+	float         influenceFade {};
+	std::string   droidName {};
+	b2Vec2        velocity {};
+	b2Vec2        worldPosInPixels {};
 	b2BodyDef     bodyDef;                      // Used for physics and collisions
 	b2CircleShape shape;
 	b2FixtureDef  fixtureDef;

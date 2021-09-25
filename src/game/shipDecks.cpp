@@ -5,7 +5,7 @@
 #include <game/player.h>
 #include <system/util.h>
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
-#include <game/bullet.h>
+#include <classes/paraBullet.h>
 #include <system/gameEvents.h>
 #include <game/lightMaps.h>
 #include <game/tiles.h>
@@ -187,7 +187,7 @@ void gam_addPaddingToLevel (const std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::vector<int> tempLevel;
-	b2Vec2           tempDimensions{};
+	b2Vec2           tempDimensions {};
 	int              countY, countX, whichTile;
 	int              destX, destY;
 	std::string      levelName;
@@ -245,8 +245,8 @@ void gam_loadShipDeck (const std::string &fileName)
 	SDL_RWops    *fp;
 	int          checkVersion;
 	_deckStruct  tempLevel;
-	_lineSegment tempSegment{};
-	b2Vec2       tempWaypoint{};
+	_lineSegment tempSegment {};
+	b2Vec2       tempWaypoint {};
 	int          tempDroidType;
 	int          tempTile;
 	int          fileSize;
@@ -337,7 +337,7 @@ void gam_loadShipDeck (const std::string &fileName)
 		tempWaypoint.x += drawOffset.x;
 		tempWaypoint.y += drawOffset.y;
 
-		b2Vec2 tempVec2{};
+		b2Vec2 tempVec2 {};
 
 		tempVec2.x = tempWaypoint.x - (tileSize / 2);
 		tempVec2.y = tempWaypoint.y - (tileSize / 2);
@@ -417,9 +417,6 @@ void gam_renderSingleTile (int destX, int destY, int tileIndex)
 		sourceRect.y = (tileIndex / numTilesDownInTexture) * tileSize;
 		sourceRect.w = tileSize;
 		sourceRect.h = tileSize; // - 1;
-
-//		sourceRect.y += 1;
-//		sourceRect.h -= 1;
 	}
 
 	destRect.x = destX;
@@ -519,7 +516,7 @@ void gam_changeToDeck (string deckName, int whichLift)
 	gam_renderAlertTiles ();
 
 	// Physics
-	sys_setupEnemyPhysics (deckName);
+	sys_setupDroidPhysics (deckName);
 	sys_setupSolidWalls (deckName);
 	gam_doorTriggerSetup ();
 	gam_findTerminalPositions (deckName);
@@ -555,8 +552,8 @@ void gam_renderVisibleScreen (double interpolation)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Rect        sourceRect;
-	b2Vec2          renderPosition{};
-	static SDL_Rect renderPositionBackground{};
+	b2Vec2          renderPosition {};
+	static SDL_Rect renderPositionBackground {};
 
 	//
 	// Only get texture sizes the first time
@@ -587,9 +584,9 @@ void gam_renderVisibleScreen (double interpolation)
 
 	renderer.setCurrentBackingTexture (GAME_BACKING_TEXTURE);
 
-	textures.at ("universe").render (&renderPositionBackground);
+//	textures.at ("universe").render (&renderPositionBackground);
 
-	backgroundStarfield.render ();
+//	backgroundStarfield.render ();
 	//
 	// Don't blit over parts of texture with transparent alpha set
 	SDL_SetTextureBlendMode (playfieldTexture, SDL_BLENDMODE_BLEND);

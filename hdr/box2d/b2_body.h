@@ -481,7 +481,7 @@ private:
 	b2Body  *m_next;
 
 	b2Fixture *m_fixtureList;
-	int32 m_fixtureCount;
+	int32     m_fixtureCount;
 
 	b2JointEdge   *m_jointList;
 	b2ContactEdge *m_contactList;

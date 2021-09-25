@@ -1,5 +1,6 @@
 #include <game/shipDecks.h>
 #include <game/lifts.h>
+#include <system/util.h>
 #include "game/terminal.h"
 
 std::vector<__tileSensor> terminals;
@@ -14,7 +15,7 @@ void gam_createTerminalSensor (unsigned long whichTerminal, int index)
 	terminals[whichTerminal].bodyDef.position.Set (terminals[whichTerminal].worldPosition.x / pixelsPerMeter, terminals[whichTerminal].worldPosition.y / pixelsPerMeter);
 	terminals[whichTerminal].body = sys_getPhysicsWorld ()->CreateBody (&terminals[whichTerminal].bodyDef);
 
-	terminals[whichTerminal].userData            = new _userData;   // TODO: Free this on shutdown
+	terminals[whichTerminal].userData            = reinterpret_cast<_userData *>(sys_malloc (sizeof (_userData), sys_getString ("%i", index))); // new _userData;   // TODO: Free this on shutdown
 	terminals[whichTerminal].userData->userType  = PHYSIC_TYPE_TERMINAL;
 	terminals[whichTerminal].userData->dataValue = (int) index;
 	terminals[whichTerminal].body->SetUserData (terminals[whichTerminal].userData);
@@ -31,10 +32,13 @@ void gam_createTerminalSensor (unsigned long whichTerminal, int index)
 void gam_clearTerminals ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &terminalItr : terminals)
+	for (auto &terminalItr: terminals)
 	{
 		if (terminalItr.userData != nullptr)
-			delete (terminalItr.userData);
+		{
+			sys_freeMemory (sys_getString ("%i", terminalItr.userData->dataValue));
+			terminalItr.userData = nullptr;
+		}
 
 		if (terminalItr.body != nullptr)
 			sys_getPhysicsWorld ()->DestroyBody (terminalItr.body);
@@ -68,10 +72,7 @@ void gam_findTerminalPositions (const std::string &levelName)
 	{
 		currentTile = shipdecks.at (levelName).tiles[((countY * (shipdecks.at (levelName).levelDimensions.x)) + countX)];
 
-		if ((TERMINAL_BOTTOM == currentTile) ||
-		    (TERMINAL_LEFT == currentTile) ||
-		    (TERMINAL_RIGHT == currentTile) ||
-		    (TERMINAL_TOP == currentTile))
+		if ((TERMINAL_BOTTOM == currentTile) || (TERMINAL_LEFT == currentTile) || (TERMINAL_RIGHT == currentTile) || (TERMINAL_TOP == currentTile))
 		{
 			tempTerminal.worldPosition.x = (countX * tileSize) + (tileSize * 0.5f);
 			tempTerminal.worldPosition.y = (countY * tileSize) + (tileSize * 0.5f);

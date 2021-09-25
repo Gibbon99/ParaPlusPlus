@@ -1,7 +1,7 @@
 #include <classes/paraRandom.h>
 #include <system/util.h>
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
-#include <game/bullet.h>
+#include <classes/paraBullet.h>
 #include "game/particles.h"
 #include "classes/paraParticle.h"
 
@@ -51,7 +51,7 @@ Uint32 paraParticle::getAttachedBullet ()
 //-----------------------------------------------------------------------------------------------------------
 //
 // Set if the particle is in use or not
-void paraParticle::setInUse(bool newState)
+void paraParticle::setInUse (bool newState)
 //-----------------------------------------------------------------------------------------------------------
 {
 	isInUse = newState;
@@ -177,7 +177,7 @@ paraParticle::paraParticle (b2Vec2 newWorldPos, int newType, Uint32 newBulletID)
 			if (tempParticle.physicObject.body == nullptr)
 				sys_shutdownWithError (sys_getString ("Unable to create physics body for particle."));
 
-			tempParticle.physicObject.userData            = new _userData;
+			tempParticle.physicObject.userData            = (new _userData);    // TODO - use para memory routine
 			tempParticle.physicObject.userData->userType  = PHYSIC_TYPE_PARTICLE;
 			tempParticle.physicObject.userData->dataValue = -1;
 			tempParticle.physicObject.body->SetUserData (tempParticle.physicObject.userData);
@@ -212,7 +212,7 @@ paraParticle::~paraParticle ()
 
 	if (usePhysics)
 	{
-		for (auto &partItr : particle)
+		for (auto &partItr: particle)
 		{
 			if (partItr.physicObject.userData != nullptr)
 			{
@@ -260,8 +260,8 @@ b2Vec2 paraParticle::getCircleAngle ()
 	}
 
 #ifdef USE_LOOKUP_TABLE
-	direction.x = static_cast<float>(speed) * sys_getCosValue(angle);
-	direction.y = static_cast<float>(speed) * sys_getSinValue(angle);
+	direction.x = static_cast<float>(speed) * sys_getCosValue (angle);
+	direction.y = static_cast<float>(speed) * sys_getSinValue (angle);
 #else
 	direction.x = (speed * cos (angle));
 	direction.y = (speed * sin (angle));
@@ -279,7 +279,7 @@ void paraParticle::animate ()
 {
 	int    particleLifetimeReduce = 0;
 	int    tempAlpha;
-	int     tempBulletIndex;
+	int    tempBulletIndex;
 	b2Vec2 spacingVelocity;
 
 	switch (type)
@@ -297,7 +297,7 @@ void paraParticle::animate ()
 			break;
 	}
 
-	for (auto &particleItr : particle)
+	for (auto       &particleItr: particle)
 	{
 		tempAlpha = static_cast<int>(particleItr.color.a);
 		tempAlpha -= particleLifetimeReduce;
@@ -325,7 +325,7 @@ void paraParticle::animate ()
 
 			if (attachedToBullet)  // Still connected to a bullet
 			{
-				tempBulletIndex = gam_getArrayIndex(bulletLink);    // Check that bullet is still valid
+				tempBulletIndex = gam_getArrayIndex (bulletLink);    // Check that bullet is still valid
 				if (tempBulletIndex < 0)
 				{
 					isDead (true);
@@ -379,7 +379,7 @@ void paraParticle::animate ()
 	auto            aliveCounter = 0;
 	//
 	// Check to see if all the particles are dead so the emitter can be removed
-	for (const auto &partItr : particle)
+	for (const auto &partItr: particle)
 	{
 		if (partItr.isAlive)
 		{
@@ -404,7 +404,7 @@ void paraParticle::render ()
 {
 	b2Vec2 renderPosition;
 
-	for (auto &particleItr : particle)
+	for (auto &particleItr: particle)
 	{
 		if (particleItr.isAlive)    // Shouldn't be needed?
 		{

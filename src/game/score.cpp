@@ -2,17 +2,17 @@
 #include "game/score.h"
 #include "game/alertLevel.h"
 
-int redAlertLevel;
-int yellowAlertLevel;
-static int currentScore = 0;
-static int printableScore = 0;
-float updateScoreDelay = 0.4f;
+int          redAlertLevel;
+int          yellowAlertLevel;
+static int   currentScore       = 0;
+static int   printableScore     = 0;
+float        updateScoreDelay   = 0.4f;
 static float updateScoreCounter = 0.0f;
 
 //------------------------------------------------------------------------------------------------------
 //
 // Modify the score buffer - send in positive or negative amount
-void gam_modifyScore(int modifyAmount)
+void gam_modifyScore (int modifyAmount)
 //------------------------------------------------------------------------------------------------------
 {
 	currentScore += modifyAmount;
@@ -21,7 +21,7 @@ void gam_modifyScore(int modifyAmount)
 //------------------------------------------------------------------------------------------------------
 //
 // Process the scoreDelay to see if the printableScore needs updating
-void gam_processScore()
+void gam_processScore ()
 //------------------------------------------------------------------------------------------------------
 {
 	if (currentScore == printableScore)
@@ -37,34 +37,34 @@ void gam_processScore()
 			printableScore++;
 		}
 
-		if (gam_getCurrentAlertLevel() == ALERT_YELLOW_TILE)
-			gam_modifyScore(5);
+		if (gam_getCurrentAlertLevel () == ALERT_YELLOW_TILE)
+			gam_modifyScore (5);
 
-		if (gam_getCurrentAlertLevel() == ALERT_RED_TILE)
-			gam_modifyScore(10);
+		if (gam_getCurrentAlertLevel () == ALERT_RED_TILE)
+			gam_modifyScore (10);
 	}
 
 	if (currentScore - printableScore > yellowAlertLevel)
 	{
-		if (gam_getCurrentAlertLevel() != ALERT_YELLOW_TILE)
-			gam_setAlertLevel(ALERT_YELLOW_TILE);
+		if (gam_getCurrentAlertLevel () != ALERT_YELLOW_TILE)
+			gam_setAlertLevel (ALERT_YELLOW_TILE);
 	}
 	else if (currentScore - printableScore > redAlertLevel)
 	{
-		if (gam_getCurrentAlertLevel() != ALERT_RED_TILE)
-			gam_setAlertLevel(ALERT_RED_TILE);
+		if (gam_getCurrentAlertLevel () != ALERT_RED_TILE)
+			gam_setAlertLevel (ALERT_RED_TILE);
 	}
 	else
 	{
-		if (gam_getCurrentAlertLevel() != ALERT_GREEN_TILE)
-			gam_setAlertLevel(ALERT_GREEN_TILE);
+		if (gam_getCurrentAlertLevel () != ALERT_GREEN_TILE)
+			gam_setAlertLevel (ALERT_GREEN_TILE);
 	}
 }
 
 //------------------------------------------------------------------------------------------------------
 //
 // Return the actual score - used for game over
-int gam_getCurrentScore()
+int gam_getCurrentScore ()
 //------------------------------------------------------------------------------------------------------
 {
 	return printableScore + currentScore;
@@ -73,7 +73,7 @@ int gam_getCurrentScore()
 //------------------------------------------------------------------------------------------------------
 //
 // Return the current score
-int gam_getPrintableScore()
+int gam_getPrintableScore ()
 //------------------------------------------------------------------------------------------------------
 {
 	return printableScore;
@@ -82,29 +82,29 @@ int gam_getPrintableScore()
 //------------------------------------------------------------------------------------------------------
 //
 // Set the starting values for the score
-void gam_initScoreValues()
+void gam_initScoreValues ()
 //------------------------------------------------------------------------------------------------------
 {
-	currentScore = 0;
+	currentScore   = 0;
 	printableScore = 0;
 }
 
 //------------------------------------------------------------------------------------------------------
 //
 // See if we need to show the high score entry screen - or just the high score screen
-void gam_decideScoreAction()
+void gam_decideScoreAction ()
 //------------------------------------------------------------------------------------------------------
 {
 	int finalScore;
 
 	finalScore = currentScore + printableScore;
 
-	if (finalScore >= gui_getLowestScore ())
+	if (finalScore >= highScores.lowestScore ()) // gui_getLowestScore ())
 	{
-		gui_showHighscoreEntry();
+		gui_showHighscoreEntry ();
 	}
 	else
 	{
-		gui_showHighscoreTable();
+		gui_showHighscoreTable ();
 	}
 }

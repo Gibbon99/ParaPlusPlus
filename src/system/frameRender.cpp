@@ -9,7 +9,7 @@
 #include "game/player.h"
 #include "gui/guiDeckView.h"
 #include "game/droids.h"
-#include "game/bullet.h"
+#include "classes/paraBullet.h"
 #include "game/particles.h"
 #include "game/lightMaps.h"
 #include "game/transferRender.h"
@@ -88,13 +88,7 @@ void sys_renderFrame (double interpolation)
 			break;
 
 		case MODE_GUI_MAINMENU:
-			gui_renderGUI ();
-			break;
-
 		case MODE_GUI_TERMINAL:
-			gui_renderGUI ();
-			break;
-
 		case MODE_GUI_TUT_TRANSFER_START:
 		case MODE_GUI_TUT_TRANSFER_GAME:
 		case MODE_GUI_TUT_LIFTS:
@@ -195,7 +189,7 @@ void sys_renderFrame (double interpolation)
 			gam_renderBullets ();
 			gam_renderParticles ();
 
-			gam_debugShowPlayerTrail ();
+//			gam_debugShowPlayerTrail ();
 
 			if (d_showWaypoints)
 				gam_showWayPoints (gam_getCurrentDeckName ());

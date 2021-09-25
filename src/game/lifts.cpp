@@ -37,9 +37,9 @@ void gam_setCurrentTunnelDeckIndex ()
 	int tempTunnel = 0;
 	currentTunnelDeckIndex = 0;
 
-	for (auto tunnelItr : shipdecks.at (gam_getCurrentDeckName ()).liftClass.tunnels)
+	for (auto tunnelItr: shipdecks.at (gam_getCurrentDeckName ()).liftClass.tunnels)
 	{
-		if (tunnelItr.second == playerDroid.getLiftIndex())
+		if (tunnelItr.second == playerDroid.getLiftIndex ())
 		{
 			tempTunnel = tunnelItr.first;
 			break;
@@ -187,22 +187,22 @@ void gam_clearLifts ()
 
 // TODO - Check all of this
 
-stopContactPhysicsBugFlag = true;
+	stopContactPhysicsBugFlag = true;
 
-	for (auto &liftItr : lifts)
+	for (auto &liftItr: lifts)
 	{
 		if (liftItr.userData != nullptr)
 		{
-			delete (liftItr.userData);
+			sys_freeMemory (sys_getString ("%s-%i", "lift", liftItr.userData->dataValue));
 			liftItr.userData = nullptr;
 		}
 
 		if (liftItr.body != nullptr)
 		{
-			liftItr.body->DestroyFixture (liftItr.body->GetFixtureList());
+			liftItr.body->DestroyFixture (liftItr.body->GetFixtureList ());
 			liftItr.body->SetEnabled (false);
 			liftItr.body->SetUserData (nullptr);
-			liftItr.body->GetWorld()->DestroyBody (liftItr.body);
+			liftItr.body->GetWorld ()->DestroyBody (liftItr.body);
 			liftItr.body = nullptr;
 		}
 	}
@@ -224,7 +224,7 @@ void gam_createLiftSensor (unsigned long whichLift, int index)
 	lifts[whichLift].bodyDef.position.Set (lifts[whichLift].worldPosition.x / pixelsPerMeter, lifts[whichLift].worldPosition.y / pixelsPerMeter);
 	lifts[whichLift].body = sys_getPhysicsWorld ()->CreateBody (&lifts[whichLift].bodyDef);
 
-	lifts[whichLift].userData            = new _userData;
+	lifts[whichLift].userData            = reinterpret_cast<_userData *>(sys_malloc (sizeof (_userData), sys_getString ("%s-%i", "lift", index)));
 	lifts[whichLift].userData->userType  = PHYSIC_TYPE_LIFT;
 	lifts[whichLift].userData->dataValue = (int) index;
 	lifts[whichLift].body->SetUserData (lifts[whichLift].userData);
@@ -376,7 +376,7 @@ void gam_setupLifts ()
 void gam_performLiftAction ()
 //----------------------------------------------------------------------------
 {
-	currentTunnel = shipdecks.at (gam_getCurrentDeckName ()).liftClass.getTunnelIndex (playerDroid.getLiftIndex());
+	currentTunnel = shipdecks.at (gam_getCurrentDeckName ()).liftClass.getTunnelIndex (playerDroid.getLiftIndex ());
 	gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "lowEnergy");
 

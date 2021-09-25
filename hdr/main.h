@@ -9,8 +9,9 @@
 #include <classes/paraGui.h>
 #include <classes/paraSprite.h>
 #include <classes/paraStarfield.h>
+#include <classes/paraHighScore.h>
 
-#ifdef WIN32
+#ifdef __WIN32__
 #include "SDL.h"
 #else
 
@@ -72,8 +73,8 @@ extern paraAudio      audio;
 extern paraGui        gui;
 extern paraStarfield  backgroundStarfield;
 extern paraStarfield  sideviewStarfield;
-
-extern paraSprite databaseSprite;
+extern paraSprite     databaseSprite;
+extern paraHighScore  highScores;
 
 extern std::map<std::string, paraTexture> textures;
 
@@ -84,6 +85,7 @@ extern double percentIntoNextFrame;
 extern int    currentMode;
 extern double pixelsPerMeter;          // From script
 extern bool   d_showPerfStats;
+extern Uint8  difficultyValue;
 //
 // Game levers
 //

@@ -6,7 +6,7 @@
 #include <game/particles.h>
 #include <game/lightMaps.h>
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
-#include "game/bullet.h"
+#include "classes/paraBullet.h"
 
 //#define DEBUG_BULLET 1
 
@@ -40,9 +40,9 @@ auto getAngle (b2Vec2 sourcePos, b2Vec2 destPos) -> float
 void gam_doDisrupterDamage (int sourceDroid)
 //---------------------------------------------------------------------------------------------------------------
 {
-	for (auto &droidItr : g_shipDeckItr->second.droid)
+	for (auto &droidItr: g_shipDeckItr->second.droid)
 	{
-		if ((droidItr.visibleToPlayer) && (droidItr.getCurrentMode() == DROID_MODE_NORMAL) && (!dataBaseEntry[droidItr.getDroidType()].disrupterImmune))
+		if ((droidItr.visibleToPlayer) && (droidItr.getCurrentMode () == DROID_MODE_NORMAL) && (!dataBaseEntry[droidItr.getDroidType ()].disrupterImmune))
 		{
 			gam_damageToDroid (droidItr.userData->dataValue, PHYSIC_DAMAGE_BULLET, sourceDroid);
 		}
@@ -68,43 +68,43 @@ paraBullet gam_createBullet (int bulletSourceIndex, Uint32 bulletID)
 
 	if (-1 == bulletSourceIndex)        // Bullet from player
 	{
-		bulletType     = dataBaseEntry[playerDroid.getDroidType()].bulletType;
-		if (!dataBaseEntry[playerDroid.getDroidType()].canShoot)
+		bulletType     = dataBaseEntry[playerDroid.getDroidType ()].bulletType;
+		if (!dataBaseEntry[playerDroid.getDroidType ()].canShoot)
 			bulletType = BULLET_TYPE_NORMAL;
 
-		newVelocity         = playerDroid.getVelocity();
-		newWorldPosInMeters = sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels());
+		newVelocity         = playerDroid.getVelocity ();
+		newWorldPosInMeters = sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ());
 		//
 		// Set its direction
-		tempVelocity = newVelocity;
-		tempVelocity.Normalize();
+		tempVelocity        = newVelocity;
+		tempVelocity.Normalize ();
 		tempVelocity *= 50.0f;
 		tempBullet.velocity = tempVelocity;
 
-		tempBullet.worldDestInMeters = tempVelocity + sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels());
+		tempBullet.worldDestInMeters = tempVelocity + sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ());
 	}
 	else        // Bullet from Droid
 	{
-		bulletType = dataBaseEntry[g_shipDeckItr->second.droid[bulletSourceIndex].getDroidType()].bulletType;
+		bulletType = dataBaseEntry[g_shipDeckItr->second.droid[bulletSourceIndex].getDroidType ()].bulletType;
 
-		if (g_shipDeckItr->second.droid[bulletSourceIndex].ai2.getTargetDroid () == -1)
+		if (g_shipDeckItr->second.droid[bulletSourceIndex].ai2.getTargetDroid () == TARGET_PLAYER)
 		{
 			// Aim at player position
-			newVelocity = playerDroid.getWorldPosInPixels() - g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels();
-			tempBullet.worldDestInMeters = sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels());
+			newVelocity = playerDroid.getWorldPosInPixels () - g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels ();
+			tempBullet.worldDestInMeters = sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ());
 		}
 		else
 		{
 			// Aim at other droid
-			newVelocity = g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai2.getTargetDroid ()].getWorldPosInPixels() - g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels();
-			tempBullet.worldDestInMeters = sys_convertPixelsToMeters (g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai2.getTargetDroid ()].getWorldPosInPixels());
+			newVelocity = g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai2.getTargetDroid ()].getWorldPosInPixels () - g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels ();
+			tempBullet.worldDestInMeters = sys_convertPixelsToMeters (g_shipDeckItr->second.droid[g_shipDeckItr->second.droid[bulletSourceIndex].ai2.getTargetDroid ()].getWorldPosInPixels ());
 		}
 
-		newWorldPosInMeters = sys_convertPixelsToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels());
+		newWorldPosInMeters = sys_convertPixelsToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels ());
 		//
 		// Set its direction
-		tempVelocity = newVelocity;
-		tempVelocity.Normalize();
+		tempVelocity        = newVelocity;
+		tempVelocity.Normalize ();
 		tempVelocity *= bulletMoveSpeed;
 		tempBullet.velocity = tempVelocity;
 	}
@@ -128,14 +128,14 @@ paraBullet gam_createBullet (int bulletSourceIndex, Uint32 bulletID)
 		if (tempBullet.body == nullptr)
 			sys_shutdownWithError ("Unable to create new physics body for bullet.");
 
-		tempBullet.userData               = new _userData;
+		tempBullet.userData               = reinterpret_cast<_userData *>(sys_malloc (sizeof (_userData), sys_getString ("%i", bulletID))); //  new _userData;
 		if (bulletSourceIndex == -1)
 			tempBullet.userData->userType = PHYSIC_TYPE_BULLET_PLAYER;
 		else
 			tempBullet.userData->userType = PHYSIC_TYPE_BULLET_ENEMY;
 
-		tempBullet.userData->ID              = bulletID;
-		tempBullet.userData->dataValue       = bulletSourceIndex;
+		tempBullet.userData->ID                   = bulletID;
+		tempBullet.userData->dataValue            = bulletSourceIndex;
 		tempBullet.userData->wallIndexValue       = -1;
 		tempBullet.userData->ignoreCollisionDroid = false;
 		tempBullet.body->SetUserData (tempBullet.userData);
@@ -215,13 +215,13 @@ void gam_initBulletArray ()
 
 	if (bullets.size () > 0)
 	{
-		for (auto &bulletItr : bullets)
+		for (auto &bulletItr: bullets)
 		{
 			if (bulletItr.inUse)
 			{
 				gam_removeBullet (bulletItr.ID);
 				gam_removeEmitter (bulletItr.ID);
-				gam_removeLightmap(bulletItr.ID);
+				gam_removeLightmap (bulletItr.ID);
 			}
 
 			bulletItr.inUse = false;
@@ -245,7 +245,7 @@ int gam_getArrayIndex (Uint32 bulletID)
 {
 	int indexCounter = 0;
 
-	for (const auto &bulletItr : bullets)
+	for (const auto &bulletItr: bullets)
 	{
 		if (bulletItr.ID == bulletID)
 			return indexCounter;
@@ -264,30 +264,30 @@ int gam_getArrayIndex (Uint32 bulletID)
 void gam_addBullet (int bulletSourceIndex)
 //---------------------------------------------------------------------------------------------------------------
 {
-	int    indexCounter = 0;
-	Uint32 bulletID;
+	int    indexCounter {};
+	Uint32 bulletID {};
 
 	if (bulletSourceIndex == -1)
-		playerDroid.setWeaponCanFire(false);
+		playerDroid.setWeaponCanFire (false);
 	else
-		g_shipDeckItr->second.droid[bulletSourceIndex].setWeaponCanFire(false);
+		g_shipDeckItr->second.droid[bulletSourceIndex].setWeaponCanFire (false);
 
 	bulletID = SDL_GetTicks ();
 
-	for (auto &bulletItr : bullets)
+	for (auto &bulletItr: bullets)
 	{
 		if (!bulletItr.inUse)
 		{
 			bulletItr = gam_createBullet (bulletSourceIndex, bulletID);
 			if (bulletSourceIndex < 0)  // Player bullet
 			{
-				gam_addEmitter (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()), PARTICLE_TYPE_TRAIL, bulletID);
-				gam_addNewLightmap (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()), LIGHTMAP_TYPE_BULLET, bulletID);
+				gam_addEmitter (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ()), PARTICLE_TYPE_TRAIL, bulletID);
+				gam_addNewLightmap (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ()), LIGHTMAP_TYPE_BULLET, bulletID);
 			}
 			else
 			{
-				gam_addEmitter(sys_convertPixelsToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels()), PARTICLE_TYPE_TRAIL, bulletID);
-				gam_addNewLightmap(sys_convertPixelsToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels()), LIGHTMAP_TYPE_BULLET, bulletID);
+				gam_addEmitter (sys_convertPixelsToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels ()), PARTICLE_TYPE_TRAIL, bulletID);
+				gam_addNewLightmap (sys_convertPixelsToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels ()), LIGHTMAP_TYPE_BULLET, bulletID);
 			}
 #ifdef DEBUG_BULLET
 			std::cout << "Bullet with ID : " << bulletID << " added to array position : " << indexCounter << std::endl;
@@ -324,7 +324,7 @@ void gam_removeBullet (Uint32 bulletID)
 
 		if (bullets.at (bulletIndex).userData != nullptr)
 		{
-//			free (bullets.at (bulletIndex).userData);       // Mismatched free
+			sys_freeMemory (sys_getString ("%i", bulletID));
 			bullets.at (bulletIndex).userData = nullptr;
 		}
 
@@ -347,7 +347,7 @@ void gam_removeBullet (Uint32 bulletID)
 void gam_processBullets ()
 //---------------------------------------------------------------------------------------------------------------
 {
-	for (auto &bulletItr : bullets)
+	for (auto &bulletItr: bullets)
 	{
 		if (bulletItr.inUse)
 		{
@@ -376,9 +376,9 @@ void gam_processBullets ()
 void gam_renderBullets ()
 //---------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2   tempPosition;
+	b2Vec2 tempPosition;
 
-	for (auto &bulletItr : bullets)
+	for (auto &bulletItr: bullets)
 	{
 		if (bulletItr.inUse)
 		{
@@ -405,7 +405,7 @@ void gam_debugBullets ()
 {
 	int activeCounter = 0;
 
-	for (const auto &bulletItr : bullets)
+	for (const auto &bulletItr: bullets)
 	{
 		if (bulletItr.inUse)
 		{

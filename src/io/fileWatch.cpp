@@ -5,17 +5,17 @@ FW::FileWatcher fileWatcher;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start the file watcher
-void io_startFileWatcher()
+void io_startFileWatcher ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	FW::WatchID watchID = fileWatcher.addWatch("./data/scripts", new UpdateListener());
+	FW::WatchID watchID = fileWatcher.addWatch ("./data/scripts", new UpdateListener ()); // TODO Free the new
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check for file changes
-void io_checkFileWatcher()
+void io_checkFileWatcher ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	fileWatcher.update();
+	fileWatcher.update ();
 }
