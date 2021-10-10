@@ -127,6 +127,8 @@ public:
 	b2Body    *body {nullptr};
 	_userData *userData {nullptr};
 
+//	paraParticle *particle;
+
 	b2Vec2 previousWorldPosInPixels {};
 
 	paraSprite sprite;

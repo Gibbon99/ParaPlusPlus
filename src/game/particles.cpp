@@ -1,72 +1,56 @@
 #include <box2d/b2_math.h>
-#include "classes/paraParticle.h"
+#include <classes/paraEmitter.h>
+#include <system/util.h>
 #include "game/particles.h"
 
-std::vector<paraParticle>   particleEmitters;
+std::vector<paraEmitter> particleEmitters;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Reset all the emitters ready for a new deck
-void gam_clearEmitters()
+void gam_clearEmitters ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &emitterItr : particleEmitters)
+	for (auto &emitterItr: particleEmitters)
 	{
-		emitterItr.setIsAttached(false);
-		emitterItr.isDead(true);
 //		delete emitterItr;
 	}
+
+	particleEmitters.clear ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new emitter to the array - newWorldPos is in meters
-void gam_addEmitter(b2Vec2 newWorldPos, int newType, Uint32 newBulletID)
+void gam_addEmitter (b2Vec2 newWorldPos, int newType, Uint32 newBulletID)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraParticle    tempEmitter(newWorldPos, newType, newBulletID);
+	printf ("Number of emitters before emplace_back [ %zu ]\n", particleEmitters.size ());
 
-	switch (newType)
-	{
-		case PARTICLE_TYPE_TRAIL:
-			tempEmitter.setIsAttached(true);
-			break;
+	if (PARTICLE_TYPE_TRAIL == newType)
+		particleEmitters.emplace_back (sys_convertMetersToPixels (newWorldPos), newType, newBulletID);
+	else
+		particleEmitters.emplace_back (newWorldPos, newType, newBulletID);
 
-		default:
-			tempEmitter.setIsAttached(false);
-			break;
-	}
+	printf ("Number of emitters after emplace_back [ %zu ]\n", particleEmitters.size ());
 
-	if (particleEmitters.empty())
-	{
-		particleEmitters.push_back (tempEmitter);
-		return;
-	}
-
-	for (auto &partItr : particleEmitters)
-	{
-		if (!partItr.inUse())
-		{
-			partItr = tempEmitter;
-			return;
-		}
-	}
-
-	particleEmitters.push_back(tempEmitter);
+	printf ("Number of particles in array after addEmitter [ %zu ]\n", particleEmitters[0].getNumberParticles ());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Remove dead emitters
-void gam_removeDeadEmitters()
+void gam_removeDeadEmitters ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &partItr : particleEmitters)
+	auto removeIndex = 0;
+
+	for (auto &partItr: particleEmitters)
 	{
-		if (partItr.isDead (false))
+		if (partItr.getCanBeRemoved ())
 		{
-			partItr.setInUse(false);
-			return;
+			particleEmitters.erase (particleEmitters.begin () + removeIndex);
+			removeIndex++;
 		}
 	}
 }
@@ -74,49 +58,48 @@ void gam_removeDeadEmitters()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Remove an emitter from an attached bullet
-void gam_removeEmitter(Uint32 whichBulletID)
+void gam_removeEmitter (Uint32 whichBulletID)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &partItr : particleEmitters)
+	for (auto &partItr: particleEmitters)
 	{
-		if ((partItr.inUse()) && (!partItr.isDead (false)))
+		if (partItr.getBulletID () == whichBulletID)
 		{
- 	 		if (partItr.getAttachedBullet () == whichBulletID)
-			{
-				partItr.setIsAttached (false);  // Emitter will die when all particles are gone
-				return;
-			}
+			partItr.setAttachedToBullet (false);
+			return;
 		}
 	}
-
 //	sys_shutdownWithError(sys_getString("Attempting to remove an unknown emitter [ %i ]", whichBulletID));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render the particles
-void gam_renderParticles()
- //----------------------------------------------------------------------------------------------------------------------
+void gam_renderParticles ()
+//----------------------------------------------------------------------------------------------------------------------
 {
-	if (particleEmitters.size() == 0)
+	if (0 == particleEmitters.size ())
 		return;
 
-	for (auto emitterItr : particleEmitters)
+	for (auto &emitterItr: particleEmitters)
 	{
-		if (emitterItr.inUse())
-			emitterItr.render();
+		emitterItr.render ();
 	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Animate the particles
-void gam_animateParticles()
+void gam_animateParticles ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &emitterItr : particleEmitters)
+	if (particleEmitters.size () > 0)
+		printf ("BEFORE Processing emitter with [ %zu ] number of particles.\n", particleEmitters[0].getNumberParticles ());
+
+	for (auto &emitterItr: particleEmitters)
 	{
-		if (emitterItr.inUse())
-			emitterItr.animate();
+		emitterItr.process ();
+
+		printf ("AFTER Processing emitter with [ %zu ] number of particles.\n", emitterItr.getNumberParticles ());
 	}
 }

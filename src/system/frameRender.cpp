@@ -183,7 +183,7 @@ void sys_renderFrame (double interpolation)
 
 			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2, 1.0, static_cast<Uint8>(255));
 
-			gam_renderDroids (gam_getCurrentDeckName ());
+			gam_renderDroids ();
 
 			gam_renderLightmaps ();
 			gam_renderBullets ();

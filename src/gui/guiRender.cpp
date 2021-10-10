@@ -47,9 +47,9 @@ void gui_drawObject (int objectType, int whichObject, bool hasFocus)
 void gui_renderActiveDialogbox ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int           indexCount = 0;
-	Uint8         r, g, b, a;
-	SDL_BlendMode tempMode;
+	int indexCount = 0;
+//	Uint8         r, g, b, a;
+//	SDL_BlendMode tempMode;
 
 	//
 	// SDL2_gfx changes the blend mode and draw color

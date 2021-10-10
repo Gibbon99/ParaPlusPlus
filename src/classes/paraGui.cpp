@@ -69,9 +69,10 @@ void paraGui::setActiveObjectDialogbox (int whichDialogbox, int objectType, std:
 	if (guiDialogBoxes.empty ())
 		return;
 
-	for (auto indexItr : guiDialogBoxes[whichDialogbox].objectIDIndex)
+	for (auto indexItr: guiDialogBoxes[whichDialogbox].objectIDIndex)
 	{
-		switch (guiDialogBoxes[whichDialogbox].objectType[indexCount])
+		switch (indexItr)
+//		switch (guiDialogBoxes[whichDialogbox].objectType[indexCount])
 		{
 			case GUI_OBJECT_BUTTON:
 				if (guiButtons[guiDialogBoxes[whichDialogbox].objectIDIndex[indexCount]].ID == objectID)
@@ -95,7 +96,7 @@ void paraGui::setActiveObject (int whichScreen, int objectType, std::string obje
 	if (guiScrollBoxes.empty ())
 		return;
 
-	for (auto indexItr : guiScreens[whichScreen].objectIDIndex)
+	for (auto indexItr: guiScreens[whichScreen].objectIDIndex)
 	{
 		switch (guiScreens[whichScreen].objectType[indexCount])
 		{
@@ -368,7 +369,7 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 	switch (objectType)
 	{
 		case GUI_OBJECT_SCREEN:
-			for (const auto &itr : guiScreens)
+			for (const auto &itr: guiScreens)
 			{
 #ifdef MY_GUI_DEBUG
 				std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ]" << std::endl;
@@ -386,7 +387,7 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 			break;
 
 		case GUI_OBJECT_DIALOGBOX:
-			for (const auto &itr : guiDialogBoxes)
+			for (const auto &itr: guiDialogBoxes)
 			{
 #ifdef MY_GUI_DEBUG
 				std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ]" << std::endl;
@@ -406,7 +407,7 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 
 		case GUI_OBJECT_BUTTON:
 
-			for (const auto &itr : guiButtons)
+			for (const auto &itr: guiButtons)
 			{
 #ifdef MY_GUI_DEBUG
 				std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ]" << std::endl;
@@ -424,7 +425,7 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 			break;
 
 		case GUI_OBJECT_SLIDER:
-			for (const auto &itr : guiSliders)
+			for (const auto &itr: guiSliders)
 			{
 				if (itr.ID == objectID)
 				{
@@ -436,7 +437,7 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 			break;
 
 		case GUI_OBJECT_LABEL:
-			for (const auto &itr : guiLabels)
+			for (const auto &itr: guiLabels)
 			{
 				if (itr.ID == objectID)
 					return indexCounter;
@@ -447,7 +448,7 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 			break;
 
 		case GUI_OBJECT_SCROLLBOX:
-			for (const auto &itr : guiScrollBoxes)
+			for (const auto &itr: guiScrollBoxes)
 			{
 				if (itr.ID == objectID)
 					return indexCounter;
@@ -457,7 +458,7 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 			break;
 
 		case GUI_OBJECT_CHECKBOX:
-			for (const auto &itr : guiCheckBoxes)
+			for (const auto &itr: guiCheckBoxes)
 			{
 				if (itr.ID == objectID)
 					return indexCounter;
@@ -467,7 +468,7 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 			break;
 
 		case GUI_OBJECT_TEXTBOX:
-			for (const auto &itr : guiTextboxes)
+			for (const auto &itr: guiTextboxes)
 			{
 				if (itr.ID == objectID)
 					return indexCounter;
@@ -477,7 +478,7 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 			break;
 
 		case GUI_OBJECT_IMAGE:
-			for (const auto &itr : guiImages)
+			for (const auto &itr: guiImages)
 			{
 				if (itr.ID == objectID)
 					return indexCounter;
@@ -526,7 +527,7 @@ void paraGui::create (int objectType, std::string objectID)
 			}
 			//
 			// Check it doesn't already exist
-			for (const auto& screenItr : guiScreens)
+			for (const auto &screenItr: guiScreens)
 			{
 				if (screenItr.ID == objectID)
 				{
@@ -549,7 +550,7 @@ void paraGui::create (int objectType, std::string objectID)
 			}
 			//
 			// Check it doesn't already exist
-			for (const auto& dialogboxItr : guiDialogBoxes)
+			for (const auto &dialogboxItr: guiDialogBoxes)
 			{
 				if (dialogboxItr.ID == objectID)
 				{
@@ -573,7 +574,7 @@ void paraGui::create (int objectType, std::string objectID)
 			}
 			//
 			// Check it doesn't already exist
-			for (const auto& buttonItr : guiButtons)
+			for (const auto &buttonItr: guiButtons)
 			{
 				if (buttonItr.ID == objectID)
 				{
@@ -598,7 +599,7 @@ void paraGui::create (int objectType, std::string objectID)
 			}
 			//
 			// Check it doesnt already exists
-			for (const auto& sliderItr : guiSliders)
+			for (const auto &sliderItr: guiSliders)
 			{
 				if (sliderItr.ID == objectID)
 				{
@@ -619,7 +620,7 @@ void paraGui::create (int objectType, std::string objectID)
 				guiLabels.push_back (newLabel);
 				return;
 			}
-			for (const auto& labelItr : guiLabels)
+			for (const auto &labelItr: guiLabels)
 			{
 				if (labelItr.ID == objectID)
 				{
@@ -640,7 +641,7 @@ void paraGui::create (int objectType, std::string objectID)
 				guiScrollBoxes.push_back (newScrollbox);
 				break;
 			}
-			for (const auto& scrollboxItr : guiScrollBoxes)
+			for (const auto &scrollboxItr: guiScrollBoxes)
 			{
 				if (scrollboxItr.ID == objectID)
 				{
@@ -661,7 +662,7 @@ void paraGui::create (int objectType, std::string objectID)
 				guiCheckBoxes.push_back (newCheckBox);
 				break;
 			}
-			for (const auto& checkBoxItr : guiCheckBoxes)
+			for (const auto &checkBoxItr: guiCheckBoxes)
 			{
 				if (checkBoxItr.ID == objectID)
 				{
@@ -682,7 +683,7 @@ void paraGui::create (int objectType, std::string objectID)
 				guiTextboxes.push_back (newTextbox);
 				break;
 			}
-			for (const auto& textboxItr : guiTextboxes)
+			for (const auto &textboxItr: guiTextboxes)
 			{
 				if (textboxItr.ID == objectID)
 				{
@@ -703,7 +704,7 @@ void paraGui::create (int objectType, std::string objectID)
 				guiImages.push_back (newImage);
 				break;
 			}
-			for (const auto& imageItr : guiImages)
+			for (const auto &imageItr: guiImages)
 			{
 				if (imageItr.ID == objectID)
 				{
@@ -2664,7 +2665,7 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	__BOUNDING_BOX badBox{};
+	__BOUNDING_BOX badBox {};
 
 	badBox.x1 = GUI_OBJECT_NOT_FOUND;
 	badBox.y1 = GUI_OBJECT_NOT_FOUND;
@@ -3634,7 +3635,7 @@ void paraGui::setKeyDescription ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the text name of the key
-string paraGui::getKeyName(int keyIndex)
+string paraGui::getKeyName (int keyIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	string keyName;
@@ -3642,7 +3643,7 @@ string paraGui::getKeyName(int keyIndex)
 	if ((keyIndex < 0) || (keyIndex > KEY_NUMBER_ACTIONS))
 		return "Invalid keyIndex";
 
-	keyName = SDL_GetKeyName(SDL_GetKeyFromScancode(keyBinding[keyIndex].keyValue));
+	keyName = SDL_GetKeyName (SDL_GetKeyFromScancode (keyBinding[keyIndex].keyValue));
 
 	return keyName;
 }
@@ -3685,7 +3686,7 @@ void paraGui::setRepeatOff (bool newState)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a new scancode for a key setting
-void paraGui::setScancode(int whichKey, int newScancode)
+void paraGui::setScancode (int whichKey, int newScancode)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((whichKey < 0) || (whichKey > KEY_NUMBER_ACTIONS))
@@ -3693,7 +3694,7 @@ void paraGui::setScancode(int whichKey, int newScancode)
 
 	keyBinding[whichKey].keyValue = static_cast<SDL_Scancode>(newScancode);
 
-	keyBinding[whichKey].text = SDL_GetKeyName(SDL_GetKeyFromScancode(keyBinding[whichKey].keyValue));
+	keyBinding[whichKey].text = SDL_GetKeyName (SDL_GetKeyFromScancode (keyBinding[whichKey].keyValue));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -3814,11 +3815,11 @@ void paraGui::setSliderValue (const std::string &objectID, const std::string &va
 {
 	int indexCount = 0;
 
-	for (auto &sliderItr : guiSliders)
+	for (auto &sliderItr: guiSliders)
 	{
 		if (sliderItr.ID == objectID)
 		{
-			for (auto &stepItr : sliderItr.element)
+			for (auto &stepItr: sliderItr.element)
 			{
 				switch (stepItr.type)
 				{
@@ -3900,7 +3901,7 @@ void paraGui::setTickedStatus (const std::string &objectID, int whichGroup, bool
 		return;
 	}
 
-	for (auto &boxItr : guiCheckBoxes)
+	for (auto &boxItr: guiCheckBoxes)
 	{
 		if (whichGroup == boxItr.group)
 			boxItr.checked = false;
@@ -3924,7 +3925,7 @@ void paraGui::processGuiInput ()
 	{
 		processMousePositionDialogbox ();
 		processMovementKeysDialogbox ();
-		processActionDialogbox();
+		processActionDialogbox ();
 	}
 
 }

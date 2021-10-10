@@ -182,7 +182,7 @@ void gam_resetDroids ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Render the droids on the current level
-void gam_renderDroids (const std::string &levelName)
+void gam_renderDroids ()
 //-------------------------------------------------------------------------------------------------------------
 {
 	b2Vec2 droidScreenPosition {};
@@ -217,8 +217,8 @@ void gam_renderDroids (const std::string &levelName)
 						debugIndex = droidItr.ai2.aStar.getWayPointsIndex ();
 
 					fontClass.render (renderer.renderer, droidScreenPosition.x, droidScreenPosition.y, 200, 200, 250, 255,
-									  sys_getString ("%3.3f %3.3f", debugDestinationPosition.x, debugDestinationPosition.y) + " " + droidItr.ai2.getAIActionString (droidItr.ai2.getCurrentAIMode ()) + " Index: " +
-									  sys_getString ("%i", debugIndex));
+					                  sys_getString ("%3.3f %3.3f", debugDestinationPosition.x, debugDestinationPosition.y) + " " + droidItr.ai2.getAIActionString (droidItr.ai2.getCurrentAIMode ()) + " Index: " +
+					                  sys_getString ("%i", debugIndex));
 					gam_debugShowTarget (droidItr);
 					droidItr.ai2.aStar.debugWayPoints ();
 #endif
@@ -560,7 +560,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Check for any droids that need to be removed - died last tick
-void gam_removeDroids (bool clearAll)
+void gam_removeDroids ()
 //-------------------------------------------------------------------------------------------------------------
 {
 	for (auto &droidItr: g_shipDeckItr->second.droid)

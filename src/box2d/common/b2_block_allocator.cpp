@@ -75,7 +75,7 @@ static const b2SizeMap b2_sizeMap;
 
 struct b2Chunk
 {
-	int32 blockSize;
+	int32   blockSize;
 	b2Block *blocks;
 };
 
@@ -126,6 +126,9 @@ void *b2BlockAllocator::Allocate (int32 size)
 	if (m_freeLists[index])
 	{
 		b2Block *block = m_freeLists[index];
+		if (nullptr == block)
+			return nullptr;
+
 		m_freeLists[index] = block->next;
 		return block;
 	}

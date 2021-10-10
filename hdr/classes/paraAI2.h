@@ -80,7 +80,7 @@ public:
 
 	void getNextDestination ();
 
-	void runAStarCode (b2Vec2 destinationTile);
+	int runAStarCode (b2Vec2 destinationTile);
 
 	void processVelocity ();
 

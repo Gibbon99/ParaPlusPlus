@@ -63,7 +63,7 @@ paraBullet gam_createBullet (int bulletSourceIndex, Uint32 bulletID)
 	int        bulletType;
 
 #ifdef DEBUG_BULLET
-	std::cout << "Creating a bullet with ID of : " << bulletID << std::endl;
+	std::cout << "Creating a bullet with ID of : " << m_bulletID << std::endl;
 #endif
 
 	if (-1 == bulletSourceIndex)        // Bullet from player
@@ -290,7 +290,7 @@ void gam_addBullet (int bulletSourceIndex)
 				gam_addNewLightmap (sys_convertPixelsToMeters (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels ()), LIGHTMAP_TYPE_BULLET, bulletID);
 			}
 #ifdef DEBUG_BULLET
-			std::cout << "Bullet with ID : " << bulletID << " added to array position : " << indexCounter << std::endl;
+			std::cout << "Bullet with ID : " << m_bulletID << " added to array position : " << indexCounter << std::endl;
 #endif
 
 			return;
@@ -309,7 +309,7 @@ void gam_removeBullet (Uint32 bulletID)
 
 	bulletIndex = gam_getArrayIndex (bulletID);
 #ifdef DEBUG_BULLET
-	std::cout << "Remove a bullet : " << bulletID << " with position in array : " << bulletIndex << std::endl;
+	std::cout << "Remove a bullet : " << m_bulletID << " with position in array : " << bulletIndex << std::endl;
 #endif
 
 	try

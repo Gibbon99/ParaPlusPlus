@@ -38,13 +38,15 @@ struct _PHYSIC_OBJECT
 	b2BodyDef     bodyDef;            // Used for physics and collisions
 	b2CircleShape shape;
 	b2FixtureDef  fixtureDef;
-	b2Body        *body     = nullptr;
-	_userData     *userData = nullptr;
+	b2Body        *body = nullptr;
+	_userData     *userData {}; // = nullptr;
+//	_userData     *userData = nullptr;
 };
 
-extern bool   d_showPhysics;
-extern double gravity;         // Set from script
-extern bool   stopContactPhysicsBugFlag;
+extern bool      d_showPhysics;
+extern double    gravity;         // Set from script
+extern bool      stopContactPhysicsBugFlag;
+extern cp::Space space;
 
 // Setup Physics engine - run once
 bool sys_setupPhysicsEngine ();
@@ -62,7 +64,7 @@ void sys_stepPhysicsWorld (float stepAmount);
 void sys_setPlayerPhysicsPosition (b2Vec2 newPosition);
 
 // Process a frame of physics - called from Fixed Update
-void sys_processPhysics (double tickTime);
+void sys_processPhysics ();
 
 // Return a pointer to the current physics world
 b2World *sys_getPhysicsWorld ();

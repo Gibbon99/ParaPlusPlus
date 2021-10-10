@@ -97,7 +97,6 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("double playerFriction", &playerFriction);
 	paraScriptInstance.addHostVariable ("double gravity", &gravity);
 	paraScriptInstance.addHostVariable ("double doorAnimSpeed", &doorAnimSpeed);
-	paraScriptInstance.addHostVariable ("int numAStarPaths", &numAStarPaths);
 	paraScriptInstance.addHostVariable ("float collisionCount", &collisionCount);
 	paraScriptInstance.addHostVariable ("int collisionLimit", &collisionLimit);
 	paraScriptInstance.addHostVariable ("float bulletDensity", &bulletDensity);

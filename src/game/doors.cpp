@@ -16,13 +16,13 @@ std::vector<_doorTrigger> doorBulletSensor;
 void gam_doorCheckTriggerAreas ()
 // ----------------------------------------------------------------------------
 {
-	int i = 0;
-	int j = 0;
+//	int i = 0;
+//	int j = 0;
 
 	if (0 == doorTriggers.size ())
 		return;        // no doors on this level to process
 
-	for (auto &doorItr : doorTriggers)
+	for (auto &doorItr: doorTriggers)
 	{
 		if ((playerDroid.previousWorldPosInPixels.x > doorItr.topLeft.x) && (playerDroid.previousWorldPosInPixels.y > doorItr.topLeft.y) && (playerDroid.previousWorldPosInPixels.x < doorItr.botRight.x) &&
 		    (playerDroid.previousWorldPosInPixels.y < doorItr.botRight.y))
@@ -38,14 +38,14 @@ void gam_doorCheckTriggerAreas ()
 	//
 	// now check all the enemy sprites against the doors
 	//
-	for (auto &doorItr : doorTriggers)
+	for (auto &doorItr: doorTriggers)
 	{
-		for (auto droidItr : g_shipDeckItr->second.droid)
+		for (auto droidItr: g_shipDeckItr->second.droid)
 		{
-			if (droidItr.getCurrentMode() == DROID_MODE_NORMAL)
+			if (droidItr.getCurrentMode () == DROID_MODE_NORMAL)
 			{
-				if ((droidItr.getWorldPosInPixels().x + (SPRITE_SIZE / 2) > doorItr.topLeft.x) && (droidItr.getWorldPosInPixels().y + (SPRITE_SIZE / 2) > doorItr.topLeft.y) && (droidItr.getWorldPosInPixels().x + (SPRITE_SIZE / 2) < doorItr.botRight.x) &&
-				(droidItr.getWorldPosInPixels().y + (SPRITE_SIZE / 2) < doorItr.botRight.y))
+				if ((droidItr.getWorldPosInPixels ().x + (SPRITE_SIZE / 2) > doorItr.topLeft.x) && (droidItr.getWorldPosInPixels ().y + (SPRITE_SIZE / 2) > doorItr.topLeft.y) &&
+				    (droidItr.getWorldPosInPixels ().x + (SPRITE_SIZE / 2) < doorItr.botRight.x) && (droidItr.getWorldPosInPixels ().y + (SPRITE_SIZE / 2) < doorItr.botRight.y))
 				{
 					doorItr.inUse = true;
 				}
@@ -89,14 +89,14 @@ void gam_changeDoorFilters (int doorState, int whichDoor)
 void gam_playDoorSound (int whichTrigger, std::string keyName)
 // ----------------------------------------------------------------------------
 {
-	int   soundPan;
+//	int   soundPan;
 	float distanceToDoor;
 	float distanceSoundLevel;
 	float distanceOrientation;
 
 	//
 	// How far is player from this door - attenuate for distance
-	distanceToDoor         = b2Distance (sys_convertPixelsToMeters (doorTriggers[whichTrigger].worldPosition), sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()));
+	distanceToDoor = b2Distance (sys_convertPixelsToMeters (doorTriggers[whichTrigger].worldPosition), sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ()));
 
 	if (distanceToDoor > distanceForDoorSoundMax)
 		distanceSoundLevel = 254;
@@ -107,7 +107,7 @@ void gam_playDoorSound (int whichTrigger, std::string keyName)
 	}
 	//
 	// Which side should the sound come from - attenuate for distance
-	if (doorTriggers[whichTrigger].worldPosition.x < playerDroid.getWorldPosInPixels().x)   // Door is to the left
+	if (doorTriggers[whichTrigger].worldPosition.x < playerDroid.getWorldPosInPixels ().x)   // Door is to the left
 	{
 		if (distanceToDoor > distanceForDoorSoundMax)
 			distanceOrientation = 254;  // All the way to the left
@@ -262,7 +262,7 @@ void gam_renderDoorFrames ()
 
 	SDL_SetRenderTarget (renderer.renderer, gam_getPlayfieldTexture ());
 
-	for (const auto &doorIndex : doorTriggers)
+	for (const auto &doorIndex: doorTriggers)
 	{
 		if (sys_visibleOnScreen (doorIndex.renderPosition, tileSize))
 		{
@@ -275,10 +275,10 @@ void gam_renderDoorFrames ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Free memory used for userData
-void gam_doorFreeSensorMemory()
+void gam_doorFreeSensorMemory ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto sensorItr : doorBulletSensor)
+	for (auto sensorItr: doorBulletSensor)
 	{
 		delete sensorItr.userData;
 	}
@@ -287,10 +287,10 @@ void gam_doorFreeSensorMemory()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Free memory used for door triggers
-void gam_doorFreeTriggerMemory()
+void gam_doorFreeTriggerMemory ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto triggerItr : doorTriggers)
+	for (auto triggerItr: doorTriggers)
 	{
 //		delete triggerItr.userData;     // Trips address sanitizer on exit
 	}
@@ -329,7 +329,7 @@ void gam_clearAllDoors ()
 {
 	doorTriggers.clear ();
 
-	for (auto &doorBulletItr : doorBulletSensor)
+	for (auto &doorBulletItr: doorBulletSensor)
 	{
 		if (doorBulletItr.userData != nullptr)
 			delete (doorBulletItr.userData);

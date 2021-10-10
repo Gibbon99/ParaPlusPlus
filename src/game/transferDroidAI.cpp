@@ -17,7 +17,7 @@ float chooseRowDelayTime = 0.0f;
 //
 // Return if a circuit to be selected is a suitable color to change
 // Return false if the circuit is already the correct color for the selected side
-bool trn_isCircuitSuitable(__TRANSFER_ROW transferIndex)
+bool trn_isCircuitSuitable (__TRANSFER_ROW transferIndex)
 //---------------------------------------------------------------------------------------------------------------------
 {
 	//
@@ -27,7 +27,7 @@ bool trn_isCircuitSuitable(__TRANSFER_ROW transferIndex)
 		if (transferIndex.currentColor == TRANSFER_COLOR_RIGHT)
 		{
 #ifdef MY_DEBUG
-			printf("Droid on right - color is already right color\n");
+			printf ("Droid on right - color is already right color\n");
 #endif
 			return false;
 		}
@@ -38,7 +38,7 @@ bool trn_isCircuitSuitable(__TRANSFER_ROW transferIndex)
 		if (transferIndex.currentColor == TRANSFER_COLOR_LEFT)
 		{
 #ifdef MY_DEBUG
-			printf("Droid on left - color is already left color\n");
+			printf ("Droid on left - color is already left color\n");
 #endif
 			return false;
 		}
@@ -89,7 +89,7 @@ int trn_findSuitableCircuitToUse (__TRANSFER_ROW transferIndex)
 		case TRANSFER_ROW_FULL_LINE_3:
 		case TRANSFER_ROW_REPEAT_HALF:
 		case TRANSFER_ROW_REPEAT_QUARTER:
-			circuitFound = trn_isCircuitSuitable(transferIndex);
+			circuitFound = trn_isCircuitSuitable (transferIndex);
 			if (circuitFound)
 				return 0;
 			else
@@ -249,11 +249,11 @@ void trn_moveToCircuit ()
 	if (droidBlockPos == nextCircuitToUse)
 	{
 		if (transferPlayerWhichSide == TRANSFER_COLOR_LEFT)
-			trn_placeToken (nextCircuitToUse, TRANSFER_COLOR_RIGHT, 0);
+			trn_placeToken (nextCircuitToUse, TRANSFER_COLOR_RIGHT);
 		else
-			trn_placeToken (nextCircuitToUse, TRANSFER_COLOR_LEFT, 0);
+			trn_placeToken (nextCircuitToUse, TRANSFER_COLOR_LEFT);
 
-		circuitFound = false;
+		circuitFound     = false;
 		nextCircuitToUse = -1;
 		numDroidTokens--;
 		if (numDroidTokens > 0)
@@ -297,7 +297,7 @@ void trn_processTransferDroidAI ()
 			//
 			// Look through each row for a suitable circuit to use
 			// rowCounter is the row that has been found suitable
-			for (auto &transferRowIndex : transferRows)
+			for (auto &transferRowIndex: transferRows)
 			{
 				nextCircuitToUse = trn_findSuitableCircuitToUse (transferRowIndex);
 				if (nextCircuitToUse != -1)

@@ -198,16 +198,16 @@ bool gui_loadSideViewData (std::string sideviewFileName)
 void gui_renderSideView ()
 // ----------------------------------------------------------------------------
 {
-	int           count;
-	int           lifts   = 8;
-	int           toLifts = 0;
-	float         x1;
-	float         y1;
-	double        sideViewTextPosX;
-	double        sideViewTextPosY;
-	Uint8         r, g, b, a;
-	SDL_BlendMode tempMode;
-	__PARA_COLOR  tempAlert{};
+	int          count;
+	int          lifts   = 8;
+	int          toLifts = 0;
+	float        x1;
+	float        y1;
+	double       sideViewTextPosX;
+	double       sideViewTextPosY;
+//	Uint8         r, g, b, a;
+//	SDL_BlendMode tempMode;
+	__PARA_COLOR tempAlert {};
 
 	fontClass.use ("guiFont");
 

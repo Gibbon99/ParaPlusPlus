@@ -277,7 +277,7 @@ void paraAStar::moveNodeToClosedList (int whichNodeIndex)
 	printf ("Thread [ %i ]: Move open node [ %i ] to closedNode list.\n", ID, whichNodeIndex);
 #endif
 
-	if (whichNodeIndex > openNodes.size () - 1)
+	if (whichNodeIndex > static_cast<int>(openNodes.size () - 1))
 		sys_shutdownWithError ("whichNodeIndex is greater than openNode size: moveNodeToClosedList");
 
 	if (openNodes.empty ())
@@ -542,9 +542,9 @@ void paraAStar::extractPath ()
 void paraAStar::compressWaypoints ()
 //--------------------------------------------------------------------------------------------------------
 {
-	int                 current{1};
-	std::vector<b2Vec2> newPoints{};
-	b2Vec2              tempPoint{};
+	int                 current {1};
+	std::vector<b2Vec2> newPoints {};
+	b2Vec2              tempPoint {};
 
 	newPoints.clear ();
 	tempPoint = wayPoints[0];
@@ -634,7 +634,7 @@ b2Vec2 paraAStar::getWaypoint ()
 	{
 		printf ("STOP: Waypoint array is empty.\n\n");
 		aStarDirection = ASTAR_DIRECTION::ERROR;
-		return b2Vec2{};
+		return b2Vec2 {};
 	}
 
 	switch (aStarDirection)

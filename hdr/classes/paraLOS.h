@@ -49,6 +49,12 @@ public:
 		b2Body *body     = fixture->GetBody ();
 		auto   *userData = static_cast<_userData *>(body->GetUserData ());
 
+		if (userData == nullptr)
+		{
+			m_hit = false;
+			return 1.0f;
+		}
+
 		switch (userData->userType)
 		{
 			case PHYSIC_TYPE_WALL:

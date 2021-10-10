@@ -201,7 +201,7 @@ void sys_gameTickRun ()
 
 			if (!gam_pauseModeOn ())
 			{
-				sys_processPhysics (TICKS_PER_SECOND);
+				sys_processPhysics ();
 				gam_animateHealing ();
 				playerDroid.sprite.animate ();
 				gam_animateDroids ();
@@ -216,7 +216,7 @@ void sys_gameTickRun ()
 
 				gam_processAI ();
 
-				gam_removeDroids (false);
+				gam_removeDroids ();
 				gam_processScore ();
 				gam_processHealingTile ();
 				gam_processInfluenceTime ();

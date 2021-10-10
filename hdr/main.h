@@ -30,9 +30,9 @@
 #include "classes/paraAudio.h"
 #include "system/eventsEngine.h"
 #include "system/shutdown.h"
-//#include "system/util.h"
 #include "physfs/physfs.h"
 #include "classes/paraRenderer.h"
+#include "chipmunkpp/chipmunk.hpp"
 
 #define ERROR_COUNT_LIMIT   10
 

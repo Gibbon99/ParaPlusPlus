@@ -36,4 +36,4 @@ extern std::string activeBackingTexture;
 void sys_startSystems ();
 
 // Start to load and prepare everything else
-static int sys_startInit (void *ptr);
+int sys_startInit (void *ptr);

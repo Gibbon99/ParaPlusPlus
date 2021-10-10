@@ -1,201 +1,113 @@
-#include <classes/paraRandom.h>
-#include <system/util.h>
-#include <sdl2_gfx/SDL2_gfxPrimitives.h>
-#include <classes/paraBullet.h>
+#include "classes/paraRandom.h"
+#include "sdl2_gfx/SDL2_gfxPrimitives.h"
+#include "system/util.h"
 #include "game/particles.h"
 #include "classes/paraParticle.h"
 
-// #define DEBUG_PARTICLE 1
-
-paraRandom angleRandom;
-
-//-----------------------------------------------------------------------------------------------------------
-//
-// Return if the emitter is dead and can be removed
-bool paraParticle::isDead (bool b)
-//-----------------------------------------------------------------------------------------------------------
-{
-	return isDeadFlag;
-}
-
-//-----------------------------------------------------------------------------------------------------------
-//
-// Is the emitter currently attached to a bullet
-bool paraParticle::isAttached ()
-//-----------------------------------------------------------------------------------------------------------
-{
-	return attachedToBullet;
-}
-
-//-----------------------------------------------------------------------------------------------------------
-//
-// Is the attached bullet still alive.  If not, set to false - keep processing until all particles are gone
-void paraParticle::setIsAttached (bool newState)
-//-----------------------------------------------------------------------------------------------------------
-{
-	attachedToBullet = newState;
-}
-
-//-----------------------------------------------------------------------------------------------------------
-//
-// Return the bullet this emitter may be linked to - return -1 if not attached
-Uint32 paraParticle::getAttachedBullet ()
-//-----------------------------------------------------------------------------------------------------------
-{
-	if (!attachedToBullet)
-		return 0;
-
-	return bulletLink;
-}
-
-//-----------------------------------------------------------------------------------------------------------
-//
-// Set if the particle is in use or not
-void paraParticle::setInUse (bool newState)
-//-----------------------------------------------------------------------------------------------------------
-{
-	isInUse = newState;
-}
-
-//-----------------------------------------------------------------------------------------------------------
-//
-// Return inUse status for this emitter
-bool paraParticle::inUse ()
-//-----------------------------------------------------------------------------------------------------------
-{
-	return isInUse;
-}
+paraRandom particleAngleRandom {};
 
 //-----------------------------------------------------------------------------------------------------------
 //
 // Constructor for a new paraParticle class - newWorldPos is in Physics coords
-paraParticle::paraParticle (b2Vec2 newWorldPos, int newType, Uint32 newBulletID)
+paraParticle::paraParticle (int newType, b2Vec2 newWorldPos)
 //-----------------------------------------------------------------------------------------------------------
 {
 #ifdef DEBUG_PARTICLE
 	std::cout << "Construct new particle. Connect with bullet index : " << newBulletID << std::endl;
 #endif
+	int trailColor {};
 
-	__PARTICLE tempParticle;
-	int        trailColor;
+	m_worldPos     = newWorldPos;
+	m_particleType = newType;
+	m_isAlive      = true;
 
-	particleSpeedExplosionMin      = 1;
-	particleSpeedExplosionMax      = 5;
-	particleSpeedSparkMin          = 1;
-	particleSpeedSparkMax          = 3;
-	particleExplosionInitialNumMin = 30;
-	particleExplosionInitialNumMax = 90;
-	particleSparkInitialNumMin     = 15;
-	particleSparkInitialNumMax     = 35;
-	particleTrailInitialNumMin     = 30;
-	particleTrailInitialNumMax     = 90;
-	particleElastic                = 0.9f;
-	particleFriction               = 0.2f;
-	particleMass                   = 0.05f;
-	particleSize                   = 4.0f;
-	particleTrailReduceRate        = 40;
-	particleExplosionReduceRate    = 10;
-	particleSparkReduceRate        = 12;
-
-	worldPos   = newWorldPos;
-	type       = newType;
-	bulletLink = newBulletID;
-
-	switch (type)
+	switch (newType)
 	{
 		case PARTICLE_TYPE_EXPLOSION:
-			numInitialParticles = angleRandom.get (particleExplosionInitialNumMin, particleExplosionInitialNumMax);
-			usePhysics          = true;
-			attachedToBullet    = false;
+			m_direction = getCircleAngle ();
+			color.r = 200;
+			color.g = 100;
+			color.b = 100;
+			color.a = particleAngleRandom.get (100, 254);;
+
+			printf ("Particle constructor - PARTICLE_TYPE_EXPLOSION.\n");
 			break;
 
 		case PARTICLE_TYPE_SPARK:
-			numInitialParticles = angleRandom.get (particleSparkInitialNumMin, particleSparkInitialNumMax);
-			usePhysics          = true;
-			attachedToBullet    = false;
+			m_direction = getCircleAngle ();
+			color.r = 220;
+			color.g = 190;
+			color.b = 200;
+			color.a = particleAngleRandom.get (100, 254);
+
+			printf ("Particle constructor - PARTICLE_TYPE_SPARK.\n");
+
 			break;
 
 		case PARTICLE_TYPE_TRAIL:
-			numInitialParticles = angleRandom.get (particleTrailInitialNumMin, particleTrailInitialNumMax);
-			usePhysics          = false;
-			attachedToBullet    = true;
+			m_worldPos.x -= (6 - particleAngleRandom.get (0, 12));
+			m_worldPos.y -= (6 - particleAngleRandom.get (0, 12));
+			trailColor = particleAngleRandom.get (100, 254);
+			color.r = trailColor;
+			color.g = trailColor;
+			color.b = trailColor;
+			color.a = trailColor;
 			break;
 	}
 
-	if (particle.size () == 0)
+	if (m_particleType != PARTICLE_TYPE_TRAIL)
 	{
-		particle.reserve (numInitialParticles);
+		physicObject.bodyDef.type = b2_dynamicBody;
+		physicObject.bodyDef.position.Set (m_worldPos.x, m_worldPos.y);
+		physicObject.bodyDef.angle = 0;
+		physicObject.body          = sys_getPhysicsWorld ()->CreateBody (getBodyDef ());
+		if (physicObject.body == nullptr)
+			sys_shutdownWithError (sys_getString ("Unable to create physics body for particle."));
+
+//		auto *userData = new _userData;
+
+		physicObject.userData            = new _userData; //reinterpret_cast<_userData *>(sys_malloc (sizeof (_userData), sys_getString ("%i", 1)));; // (new _userData);    // TODO - use para memory routine
+		physicObject.userData->userType  = PHYSIC_TYPE_PARTICLE;
+		physicObject.userData->dataValue = 0;
+		physicObject.body->SetUserData (physicObject.userData);
+
+//		userData->userType  = PHYSIC_TYPE_PARTICLE;
+//		userData->dataValue = 0;
+//		physicObject.body->SetUserData (userData);
+
+//		delete userData;
+
+//		delete physicObject.userData;
+
+		physicObject.shape.m_radius = static_cast<float>(particleSize / pixelsPerMeter);
+		physicObject.shape.m_p.Set (0, 0);
+
+		physicObject.fixtureDef.shape               = &physicObject.shape;
+		physicObject.fixtureDef.density             = particleMass;
+		physicObject.fixtureDef.friction            = particleFriction;
+		physicObject.fixtureDef.restitution         = particleElastic;
+		physicObject.fixtureDef.filter.categoryBits = PHYSIC_TYPE_PARTICLE;
+		physicObject.fixtureDef.filter.maskBits     = PHYSIC_TYPE_WALL;
+		physicObject.body->CreateFixture (&physicObject.fixtureDef);
 	}
-	else
-	{
-		particle.clear ();
-		particle.reserve (numInitialParticles);
-	}
+}
 
-	for (auto i = 0; i != numInitialParticles; i++)
-	{
-		tempParticle.worldPos = newWorldPos;
-		tempParticle.isAlive  = true;
+//-------------------------------------------------------------------------------------------------------------
+//
+// Return the location of the body definition
+b2BodyDef *paraParticle::getBodyDef ()
+//-------------------------------------------------------------------------------------------------------------
+{
+	return &physicObject.bodyDef;
+}
 
-		switch (type)
-		{
-			case PARTICLE_TYPE_EXPLOSION:
-				tempParticle.direction = getCircleAngle ();
-				tempParticle.color.r   = 200;
-				tempParticle.color.g   = 100;
-				tempParticle.color.b   = 100;
-				tempParticle.color.a   = angleRandom.get (100, 254);;
-				break;
-
-			case PARTICLE_TYPE_SPARK:
-				tempParticle.direction = getCircleAngle ();
-				tempParticle.color.r   = 220;
-				tempParticle.color.g   = 190;
-				tempParticle.color.b   = 200;
-				tempParticle.color.a   = angleRandom.get (100, 254);;
-				break;
-
-			case PARTICLE_TYPE_TRAIL:
-				tempParticle.worldPos = sys_convertMetersToPixels (tempParticle.worldPos);
-				tempParticle.worldPos.x -= (6 - angleRandom.get (0, 12));
-				tempParticle.worldPos.y -= (6 - angleRandom.get (0, 12));
-				tempParticle.worldPos = sys_convertPixelsToMeters (tempParticle.worldPos);
-				trailColor = angleRandom.get (100, 254);
-				tempParticle.color.r = trailColor;
-				tempParticle.color.g = trailColor;
-				tempParticle.color.b = trailColor;
-				tempParticle.color.a = trailColor;
-				break;
-		}
-
-		if (usePhysics)
-		{
-			tempParticle.physicObject.bodyDef.type = b2_dynamicBody;
-			tempParticle.physicObject.bodyDef.position.Set (tempParticle.worldPos.x, tempParticle.worldPos.y);
-			tempParticle.physicObject.bodyDef.angle = 0;
-			tempParticle.physicObject.body          = sys_getPhysicsWorld ()->CreateBody (&tempParticle.physicObject.bodyDef);
-			if (tempParticle.physicObject.body == nullptr)
-				sys_shutdownWithError (sys_getString ("Unable to create physics body for particle."));
-
-			tempParticle.physicObject.userData            = (new _userData);    // TODO - use para memory routine
-			tempParticle.physicObject.userData->userType  = PHYSIC_TYPE_PARTICLE;
-			tempParticle.physicObject.userData->dataValue = -1;
-			tempParticle.physicObject.body->SetUserData (tempParticle.physicObject.userData);
-
-			tempParticle.physicObject.shape.m_radius = static_cast<float>(particleSize / pixelsPerMeter);
-			tempParticle.physicObject.shape.m_p.Set (0, 0);
-
-			tempParticle.physicObject.fixtureDef.shape               = &tempParticle.physicObject.shape;
-			tempParticle.physicObject.fixtureDef.density             = particleMass;
-			tempParticle.physicObject.fixtureDef.friction            = particleFriction;
-			tempParticle.physicObject.fixtureDef.restitution         = particleElastic;
-			tempParticle.physicObject.fixtureDef.filter.categoryBits = PHYSIC_TYPE_PARTICLE;
-			tempParticle.physicObject.fixtureDef.filter.maskBits     = PHYSIC_TYPE_WALL;
-			tempParticle.physicObject.body->CreateFixture (&tempParticle.physicObject.fixtureDef);
-		}
-		particle.push_back (tempParticle);
-	}
-	isInUse = true;
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return if the particle is alive or not
+bool paraParticle::isAlive () const
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return m_isAlive;
 }
 
 //-----------------------------------------------------------------------------------------------------------
@@ -208,33 +120,31 @@ paraParticle::~paraParticle ()
 	std::cout << "De-construct particle" << std::endl;
 #endif
 
-	stopContactPhysicsBugFlag = true;
-
-	if (usePhysics)
+	if (m_particleType != PARTICLE_TYPE_TRAIL)
 	{
-		for (auto &partItr: particle)
+		stopContactPhysicsBugFlag = true;
+
+		if (physicObject.userData != nullptr)
 		{
-			if (partItr.physicObject.userData != nullptr)
-			{
-//				delete partItr.physicObject.userData;
-				partItr.physicObject.userData = nullptr;
-			}
-
-			if (partItr.physicObject.body != nullptr)
-			{
-				/*
-				partItr.physicObject.body->DestroyFixture (partItr.physicObject.body->GetFixtureList());
-				partItr.physicObject.body->SetEnabled (false);
-				partItr.physicObject.body->SetUserData (nullptr);
-				partItr.physicObject.body->GetWorld()->DestroyBody (partItr.physicObject.body);
-				partItr.physicObject.body = nullptr;
-				*/
-			}
+//			delete physicObject.userData;
+			physicObject.userData = nullptr;
 		}
-	}
-	particle.clear ();
 
-	stopContactPhysicsBugFlag = false;
+		if (physicObject.body != nullptr)
+		{
+			physicObject.body->DestroyFixture (physicObject.body->GetFixtureList ());
+			physicObject.body->SetEnabled (false);
+			physicObject.body->SetUserData (nullptr);
+			physicObject.body->GetWorld ()->DestroyBody (physicObject.body);
+			physicObject.body = nullptr;
+		}
+
+		stopContactPhysicsBugFlag = false;
+	}
+	else
+	{
+		std::cout << "Particle destructor called - PARTICLE_TYPE_TRAIL." << std::endl;
+	}
 }
 
 //-----------------------------------------------------------------------------------------------------------
@@ -243,46 +153,44 @@ paraParticle::~paraParticle ()
 b2Vec2 paraParticle::getCircleAngle ()
 //-----------------------------------------------------------------------------------------------------------
 {
-	int    angle, speed;
-	b2Vec2 direction;
+	int    angle {}, speed {};
+	b2Vec2 newDirection {};
 
-	angle = angleRandom.get (0, 359);
+	angle = particleAngleRandom.get (0, 359);
 
-	switch (type)
+	switch (m_particleType)
 	{
 		case PARTICLE_TYPE_EXPLOSION:
-			speed = angleRandom.get (particleSpeedExplosionMin, particleSpeedExplosionMax);
+			speed = particleAngleRandom.get (particleSpeedExplosionMin, particleSpeedExplosionMax);
 			break;
 
 		case PARTICLE_TYPE_SPARK:
-			speed = angleRandom.get (particleSpeedSparkMin, particleSpeedSparkMax);
+			speed = particleAngleRandom.get (particleSpeedSparkMin, particleSpeedSparkMax);
 			break;
 	}
 
 #ifdef USE_LOOKUP_TABLE
-	direction.x = static_cast<float>(speed) * sys_getCosValue (angle);
-	direction.y = static_cast<float>(speed) * sys_getSinValue (angle);
+	newDirection.x = static_cast<float>(speed) * sys_getCosValue (angle);
+	newDirection.y = static_cast<float>(speed) * sys_getSinValue (angle);
 #else
 	direction.x = (speed * cos (angle));
 	direction.y = (speed * sin (angle));
 #endif
 
-	direction.Normalize ();  // Is this needed, negates getting the speed??
-	return direction;
+	newDirection.Normalize ();  // Is this needed, negates getting the speed??
+	return newDirection;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Animate the particles
+// Animate the particle
 void paraParticle::animate ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int    particleLifetimeReduce = 0;
-	int    tempAlpha;
-	int    tempBulletIndex;
-	b2Vec2 spacingVelocity;
+	int particleLifetimeReduce {};
+	int tempAlpha {};
 
-	switch (type)
+	switch (m_particleType)
 	{
 		case PARTICLE_TYPE_EXPLOSION:
 			particleLifetimeReduce = particleExplosionReduceRate;
@@ -293,157 +201,60 @@ void paraParticle::animate ()
 			break;
 
 		case PARTICLE_TYPE_TRAIL:
-			particleLifetimeReduce = angleRandom.get (1, particleTrailReduceRate);
+			particleLifetimeReduce = particleAngleRandom.get (1, particleTrailReduceRate);
 			break;
 	}
 
-	for (auto       &particleItr: particle)
+	tempAlpha = static_cast<int>(color.a);
+	tempAlpha -= particleLifetimeReduce;
+
+	if (tempAlpha < 0)
 	{
-		tempAlpha = static_cast<int>(particleItr.color.a);
-		tempAlpha -= particleLifetimeReduce;
-
-		if (tempAlpha < 0)
-		{
-			particleItr.isAlive = false;
-			particleItr.color.a = 0;
-			if (type != PARTICLE_TYPE_TRAIL)
-			{
-				if (usePhysics)
-				{
-					if (particleItr.physicObject.body != nullptr)
-					{
-						particleItr.physicObject.body->GetWorld ()->DestroyBody (particleItr.physicObject.body);
-						particleItr.physicObject.body = nullptr;
-					}
-					if (particleItr.physicObject.userData != nullptr)
-					{
-						delete particleItr.physicObject.userData;
-						particleItr.physicObject.userData = nullptr;
-					}
-				}
-			}
-
-			if (attachedToBullet)  // Still connected to a bullet
-			{
-				tempBulletIndex = gam_getArrayIndex (bulletLink);    // Check that bullet is still valid
-				if (tempBulletIndex < 0)
-				{
-					isDead (true);
-				}
-				else
-				{
-					particleItr.isAlive  = true;
-					particleItr.worldPos = sys_convertMetersToPixels (bullets[gam_getArrayIndex (bulletLink)].worldPosInMeters);
-					particleItr.worldPos.x -= ((bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth () * 0.5) - angleRandom.get (0, bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth ()));
-					particleItr.worldPos.y -= ((bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameHeight () * 0.5) - angleRandom.get (0, bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameHeight ()));
-					//
-					// Put starting position behind direction of bullet travel
-					spacingVelocity      = bullets[gam_getArrayIndex (bulletLink)].velocity;
-					spacingVelocity.Normalize ();
-					spacingVelocity *= static_cast<float>(bullets[gam_getArrayIndex (bulletLink)].sprite.getFrameWidth () * 0.5f);
-					particleItr.worldPos -= spacingVelocity;
-					particleItr.worldPos = sys_convertPixelsToMeters (particleItr.worldPos);
-
-					particleItr.color.a = angleRandom.get (100, 255);
-				}
-			}
-		}
-		else    // Particle is still alive
-		{
-			switch (type)
-			{
-				case PARTICLE_TYPE_EXPLOSION:
-				case PARTICLE_TYPE_SPARK:
-					if (usePhysics)
-					{
-						particleItr.physicObject.body->ApplyForce (particleItr.direction, particleItr.physicObject.body->GetWorldCenter (), true);
-						particleItr.color.a = static_cast<Uint8>(tempAlpha);
-					}
-					else
-					{
-						particleItr.direction.Normalize ();
-						particleItr.direction *= 0.10f;
-
-						particleItr.worldPos += particleItr.direction;
-						particleItr.color.a = static_cast<Uint8>(tempAlpha);
-					}
-					break;
-
-				case PARTICLE_TYPE_TRAIL:
-					particleItr.color.a = static_cast<Uint8>(tempAlpha);
-					break;
-			}
-		}       // Particle is still alive
-	}       // For each particle loop
-
-	auto            aliveCounter = 0;
-	//
-	// Check to see if all the particles are dead so the emitter can be removed
-	for (const auto &partItr: particle)
+		m_isAlive = false;
+		color.a = 0;
+	}
+	else    // Particle is still alive
 	{
-		if (partItr.isAlive)
+		switch (m_particleType)
 		{
-			aliveCounter++;
+			case PARTICLE_TYPE_EXPLOSION:
+			case PARTICLE_TYPE_SPARK:
+				physicObject.body->ApplyForce (m_direction, physicObject.body->GetWorldCenter (), true);
+				color.a = static_cast<Uint8>(tempAlpha);
+				break;
+
+			case PARTICLE_TYPE_TRAIL:
+				color.a = static_cast<Uint8>(tempAlpha);
+				break;
 		}
 	}
-
-//	std::cout << "Alive counter : " << aliveCounter << std::endl;
-
-	if (aliveCounter > 0)
-		return;
-
-	isDeadFlag = true;
-	isInUse    = false;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Render the particles
+// Render the particle
 void paraParticle::render ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	b2Vec2 renderPosition;
 
-	for (auto &particleItr: particle)
+	if (m_isAlive)
 	{
-		if (particleItr.isAlive)    // Shouldn't be needed?
+		switch (m_particleType)
 		{
-			switch (type)
-			{
-				case PARTICLE_TYPE_EXPLOSION:
-				case PARTICLE_TYPE_SPARK:
-					if (usePhysics)
-					{
-						if (particleItr.physicObject.body != nullptr)
-						{
-							renderPosition = particleItr.physicObject.body->GetPosition ();
-						}
-						else
-						{
-							std::cout << "Attempting to get position from null body" << std::endl;
-						}
-					}
-					else
-						renderPosition = particleItr.worldPos;
-					break;
+			case PARTICLE_TYPE_EXPLOSION:
+			case PARTICLE_TYPE_SPARK:
+				renderPosition = physicObject.body->GetPosition ();
+				renderPosition = sys_convertMetersToPixels (renderPosition);
+				break;
 
-				case PARTICLE_TYPE_TRAIL:
-					renderPosition = particleItr.worldPos;
-					break;
-			}
-
-			renderPosition = sys_convertMetersToPixels (renderPosition);
-			renderPosition = sys_worldToScreen (renderPosition, static_cast<int>(particleSize));
-
-			switch (particleRenderType)
-			{
-				case PARTICLE_RENDER_BITMAP:
-					break;
-
-				case PARTICLE_RENDER_PRIMITIVE:
-					filledCircleRGBA (renderer.renderer, renderPosition.x, renderPosition.y, particleSize / 2, particleItr.color.r, particleItr.color.g, particleItr.color.b, particleItr.color.a);
-					break;
-			}
+			case PARTICLE_TYPE_TRAIL:
+				renderPosition = m_worldPos;
+				break;
 		}
+
+		renderPosition = sys_worldToScreen (renderPosition, static_cast<int>(particleSize));
+
+		filledCircleRGBA (renderer.renderer, renderPosition.x, renderPosition.y, particleSize / 2, color.r, color.g, color.b, color.a);
 	}
 }

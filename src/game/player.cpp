@@ -283,9 +283,9 @@ void gam_processActionKey ()
 void gam_checkPlayerHealth ()
 //-----------------------------------------------------------------------------------------------------------------
 {
-	float       dangerHealthLevel;
-	float       newAnimationSpeed;
-	static bool lowEnergySoundPlaying = false;
+	float dangerHealthLevel;
+	float newAnimationSpeed;
+//	static bool lowEnergySoundPlaying = false;
 
 	//
 	// Process player health and animation
@@ -320,7 +320,7 @@ void gam_checkPlayerHealth ()
 		playerDroid.sprite.setLowHealth (true);
 		if (!audio.isPlaying ("lowEnergy"))
 		{
-			lowEnergySoundPlaying = true;
+//			lowEnergySoundPlaying = true;
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "lowEnergy");
 		}
 	}
@@ -329,7 +329,7 @@ void gam_checkPlayerHealth ()
 		playerDroid.sprite.setLowHealth (false);
 		if (audio.isPlaying ("lowEnergy"))
 		{
-			lowEnergySoundPlaying = false;
+//			lowEnergySoundPlaying = false;
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "lowEnergy");
 		}
 	}
@@ -455,7 +455,7 @@ void gam_processInfluenceTime ()
 	}
 
 #ifdef MY_DEBUG
-	if (playerDroid.getLowInfluenceTimeLeft())
+	if (playerDroid.getLowInfluenceTimeLeft ())
 		std::cout << "Influence time is about to run out" << std::endl;
 #endif
 }

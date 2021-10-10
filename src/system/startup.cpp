@@ -85,7 +85,8 @@ void sys_startSystems ()
 			sys_shutdownWithError (sys_getString ("SDL could not initialize. [ %s ]", SDL_GetError ()));
 	}
 
-//	io_initLogFile ();
+	io_initLogFile ();
+
 #ifdef MY_DEBUG
 	log_addEvent ("Running DEBUG version.");
 #endif

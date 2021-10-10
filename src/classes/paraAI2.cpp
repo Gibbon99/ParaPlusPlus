@@ -352,7 +352,6 @@ void paraAI2::initAI ()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	paraRandom randomDirection;
-	int        whichDirection;
 
 	for (auto i = 0; i != AI2_MODE_NUMBER; i++)
 	{
@@ -882,12 +881,12 @@ void paraAI2::setHealValue (float newHealthPercent)
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Run common aStar functions
-void paraAI2::runAStarCode (b2Vec2 destinationTile)
+int paraAI2::runAStarCode (b2Vec2 destinationTile)
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	aStar.setID (arrayIndex);
 
-	aStar.requestNewPath (sys_convertPixelsToTiles (sys_convertMetersToPixels (worldPositionInMeters)), destinationTile);
+	auto returnCode = aStar.requestNewPath (sys_convertPixelsToTiles (sys_convertMetersToPixels (worldPositionInMeters)), destinationTile);
 
 #ifdef NO_THREAD
 	aStar.searchThread ();
@@ -895,6 +894,7 @@ void paraAI2::runAStarCode (b2Vec2 destinationTile)
 	aStar.startThread ();
 #endif
 
+	return returnCode;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -903,9 +903,9 @@ void paraAI2::runAStarCode (b2Vec2 destinationTile)
 void paraAI2::changeAIModeTo (int newAIMode)
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 tileDestination;
-	b2Vec2 localWorldPosInPixels;
-	int    returnCode;
+	b2Vec2 tileDestination {};
+	b2Vec2 localWorldPosInPixels {};
+	int    returnCode {};
 
 	std::thread aStarThread2;
 
@@ -966,7 +966,7 @@ void paraAI2::changeAIModeTo (int newAIMode)
 				return;
 			}
 
-			runAStarCode (tileDestination);
+			returnCode = runAStarCode (tileDestination);
 
 #ifdef DEBUG_AI2
 			std::cout << "[ " << arrayIndex << " ]" << " - Found the destination healing tile." << std::endl;
@@ -1001,7 +1001,7 @@ void paraAI2::changeAIModeTo (int newAIMode)
 			std::cout << "[ " << arrayIndex << " ]" << " - Found the destination flee tile." << std::endl;
 #endif
 
-			runAStarCode (tileDestination);
+			returnCode = runAStarCode (tileDestination);
 #ifdef NO_THREAD
 			if (ASTAR_STATUS_TOO_SHORT == returnCode)
 			{
@@ -1029,7 +1029,7 @@ void paraAI2::changeAIModeTo (int newAIMode)
 #ifdef DEBUG_AI2
 			std::cout << "[ " << arrayIndex << " ]" << " - Found the player trail tile." << std::endl;
 #endif
-			runAStarCode (tileDestination);
+			returnCode = runAStarCode (tileDestination);
 #ifdef NO_THREAD
 			if (ASTAR_STATUS_TOO_SHORT == returnCode)
 			{

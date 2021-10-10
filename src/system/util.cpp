@@ -486,8 +486,6 @@ void sys_freeMemory ()
 bool sys_visibleOnScreen (b2Vec2 worldCoord, int shapeSize)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	static int previousShapeSize = -1;
-
 	if (worldCoord.x < viewportRect.x - static_cast<float>(shapeSize))
 	{
 		return false;
@@ -513,7 +511,7 @@ bool sys_visibleOnScreen (b2Vec2 worldCoord, int shapeSize)
 b2Vec2 sys_worldToScreen (b2Vec2 worldPos, int shapeSize)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 screenCoords{};
+	b2Vec2 screenCoords {};
 
 	if (sys_visibleOnScreen (worldPos, shapeSize) != 0)
 	{

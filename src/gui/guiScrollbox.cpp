@@ -17,9 +17,9 @@ void gui_renderScrollbox (std::string whichScrollbox, double interpolate)
 	double         drawPositionY = 0.0;
 	double         renderPosX    = 0.0;
 	double         renderPosY    = 0.0;
-	__BOUNDING_BOX bb{};
-	__PARA_COLOR   backGroundColor{};
-	__PARA_COLOR   fontColor{};
+	__BOUNDING_BOX bb {};
+	__PARA_COLOR   backGroundColor {};
+	__PARA_COLOR   fontColor {};
 	std::string    fontName;
 
 	//
@@ -72,8 +72,8 @@ void gui_renderScrollbox (std::string whichScrollbox, double interpolate)
 	// Draw background
 	roundedBoxRGBA (renderer.renderer, bb.x1, bb.y1, bb.x2, bb.y2, cornerRadius, backGroundColor.r, backGroundColor.g, backGroundColor.b, backGroundColor.a);
 
-	double alphaStep = 255.0 / static_cast<double>(fontClass.height ());
-	double lineAlpha = 0.0;
+//	double alphaStep = 255.0 / static_cast<double>(fontClass.height ());
+//	double lineAlpha = 0.0;
 
 	lineCount = 0;
 	if (gui.getScrollDelay (objectIndex) > 0)
@@ -88,14 +88,14 @@ void gui_renderScrollbox (std::string whichScrollbox, double interpolate)
 	}
 
 #ifdef CLIP_SCROLLBOX
-	SDL_Rect    clipRect;
+	SDL_Rect clipRect;
 
 	clipRect.h = bb.y2 - bb.y1;
 	clipRect.w = bb.x2 - bb.x1;
 	clipRect.x = bb.x1;
 	clipRect.y = bb.y1;
 
-	SDL_RenderSetClipRect(renderer.renderer, &clipRect);
+	SDL_RenderSetClipRect (renderer.renderer, &clipRect);
 #endif
 
 	for (auto lineItr = gui.getRBegin (objectIndex); lineItr != gui.getREnd (objectIndex); ++lineItr)
@@ -119,32 +119,32 @@ void gui_renderScrollbox (std::string whichScrollbox, double interpolate)
 		}
 #endif
 
-	renderPosX = bb.x1;
+		renderPosX = bb.x1;
 
 #ifdef CLIP_SCROLLBOX
-	renderPosY = ((bb.y2) - (lineCount * fontClass.height()) - drawPositionY);
+		renderPosY = ((bb.y2) - (lineCount * fontClass.height ()) - drawPositionY);
 #else
-	renderPosY = ((bb.y2 - fontClass.height()) - (lineCount * fontClass.height()) - drawPositionY);
+		renderPosY = ((bb.y2 - fontClass.height()) - (lineCount * fontClass.height()) - drawPositionY);
 #endif
 
 #ifdef CLIP_SCROLLBOX
-	fontClass.render(renderer.renderer, renderPosX, renderPosY, fontColor.r, fontColor.g, fontColor.b, 250, lineItr->c_str());
+		fontClass.render (renderer.renderer, renderPosX, renderPosY, fontColor.r, fontColor.g, fontColor.b, 250, lineItr->c_str ());
 #else
-	fontClass.render(renderer.renderer, renderPosX, renderPosY, fontColor.r, fontColor.g, fontColor.b, static_cast<Uint8>(lineAlpha), lineItr->c_str());
+		fontClass.render(renderer.renderer, renderPosX, renderPosY, fontColor.r, fontColor.g, fontColor.b, static_cast<Uint8>(lineAlpha), lineItr->c_str());
 #endif
 
-	lineCount++;
+		lineCount++;
 #ifdef CLIP_SCROLLBOX
-	if (lineCount == gui.getNumberPrintLines(objectIndex) + 2)
+		if (lineCount == gui.getNumberPrintLines (objectIndex) + 2)
 #else
-	if (lineCount == gui.getNumberPrintLines(objectIndex) - 1)
+			if (lineCount == gui.getNumberPrintLines(objectIndex) - 1)
 #endif
-		break;
+			break;
 	}
 
 	//
 	// Disable clipping
-	SDL_RenderSetClipRect(renderer.renderer, nullptr);
+	SDL_RenderSetClipRect (renderer.renderer, nullptr);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ void gui_scrollOnePixel (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string    fontName;
-	__BOUNDING_BOX bb{};
+	__BOUNDING_BOX bb {};
 
 	fontName = gui.getFontName (GUI_OBJECT_SCROLLBOX, objectIndex);
 	if (fontName.size () == 0)

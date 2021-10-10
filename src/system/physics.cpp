@@ -2,6 +2,7 @@
 #include <game/shipDecks.h>
 #include <system/util.h>
 #include <game/lifts.h>
+#include <chipmunk_structs.h>
 #include "system/physics.h"
 #include "classes/paraPhysicsDestruction.h"
 
@@ -20,8 +21,11 @@ bool                      d_showPhysics             = false;
 bool                      physicsStarted            = true;
 int32                     velocityIterations        = 6;   //how strongly to correct velocity
 int32                     positionIterations        = 3;   //how strongly to correct position
-double                    gravity;         // Set from script
+double                    gravity;                         // Set from script
 bool                      stopContactPhysicsBugFlag = false;
+
+std::unique_ptr<cp::Space> worldSpace;
+std::shared_ptr<cp::Body>  testBody;
 
 //----------------------------------------------------------------------------------------------------------------
 //
@@ -32,12 +36,26 @@ b2World *sys_getPhysicsWorld ()
 	return physicsWorld;
 }
 
+std::unique_ptr<cp::Space> sys_returnPhysicsWorld ()
+{
+	worldSpace = std::make_unique<cp::Space> ();
+
+
+	return std::move (worldSpace);
+}
+
 //----------------------------------------------------------------------------------------------------------------
 //
 // Process a frame of physics - called from Fixed Update
-void sys_processPhysics (double tickTime)
+void sys_processPhysics ()
 //----------------------------------------------------------------------------------------------------------------
 {
+	testBody = std::make_shared<cp::Body> (0, 0);
+	sys_returnPhysicsWorld ()->add (testBody);
+	testBody->setPosition ({0, 0});
+
+	sys_returnPhysicsWorld ()->step (0.0);
+
 	playerDroid.body->ApplyForce (playerDroid.getVelocity (), playerDroid.body->GetWorldCenter (), true);
 
 	sys_stepPhysicsWorld (1.0f / TICKS_PER_SECOND);
@@ -94,6 +112,8 @@ void sys_setPlayerPhysicsPosition (b2Vec2 newPosition)
 void sys_stepPhysicsWorld (float stepAmount)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	space.step (stepAmount);
+
 	physicsWorld->Step (stepAmount, velocityIterations, positionIterations);
 }
 
@@ -105,6 +125,9 @@ bool sys_setupPhysicsEngine ()
 {
 	// Define the gravityVector vector.
 	b2Vec2 gravityVector (0.0f, 0.0f);
+
+	space.setGravity (cp::Vect {0, 0});
+//	space.add
 
 	// Construct a world object, which will hold and simulate the rigid bodies.
 	physicsWorld = new b2World (gravityVector);
@@ -160,7 +183,7 @@ void sys_setupPlayerPhysics ()
 	playerDroid.setFixtureDefMaskBits (PHYSIC_TYPE_WALL | PHYSIC_TYPE_BULLET_ENEMY | PHYSIC_TYPE_DOOR_CLOSED | PHYSIC_TYPE_ENEMY);
 	playerDroid.body->CreateFixture (playerDroid.getFixtureDef ());
 
-	playerDroid.setVelocity (b2Vec2{0, 0});
+	playerDroid.setVelocity (b2Vec2 {0, 0});
 }
 
 //----------------------------------------------------------------------------------------------------------------------

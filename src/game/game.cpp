@@ -69,5 +69,4 @@ void gam_processGameOver ()
 
 	gui.restartScrollBox ("introScreen.scrollbox");
 	gui.restartScrollBox ("wonScreen.scrollbox");
-	gam_resetAllPaths ();
 }

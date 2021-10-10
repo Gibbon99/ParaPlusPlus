@@ -15,7 +15,7 @@ int testVar = 100;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Process the contents of the console queue - run by detached thread
-void con_processConsoleEventQueue (void *data)
+void con_processConsoleEventQueue ()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraEventConsole  *tempEvent;
@@ -257,8 +257,6 @@ void con_initConsole ()
 	console.addVariable ("d_showPhysics", VAR_TYPE_BOOL, &d_showPhysics);
 	console.addVariable ("d_doWallCollisions", VAR_TYPE_BOOL, &doWallCollisions);
 	console.addVariable ("d_showInfluenceMap", VAR_TYPE_BOOL, &d_showInfluenceMap);
-	console.addVariable ("d_showNodeArrays", VAR_TYPE_BOOL, &d_showNodeArrays);
-	console.addVariable ("d_showAStarPath", VAR_TYPE_BOOL, &d_showAStarPath);
 	console.addVariable ("d_showPerfStats", VAR_TYPE_BOOL, &d_showPerfStats);
 	console.addVariable ("d_showPathIndex", VAR_TYPE_INT, &d_showPathIndex);
 	console.addVariable ("d_showWaypoints", VAR_TYPE_BOOL, &d_showWaypoints);

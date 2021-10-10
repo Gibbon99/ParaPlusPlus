@@ -7,7 +7,7 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Create a collision map for passed in keyName
+// Create a collision map for passed in keyName TODO Remove
 void gam_createCollisionMap (std::string &keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
@@ -36,7 +36,7 @@ void gam_loadTexture (std::string &fileName, std::string &keyName)
 		auto textureItr = textures.find (keyName);
 		if (textureItr != textures.end ())
 		{
-			textureItr->second.destroy();
+			textureItr->second.destroy ();
 			textures.erase (textureItr);
 		}
 

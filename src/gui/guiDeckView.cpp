@@ -8,7 +8,7 @@
 double      tileScaleX;
 double      tileScaleY;
 SDL_TimerID blinkIconTimerID = 0;
-bool        showIcon = true;
+bool        showIcon         = true;
 
 //-----------------------------------------------------------------------------
 //
@@ -24,7 +24,7 @@ Uint32 gui_blinkPlayerIcon (Uint32 interval, void *param)
 //-----------------------------------------------------------------------------
 //
 // Create and start the timer for player blink
-void gui_startBlinkTimer(int blinkRateInMS)
+void gui_startBlinkTimer (int blinkRateInMS)
 //-----------------------------------------------------------------------------
 {
 	blinkIconTimerID = SDL_AddTimer (blinkRateInMS, gui_blinkPlayerIcon, nullptr);
@@ -35,11 +35,11 @@ void gui_startBlinkTimer(int blinkRateInMS)
 //-----------------------------------------------------------------------------
 //
 // Stop the blink timer
-void gui_stopBlinkTimer()
+void gui_stopBlinkTimer ()
 //-----------------------------------------------------------------------------
 {
 	if (blinkIconTimerID != 0)
-		SDL_RemoveTimer(blinkIconTimerID);
+		SDL_RemoveTimer (blinkIconTimerID);
 }
 
 //-----------------------------------------------------------------------------
@@ -73,8 +73,8 @@ void gui_renderTerminalDeck ()
 	SDL_Rect destRect;
 	SDL_Rect sourceRect;
 //	std::string levelNameCache;
-	Uint8         r, g, b, a;
-	SDL_BlendMode tempMode;
+//	Uint8         r, g, b, a;
+//	SDL_BlendMode tempMode;
 
 	//
 	// SDL2_gfx changes the blend mode and draw color

@@ -16,6 +16,7 @@ Check bottom edge of animated tiles in graphics
 
 Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
 Deck view - Player icon location wrong on observation, airlock
+Put lastUsedName into highscore entry screen
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
@@ -159,6 +160,8 @@ DONE - Need debug mode to show path destination to track why aStar isn't working
 DONE - Hunt mode - when in attack mode, and lose sight, go into hunt - check current tile to see if it is one in the player trail or not, if so, follow to player - until attack timer runs out
 DONE - Made highScore into a proper class
 >Commit
+DONE - Rework CMake file
+
 
 GUI
 ------

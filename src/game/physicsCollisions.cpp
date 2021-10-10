@@ -150,7 +150,7 @@ void paraDebugDraw::DrawSegment (const b2Vec2 &p1, const b2Vec2 &p2, const b2Col
 void paraDebugDraw::DrawTransform (const b2Transform &xf)
 //----------------------------------------------------------------------------------------------------------------------
 {
-
+	auto temp = xf;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -255,7 +255,9 @@ void contactListener::BeginContact (b2Contact *contact)
 		case PHYSIC_TYPE_DOOR_BULLET:
 			if ((bodyUserData_B->userType == PHYSIC_TYPE_BULLET_PLAYER) || (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY))
 			{
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_B->ID)].worldPosInMeters;
+				auto bulletIndex = gam_getArrayIndex (bodyUserData_B->ID);
+
+				renderPosition = bullets[bulletIndex].worldPosInMeters;
 				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
 				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
 				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
@@ -531,6 +533,7 @@ void contactListener::EndContact (b2Contact *contact)
 void contactListener::PreSolve (b2Contact *contact, const b2Manifold *manifold)
 //----------------------------------------------------------------------------------------------------------------------
 {
+	auto      temp = manifold;
 	_userData *bodyUserData_A;
 	_userData *bodyUserData_B;
 
@@ -585,7 +588,7 @@ void contactListener::PreSolve (b2Contact *contact, const b2Manifold *manifold)
 
 			if (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY)
 			{
-				//				par_addEmitter (bullets[bodyUserData_B->dataValue].worldPos, PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
+				//				par_addEmitter (bullets[bodyUserData_B->dataValue].m_worldPos, PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
 //				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
 //				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
 //				contact->SetEnabled(false);
@@ -638,7 +641,7 @@ void contactListener::PreSolve (b2Contact *contact, const b2Manifold *manifold)
 
 			if (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_ENEMY)
 			{
-				//				par_addEmitter (bullets[bodyUserData_B->dataValue].worldPos, PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
+				//				par_addEmitter (bullets[bodyUserData_B->dataValue].m_worldPos, PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
 //				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
 //				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
 //				contact->SetEnabled(false);
