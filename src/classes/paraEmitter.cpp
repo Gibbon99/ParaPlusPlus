@@ -9,7 +9,7 @@ paraRandom angleRandom {};
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Deconstructor for an emitter class
-paraEmitter::~paraEmitter ()
+paraEmitter::~paraEmitter()
 //----------------------------------------------------------------------------------------------------------------------
 {
 
@@ -17,9 +17,9 @@ paraEmitter::~paraEmitter ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Constructor for a new paraEmitter - pass in position in physics coordinates
+// Constructor for a new paraEmitter - pass in position in worldspace ( pixels )  coordinates
 // Position for PARTICLE_TYPE_TRAIL is in pixels
-paraEmitter::paraEmitter (const b2Vec2 newWorldPos, const int newEmitterType, const Uint32 newBulletID)
+paraEmitter::paraEmitter(const cpVect newWorldPos, const int newEmitterType, const Uint32 newBulletID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int numInitialParticles {};
@@ -52,16 +52,13 @@ paraEmitter::paraEmitter (const b2Vec2 newWorldPos, const int newEmitterType, co
 	for (int i = 0; i != numInitialParticles; i++)
 	{
 		particles.emplace_back (m_emitterType, newWorldPos);
-//		particles.push_back (std::move (paraParticle (m_emitterType, newWorldPos)));
 	}
-
-	printf ("Size of particle vector [ %zu ]\n", particles.size ());
 }
 
 //-----------------------------------------------------------------------------------------------------------
 //
 // Remove the emitter from a bullet
-void paraEmitter::setAttachedToBullet (bool newValue)
+void paraEmitter::setAttachedToBullet(bool newValue)
 //-----------------------------------------------------------------------------------------------------------
 {
 	m_attachedToBullet = newValue;
@@ -70,7 +67,7 @@ void paraEmitter::setAttachedToBullet (bool newValue)
 //-----------------------------------------------------------------------------------------------------------
 //
 // Return size of particle vector
-size_t paraEmitter::getNumberParticles ()
+size_t paraEmitter::getNumberParticles()
 //-----------------------------------------------------------------------------------------------------------
 {
 	return particles.size ();
@@ -79,7 +76,7 @@ size_t paraEmitter::getNumberParticles ()
 //-----------------------------------------------------------------------------------------------------------
 //
 // Render all the particles for this emitter
-void paraEmitter::render ()
+void paraEmitter::render()
 //-----------------------------------------------------------------------------------------------------------
 {
 	for (auto &partItr: particles)
@@ -91,7 +88,7 @@ void paraEmitter::render ()
 //-----------------------------------------------------------------------------------------------------------
 //
 // Check to see if the emitter is no longer in use and remove it
-bool paraEmitter::getCanBeRemoved ()
+bool paraEmitter::getCanBeRemoved() const
 //-----------------------------------------------------------------------------------------------------------
 {
 	return m_canBeRemoved;
@@ -100,7 +97,7 @@ bool paraEmitter::getCanBeRemoved ()
 //-----------------------------------------------------------------------------------------------------------
 //
 // Get rid of an emitter
-void paraEmitter::setCanBeRemoved (bool newValue)
+void paraEmitter::setCanBeRemoved(bool newValue)
 //-----------------------------------------------------------------------------------------------------------
 {
 	m_canBeRemoved = newValue;
@@ -109,7 +106,7 @@ void paraEmitter::setCanBeRemoved (bool newValue)
 //-----------------------------------------------------------------------------------------------------------
 //
 // Return the bullet this emitter may be linked too
-Uint32 paraEmitter::getBulletID () const
+Uint32 paraEmitter::getBulletID() const
 //-----------------------------------------------------------------------------------------------------------
 {
 	return m_bulletID;
@@ -118,7 +115,7 @@ Uint32 paraEmitter::getBulletID () const
 //-----------------------------------------------------------------------------------------------------------
 //
 // Process each of the particles for animation - also remove all dead particles
-void paraEmitter::process ()
+void paraEmitter::process()
 //-----------------------------------------------------------------------------------------------------------
 {
 	if (m_canBeRemoved)
@@ -135,15 +132,15 @@ void paraEmitter::process ()
 		else
 		{
 			// add new particle to form trail behind bullet
-			auto tempWorldPos = sys_convertMetersToPixels (bullets[gam_getArrayIndex (m_bulletID)].worldPosInMeters);
+			auto tempWorldPos = bullets[gam_getArrayIndex (m_bulletID)].worldPosInPixels;
 			tempWorldPos.x -= ((bullets[gam_getArrayIndex (m_bulletID)].sprite.getFrameWidth () * 0.5) - angleRandom.get (0, bullets[gam_getArrayIndex (m_bulletID)].sprite.getFrameWidth ()));
 			tempWorldPos.y -= ((bullets[gam_getArrayIndex (m_bulletID)].sprite.getFrameHeight () * 0.5) - angleRandom.get (0, bullets[gam_getArrayIndex (m_bulletID)].sprite.getFrameHeight ()));
 			//
 			// Put starting position behind direction of bullet travel
 			auto spacingVelocity = bullets[gam_getArrayIndex (m_bulletID)].velocity;
-			spacingVelocity.Normalize ();
-			spacingVelocity *= static_cast<float>(bullets[gam_getArrayIndex (m_bulletID)].sprite.getFrameWidth () * 0.5f);
-			tempWorldPos -= spacingVelocity;
+			spacingVelocity = cpvnormalize (spacingVelocity);
+			spacingVelocity = cpvmult (spacingVelocity, bullets[gam_getArrayIndex (m_bulletID)].sprite.getFrameWidth () * 0.5f);
+			tempWorldPos    = cpvsub (tempWorldPos, spacingVelocity);
 
 			particles.emplace_back (PARTICLE_TYPE_TRAIL, tempWorldPos);
 		}
@@ -162,8 +159,6 @@ void paraEmitter::process ()
 	}
 	//
 	// All particles are dead - clear the array and mark emitter can be removed
-	std::cout << "All particles are dead - mark emitter can be removed" << std::endl;
-
 	if (m_canBeRemoved)
 		particles.clear ();
 }

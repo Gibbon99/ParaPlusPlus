@@ -1,7 +1,6 @@
 #pragma once
 
 #include <unordered_map>
-#include <box2d/b2_collision.h>
 #include <classes/paraLift.h>
 #include "main.h"
 #include "droids.h"
@@ -81,8 +80,8 @@ struct paraVec2i
 //-----------------------------------------------------------------------------
 struct _lineSegment
 {
-	b2Vec2 start;
-	b2Vec2 finish;
+	cpVect start;
+	cpVect finish;
 };
 
 //-----------------------------------------------------------------------------
@@ -107,8 +106,8 @@ struct _basicHealing
 	int    pos;                 // position in array
 	int    currentFrame;        // which frame are we on
 	double frameDelay;          // animation counter
-	b2Vec2 worldPosInPixels;    // Position in world coords
-	b2Vec2 worldPosInMeters;      // Position on the map to update image
+	cpVect worldPosInPixels;    // Position in world coords
+	cpVect worldPosInMeters;      // Position on the map to update image
 };
 
 struct _deckStruct
@@ -118,9 +117,9 @@ struct _deckStruct
 	int                        numWaypoints;
 	int                        numDroids;
 	int                        numLifts;
-	b2Vec2                     levelDimensions;
+	cpVect                     levelDimensions;
 	std::vector<_lineSegment>  lineSegments; // Need to be floats for load ??
-	std::vector<b2Vec2>        wayPoints;
+	std::vector<cpVect>        wayPoints;
 	std::vector<int>           tiles;
 	std::vector<int>           droidTypes;
 	char                       levelName[20];
@@ -133,7 +132,7 @@ struct _deckStruct
 	std::vector<_liftBasic>    lifts;
 	paraLift                   liftClass;
 	std::vector<_basicHealing> healing;
-	std::vector<paraDroid>    droid;
+	std::vector<paraDroid>     droid;
 
 	bool wallPhysicsCreated  = false;
 	bool droidPhysicsCreated = false;
@@ -174,7 +173,7 @@ int gam_getCurrentDeckIndex ();
 void gam_createInfluenceMap ();
 
 // Change player pixel coords into tile coords
-void gam_populateInfluenceMap (b2Vec2 playerPositionInPixels);
+void gam_populateInfluenceMap(cpVect playerPositionInPixels);
 
 // Get the value from the influence map
 int gam_getInfluenceMapValue (int tileIndex);

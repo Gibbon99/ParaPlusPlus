@@ -1,7 +1,8 @@
 #include <queue>
 #include <game/pathFind.h>
 #include <system/frameRender.h>
-#include "system/physics.h"
+#include <game/physicsCollisions.h>
+#include "system/cpPhysics.h"
 #include "system/util.h"
 #include "classes/paraEvent.h"
 #include "classes/paraBullet.h"
@@ -15,7 +16,7 @@ int testVar = 100;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Process the contents of the console queue - run by detached thread
-void con_processConsoleEventQueue ()
+void con_processConsoleEventQueue()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraEventConsole  *tempEvent;
@@ -81,7 +82,7 @@ void con_processConsoleEventQueue ()
 // -1 is passed in from classes to add a line to avoid including the additional header
 //
 // Cache the value for the Mutex on first run
-void con_addEvent (int newAction, string newLine)
+void con_addEvent(int newAction, string newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static PARA_Mutex *tempMutex = nullptr;
@@ -121,7 +122,7 @@ void con_addEvent (int newAction, string newLine)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render the console to the screen
-void con_renderConsole ()
+void con_renderConsole()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Surface      *tempSurface  = nullptr;
@@ -206,7 +207,7 @@ void con_renderConsole ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start the console processing queue and thread
-void con_initConsole ()
+void con_initConsole()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	console.setScreenSize (hiresVirtualWidth, hiresVirtualHeight);
@@ -267,7 +268,7 @@ void con_initConsole ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Display the list of commands to the console
-void con_showHelp ()
+void con_showHelp()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string allCommands;

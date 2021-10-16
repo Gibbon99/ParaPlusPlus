@@ -26,6 +26,7 @@
 #include <gui/guiSideview.h>
 #include <game/doors.h>
 #include <game/pathFind.h>
+#include <system/cpPhysics.h>
 
 //----------------------------------------------------------------------------------------------------------------------
 //

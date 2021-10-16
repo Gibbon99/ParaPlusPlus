@@ -41,7 +41,6 @@
       <option name="CATCH_ON_NEW_LINE" value="true" />
       <option name="ALIGN_GROUP_FIELD_DECLARATIONS" value="true" />
       <option name="SPACE_BEFORE_METHOD_CALL_PARENTHESES" value="true" />
-      <option name="SPACE_BEFORE_METHOD_PARENTHESES" value="true" />
       <option name="KEEP_SIMPLE_BLOCKS_IN_ONE_LINE" value="false" />
       <option name="KEEP_SIMPLE_METHODS_IN_ONE_LINE" value="false" />
       <option name="DOWHILE_BRACE_FORCE" value="3" />

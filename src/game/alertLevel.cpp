@@ -1,18 +1,17 @@
-#include <box2d/b2_math.h>
 #include <game/shipDecks.h>
 #include <system/util.h>
 #include <game/lightMaps.h>
 #include <game/audio.h>
 #include "game/alertLevel.h"
 
-std::vector<b2Vec2> tileLocationsInPixels;
+std::vector<cpVect> tileLocationsInPixels;
 static int          currentAlertLevel = -1;
 int                 alertLevelVolume;
 
 //------------------------------------------------------------------------------------------------------
 //
 // Start the alert level playing - on deck change
-void gam_startAlertLevelSound (int whichAlertLevel)
+void gam_startAlertLevelSound(int whichAlertLevel)
 //------------------------------------------------------------------------------------------------------
 {
 	switch (whichAlertLevel)
@@ -34,7 +33,7 @@ void gam_startAlertLevelSound (int whichAlertLevel)
 //------------------------------------------------------------------------------------------------------
 //
 // Stop the alert level playing
-void gam_stopAlertLevelSound (int whichAlertLevel)
+void gam_stopAlertLevelSound(int whichAlertLevel)
 //------------------------------------------------------------------------------------------------------
 {
 	switch (whichAlertLevel)
@@ -56,7 +55,7 @@ void gam_stopAlertLevelSound (int whichAlertLevel)
 //------------------------------------------------------------------------------------------------------
 //
 // Change alert level background sound
-void gam_changeAlertLevelSound (int oldAlertLevel, int newAlertLevel)
+void gam_changeAlertLevelSound(int oldAlertLevel, int newAlertLevel)
 //------------------------------------------------------------------------------------------------------
 {
 	gam_stopAlertLevelSound (oldAlertLevel);
@@ -67,7 +66,7 @@ void gam_changeAlertLevelSound (int oldAlertLevel, int newAlertLevel)
 //------------------------------------------------------------------------------------------------------
 //
 // Set the new alert level
-void gam_setAlertLevel (int newAlertLevel)
+void gam_setAlertLevel(int newAlertLevel)
 //------------------------------------------------------------------------------------------------------
 {
 	if (currentAlertLevel != newAlertLevel)
@@ -82,7 +81,7 @@ void gam_setAlertLevel (int newAlertLevel)
 //------------------------------------------------------------------------------------------------------
 //
 // Get the current alert level
-int gam_getCurrentAlertLevel ()
+int gam_getCurrentAlertLevel()
 //------------------------------------------------------------------------------------------------------
 {
 	return currentAlertLevel;
@@ -91,13 +90,13 @@ int gam_getCurrentAlertLevel ()
 //------------------------------------------------------------------------------------------------------
 //
 // Locate all the alert level tiles and store their location
-void gam_locateAlertTiles ()
+void gam_locateAlertTiles()
 //------------------------------------------------------------------------------------------------------
 {
 	int    countX      = 0;
 	int    countY      = 0;
 	int    currentTile = 0;
-	b2Vec2 tileWorldPos;
+	cpVect tileWorldPos;
 
 	if (tileLocationsInPixels.size () > 0)
 		tileLocationsInPixels.clear ();
@@ -114,7 +113,7 @@ void gam_locateAlertTiles ()
 				tileWorldPos.x = (countX * tileSize);
 				tileWorldPos.y = (countY * tileSize);
 				tileLocationsInPixels.push_back (tileWorldPos);
-				gam_addNewLightmap (sys_convertPixelsToMeters (tileWorldPos), LIGHTMAP_TYPE_ALERT, gam_getCurrentAlertLevel());
+				gam_addNewLightmap (tileWorldPos, LIGHTMAP_TYPE_ALERT, gam_getCurrentAlertLevel ());
 				break;
 
 			default:
@@ -134,7 +133,7 @@ void gam_locateAlertTiles ()
 //------------------------------------------------------------------------------------------------------
 //
 // Render the alert level tiles according to the current alert level
-void gam_renderAlertTiles ()
+void gam_renderAlertTiles()
 //------------------------------------------------------------------------------------------------------
 {
 	PARA_Texture *tempTexture;
@@ -143,7 +142,7 @@ void gam_renderAlertTiles ()
 
 	SDL_SetRenderTarget (renderer.renderer, gam_getPlayfieldTexture ());
 
-	for (const auto &alertTileItr : tileLocationsInPixels)
+	for (const auto &alertTileItr: tileLocationsInPixels)
 	{
 		gam_renderSingleTile (static_cast<int>(alertTileItr.x), static_cast<int>(alertTileItr.y), currentAlertLevel);
 	}

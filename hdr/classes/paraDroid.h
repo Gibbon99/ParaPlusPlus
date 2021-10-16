@@ -1,9 +1,9 @@
 #ifndef PARA_PARADROID_H
 #define PARA_PARADROID_H
 
-#include <box2d/b2_body.h>
-#include <box2d/box2d.h>
-#include "system/physics.h"
+#include <cpVect.h>
+#include <chipmunk.h>
+#include "system/cpPhysics.h"
 #include "classes/paraAI2.h"
 
 extern int   collisionLimit;
@@ -13,106 +13,77 @@ class paraDroid
 {
 public:
 
-	void ReleaseRef ();
+	void ReleaseRef();
 
-	void AddRef ();
+	void AddRef();
 
-	int getCurrentMode ();
+	int getCurrentMode();
 
-	void setCurrentMode (int newCurrentMode);
+	void setCurrentMode(int newCurrentMode);
 
-	int getDroidType ();
+	int getDroidType();
 
-	void setDroidType (int newDroidType);
+	void setDroidType(int newDroidType);
 
-	int getWeaponCanFire ();
+	int getWeaponCanFire();
 
-	void setWeaponCanFire (int newWeaponCanFire);
+	void setWeaponCanFire(int newWeaponCanFire);
 
-	int getCurrentHealth ();
+	int getCurrentHealth();
 
-	void setCurrentHealth (int newCurrentHealth);
+	void setCurrentHealth(int newCurrentHealth);
 
-	int getOverHealingTile ();
+	int getOverHealingTile();
 
-	void setOverHealingTile (int newOverHealingTile);
+	void setOverHealingTile(bool newOverHealingTile);
 
-	int getOverTerminalTile ();
+	int getOverTerminalTile();
 
-	void setOverTerminalTile (int newOverTerminalTile);
+	void setOverTerminalTile(int newOverTerminalTile);
 
-	void setIndex (int newIndex);
+	void setIndex(int newIndex);
 
-	int getIndex ();
+	int getIndex();
 
-	void setLiftIndex (int newLiftIndex);
+	void setLiftIndex(int newLiftIndex);
 
-	int getLiftIndex ();
+	int getLiftIndex();
 
-	void setWeaponDelay (float newWeaponDelay);
+	void setWeaponDelay(float newWeaponDelay);
 
-	float getWeaponDelay ();
+	float getWeaponDelay();
 
-	void setInfluenceTimeLeft (float newInfluenceTimeLeft);
+	void setInfluenceTimeLeft(float newInfluenceTimeLeft);
 
-	float getInfluenceTimeLeft ();
+	float getInfluenceTimeLeft();
 
-	void setInfluenceFade (float newInfluenceFade);
+	void setInfluenceFade(float newInfluenceFade);
 
-	float getInfluenceFade ();
+	float getInfluenceFade();
 
-	void setLowInfluenceTimeLeft (float newlowInfluenceTimeLeft);
+	void setLowInfluenceTimeLeft(float newlowInfluenceTimeLeft);
 
-	bool getLowInfluenceTimeLeft ();
+	bool getLowInfluenceTimeLeft();
 
-	void setInTransferMode (float newInTransferMode);
+	void setInTransferMode(float newInTransferMode);
 
-	bool getInTransferMode ();
+	bool getInTransferMode();
 
-	std::string getDroidName ();
+	std::string getDroidName();
 
-	void setDroidName (std::string newDroidName);
+	void setDroidName(std::string newDroidName);
 
-	b2Vec2 getVelocity ();
+	cpVect getVelocity();
 
-	void setVelocity (b2Vec2 newVelocity);
+	void setVelocity(cpVect newVelocity);
 
-	bool getOverLiftTile ();
+	bool getOverLiftTile();
 
-	void setOverLiftTile (int newOverLiftTile);
+	void setOverLiftTile(int newOverLiftTile);
 
-	b2BodyDef *getBodyDef ();
+	void setWorldPosInPixels(cpVect newWorldPosInPixels);
 
-	void setBodyDefType (b2BodyType newBodyType);
-
-
-	void setBodyPosition (b2Vec2 newBodyPosition);
-
-	void setBodyAngle (float newBodyAngle);
-
-	void setShapeRadius (float newShapeRadius);
-
-	void setShapePosition (b2Vec2 newShapePosition);
-
-	void setFixtureDefShape (b2Shape *newShape);
-
-	void setFixtureDefDensity (float newDensity);
-
-	void setFixtureDefFriction (float newFriction);
-
-	void setFixtureDefFilterCategoryBits (uint16 newFilterBits);
-
-	void setFixtureDefMaskBits (uint16 newMaskBits);
-
-	void setFixtureRestitution (float newRestitution);
-
-	b2FixtureDef *getFixtureDef ();
-
-	b2Shape *getShape ();
-
-	void setWorldPosInPixels (b2Vec2 newWorldPosInPixels);
-
-	b2Vec2 getWorldPosInPixels ();
+	cpVect getWorldPosInPixels();
 
 	// ----------------- Vars Public ----------------------
 
@@ -124,12 +95,9 @@ public:
 	int transferTargetDroidIndex {};
 	int transferTargetDroidType {};
 
-	b2Body    *body {nullptr};
-	_userData *userData {nullptr};
-
-//	paraParticle *particle;
-
-	b2Vec2 previousWorldPosInPixels {};
+	cpBody                *body {nullptr};
+	cpShape               *shape {nullptr};
+	shared_ptr<_userData> userData {};
 
 	paraSprite sprite;
 	paraAI2    ai2;
@@ -141,26 +109,21 @@ public:
 	float      collisionCounterDelayPlayer {0.0};
 
 private:
-	bool          lowInfluenceTimeleft {false};
-	bool          weaponCanFire {true};
-	bool          overHealingTile {false};
-	bool          overTerminalTile {false};
-	bool          inTransferMode {false};
-	bool          overLiftTile {false};
-	int           currentMode {};                // What is the droid doing; transfer, healing, terminal etc
-	int           droidType {};
-	int           currentHealth {};
-	int           index {};                      // Used in physics callback
-	int           liftIndex {-1};
-	float         weaponDelay {};
-	float         influenceTimeLeft {};
-	float         influenceFade {};
-	std::string   droidName {};
-	b2Vec2        velocity {};
-	b2Vec2        worldPosInPixels {};
-	b2BodyDef     bodyDef;                      // Used for physics and collisions
-	b2CircleShape shape;
-	b2FixtureDef  fixtureDef;
+	bool        lowInfluenceTimeleft {false};
+	bool        weaponCanFire {true};
+	bool        overHealingTile {false};
+	bool        overTerminalTile {false};
+	bool        inTransferMode {false};
+	bool        overLiftTile {false};
+	int         currentMode {};                // What is the droid doing; transfer, healing, terminal etc
+	int         droidType {};
+	int         currentHealth {};
+	int         index {};                      // Used in physics callback
+	int         liftIndex {-1};
+	float       weaponDelay {};
+	float       influenceTimeLeft {};
+	float       influenceFade {};
+	std::string droidName {};
 };
 
 #endif //PARA_PARADROID_H

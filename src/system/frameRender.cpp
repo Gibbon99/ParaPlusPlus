@@ -2,6 +2,7 @@
 #include <gui/guiHighScore.h>
 #include <system/util.h>
 #include <classes/paraStarfield.h>
+#include <system/cpPhysicsDebug.h>
 #include "gui/guiScrollbox.h"
 #include "system/startup.h"
 #include "game/shipDecks.h"
@@ -31,7 +32,7 @@ SDL_BlendMode tempMode;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Prepare the frame for rendering
-void sys_prepareFrame ()
+void sys_prepareFrame()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	//
@@ -48,7 +49,7 @@ void sys_prepareFrame ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Complete a frame and present to the screen
-void sys_completeFrame ()
+void sys_completeFrame()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
@@ -60,7 +61,7 @@ void sys_completeFrame ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a frame once
-void sys_renderFrame (double interpolation)
+void sys_renderFrame(double interpolation)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	sys_prepareFrame ();
@@ -198,7 +199,7 @@ void sys_renderFrame (double interpolation)
 				gam_debugInfluenceMap ();
 
 			if (d_showPhysics)
-				sys_getPhysicsWorld ()->DebugDraw ();
+				d_drawPhysicsDebug ();
 
 //			if (d_showNodeArrays)
 //				gam_AStarDebugNodes (d_showPathIndex);
@@ -221,8 +222,14 @@ void sys_renderFrame (double interpolation)
 			break;
 	}
 
-	if (doScreenEffect)
-		textures.at ("screen").render ();
+	try
+	{
+		if (doScreenEffect)
+			textures.at ("screen").render ();
+	}
+	catch (std::out_of_range &outOfRange)
+	{
+	}
 
 	if ((currentMode != MODE_CONSOLE_EDIT) && (currentMode != MODE_CONSOLE_INIT) && (currentMode != MODE_SHOW_SPLASH))
 	{

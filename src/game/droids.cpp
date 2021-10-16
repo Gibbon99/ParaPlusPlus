@@ -1,26 +1,25 @@
-#include <game/database.h>
-#include <game/shipDecks.h>
-#include <system/util.h>
-#include <game/player.h>
-#include <game/audio.h>
-#include <game/particles.h>
-#include <game/pathFind.h>
-#include <game/lineOfSight.h>
-#include <game/texture.h>
-#include <game/game.h>
-#include <sdl2_gfx/SDL2_gfxPrimitives.h>
-#include <classes/paraRandom.h>
+#include "game/database.h"
+#include "game/shipDecks.h"
+#include "system/util.h"
+#include "game/player.h"
+#include "game/audio.h"
+#include "game/particles.h"
+#include "game/lineOfSight.h"
+#include "game/texture.h"
+#include "game/game.h"
+#include "classes/paraRandom.h"
 #include "game/droids.h"
 #include "game/score.h"
+#include <sdl2_gfx/SDL2_gfxPrimitives.h>
 
 float explosionAnimationSpeed;
 
-//#define MY_DEBUG 1
+#define MY_DEBUG 1
 
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return the name of a sprite based on its type
-std::string gam_getDroidName (int droidType)
+std::string gam_getDroidName(int droidType)
 //-------------------------------------------------------------------------------------------------------------
 {
 	switch (droidType)
@@ -101,7 +100,7 @@ std::string gam_getDroidName (int droidType)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Create the droids for the level and init values
-void gam_initDroids (const std::string &levelName)
+void gam_initDroids(const std::string &levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
 	int        wayPointStartIndex = 0;
@@ -139,9 +138,9 @@ void gam_initDroids (const std::string &levelName)
 		if (whichDirection < 5)
 			tempDroid.ai2.setWaypointDirection (PATROL_WAYPOINT_DIRECTION::UP);
 
-		tempDroid.setWorldPosInPixels (b2Vec2 {shipdecks.at (levelName).wayPoints[wayPointStartIndex].x, shipdecks.at (levelName).wayPoints[wayPointStartIndex].y});
+		tempDroid.ai2.setWorldPosInPixels (cpVect {shipdecks.at (levelName).wayPoints[wayPointStartIndex].x, shipdecks.at (levelName).wayPoints[wayPointStartIndex].y});
 
-		tempDroid.ai2.setDestinationInMeters (sys_convertPixelsToMeters (tempDroid.getWorldPosInPixels ()));
+		tempDroid.ai2.setDestinationInPixels (tempDroid.ai2.getWorldPosInPixels ());
 
 		tempDroid.ai2.setWaypointIndex (wayPointStartIndex++);
 		tempDroid.ai2.setAcceleration (dataBaseEntry[droidItr].accelerate);
@@ -170,7 +169,7 @@ void gam_initDroids (const std::string &levelName)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Reset the droid information for a new game
-void gam_resetDroids ()
+void gam_resetDroids()
 //-------------------------------------------------------------------------------------------------------------
 {
 	for (auto &shipdeckItr: shipdecks)
@@ -182,10 +181,10 @@ void gam_resetDroids ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Render the droids on the current level
-void gam_renderDroids ()
+void gam_renderDroids()
 //-------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 droidScreenPosition {};
+	cpVect droidScreenPosition {};
 
 	for (auto droidItr: g_shipDeckItr->second.droid)
 	{
@@ -193,7 +192,7 @@ void gam_renderDroids ()
 		{
 			if ((droidItr.getCurrentMode () == DROID_MODE_EXPLODING) || (droidItr.getCurrentMode () == DROID_MODE_NORMAL))
 			{
-				droidItr.setWorldPosInPixels (sys_convertMetersToPixels (droidItr.body->GetPosition ()));
+				droidItr.setWorldPosInPixels (cpBodyGetPosition (droidItr.body));
 
 				droidScreenPosition = sys_worldToScreen (droidItr.getWorldPosInPixels (), 24);
 
@@ -201,10 +200,10 @@ void gam_renderDroids ()
 				{
 					droidItr.sprite.render (droidScreenPosition.x, droidScreenPosition.y, 1.0, static_cast<Uint8>(droidItr.visibleValue));
 
-#ifdef MY_DEBUG
-					b2Vec2 debugDestinationPosition;
+#ifdef MY_DEBUG_1
+					cpVect debugDestinationPosition;
 
-					debugDestinationPosition = droidItr.ai2.debugGetDestinationCoordsInMeters ();
+					debugDestinationPosition = droidItr.ai2.debugGetDestinationCoordsInPixels ();
 
 					droidItr.ai2.debugShowDestination ();
 					fontClass.use ("consoleFont");
@@ -217,8 +216,8 @@ void gam_renderDroids ()
 						debugIndex = droidItr.ai2.aStar.getWayPointsIndex ();
 
 					fontClass.render (renderer.renderer, droidScreenPosition.x, droidScreenPosition.y, 200, 200, 250, 255,
-					                  sys_getString ("%3.3f %3.3f", debugDestinationPosition.x, debugDestinationPosition.y) + " " + droidItr.ai2.getAIActionString (droidItr.ai2.getCurrentAIMode ()) + " Index: " +
-					                  sys_getString ("%i", debugIndex));
+									  sys_getString ("%3.3f %3.3f", debugDestinationPosition.x, debugDestinationPosition.y) + " " + droidItr.ai2.getAIActionString (droidItr.ai2.getCurrentAIMode ()) + " Index: " +
+									  sys_getString ("%i", debugIndex));
 					gam_debugShowTarget (droidItr);
 					droidItr.ai2.aStar.debugWayPoints ();
 #endif
@@ -231,7 +230,7 @@ void gam_renderDroids ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Animate the droid sprites
-void gam_animateDroids ()
+void gam_animateDroids()
 //-------------------------------------------------------------------------------------------------------------
 {
 	bool animationEnd = false;
@@ -253,7 +252,7 @@ void gam_animateDroids ()
 //-----------------------------------------------------------------------------
 //
 // Recharge a droids weapon fire rate
-void gam_weaponRechargeDroid (paraDroid *whichDroid)
+void gam_weaponRechargeDroid(paraDroid *whichDroid)
 //-----------------------------------------------------------------------------
 {
 	if (!whichDroid->getWeaponCanFire ())
@@ -270,7 +269,7 @@ void gam_weaponRechargeDroid (paraDroid *whichDroid)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Process the AI for each droid
-void gam_processAI ()
+void gam_processAI()
 //-------------------------------------------------------------------------------------------------------------
 {
 	for (auto &droidItr: g_shipDeckItr->second.droid)
@@ -285,11 +284,10 @@ void gam_processAI ()
 			if (nullptr == droidItr.body)
 				break;
 
-			droidItr.ai2.process (droidItr.body->GetPosition ());
+			droidItr.ai2.process (cpBodyGetPosition (droidItr.body));
 
-			droidItr.ai2.doMovement (droidItr.body->GetPosition ());
+			droidItr.ai2.doMovement (cpBodyGetPosition (droidItr.body));
 
-			droidItr.body->ApplyForce (droidItr.ai2.getVelocity (), droidItr.body->GetWorldCenter (), true);
 			//
 			// Slowly decrement the collision counter for other droids
 			if (droidItr.userData->ignoreCollisionDroid)
@@ -321,7 +319,7 @@ void gam_processAI ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Process the counter to ignore collisions
-void gam_processCollision (int droidA)
+void gam_processCollision(int droidA)
 //-------------------------------------------------------------------------------------------------------------
 {
 	if (g_shipDeckItr->second.droid[droidA].getCurrentMode () == DROID_MODE_NORMAL)
@@ -334,7 +332,7 @@ void gam_processCollision (int droidA)
 		if (g_shipDeckItr->second.droid[droidA].userData->ignoreCollisionDroid)
 			return;
 
-		g_shipDeckItr->second.droid[droidA].setVelocity (b2Vec2 {g_shipDeckItr->second.droid[droidA].getVelocity ().x * 0.5f, g_shipDeckItr->second.droid[droidA].getVelocity ().y * 0.5f});
+		g_shipDeckItr->second.droid[droidA].setVelocity (cpVect {g_shipDeckItr->second.droid[droidA].getVelocity ().x * 0.5f, g_shipDeckItr->second.droid[droidA].getVelocity ().y * 0.5f});
 		g_shipDeckItr->second.droid[droidA].ai2.switchWaypointDirection ();
 		g_shipDeckItr->second.droid[droidA].collisionCounterDroid++;
 		if (g_shipDeckItr->second.droid[droidA].collisionCounterDroid > collisionLimit)
@@ -348,12 +346,12 @@ void gam_processCollision (int droidA)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Droid has lost all health - explode and remove
-void gam_explodeDroid (paraDroid *whichDroid)
+void gam_explodeDroid(paraDroid *whichDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
 	whichDroid->ai2.aStar.stopUsingPath ();
 
-	whichDroid->setVelocity (b2Vec2 {0, 0});
+	whichDroid->setVelocity (cpVect {0, 0});
 	whichDroid->setCurrentMode (DROID_MODE_EXPLODING);
 	whichDroid->sprite.create ("explosion", 25, explosionAnimationSpeed);
 	whichDroid->sprite.setAnimateSpeed (explosionAnimationSpeed);      // Set for explosion animation
@@ -363,13 +361,34 @@ void gam_explodeDroid (paraDroid *whichDroid)
 	else
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
 
-	gam_addEmitter (sys_convertPixelsToMeters (whichDroid->getWorldPosInPixels ()), PARTICLE_TYPE_EXPLOSION, 0);
+	gam_addEmitter (whichDroid->getWorldPosInPixels (), PARTICLE_TYPE_EXPLOSION, 0);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
+// Get the current mode of the droid
+int gam_getDroidCurrentMode(int targetDroid)
+//-------------------------------------------------------------------------------------------------------------
+{
+	return g_shipDeckItr->second.droid[targetDroid].getCurrentMode ();
+}
+
+//-------------------------------------------------------------------------------------------------------------
+//
+// Set velocity to zero
+void gam_setDroidVelocity(int targetDroid, cpVect newVelocity)
+//-------------------------------------------------------------------------------------------------------------
+{
+	if (g_shipDeckItr->second.droid[targetDroid].getCurrentMode () != DROID_MODE_EXPLODING)
+	{
+		g_shipDeckItr->second.droid[targetDroid].setVelocity (newVelocity);
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //
 // Work out the droid animation speed based on health
-void gam_setHealthAnimation (int targetDroid)
+void gam_setHealthAnimation(int targetDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
 	float newAnimationSpeed;
@@ -390,7 +409,7 @@ void gam_setHealthAnimation (int targetDroid)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Calculate new droid health percentage and modify AI behaviour
-void gam_checkDroidHealth (int targetDroid)
+void gam_checkDroidHealth(int targetDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
 	float newHealthPercent;
@@ -413,7 +432,7 @@ void gam_checkDroidHealth (int targetDroid)
 //-------------------------------------------------------------------------------------------------------------
 //
 // See if a droid sees another droid get shot, or get transferred into
-void gam_checkActionWitness ()
+void gam_checkActionWitness()
 //-------------------------------------------------------------------------------------------------------------
 {
 	for (auto &droidItr: g_shipDeckItr->second.droid)
@@ -439,7 +458,7 @@ void gam_checkActionWitness ()
 // Process damage to a droid
 //
 // damageSource can be either a bullet, explosion or a collision with player or another droid
-void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
+void gam_damageToDroid(int targetDroid, int damageSource, int sourceDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
 
@@ -560,7 +579,7 @@ void gam_damageToDroid (int targetDroid, int damageSource, int sourceDroid)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Check for any droids that need to be removed - died last tick
-void gam_removeDroids ()
+void gam_removeDroids()
 //-------------------------------------------------------------------------------------------------------------
 {
 	for (auto &droidItr: g_shipDeckItr->second.droid)
@@ -588,12 +607,16 @@ void gam_removeDroids ()
 			// Remove physics
 			if (droidItr.body != nullptr)
 			{
-				droidItr.body->GetWorld ()->DestroyBody (droidItr.body);
-				droidItr.body = nullptr;
-				//
-				// Free memory
-				sys_freeMemory (sys_getString ("%s-%i", gam_getCurrentDeckName ().c_str (), droidItr.ai2.getArrayIndex ()));
-				droidItr.userData = nullptr;
+				if (droidItr.shape != nullptr)
+				{
+					cpSpaceRemoveShape (sys_returnPhysicsWorld (), droidItr.shape);
+					droidItr.shape = nullptr;
+				}
+				if (droidItr.body != nullptr)
+				{
+					cpSpaceRemoveBody (sys_returnPhysicsWorld (), droidItr.body);
+					droidItr.body = nullptr;
+				}
 			}
 			//
 			// add to score
@@ -611,11 +634,11 @@ void gam_removeDroids ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Show the current droids attack target
-void gam_debugShowTarget (paraDroid whichDroid)
+void gam_debugShowTarget(paraDroid whichDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 startPos {};
-	b2Vec2 endPos {};
+	cpVect startPos {};
+	cpVect endPos {};
 
 	if (dataBaseEntry[whichDroid.getDroidType ()].canShoot)
 	{
@@ -641,7 +664,7 @@ void gam_debugShowTarget (paraDroid whichDroid)
 // See if droid is dead - set explosion sprite and change mode
 //
 // gam_explodeDroid changes the currentMode
-void gam_checkDroidHealth (paraDroid *whichDroid)
+void gam_checkDroidHealth(paraDroid *whichDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
 	if (whichDroid->getCurrentMode () == DROID_MODE_NORMAL)

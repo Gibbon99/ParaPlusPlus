@@ -13,7 +13,7 @@ bool        showIcon         = true;
 //-----------------------------------------------------------------------------
 //
 // Switch state for blinking player icon
-Uint32 gui_blinkPlayerIcon (Uint32 interval, void *param)
+Uint32 gui_blinkPlayerIcon(Uint32 interval, void *param)
 //-----------------------------------------------------------------------------
 {
 	showIcon = !showIcon;
@@ -24,7 +24,7 @@ Uint32 gui_blinkPlayerIcon (Uint32 interval, void *param)
 //-----------------------------------------------------------------------------
 //
 // Create and start the timer for player blink
-void gui_startBlinkTimer (int blinkRateInMS)
+void gui_startBlinkTimer(int blinkRateInMS)
 //-----------------------------------------------------------------------------
 {
 	blinkIconTimerID = SDL_AddTimer (blinkRateInMS, gui_blinkPlayerIcon, nullptr);
@@ -35,7 +35,7 @@ void gui_startBlinkTimer (int blinkRateInMS)
 //-----------------------------------------------------------------------------
 //
 // Stop the blink timer
-void gui_stopBlinkTimer ()
+void gui_stopBlinkTimer()
 //-----------------------------------------------------------------------------
 {
 	if (blinkIconTimerID != 0)
@@ -45,7 +45,7 @@ void gui_stopBlinkTimer ()
 //-----------------------------------------------------------------------------
 //
 // Draw the player indicator on the deckview map
-void gui_renderPlayerLocation ()
+void gui_renderPlayerLocation()
 //-----------------------------------------------------------------------------
 {
 	int tileLocationX, tileLocationY;
@@ -53,8 +53,8 @@ void gui_renderPlayerLocation ()
 	if (!showIcon)
 		return;
 
-	tileLocationX = playerDroid.previousWorldPosInPixels.x * tileScaleX;
-	tileLocationY = playerDroid.previousWorldPosInPixels.y * tileScaleY;
+	tileLocationX = playerDroid.ai2.getPreviousWorldPosInPixels ().x * tileScaleX;
+	tileLocationY = playerDroid.ai2.getPreviousWorldPosInPixels ().y * tileScaleY;
 
 	filledCircleRGBA (renderer.renderer, tileLocationX, tileLocationY, 12, 255, 255, 255, 255);
 }
@@ -62,7 +62,7 @@ void gui_renderPlayerLocation ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Show the entire current deck from the terminal
-void gui_renderTerminalDeck ()
+void gui_renderTerminalDeck()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	Uint32   format;
@@ -72,16 +72,8 @@ void gui_renderTerminalDeck ()
 	double   deckViewTextPosY;
 	SDL_Rect destRect;
 	SDL_Rect sourceRect;
-//	std::string levelNameCache;
-//	Uint8         r, g, b, a;
-//	SDL_BlendMode tempMode;
 
-	//
-	// SDL2_gfx changes the blend mode and draw color
-	// as part of its rendering - remember so we can change it back
-	//
-//	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
-//	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
+	deckviewStarfield.render ();
 
 	SDL_QueryTexture (gam_getPlayfieldTexture (), &format, nullptr, &width, &height);
 	if (width > hiresVirtualWidth)
@@ -118,7 +110,4 @@ void gui_renderTerminalDeck ()
 	fontClass.render (renderer.renderer, deckViewTextPosX, deckViewTextPosY, 255, 255, 255, 255, sys_getString ("Deck [ %s ]", gam_returnLevelNameFromDeck (currentDeckNumber).c_str ()));
 
 	gui_renderPlayerLocation ();
-
-//	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
-//	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
 }

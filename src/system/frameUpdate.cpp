@@ -27,7 +27,7 @@ SDL_Event evt;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Handle system events and populate the keyboard state array
-void sys_processInputEvents ()
+void sys_processInputEvents()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	while (SDL_PollEvent (&evt) != 0)
@@ -164,7 +164,7 @@ void sys_processInputEvents ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Run a frame once
-void sys_gameTickRun ()
+void sys_gameTickRun()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (renderer.currentFadeState != FADE_STATE_NONE)
@@ -243,6 +243,7 @@ void sys_gameTickRun ()
 
 		case MODE_GUI_DECKVIEW:
 			gam_animateHealing ();
+			deckviewStarfield.animate ();
 			break;
 
 		case MODE_GUI_SHIPVIEW:

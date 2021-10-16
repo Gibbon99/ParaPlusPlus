@@ -8,14 +8,14 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a collision map for passed in keyName TODO Remove
-void gam_createCollisionMap (std::string &keyName)
+void gam_createCollisionMap(std::string &keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	try
 	{
 		textures.at (keyName).createMap ();
 	}
-	catch (std::out_of_range outOfRange)
+	catch (std::out_of_range &outOfRange)
 	{
 		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_MAP, 1, "planet|planet| ");
 	}
@@ -24,7 +24,7 @@ void gam_createCollisionMap (std::string &keyName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load a texture passing in filename from script - replace if it already exists
-void gam_loadTexture (std::string &fileName, std::string &keyName)
+void gam_loadTexture(std::string &fileName, std::string &keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraTexture tempTexture (con_addEvent, io_loadRawFile);

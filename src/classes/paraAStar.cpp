@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Constructor
-paraAStar::paraAStar ()
+paraAStar::paraAStar()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 }
@@ -25,7 +25,7 @@ paraAStar::paraAStar ()
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Deconstructor
-paraAStar::~paraAStar ()
+paraAStar::~paraAStar()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 }
@@ -33,7 +33,7 @@ paraAStar::~paraAStar ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Return the ID for this aStar and thread
-int paraAStar::getID ()
+int paraAStar::getID()
 //--------------------------------------------------------------------------------------------------------
 {
 	return ID;
@@ -42,7 +42,7 @@ int paraAStar::getID ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Set the ID for this aStar
-void paraAStar::setID (int newID)
+void paraAStar::setID(int newID)
 //--------------------------------------------------------------------------------------------------------
 {
 	ID = newID;
@@ -51,10 +51,10 @@ void paraAStar::setID (int newID)
 //--------------------------------------------------------------------------------------------------------
 //
 // Show the open and closed nodes
-void paraAStar::debugNodes ()
+void paraAStar::debugNodes()
 //--------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 drawPosition {};
+	cpVect drawPosition {};
 
 	for (auto foundItr: wayPoints)
 	{
@@ -68,7 +68,7 @@ void paraAStar::debugNodes ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Draw debug graphic
-void paraAStar::debugDraw (b2Vec2 lineStart, b2Vec2 lineFinish)
+void paraAStar::debugDraw(cpVect lineStart, cpVect lineFinish)
 //--------------------------------------------------------------------------------------------------------
 {
 	lineStart  = sys_worldToScreen (lineStart, 2);
@@ -84,11 +84,11 @@ void paraAStar::debugDraw (b2Vec2 lineStart, b2Vec2 lineFinish)
 //--------------------------------------------------------------------------------------------------------
 //
 // Show aStar waypoint lines
-void paraAStar::debugWayPoints ()
+void paraAStar::debugWayPoints()
 //--------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 lineStart {};
-	b2Vec2 lineFinish {};
+	cpVect lineStart {};
+	cpVect lineFinish {};
 	int    i {0};
 
 	if (wayPoints.size () == 0)
@@ -121,7 +121,7 @@ void paraAStar::debugWayPoints ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Return if the thread is still running
-bool paraAStar::stillRunning ()
+bool paraAStar::stillRunning()
 //--------------------------------------------------------------------------------------------------------
 {
 	return isRunning;
@@ -130,7 +130,7 @@ bool paraAStar::stillRunning ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Return if the waypoints are ready to use
-bool paraAStar::areWaypointsReady ()
+bool paraAStar::areWaypointsReady()
 //--------------------------------------------------------------------------------------------------------
 {
 	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
@@ -141,7 +141,7 @@ bool paraAStar::areWaypointsReady ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Is a tile considered 'solid' or not for creating a path
-bool paraAStar::isTileSolid (int tileIndex)
+bool paraAStar::isTileSolid(int tileIndex)
 //--------------------------------------------------------------------------------------------------------
 {
 	if (tileIndex < 0)
@@ -184,7 +184,7 @@ bool paraAStar::isTileSolid (int tileIndex)
 //--------------------------------------------------------------------------------------------------------
 //
 // Find the distance from one tile to the next - Manhatten distance
-int paraAStar::findDistance (b2Vec2 fromTile, b2Vec2 toTile)
+int paraAStar::findDistance(cpVect fromTile, cpVect toTile)
 //--------------------------------------------------------------------------------------------------------
 {
 	int costX {}, costY {};
@@ -202,7 +202,7 @@ int paraAStar::findDistance (b2Vec2 fromTile, b2Vec2 toTile)
 //--------------------------------------------------------------------------------------------------------
 //
 // Add a tile to the openNode list
-inline void paraAStar::addTileToOpenNode (b2Vec2 whichTile, int moveCost, int parent)
+inline void paraAStar::addTileToOpenNode(cpVect whichTile, int moveCost, int parent)
 //--------------------------------------------------------------------------------------------------------
 {
 #ifdef ASTAR_DEBUG
@@ -236,7 +236,7 @@ inline void paraAStar::addTileToOpenNode (b2Vec2 whichTile, int moveCost, int pa
 //--------------------------------------------------------------------------------------------------------
 //
 // Find the node with the lowest totalCost
-int paraAStar::findLowestCostNode ()
+int paraAStar::findLowestCostNode()
 //--------------------------------------------------------------------------------------------------------
 {
 	int lowestCost {50000};
@@ -266,7 +266,7 @@ int paraAStar::findLowestCostNode ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Move a node from the openNode list to the closedNode list
-void paraAStar::moveNodeToClosedList (int whichNodeIndex)
+void paraAStar::moveNodeToClosedList(int whichNodeIndex)
 //--------------------------------------------------------------------------------------------------------
 {
 	_pathNode4 tempNode {};
@@ -314,7 +314,7 @@ void paraAStar::moveNodeToClosedList (int whichNodeIndex)
 //--------------------------------------------------------------------------------------------------------
 //
 // Check if node is in the OPEN list
-bool paraAStar::isNodeInOpenList (b2Vec2 whichNode)
+bool paraAStar::isNodeInOpenList(cpVect whichNode)
 //--------------------------------------------------------------------------------------------------------
 {
 	for (auto itr: openNodes)
@@ -328,7 +328,7 @@ bool paraAStar::isNodeInOpenList (b2Vec2 whichNode)
 //--------------------------------------------------------------------------------------------------------
 //
 // Check if node is in the CLOSED list
-bool paraAStar::isNodeInClosedList (b2Vec2 whichNode)
+bool paraAStar::isNodeInClosedList(cpVect whichNode)
 //--------------------------------------------------------------------------------------------------------
 {
 	for (auto itr: closedNodes)
@@ -345,7 +345,7 @@ bool paraAStar::isNodeInClosedList (b2Vec2 whichNode)
 //
 // Return FALSE if the tile is solid and no new node can be generated
 // Return FALSE if the node is already used on the CLOSED list
-bool paraAStar::generateNewNode (int whichDirection)
+bool paraAStar::generateNewNode(int whichDirection)
 //--------------------------------------------------------------------------------------------------------
 {
 	std::string directionStr {};
@@ -480,7 +480,7 @@ bool paraAStar::generateNewNode (int whichDirection)
 //--------------------------------------------------------------------------------------------------------
 //
 // Extract the path from the list of closed nodes
-void paraAStar::extractPath ()
+void paraAStar::extractPath()
 //--------------------------------------------------------------------------------------------------------
 {
 	int        nodeParent {-1};
@@ -539,12 +539,12 @@ void paraAStar::extractPath ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Compress the waypoints
-void paraAStar::compressWaypoints ()
+void paraAStar::compressWaypoints()
 //--------------------------------------------------------------------------------------------------------
 {
 	int                 current {1};
-	std::vector<b2Vec2> newPoints {};
-	b2Vec2              tempPoint {};
+	std::vector<cpVect> newPoints {};
+	cpVect              tempPoint {};
 
 	newPoints.clear ();
 	tempPoint = wayPoints[0];
@@ -578,10 +578,10 @@ void paraAStar::compressWaypoints ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Turn the AStar nodes into world position coords
-void paraAStar::convertToCoords ()
+void paraAStar::convertToCoords()
 //--------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 tempWaypoint;
+	cpVect tempWaypoint;
 
 	for (auto itr: foundPath)
 	{
@@ -606,7 +606,7 @@ void paraAStar::convertToCoords ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Swap the direction flag
-void paraAStar::switchTravelDirection ()
+void paraAStar::switchTravelDirection()
 //--------------------------------------------------------------------------------------------------------
 {
 	if (aStarDirection == ASTAR_DIRECTION::UP)
@@ -618,7 +618,7 @@ void paraAStar::switchTravelDirection ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Get the aStar direction
-ASTAR_DIRECTION paraAStar::getAStarDirection ()
+ASTAR_DIRECTION paraAStar::getAStarDirection()
 //--------------------------------------------------------------------------------------------------------
 {
 	return aStarDirection;
@@ -627,14 +627,14 @@ ASTAR_DIRECTION paraAStar::getAStarDirection ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Get the waypoint pointed to by the wayPointsIndex
-b2Vec2 paraAStar::getWaypoint ()
+cpVect paraAStar::getWaypoint()
 //--------------------------------------------------------------------------------------------------------
 {
 	if (wayPoints.size () == 0)
 	{
 		printf ("STOP: Waypoint array is empty.\n\n");
 		aStarDirection = ASTAR_DIRECTION::ERROR;
-		return b2Vec2 {};
+		return cpVect {};
 	}
 
 	switch (aStarDirection)
@@ -663,6 +663,9 @@ b2Vec2 paraAStar::getWaypoint ()
 				aStarDirection = ASTAR_DIRECTION::DESTINATION;
 			}
 			break;
+
+		case ASTAR_DIRECTION::ERROR:
+			break;
 	}
 	return wayPoints[wayPointsIndex];
 }
@@ -670,7 +673,7 @@ b2Vec2 paraAStar::getWaypoint ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Get the path status
-int paraAStar::getPathStatus ()
+int paraAStar::getPathStatus()
 //--------------------------------------------------------------------------------------------------------
 {
 	return pathStatus;
@@ -679,7 +682,7 @@ int paraAStar::getPathStatus ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Return the current wayPointIndex - debug
-int paraAStar::getWayPointsIndex ()
+int paraAStar::getWayPointsIndex()
 //--------------------------------------------------------------------------------------------------------
 {
 	return wayPointsIndex;
@@ -689,7 +692,7 @@ int paraAStar::getWayPointsIndex ()
 //
 // A thread to run the aStar searching function
 //void paraAStar::searchThread ()
-int paraAStar::searchThread ()
+int paraAStar::searchThread()
 //--------------------------------------------------------------------------------------------------------
 {
 	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
@@ -753,7 +756,7 @@ int paraAStar::searchThread ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Stop using the current aStar path and reset it
-void paraAStar::stopUsingPath ()
+void paraAStar::stopUsingPath()
 //--------------------------------------------------------------------------------------------------------
 {
 	closedNodes.clear ();
@@ -771,7 +774,7 @@ void paraAStar::stopUsingPath ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Start a new path and create a detached thread to run the pathfinding
-int paraAStar::requestNewPath (b2Vec2 start, b2Vec2 destination)
+int paraAStar::requestNewPath(cpVect start, cpVect destination)
 //--------------------------------------------------------------------------------------------------------
 {
 	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
@@ -787,7 +790,7 @@ int paraAStar::requestNewPath (b2Vec2 start, b2Vec2 destination)
 	modf (destination.x, &destTile.x);
 	modf (destination.y, &destTile.y);
 
-	distanceTestResult = b2Distance (start, destination);
+	distanceTestResult = cpvdist (start, destination);
 
 #ifdef ASTAR_DEBUG
 	printf ("Thread [ %i ]: AStar distance between start and destination [ %f ]\n", ID, distanceTestResult);
@@ -810,7 +813,7 @@ int paraAStar::requestNewPath (b2Vec2 start, b2Vec2 destination)
 //--------------------------------------------------------------------------------------------------------
 //
 // Start the aStar pathfinding thread
-std::thread::id paraAStar::startThread ()
+std::thread::id paraAStar::startThread()
 //--------------------------------------------------------------------------------------------------------
 {
 	threadID = new std::thread (&paraAStar::searchThread, this);

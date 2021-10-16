@@ -4,12 +4,12 @@
 #include <system/util.h>
 #include "classes/paraTexture.h"
 
-void paraTexture::AddRef ()
+void paraTexture::AddRef()
 {
 
 }
 
-void paraTexture::ReleaseRef ()
+void paraTexture::ReleaseRef()
 {
 
 }
@@ -17,7 +17,7 @@ void paraTexture::ReleaseRef ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Constructor
-paraTexture::paraTexture (textureFunctionPtrStr outputFunction, textureFunctionPtrLoad loadFunction)
+paraTexture::paraTexture(textureFunctionPtrStr outputFunction, textureFunctionPtrLoad loadFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraTexture::funcOutput = outputFunction;
@@ -27,7 +27,7 @@ paraTexture::paraTexture (textureFunctionPtrStr outputFunction, textureFunctionP
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return a pointer to the texture
-PARA_Texture *paraTexture::getTexture ()
+PARA_Texture *paraTexture::getTexture()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return texture;
@@ -37,7 +37,7 @@ PARA_Texture *paraTexture::getTexture ()
 //
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
-std::string paraTexture::int_getString (std::string format, ...)
+std::string paraTexture::int_getString(std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	const char *const zcFormat = format.c_str ();
@@ -65,7 +65,7 @@ std::string paraTexture::int_getString (std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the filename for a texture
-void paraTexture::setFileName (std::string newFilename)
+void paraTexture::setFileName(std::string newFilename)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	fileName = newFilename;
@@ -74,7 +74,7 @@ void paraTexture::setFileName (std::string newFilename)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Destroy this texture
-void paraTexture::destroy ()
+void paraTexture::destroy()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_DestroyTexture (texture);
@@ -86,7 +86,7 @@ void paraTexture::destroy ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check if a texture has been loaded properly
-bool paraTexture::isLoaded ()
+bool paraTexture::isLoaded()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return loaded;
@@ -95,7 +95,7 @@ bool paraTexture::isLoaded ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load a bitmap from a memory pointer - create a texture from the surface
-bool paraTexture::load (std::string newFileName, std::string newKeyName)
+bool paraTexture::load(std::string newFileName, std::string newKeyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (newFileName.empty ())
@@ -143,7 +143,7 @@ bool paraTexture::load (std::string newFileName, std::string newKeyName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the height of a texture
-int paraTexture::getHeight ()
+int paraTexture::getHeight()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return height;
@@ -152,7 +152,7 @@ int paraTexture::getHeight ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the width of a texture
-int paraTexture::getWidth ()
+int paraTexture::getWidth()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return width;
@@ -161,10 +161,14 @@ int paraTexture::getWidth ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a texture to the current backing target - or screen if backing texture is not used
-void paraTexture::render ()
+void paraTexture::render()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_SetTextureBlendMode (static_cast<PARA_Texture *>(texture), SDL_BLENDMODE_BLEND);
+	if (!loaded)
+		return;
+
+	SDL_SetTextureBlendMode (static_cast<PARA_Texture *>(texture), SDL_BLENDMODE_MOD); //SDL_BLENDMODE_BLEND);
+
 	if (SDL_RenderCopy (renderer.renderer, texture, nullptr, nullptr) < 0)
 	{
 		funcOutput (-1, int_getString ("Unable to render texture [ %s ] - [ %s ]", keyName.c_str (), SDL_GetError ()));
@@ -177,7 +181,7 @@ void paraTexture::render ()
 // Render a texture to the current backing target - or screen if backing texture is not used
 //
 // Pass in destination coords - coords are in pixel space
-void paraTexture::render (SDL_Rect *destination)
+void paraTexture::render(SDL_Rect *destination)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (SDL_RenderCopy (renderer.renderer, texture, nullptr, destination) < 0)
@@ -190,7 +194,7 @@ void paraTexture::render (SDL_Rect *destination)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the boolean value from single bit array of the image pixels
-char paraTexture::pixelColor (int posX, int posY)
+char paraTexture::pixelColor(int posX, int posY)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((posY * surface->w + posX) > static_cast<int>(collisionMap.size ()))
@@ -203,7 +207,7 @@ char paraTexture::pixelColor (int posX, int posY)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load a collision map
-void paraTexture::loadMap ()
+void paraTexture::loadMap()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_file   *fileHandle;
@@ -235,7 +239,7 @@ void paraTexture::loadMap ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a collision map - used for starfield background
-bool paraTexture::createMap ()
+bool paraTexture::createMap()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int         counter = 0;

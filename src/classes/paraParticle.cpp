@@ -9,7 +9,7 @@ paraRandom particleAngleRandom {};
 //-----------------------------------------------------------------------------------------------------------
 //
 // Constructor for a new paraParticle class - newWorldPos is in Physics coords
-paraParticle::paraParticle (int newType, b2Vec2 newWorldPos)
+paraParticle::paraParticle(int newType, cpVect newWorldPos)
 //-----------------------------------------------------------------------------------------------------------
 {
 #ifdef DEBUG_PARTICLE
@@ -29,8 +29,6 @@ paraParticle::paraParticle (int newType, b2Vec2 newWorldPos)
 			color.g = 100;
 			color.b = 100;
 			color.a = particleAngleRandom.get (100, 254);;
-
-			printf ("Particle constructor - PARTICLE_TYPE_EXPLOSION.\n");
 			break;
 
 		case PARTICLE_TYPE_SPARK:
@@ -39,9 +37,6 @@ paraParticle::paraParticle (int newType, b2Vec2 newWorldPos)
 			color.g = 190;
 			color.b = 200;
 			color.a = particleAngleRandom.get (100, 254);
-
-			printf ("Particle constructor - PARTICLE_TYPE_SPARK.\n");
-
 			break;
 
 		case PARTICLE_TYPE_TRAIL:
@@ -57,54 +52,32 @@ paraParticle::paraParticle (int newType, b2Vec2 newWorldPos)
 
 	if (m_particleType != PARTICLE_TYPE_TRAIL)
 	{
-		physicObject.bodyDef.type = b2_dynamicBody;
-		physicObject.bodyDef.position.Set (m_worldPos.x, m_worldPos.y);
-		physicObject.bodyDef.angle = 0;
-		physicObject.body          = sys_getPhysicsWorld ()->CreateBody (getBodyDef ());
-		if (physicObject.body == nullptr)
-			sys_shutdownWithError (sys_getString ("Unable to create physics body for particle."));
+		body = cpSpaceAddBody (sys_returnPhysicsWorld (), cpBodyNew (particleMass, cpMomentForCircle (particleMass, 0.0f, particleSize, cpvzero)));
+		cpBodySetMass (body, particleMass);
+		cpBodySetVelocity (body, cpvzero);
+		cpBodySetPosition (body, m_worldPos);
 
-//		auto *userData = new _userData;
+		shape = cpSpaceAddShape (sys_returnPhysicsWorld (), cpCircleShapeNew (body, particleSize, cpvzero));
+		cpShapeSetFriction (shape, particleFriction);
+		cpShapeSetElasticity (shape, particleElastic);
+		cpShapeSetCollisionType (shape, PHYSIC_TYPE_PARTICLE);
+		cpShapeSetFilter (shape, FILTER_CAT_PARTICLE);
 
-		physicObject.userData            = new _userData; //reinterpret_cast<_userData *>(sys_malloc (sizeof (_userData), sys_getString ("%i", 1)));; // (new _userData);    // TODO - use para memory routine
-		physicObject.userData->userType  = PHYSIC_TYPE_PARTICLE;
-		physicObject.userData->dataValue = 0;
-		physicObject.body->SetUserData (physicObject.userData);
-
-//		userData->userType  = PHYSIC_TYPE_PARTICLE;
-//		userData->dataValue = 0;
-//		physicObject.body->SetUserData (userData);
-
-//		delete userData;
-
-//		delete physicObject.userData;
-
-		physicObject.shape.m_radius = static_cast<float>(particleSize / pixelsPerMeter);
-		physicObject.shape.m_p.Set (0, 0);
-
-		physicObject.fixtureDef.shape               = &physicObject.shape;
-		physicObject.fixtureDef.density             = particleMass;
-		physicObject.fixtureDef.friction            = particleFriction;
-		physicObject.fixtureDef.restitution         = particleElastic;
-		physicObject.fixtureDef.filter.categoryBits = PHYSIC_TYPE_PARTICLE;
-		physicObject.fixtureDef.filter.maskBits     = PHYSIC_TYPE_WALL;
-		physicObject.body->CreateFixture (&physicObject.fixtureDef);
+		userData = std::make_shared<_userData> ();
+		userData->bulletID              = -1;
+		userData->userType              = cpShapeGetCollisionType (shape);
+		userData->dataValue             = -1;
+//		userData->wallIndexValue        = -1;
+		userData->ignoreCollisionDroid  = false;
+		userData->ignoreCollisionPlayer = false;
+		cpShapeSetUserData (shape, userData.get ());
 	}
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-// Return the location of the body definition
-b2BodyDef *paraParticle::getBodyDef ()
-//-------------------------------------------------------------------------------------------------------------
-{
-	return &physicObject.bodyDef;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return if the particle is alive or not
-bool paraParticle::isAlive () const
+bool paraParticle::isAlive() const
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return m_isAlive;
@@ -113,7 +86,7 @@ bool paraParticle::isAlive () const
 //-----------------------------------------------------------------------------------------------------------
 //
 // Deconstructor for a particle class
-paraParticle::~paraParticle ()
+paraParticle::~paraParticle()
 //-----------------------------------------------------------------------------------------------------------
 {
 #ifdef DEBUG_PARTICLE
@@ -122,39 +95,27 @@ paraParticle::~paraParticle ()
 
 	if (m_particleType != PARTICLE_TYPE_TRAIL)
 	{
-		stopContactPhysicsBugFlag = true;
-
-		if (physicObject.userData != nullptr)
+		if (shape != nullptr)
 		{
-//			delete physicObject.userData;
-			physicObject.userData = nullptr;
+			cpSpaceRemoveShape (sys_returnPhysicsWorld (), shape);
+			shape = nullptr;
 		}
-
-		if (physicObject.body != nullptr)
+		if (body != nullptr)
 		{
-			physicObject.body->DestroyFixture (physicObject.body->GetFixtureList ());
-			physicObject.body->SetEnabled (false);
-			physicObject.body->SetUserData (nullptr);
-			physicObject.body->GetWorld ()->DestroyBody (physicObject.body);
-			physicObject.body = nullptr;
+			cpSpaceRemoveBody (sys_returnPhysicsWorld (), body);
+			body = nullptr;
 		}
-
-		stopContactPhysicsBugFlag = false;
-	}
-	else
-	{
-		std::cout << "Particle destructor called - PARTICLE_TYPE_TRAIL." << std::endl;
 	}
 }
 
 //-----------------------------------------------------------------------------------------------------------
 //
 // Get a random normalized vector in a circle shape
-b2Vec2 paraParticle::getCircleAngle ()
+cpVect paraParticle::getCircleAngle() const
 //-----------------------------------------------------------------------------------------------------------
 {
 	int    angle {}, speed {};
-	b2Vec2 newDirection {};
+	cpVect newDirection {};
 
 	angle = particleAngleRandom.get (0, 359);
 
@@ -169,6 +130,8 @@ b2Vec2 paraParticle::getCircleAngle ()
 			break;
 	}
 
+	newDirection = cpvnormalize (newDirection);
+
 #ifdef USE_LOOKUP_TABLE
 	newDirection.x = static_cast<float>(speed) * sys_getCosValue (angle);
 	newDirection.y = static_cast<float>(speed) * sys_getSinValue (angle);
@@ -177,14 +140,13 @@ b2Vec2 paraParticle::getCircleAngle ()
 	direction.y = (speed * sin (angle));
 #endif
 
-	newDirection.Normalize ();  // Is this needed, negates getting the speed??
 	return newDirection;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Animate the particle
-void paraParticle::animate ()
+void paraParticle::animate()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int particleLifetimeReduce {};
@@ -219,7 +181,8 @@ void paraParticle::animate ()
 		{
 			case PARTICLE_TYPE_EXPLOSION:
 			case PARTICLE_TYPE_SPARK:
-				physicObject.body->ApplyForce (m_direction, physicObject.body->GetWorldCenter (), true);
+				if (body != nullptr)
+					cpBodyApplyForceAtLocalPoint (body, m_direction, cpvzero);
 				color.a = static_cast<Uint8>(tempAlpha);
 				break;
 
@@ -233,10 +196,10 @@ void paraParticle::animate ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render the particle
-void paraParticle::render ()
+void paraParticle::render()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 renderPosition;
+	cpVect renderPosition;
 
 	if (m_isAlive)
 	{
@@ -244,8 +207,8 @@ void paraParticle::render ()
 		{
 			case PARTICLE_TYPE_EXPLOSION:
 			case PARTICLE_TYPE_SPARK:
-				renderPosition = physicObject.body->GetPosition ();
-				renderPosition = sys_convertMetersToPixels (renderPosition);
+				if (body != nullptr)
+					renderPosition = cpBodyGetPosition (body);
 				break;
 
 			case PARTICLE_TYPE_TRAIL:

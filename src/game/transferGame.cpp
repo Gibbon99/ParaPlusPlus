@@ -249,7 +249,7 @@ void trn_transferLostGame ()
 void trn_transferIntoDroid ()
 //---------------------------------------------------------------------------------------------------------------------
 {
-	playerDroid.setVelocity (b2Vec2 {0, 0});
+	playerDroid.setVelocity (cpVect {0, 0});
 
 	if (playerDroid.transferTargetDroidType > 0)
 	{

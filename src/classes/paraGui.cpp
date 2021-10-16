@@ -8,12 +8,12 @@
 #include "classes/paraGui.h"
 
 
-void paraGui::AddRef ()
+void paraGui::AddRef()
 {
 
 }
 
-void paraGui::ReleaseRef ()
+void paraGui::ReleaseRef()
 {
 
 }
@@ -21,7 +21,7 @@ void paraGui::ReleaseRef ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index of the current action object from the current dialogbox
-int paraGui::getActiveObjectIndexDialogbox ()
+int paraGui::getActiveObjectIndexDialogbox()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiDialogBoxes[currentDialogbox].objectIDIndex[guiDialogBoxes[currentDialogbox].selectedObject];
@@ -30,7 +30,7 @@ int paraGui::getActiveObjectIndexDialogbox ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index of the current action object from the current screen
-int paraGui::getActiveObjectIndex ()
+int paraGui::getActiveObjectIndex()
 //----------------------------------------------------------------------------------------------------------------------
 {
 #ifdef MY_GUI_DEBUG
@@ -43,7 +43,7 @@ int paraGui::getActiveObjectIndex ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the currently active dialogbox
-int paraGui::getCurrentDialogbox ()
+int paraGui::getCurrentDialogbox()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return currentDialogbox;
@@ -52,7 +52,7 @@ int paraGui::getCurrentDialogbox ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the currently active screen
-int paraGui::getCurrentScreen ()
+int paraGui::getCurrentScreen()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return currentScreen;
@@ -61,7 +61,7 @@ int paraGui::getCurrentScreen ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a new active object for a dialogbox
-void paraGui::setActiveObjectDialogbox (int whichDialogbox, int objectType, std::string objectID)
+void paraGui::setActiveObjectDialogbox(int whichDialogbox, int objectType, std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int indexCount = 0;
@@ -88,7 +88,7 @@ void paraGui::setActiveObjectDialogbox (int whichDialogbox, int objectType, std:
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a new active object
-void paraGui::setActiveObject (int whichScreen, int objectType, std::string objectID)
+void paraGui::setActiveObject(int whichScreen, int objectType, std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int indexCount = 0;
@@ -132,7 +132,7 @@ void paraGui::setActiveObject (int whichScreen, int objectType, std::string obje
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a new dialog box
-void paraGui::setCurrentDialogbox (int newDialogbox)
+void paraGui::setCurrentDialogbox(int newDialogbox)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	currentDialogbox = newDialogbox;
@@ -141,7 +141,7 @@ void paraGui::setCurrentDialogbox (int newDialogbox)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Change to a new GUI screen
-void paraGui::setCurrentScreen (int newScreen)
+void paraGui::setCurrentScreen(int newScreen)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	currentScreen = newScreen;
@@ -154,7 +154,7 @@ void paraGui::setCurrentScreen (int newScreen)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index of the object Index
-int paraGui::indexByIndexDialogbox (int whichObject)
+int paraGui::indexByIndexDialogbox(int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiDialogBoxes[currentDialogbox].objectIDIndex[whichObject];
@@ -163,7 +163,7 @@ int paraGui::indexByIndexDialogbox (int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index of the object index - by the passed in index
-int paraGui::indexByIndex (int whichObject)
+int paraGui::indexByIndex(int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScreens[currentScreen].objectIDIndex[whichObject];
@@ -172,7 +172,7 @@ int paraGui::indexByIndex (int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index into the objectType array by index
-int paraGui::typeByIndexDialogbox (int whichObject)
+int paraGui::typeByIndexDialogbox(int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiDialogBoxes[currentDialogbox].objectType[whichObject];
@@ -181,7 +181,7 @@ int paraGui::typeByIndexDialogbox (int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index into the objectType array by index
-int paraGui::typeByIndex (int whichObject)
+int paraGui::typeByIndex(int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScreens[currentScreen].objectType[whichObject];
@@ -190,7 +190,7 @@ int paraGui::typeByIndex (int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the currently selected object on the current dialobox
-int paraGui::selectedObjectDialogbox ()
+int paraGui::selectedObjectDialogbox()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiDialogBoxes[currentDialogbox].selectedObject;
@@ -199,7 +199,7 @@ int paraGui::selectedObjectDialogbox ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the currently selected object on the current screen
-int paraGui::selectedObject ()
+int paraGui::selectedObject()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScreens[currentScreen].selectedObject;
@@ -208,7 +208,7 @@ int paraGui::selectedObject ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return how many elements are on the currently active dialobox
-int paraGui::numElementsDialogbox ()
+int paraGui::numElementsDialogbox()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiDialogBoxes[currentDialogbox].objectIDIndex.size ();
@@ -217,7 +217,7 @@ int paraGui::numElementsDialogbox ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return how many elements are on the currently active screen
-int paraGui::numElements ()
+int paraGui::numElements()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScreens[currentScreen].objectIDIndex.size ();
@@ -227,7 +227,7 @@ int paraGui::numElements ()
 //
 // Set the dimensions of the screen the GUI is rendering to when in game mode
 // Dialogboxes rendered in Gamemode are on lower resolution screen
-void paraGui::setRenderDimensionsGameMode (int width, int height)
+void paraGui::setRenderDimensionsGameMode(int width, int height)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	renderWidthGame  = width;
@@ -237,7 +237,7 @@ void paraGui::setRenderDimensionsGameMode (int width, int height)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the dimensions of the screen the GUI is rendering to
-void paraGui::setRenderDimensions (int width, int height)
+void paraGui::setRenderDimensions(int width, int height)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	renderWidth  = width;
@@ -247,7 +247,7 @@ void paraGui::setRenderDimensions (int width, int height)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check if a mouse point is inside a bounding box
-bool paraGui::pointInBox (int x, int y, __BOUNDING_BOX checkBox)
+bool paraGui::pointInBox(int x, int y, __BOUNDING_BOX checkBox)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	float ratioX;
@@ -287,7 +287,7 @@ bool paraGui::pointInBox (int x, int y, __BOUNDING_BOX checkBox)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a function to call when displaying any output
-void paraGui::setOutputFunction (funcPtrIntStr outputFunction)
+void paraGui::setOutputFunction(funcPtrIntStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraGui::funcOutput = outputFunction;
@@ -296,7 +296,7 @@ void paraGui::setOutputFunction (funcPtrIntStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Init the GUI system
-void paraGui::init (funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, int newRenderWidthGame, int newRenderHeightGame, std::string newFileName)
+void paraGui::init(funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, int newRenderWidthGame, int newRenderHeightGame, std::string newFileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	setOutputFunction (outputFunction);
@@ -312,7 +312,7 @@ void paraGui::init (funcPtrIntStr outputFunction, funcStrIn getStringFunc, int n
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Called after the scripting engine restarts
-void paraGui::restart ()
+void paraGui::restart()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScreens.clear ();
@@ -330,7 +330,7 @@ void paraGui::restart ()
 //
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
-std::string paraGui::int_getString (std::string format, ...)
+std::string paraGui::int_getString(std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	const char *const zcFormat = format.c_str ();
@@ -358,7 +358,7 @@ std::string paraGui::int_getString (std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the index of a object type from its array
-int paraGui::getIndex (int objectType, const std::string &objectID)
+int paraGui::getIndex(int objectType, const std::string &objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int indexCounter = 0;
@@ -496,7 +496,7 @@ int paraGui::getIndex (int objectType, const std::string &objectID)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a new object type
-void paraGui::create (int objectType, std::string objectID)
+void paraGui::create(int objectType, std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	__SCREEN_OBJECT newScreen;
@@ -727,7 +727,7 @@ void paraGui::create (int objectType, std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the fade value of the bottom line
-double paraGui::getLineFade (int objectIndex)
+double paraGui::getLineFade(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].lineFade;
@@ -736,7 +736,7 @@ double paraGui::getLineFade (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the fade value of the bottom line
-void paraGui::setLineFade (int objectIndex, double newLineFade)
+void paraGui::setLineFade(int objectIndex, double newLineFade)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScrollBoxes[objectIndex].lineFade = newLineFade;
@@ -745,7 +745,7 @@ void paraGui::setLineFade (int objectIndex, double newLineFade)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the iterator pointing to the reverse entry
-std::vector<std::string>::reverse_iterator paraGui::getREnd (int objectIndex)
+std::vector<std::string>::reverse_iterator paraGui::getREnd(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].scrollBoxText.rend ();
@@ -754,7 +754,7 @@ std::vector<std::string>::reverse_iterator paraGui::getREnd (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the iterator pointing to the last entry
-std::vector<std::string>::reverse_iterator paraGui::getRBegin (int objectIndex)
+std::vector<std::string>::reverse_iterator paraGui::getRBegin(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].scrollBoxText.rbegin ();
@@ -763,7 +763,7 @@ std::vector<std::string>::reverse_iterator paraGui::getRBegin (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Reset a scrollbox to start
-void paraGui::restartScrollBox (const string &objectID)
+void paraGui::restartScrollBox(const string &objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex;
@@ -786,7 +786,7 @@ void paraGui::restartScrollBox (const string &objectID)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the next line of text to show in the scrollbox
-void paraGui::getNextLineOfText (int objectIndex)
+void paraGui::getNextLineOfText(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string fontName;
@@ -873,7 +873,7 @@ void paraGui::getNextLineOfText (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the current number of lines to print in a scrollbox
-int paraGui::getNumberPrintLines (int objectIndex)
+int paraGui::getNumberPrintLines(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].numLinesToPrint;
@@ -882,7 +882,7 @@ int paraGui::getNumberPrintLines (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the number of lines to print in a scrollbox
-void paraGui::setNumberPrintLines (int objectIndex, int newNumberLines)
+void paraGui::setNumberPrintLines(int objectIndex, int newNumberLines)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScrollBoxes[objectIndex].numLinesToPrint = newNumberLines;
@@ -891,7 +891,7 @@ void paraGui::setNumberPrintLines (int objectIndex, int newNumberLines)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the current scrollY counter
-double paraGui::getScrollY (int objectIndex)
+double paraGui::getScrollY(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].scrollY;
@@ -900,7 +900,7 @@ double paraGui::getScrollY (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the current scrollY counter
-void paraGui::setScrollY (int objectIndex, double newScrollY)
+void paraGui::setScrollY(int objectIndex, double newScrollY)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScrollBoxes[objectIndex].scrollY = newScrollY;
@@ -909,7 +909,7 @@ void paraGui::setScrollY (int objectIndex, double newScrollY)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the current scrollY counter
-double paraGui::getPreviousScrollY (int objectIndex)
+double paraGui::getPreviousScrollY(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].previousScrollY;
@@ -918,7 +918,7 @@ double paraGui::getPreviousScrollY (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the current scrollY counter
-void paraGui::setPreviousScrollY (int objectIndex, double newScrollY)
+void paraGui::setPreviousScrollY(int objectIndex, double newScrollY)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScrollBoxes[objectIndex].previousScrollY = newScrollY;
@@ -927,7 +927,7 @@ void paraGui::setPreviousScrollY (int objectIndex, double newScrollY)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the current scrollbox delay counter
-double paraGui::getScrollDelay (int objectIndex)
+double paraGui::getScrollDelay(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiScrollBoxes[objectIndex].scrollDelay;
@@ -936,7 +936,7 @@ double paraGui::getScrollDelay (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the new scrolbox delay counter
-void paraGui::setScrollDelay (int objectIndex, double newScrollDelay)
+void paraGui::setScrollDelay(int objectIndex, double newScrollDelay)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScrollBoxes[objectIndex].scrollDelay = newScrollDelay;
@@ -945,7 +945,7 @@ void paraGui::setScrollDelay (int objectIndex, double newScrollDelay)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the scrolling speed for a scrollbox
-void paraGui::setScrollSpeed (int objectType, const std::string &objectID, double newScrollSpeed)
+void paraGui::setScrollSpeed(int objectType, const std::string &objectID, double newScrollSpeed)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex = 0;
@@ -965,7 +965,7 @@ void paraGui::setScrollSpeed (int objectType, const std::string &objectID, doubl
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add an object to a dialogbox
-void paraGui::addToDialogbox (int objectType, std::string objectID, std::string dialogboxID)
+void paraGui::addToDialogbox(int objectType, std::string objectID, std::string dialogboxID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int dialogboxIndex = 0;
@@ -997,7 +997,7 @@ void paraGui::addToDialogbox (int objectType, std::string objectID, std::string 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add an object to a screen
-void paraGui::addToScreen (int objectType, std::string objectID, std::string screenID)
+void paraGui::addToScreen(int objectType, std::string objectID, std::string screenID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int screenIndex = 0;
@@ -1030,7 +1030,7 @@ void paraGui::addToScreen (int objectType, std::string objectID, std::string scr
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Setup the position for an object
-void paraGui::setPosition (int objectType, std::string objectID, int newRadius, int coordType, double newPosX, double newPosY, double newWidth, double newHeight)
+void paraGui::setPosition(int objectType, std::string objectID, int newRadius, int coordType, double newPosX, double newPosY, double newWidth, double newHeight)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int    objectIndex = 0;
@@ -1253,7 +1253,7 @@ void paraGui::setPosition (int objectType, std::string objectID, int newRadius, 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the fontname to use for this object
-std::string paraGui::getFontName (int objectType, int objectIndex)
+std::string paraGui::getFontName(int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (objectType)
@@ -1356,7 +1356,7 @@ std::string paraGui::getFontName (int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the fontClass name to render text with for this object
-void paraGui::setFontName (int objectType, std::string objectID, std::string newFontName)
+void paraGui::setFontName(int objectType, std::string objectID, std::string newFontName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex;
@@ -1413,7 +1413,7 @@ void paraGui::setFontName (int objectType, std::string objectID, std::string new
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the label for this object
-void paraGui::setLabel (int objectType, std::string objectID, int newGapSize, int newLabelPos, std::string newLabel)
+void paraGui::setLabel(int objectType, std::string objectID, int newGapSize, int newLabelPos, std::string newLabel)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex = 0;
@@ -1495,7 +1495,7 @@ void paraGui::setLabel (int objectType, std::string objectID, int newGapSize, in
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the name of the script function to be run when the object is activated
-void paraGui::setAction (int objectType, std::string objectID, std::string newAction)
+void paraGui::setAction(int objectType, std::string objectID, std::string newAction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex = 0;
@@ -1536,7 +1536,7 @@ void paraGui::setAction (int objectType, std::string objectID, std::string newAc
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the colors for this object - by index. Private function - colors are set by type
-void paraGui::setColorByIndex (int objectType, int objectIndex, int whichColor, int red, int green, int blue, int alpha)
+void paraGui::setColorByIndex(int objectType, int objectIndex, int whichColor, int red, int green, int blue, int alpha)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (objectType)
@@ -1751,7 +1751,7 @@ void paraGui::setColorByIndex (int objectType, int objectIndex, int whichColor, 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a object types color
-void paraGui::setColor (int objectType, std::string objectID, int whichColor, int red, int green, int blue, int alpha)
+void paraGui::setColor(int objectType, std::string objectID, int whichColor, int red, int green, int blue, int alpha)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex;
@@ -1821,7 +1821,7 @@ void paraGui::setColor (int objectType, std::string objectID, int whichColor, in
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Final step to say the object is ready to use
-void paraGui::setReady (int objectType, std::string objectID, bool newState)
+void paraGui::setReady(int objectType, std::string objectID, bool newState)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex;
@@ -1882,7 +1882,7 @@ void paraGui::setReady (int objectType, std::string objectID, bool newState)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the text for the label
-std::string paraGui::getLabelText (int objectType, int objectIndex)
+std::string paraGui::getLabelText(int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (objectType)
@@ -2031,7 +2031,7 @@ std::string paraGui::getLabelText (int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the gapSize for rendering the label
-int paraGui::getGapSize (int objectType, int objectIndex)
+int paraGui::getGapSize(int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (objectType)
@@ -2140,7 +2140,7 @@ int paraGui::getGapSize (int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the position of the label
-int paraGui::getLabelPos (int objectType, int objectIndex)
+int paraGui::getLabelPos(int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (objectType)
@@ -2251,7 +2251,7 @@ int paraGui::getLabelPos (int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the radius value
-int paraGui::getRadius (int objectType, int objectIndex)
+int paraGui::getRadius(int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (objectType)
@@ -2363,7 +2363,7 @@ int paraGui::getRadius (int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the colors for an object and the desired color type
-__PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
+__PARA_COLOR paraGui::getColor(int objectType, int objectIndex, int whichColor)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	__PARA_COLOR badColor;
@@ -2662,7 +2662,7 @@ __PARA_COLOR paraGui::getColor (int objectType, int objectIndex, int whichColor)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the bounding box coordinates for the object
-__BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
+__BOUNDING_BOX paraGui::getBB(int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	__BOUNDING_BOX badBox {};
@@ -2836,7 +2836,7 @@ __BOUNDING_BOX paraGui::getBB (int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Find the object on the current dialogbox and make it active
-void paraGui::setActiveDialogbox (std::string objectID)
+void paraGui::setActiveDialogbox(std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	unsigned long indexCount = 0;
@@ -2859,7 +2859,7 @@ void paraGui::setActiveDialogbox (std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Find the object on the current screen and make it active
-void paraGui::setActive (std::string objectID)
+void paraGui::setActive(std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	unsigned long indexCount = 0;
@@ -2898,7 +2898,7 @@ void paraGui::setActive (std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Is the passed in object ready for use
-bool paraGui::isReady (int objectType, int objectIndex)
+bool paraGui::isReady(int objectType, int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (objectType)
@@ -3046,7 +3046,7 @@ bool paraGui::isReady (int objectType, int objectIndex)
 //-----------------------------------------------------------------------------
 //
 // Return if an object can be selected or not
-bool paraGui::canBeSelected (int objectType, int whichObject)
+bool paraGui::canBeSelected(int objectType, int [[maybe_unused]] whichObject)
 //-----------------------------------------------------------------------------
 {
 	switch (objectType)
@@ -3065,7 +3065,7 @@ bool paraGui::canBeSelected (int objectType, int whichObject)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check if the mouse is inside an elements bounding box on a dialogbox - active it if so
-void paraGui::processMousePositionDialogbox ()
+void paraGui::processMousePositionDialogbox()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static int previousElement = 0;
@@ -3098,7 +3098,7 @@ void paraGui::processMousePositionDialogbox ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check if the mouse is inside an elements bounding box - activate it if it is
-void paraGui::processMousePosition ()
+void paraGui::processMousePosition()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static int previousElement = 0;
@@ -3155,7 +3155,7 @@ void paraGui::processMousePosition ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check movement actions
-void paraGui::processMovementKeysDialogbox ()
+void paraGui::processMovementKeysDialogbox()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int indexCount     = 1;
@@ -3233,7 +3233,7 @@ void paraGui::processMovementKeysDialogbox ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check movement actions
-void paraGui::processMovementKeys ()
+void paraGui::processMovementKeys()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int indexCount     = 1;
@@ -3371,7 +3371,7 @@ void paraGui::processMovementKeys ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Process action key for current dialog
-void paraGui::processActionDialogbox ()
+void paraGui::processActionDialogbox()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int currentElement;
@@ -3407,7 +3407,7 @@ void paraGui::processActionDialogbox ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Process any actions keys
-void paraGui::processAction ()
+void paraGui::processAction()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int currentElement;
@@ -3471,7 +3471,7 @@ void paraGui::processAction ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Update the mouse positions
-void paraGui::setMouse (int newPosX, int newPosY)
+void paraGui::setMouse(int newPosX, int newPosY)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	mouseX = newPosX;
@@ -3483,7 +3483,7 @@ void paraGui::setMouse (int newPosX, int newPosY)
 // Write the keyboard layout to disk - currently using physfs library - assuming its been started
 //
 // TODO: read / write to platforms native byte order
-void paraGui::save ()
+void paraGui::save()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_file   *fileHandle;
@@ -3516,7 +3516,7 @@ void paraGui::save ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Read in the keyboard binding file - currently using physfs library - assuming its been started
-void paraGui::load ()
+void paraGui::load()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_file   *fileHandle;
@@ -3556,7 +3556,7 @@ void paraGui::load ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Display the keybinding table
-void paraGui::print ()
+void paraGui::print()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	funcOutput (-1, int_getString ("--- Key Binding Table ---"));
@@ -3570,7 +3570,7 @@ void paraGui::print ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the state of a key based on PARA_KEY
-bool paraGui::keyDown (int whichKey)
+bool paraGui::keyDown(int whichKey)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((whichKey < KEY_FIRST) || (whichKey > KEY_NUMBER_ACTIONS))
@@ -3585,7 +3585,7 @@ bool paraGui::keyDown (int whichKey)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the state of a key based on PARA_Key index. This will be overwritten next frame when the array is updated
-void paraGui::setState (int whichKey, bool newState, int newActionSource)
+void paraGui::setState(int whichKey, bool newState, int newActionSource)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((whichKey < KEY_FIRST) || (whichKey > KEY_NUMBER_ACTIONS))
@@ -3602,7 +3602,7 @@ void paraGui::setState (int whichKey, bool newState, int newActionSource)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Assign the text description for each key
-void paraGui::setKeyDescription ()
+void paraGui::setKeyDescription()
 //----------------------------------------------------------------------------------------------------------------------
 {
 
@@ -3635,7 +3635,7 @@ void paraGui::setKeyDescription ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the text name of the key
-string paraGui::getKeyName (int keyIndex)
+string paraGui::getKeyName(int keyIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	string keyName;
@@ -3651,7 +3651,7 @@ string paraGui::getKeyName (int keyIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the default values for keybindings
-void paraGui::setDefaultKeybindings ()
+void paraGui::setDefaultKeybindings()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	keyBinding[KEY_LEFT].keyValue       = SDL_SCANCODE_LEFT;
@@ -3668,7 +3668,7 @@ void paraGui::setDefaultKeybindings ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the repeat state for keys
-int paraGui::getRepeatOff ()
+int paraGui::getRepeatOff()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return repeatOff;
@@ -3677,7 +3677,7 @@ int paraGui::getRepeatOff ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set whether keys repeat when held down or not
-void paraGui::setRepeatOff (bool newState)
+void paraGui::setRepeatOff(bool newState)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	repeatOff = newState;
@@ -3686,7 +3686,7 @@ void paraGui::setRepeatOff (bool newState)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a new scancode for a key setting
-void paraGui::setScancode (int whichKey, int newScancode)
+void paraGui::setScancode(int whichKey, int newScancode)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((whichKey < 0) || (whichKey > KEY_NUMBER_ACTIONS))
@@ -3700,7 +3700,7 @@ void paraGui::setScancode (int whichKey, int newScancode)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the current scancode for a key setting
-int paraGui::getScancode (int whichKey)
+int paraGui::getScancode(int whichKey)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((whichKey < 0) || (whichKey > KEY_NUMBER_ACTIONS))
@@ -3712,7 +3712,7 @@ int paraGui::getScancode (int whichKey)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Update the state of the keyboard mappings from the system keyboard state. Don't repeat keys if repeatOff is true
-void paraGui::update ()
+void paraGui::update()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return;
@@ -3749,7 +3749,7 @@ void paraGui::update ()
 //-----------------------------------------------------------------------------
 //
 // Return how many elements are in this slider
-int paraGui::getNumElements (int whichSlider)
+int paraGui::getNumElements(int whichSlider)
 //-----------------------------------------------------------------------------
 {
 	return guiSliders[whichSlider].element.size ();
@@ -3758,7 +3758,7 @@ int paraGui::getNumElements (int whichSlider)
 //-----------------------------------------------------------------------------
 //
 // Get the label for the current step in a slider
-std::string paraGui::sliderElementLabel (int whichSlider)
+std::string paraGui::sliderElementLabel(int whichSlider)
 //-----------------------------------------------------------------------------
 {
 	if (whichSlider > static_cast<int>(guiSliders.size () - 1))
@@ -3770,7 +3770,7 @@ std::string paraGui::sliderElementLabel (int whichSlider)
 //-----------------------------------------------------------------------------
 //
 // Return the number of elements in a slider
-int paraGui::sliderSize (int whichSlider)
+int paraGui::sliderSize(int whichSlider)
 //-----------------------------------------------------------------------------
 {
 	return guiSliders[whichSlider].element.size ();
@@ -3779,7 +3779,7 @@ int paraGui::sliderSize (int whichSlider)
 //-----------------------------------------------------------------------------
 //
 // Return the selector step position for a slider
-int paraGui::getSelectPosition (int whichSlider)
+int paraGui::getSelectPosition(int whichSlider)
 //-----------------------------------------------------------------------------
 {
 	if ((whichSlider < 0) || (whichSlider > static_cast<int>(guiSliders.size () - 1)))
@@ -3791,7 +3791,7 @@ int paraGui::getSelectPosition (int whichSlider)
 //-----------------------------------------------------------------------------
 //
 // Get the value from the current step of a slider
-std::string paraGui::getSliderValue (const std::string &objectID)
+std::string paraGui::getSliderValue(const std::string &objectID)
 //-----------------------------------------------------------------------------
 {
 	int objectIndex = 0;
@@ -3810,7 +3810,7 @@ std::string paraGui::getSliderValue (const std::string &objectID)
 //-----------------------------------------------------------------------------
 //
 // Set the slider to the passed in value
-void paraGui::setSliderValue (const std::string &objectID, const std::string &value)
+void paraGui::setSliderValue(const std::string &objectID, const std::string &value)
 //-----------------------------------------------------------------------------
 {
 	int indexCount = 0;
@@ -3848,7 +3848,7 @@ void paraGui::setSliderValue (const std::string &objectID, const std::string &va
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add an element to a slider
-void paraGui::addNewElement (const std::string &objectID, const std::string &newLabel, const std::string &newValue, int type)
+void paraGui::addNewElement(const std::string &objectID, const std::string &newLabel, const std::string &newValue, int type)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_sliderElement tmpElement;
@@ -3873,7 +3873,7 @@ void paraGui::addNewElement (const std::string &objectID, const std::string &new
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the ticked status of a checkbox
-bool paraGui::getTickedStatus (int objectIndex)
+bool paraGui::getTickedStatus(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return guiCheckBoxes[objectIndex].checked;
@@ -3882,13 +3882,13 @@ bool paraGui::getTickedStatus (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the ticked status of a checkbox - unset all others in the same group
-void paraGui::setTickedStatus (const std::string &objectID, int whichGroup, bool newValue)
+void paraGui::setTickedStatus(const std::string &objectID, int whichGroup, bool newValue)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex = 0;
 	//
 	// Find the index for this object
-	objectIndex                        = getIndex (GUI_OBJECT_CHECKBOX, objectID);
+	objectIndex = getIndex (GUI_OBJECT_CHECKBOX, objectID);
 	if (-1 == objectIndex)
 	{
 		funcOutput (-1, int_getString ("ERROR: Couldn't find GUI object index [ %s ]", objectID.c_str ()));
@@ -3912,7 +3912,7 @@ void paraGui::setTickedStatus (const std::string &objectID, int whichGroup, bool
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Process the key events
-void paraGui::processGuiInput ()
+void paraGui::processGuiInput()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (currentDialogbox == NO_DIALOG_BOX)

@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <system/startup.h>
+#include <system/util.h>
 #include "classes/paraAudio.h"
 
 //#define AUDIO_DEBUG 1
@@ -12,7 +13,7 @@
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Constructor
-paraAudio::paraAudio ()
+paraAudio::paraAudio()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	Mix_Init (0);
@@ -21,27 +22,27 @@ paraAudio::paraAudio ()
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Deconstructor
-paraAudio::~paraAudio ()
+paraAudio::~paraAudio()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	Mix_Quit ();
 
-	auto audioItr = audio.begin();
+	auto audioItr = audio.begin ();
 
-	while (audioItr != audio.end())
+	while (audioItr != audio.end ())
 	{
-		free(audioItr->second.audio);
+		free (audioItr->second.audio);
 
 		audioItr++;
 	}
 
 }
 
-void paraAudio::AddRef ()
+void paraAudio::AddRef()
 {
 }
 
-void paraAudio::ReleaseRef ()
+void paraAudio::ReleaseRef()
 {
 
 }
@@ -50,7 +51,7 @@ void paraAudio::ReleaseRef ()
 //
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
-std::string paraAudio::int_getString (std::string format, ...)
+std::string paraAudio::int_getString(std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	const char *const zcFormat = format.c_str ();
@@ -78,7 +79,7 @@ std::string paraAudio::int_getString (std::string format, ...)
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Init the audio system
-int paraAudio::init (int numMaxActiveChannels, audioFunctionPtrStr outputFunction, audioFunctionPtrLoad loadFunction)
+int paraAudio::init(int numMaxActiveChannels, audioFunctionPtrStr outputFunction, audioFunctionPtrLoad loadFunction)
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	__audioActiveSounds tempActiveSounds;
@@ -94,6 +95,13 @@ int paraAudio::init (int numMaxActiveChannels, audioFunctionPtrStr outputFunctio
 		funcOutput (-1, int_getString ("Unable to open audio - [ %s ]", Mix_GetError ()));
 		return -1;
 	}
+
+	for (auto i = 0; i < SDL_GetNumAudioDrivers (); ++i)
+	{
+		logFile.write (sys_getString ("%i: %s", i, SDL_GetAudioDriver (i)));
+	}
+
+	logFile.write (sys_getString ("Using audio driver: %s\n", SDL_GetCurrentAudioDriver ()));
 
 	if ((numMaxActiveChannels < 0) || (numMaxActiveChannels > MAX_NUM_CHANNELS))
 	{
@@ -120,7 +128,7 @@ int paraAudio::init (int numMaxActiveChannels, audioFunctionPtrStr outputFunctio
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Return the number of channels that are currently playing
-int paraAudio::getNumPlayingChannels ()
+int paraAudio::getNumPlayingChannels()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	return Mix_Playing (-1);
@@ -129,25 +137,25 @@ int paraAudio::getNumPlayingChannels ()
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Pause all sounds from playing
-void paraAudio::pauseAllChannels ()
+void paraAudio::pauseAllChannels()
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	Mix_Pause(-1);
+	Mix_Pause (-1);
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Resume playing all paused sounds
-void paraAudio::resumeAllChannels ()
+void paraAudio::resumeAllChannels()
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	Mix_Resume(-1);
+	Mix_Resume (-1);
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Stop all currently playing channels
-void paraAudio::stopAllChannels ()
+void paraAudio::stopAllChannels()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	Mix_HaltChannel (-1);
@@ -156,14 +164,14 @@ void paraAudio::stopAllChannels ()
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Returns true if current sound is playing
-bool paraAudio::isPlaying(const std::string& keyName)
+bool paraAudio::isPlaying(const std::string &keyName)
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	for (const auto& audioItr : activeSounds)
+	for (const auto &audioItr: activeSounds)
 	{
 		if (keyName == audioItr.keyName)
 		{
-			if (Mix_Playing(audioItr.whichChannel) == 1)
+			if (Mix_Playing (audioItr.whichChannel) == 1)
 				return true;
 		}
 	}
@@ -173,7 +181,7 @@ bool paraAudio::isPlaying(const std::string& keyName)
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Return the current master volume level - to be saved in config file
-int paraAudio::getMasterVolume ()
+int paraAudio::getMasterVolume()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	return currentVolumeLevel;
@@ -183,7 +191,7 @@ int paraAudio::getMasterVolume ()
 //
 // Set the overall volume
 // Use scale of 0 to 10 and map to 0 - MIX_MAX_VOLUME ( 128 )
-void paraAudio::setMasterVolume (int volume)
+void paraAudio::setMasterVolume(int volume)
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	if ((volume < 0) || (volume > PARA_MAX_VOLUME))
@@ -200,10 +208,10 @@ void paraAudio::setMasterVolume (int volume)
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Stop playing a sound based on name
-void paraAudio::stop (std::string keyName)
+void paraAudio::stop(std::string keyName)
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &audioItr : activeSounds)
+	for (auto &audioItr: activeSounds)
 	{
 		if (keyName == audioItr.keyName)
 		{
@@ -219,7 +227,7 @@ void paraAudio::stop (std::string keyName)
 // Distance: 0 (close / loud ) to 255 (far / quiet)
 //
 // Panning: 254 for all left, 127 for center, 0 for all right
-int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
+int paraAudio::play(std::string keyName, bool loop, int distance, int pan)
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	static int numDoorsPlaying = 0;
@@ -240,11 +248,11 @@ int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
 			return -1;
 		}
 
-		for (auto &activeItr : activeSounds)
+		for (auto &activeItr: activeSounds)
 		{
 			if (Mix_Playing (activeItr.whichChannel) == 0)   // Channel is not playing
 			{
-				if (activeItr.doorSound)        // If it was a door sound - decrement counter
+				if (activeItr.doorSound)        // If it was a door sound - decrement counter TODO - Check this. Other sounds are triggering this
 					numDoorsPlaying--;
 
 				Mix_UnregisterAllEffects (activeItr.whichChannel);       // Reset any effects from previous sounds
@@ -275,7 +283,7 @@ int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
 				}
 				else
 				{
-					activeItr.doorSound = false;
+					activeItr.doorSound    = false;
 					activeItr.whichChannel = Mix_PlayChannel(activeItr.whichChannel, audio[keyName].audio, loop ? -1 : 0);
 					activeItr.keyName      = keyName;
 #ifdef AUDIO_DEBUG
@@ -297,7 +305,7 @@ int paraAudio::play (std::string keyName, bool loop, int distance, int pan)
 // Load a pointer to memory as a MIX_Chunk
 //
 // Any extension on the filename is removed, and the remainder becomes the keyName index into the array
-bool paraAudio::load (std::string fileName)
+bool paraAudio::load(std::string fileName)
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	__audio tempAudio;
@@ -330,7 +338,7 @@ bool paraAudio::load (std::string fileName)
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Get the actual details used by the sound device
-void paraAudio::deviceInfo ()
+void paraAudio::deviceInfo()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	int         numTimesOpened = 0;

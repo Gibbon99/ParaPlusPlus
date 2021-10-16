@@ -77,9 +77,9 @@ void gui_renderActiveDialogbox ()
 void gui_renderGUI ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int           indexCount = 0;
-	Uint8         r, g, b, a;
-	SDL_BlendMode tempMode;
+	int indexCount = 0;
+//	Uint8         r, g, b, a;
+//	SDL_BlendMode tempMode;
 
 	//
 	// SDL2_gfx changes the blend mode and draw color

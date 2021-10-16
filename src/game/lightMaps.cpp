@@ -53,7 +53,7 @@ void gam_removeLightmap (Uint32 whichBullet)
 //-----------------------------------------------------------------------------------------------------------
 //
 // Add a new lightmap to the array
-void gam_addNewLightmap (b2Vec2 newWorldPosition, int newType, Uint32 newWhichBullet)
+void gam_addNewLightmap(cpVect newWorldPosition, int newType, Uint32 newWhichBullet)
 //-----------------------------------------------------------------------------------------------------------
 {
 	paraLightmap tempLightmap (newWorldPosition, newType, newWhichBullet);

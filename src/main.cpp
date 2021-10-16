@@ -13,6 +13,7 @@ paraAudio      audio {};
 paraGui        gui {};
 paraStarfield  backgroundStarfield {};
 paraStarfield  sideviewStarfield {};
+paraStarfield  deckviewStarfield {};
 paraSprite     databaseSprite {};
 paraHighScore  highScores {"data/highscore.dat", NUM_HIGHSCORE_ROWS, "DAB", 600, 100};
 
@@ -37,7 +38,7 @@ Uint8  difficultyValue {0};
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the current game time
-Uint32 sys_getCurrentTime ()
+Uint32 sys_getCurrentTime()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return currentTime;
@@ -46,7 +47,7 @@ Uint32 sys_getCurrentTime ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Timer callback to track the Update and Render FPS
-Uint32 fpsCallback (Uint32 interval, void *param)
+Uint32 fpsCallback(Uint32 interval, void *param)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	thinkFPSPrint = thinkFPS;
@@ -60,7 +61,7 @@ Uint32 fpsCallback (Uint32 interval, void *param)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Entry point - fixed update time step with unrestricted rendering
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 //----------------------------------------------------------------------------------------------------------------------
 {
 	double msPerUpdate  = 1000.0f / TICKS_PER_SECOND;

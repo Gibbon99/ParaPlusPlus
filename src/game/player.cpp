@@ -28,13 +28,13 @@ float     bounceCounterDelay;              // From script
 static double angleCounter       = 1.0;
 int           radius             = 40;
 
-std::vector<b2Vec2> playerTrail;
+std::vector<cpVect> playerTrail;
 unsigned long       maxTrailSize = 10;
 
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Render the test circle
-void gam_moveTestCircle ()
+void gam_moveTestCircle()
 //-----------------------------------------------------------------------------------------------------------------
 {
 	static int angle = 0;
@@ -52,7 +52,7 @@ void gam_moveTestCircle ()
 //-----------------------------------------------------------------------------
 //
 // Check and decrement the bump counter
-void gam_checkBumpCounter ()        // TODO - Can be removed?
+void gam_checkBumpCounter()        // TODO - Can be removed?
 //-----------------------------------------------------------------------------
 {
 	if (bounceCounter > 0)
@@ -69,7 +69,7 @@ void gam_checkBumpCounter ()        // TODO - Can be removed?
 //-----------------------------------------------------------------------------
 //
 // Recharge player weapon
-void gam_weaponRechargePlayer ()
+void gam_weaponRechargePlayer()
 //-----------------------------------------------------------------------------
 {
 	if (!playerDroid.getWeaponCanFire ())
@@ -93,7 +93,7 @@ void gam_weaponRechargePlayer ()
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Setup the player droid - run once at start of each new game
-void gam_setupPlayerDroid ()
+void gam_setupPlayerDroid()
 //-----------------------------------------------------------------------------------------------------------------
 {
 	playerDroid.setDroidType (0);
@@ -112,42 +112,42 @@ void gam_setupPlayerDroid ()
 //-----------------------------------------------------------------------------
 //
 // Process player movement
-void gam_processPlayerMovement ()
+void gam_processPlayerMovement()
 //-----------------------------------------------------------------------------
 {
 	if (gui.keyDown (KEY_LEFT))
 	{
-		playerDroid.setVelocity (b2Vec2 {static_cast<float>(playerDroid.getVelocity ().x - playerDroid.ai2.getAcceleration ()), playerDroid.getVelocity ().y});
+		playerDroid.setVelocity (cpVect {static_cast<float>(playerDroid.getVelocity ().x - playerDroid.ai2.getAcceleration ()), playerDroid.getVelocity ().y});
 		if (playerDroid.getVelocity ().x < -playerDroid.ai2.getMaxSpeed ())
 		{
-			playerDroid.setVelocity (b2Vec2 {static_cast<float>(-playerDroid.ai2.getMaxSpeed ()), playerDroid.getVelocity ().y});
+			playerDroid.setVelocity (cpVect {static_cast<float>(-playerDroid.ai2.getMaxSpeed ()), playerDroid.getVelocity ().y});
 		}
 	}
 
 	else if (gui.keyDown (KEY_RIGHT))
 	{
-		playerDroid.setVelocity (b2Vec2 {static_cast<float>(playerDroid.getVelocity ().x + playerDroid.ai2.getAcceleration ()), playerDroid.getVelocity ().y});
+		playerDroid.setVelocity (cpVect {static_cast<float>(playerDroid.getVelocity ().x + playerDroid.ai2.getAcceleration ()), playerDroid.getVelocity ().y});
 		if (playerDroid.getVelocity ().x > playerDroid.ai2.getMaxSpeed ())
 		{
-			playerDroid.setVelocity (b2Vec2 {static_cast<float>(playerDroid.ai2.getMaxSpeed ()), playerDroid.getVelocity ().y});
+			playerDroid.setVelocity (cpVect {static_cast<float>(playerDroid.ai2.getMaxSpeed ()), playerDroid.getVelocity ().y});
 		}
 	}
 
 	if (gui.keyDown (KEY_UP))
 	{
-		playerDroid.setVelocity (b2Vec2 {playerDroid.getVelocity ().x, static_cast<float>(playerDroid.getVelocity ().y - playerDroid.ai2.getAcceleration ())});
+		playerDroid.setVelocity (cpVect {playerDroid.getVelocity ().x, static_cast<float>(playerDroid.getVelocity ().y - playerDroid.ai2.getAcceleration ())});
 		if (playerDroid.getVelocity ().y < -playerDroid.ai2.getMaxSpeed ())
 		{
-			playerDroid.setVelocity (b2Vec2 {playerDroid.getVelocity ().x, static_cast<float>(-playerDroid.ai2.getMaxSpeed ())});
+			playerDroid.setVelocity (cpVect {playerDroid.getVelocity ().x, static_cast<float>(-playerDroid.ai2.getMaxSpeed ())});
 		}
 	}
 
 	else if (gui.keyDown (KEY_DOWN))
 	{
-		playerDroid.setVelocity (b2Vec2 {playerDroid.getVelocity ().x, static_cast<float>(playerDroid.getVelocity ().y + playerDroid.ai2.getAcceleration ())});
+		playerDroid.setVelocity (cpVect {playerDroid.getVelocity ().x, static_cast<float>(playerDroid.getVelocity ().y + playerDroid.ai2.getAcceleration ())});
 		if (playerDroid.getVelocity ().y > playerDroid.ai2.getMaxSpeed ())
 		{
-			playerDroid.setVelocity (b2Vec2 {playerDroid.getVelocity ().x, static_cast<float>(playerDroid.ai2.getMaxSpeed ())});
+			playerDroid.setVelocity (cpVect {playerDroid.getVelocity ().x, static_cast<float>(playerDroid.ai2.getMaxSpeed ())});
 		}
 	}
 
@@ -157,10 +157,10 @@ void gam_processPlayerMovement ()
 	{
 		if (playerDroid.getVelocity ().x < 0.0f)
 		{
-			playerDroid.setVelocity (b2Vec2 {static_cast<float>(playerDroid.getVelocity ().x + gravity), playerDroid.getVelocity ().y});
+			playerDroid.setVelocity (cpVect {static_cast<float>(playerDroid.getVelocity ().x + gravity), playerDroid.getVelocity ().y});
 			if (playerDroid.getVelocity ().x > 0.0f)
 			{
-				playerDroid.setVelocity (b2Vec2 {0.0f, playerDroid.getVelocity ().y});
+				playerDroid.setVelocity (cpVect {0.0f, playerDroid.getVelocity ().y});
 			}
 		}
 	}
@@ -169,10 +169,10 @@ void gam_processPlayerMovement ()
 	{
 		if (playerDroid.getVelocity ().x > 0.0f)
 		{
-			playerDroid.setVelocity (b2Vec2 {static_cast<float>(playerDroid.getVelocity ().x - gravity), playerDroid.getVelocity ().y});
+			playerDroid.setVelocity (cpVect {static_cast<float>(playerDroid.getVelocity ().x - gravity), playerDroid.getVelocity ().y});
 			if (playerDroid.getVelocity ().x < 0.0f)
 			{
-				playerDroid.setVelocity (b2Vec2 {0.0f, playerDroid.getVelocity ().y});
+				playerDroid.setVelocity (cpVect {0.0f, playerDroid.getVelocity ().y});
 			}
 		}
 	}
@@ -181,10 +181,10 @@ void gam_processPlayerMovement ()
 	{
 		if (playerDroid.getVelocity ().y < 0.0f)
 		{
-			playerDroid.setVelocity (b2Vec2 {playerDroid.getVelocity ().x, static_cast<float>(playerDroid.getVelocity ().y + gravity)});
+			playerDroid.setVelocity (cpVect {playerDroid.getVelocity ().x, static_cast<float>(playerDroid.getVelocity ().y + gravity)});
 			if (playerDroid.getVelocity ().y > 0.0f)
 			{
-				playerDroid.setVelocity (b2Vec2 {playerDroid.getVelocity ().x, 0.0f});
+				playerDroid.setVelocity (cpVect {playerDroid.getVelocity ().x, 0.0f});
 			}
 		}
 	}
@@ -193,10 +193,10 @@ void gam_processPlayerMovement ()
 	{
 		if (playerDroid.getVelocity ().y > 0.0f)
 		{
-			playerDroid.setVelocity (b2Vec2 {playerDroid.getVelocity ().x, static_cast<float>(playerDroid.getVelocity ().y - gravity)});
+			playerDroid.setVelocity (cpVect {playerDroid.getVelocity ().x, static_cast<float>(playerDroid.getVelocity ().y - gravity)});
 			if (playerDroid.getVelocity ().y < 0.0f)
 			{
-				playerDroid.setVelocity (b2Vec2 {playerDroid.getVelocity ().x, 0.0f});
+				playerDroid.setVelocity (cpVect {playerDroid.getVelocity ().x, 0.0f});
 			}
 		}
 	}
@@ -205,7 +205,7 @@ void gam_processPlayerMovement ()
 //----------------------------------------------------------------------------
 //
 // Start all the actions resulting from pressing the action key
-void gam_processActionKey ()
+void gam_processActionKey()
 //----------------------------------------------------------------------------
 {
 	gam_setHudText ("hudMoving");
@@ -280,7 +280,7 @@ void gam_processActionKey ()
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Check the players health, and set low health for animation
-void gam_checkPlayerHealth ()
+void gam_checkPlayerHealth()
 //-----------------------------------------------------------------------------------------------------------------
 {
 	float dangerHealthLevel;
@@ -295,7 +295,7 @@ void gam_checkPlayerHealth ()
 		{
 			playerDroid.setCurrentMode (DROID_MODE_EXPLODING);
 
-			playerDroid.setVelocity (b2Vec2 {0, 0});
+			playerDroid.setVelocity (cpVect {0, 0});
 			playerDroid.sprite.create ("explosion", 25, explosionAnimationSpeed);
 			playerDroid.sprite.setAnimateSpeed (explosionAnimationSpeed);      // Set for explosion animation
 
@@ -304,7 +304,7 @@ void gam_checkPlayerHealth ()
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode1");
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
 
-			gam_addEmitter (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ()), PARTICLE_TYPE_EXPLOSION, 0);
+			gam_addEmitter (playerDroid.getWorldPosInPixels (), PARTICLE_TYPE_EXPLOSION, 0);
 
 			sys_clearDroidPhysics (gam_getCurrentDeckName ());
 
@@ -348,7 +348,7 @@ void gam_checkPlayerHealth ()
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Damage to player droid
-void gam_damageToPlayer (int damageSource, int sourceDroid)
+void gam_damageToPlayer(int damageSource, int sourceDroid)
 //-----------------------------------------------------------------------------------------------------------------
 {
 
@@ -389,7 +389,7 @@ void gam_damageToPlayer (int damageSource, int sourceDroid)
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Set the influence time limit - based on droid class
-void gam_setInfluenceTimelimit (int targetDroidClass)
+void gam_setInfluenceTimelimit(int targetDroidClass)
 //-----------------------------------------------------------------------------------------------------------------
 {
 	playerDroid.setInfluenceTimeLeft (influenceTimelimit - (static_cast<float>(targetDroidClass) * 2));
@@ -399,7 +399,7 @@ void gam_setInfluenceTimelimit (int targetDroidClass)
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Reset the Influence time flag - so player doesn't change color
-void gam_resetInfluenceTimeLeftFlag ()
+void gam_resetInfluenceTimeLeftFlag()
 //-----------------------------------------------------------------------------------------------------------------
 {
 	playerDroid.setLowInfluenceTimeLeft (false);
@@ -408,7 +408,7 @@ void gam_resetInfluenceTimeLeftFlag ()
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Process how long a droid can be controlled for
-void gam_processInfluenceTime ()
+void gam_processInfluenceTime()
 //-----------------------------------------------------------------------------------------------------------------
 {
 	if (playerDroid.getDroidType () == 0)
@@ -440,10 +440,10 @@ void gam_processInfluenceTime ()
 
 	if (playerDroid.getInfluenceTimeLeft () < 0.0f)
 	{
-		playerDroid.setVelocity (b2Vec2 {0, 0});
+		playerDroid.setVelocity (cpVect {0, 0});
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "explode2");
-		gam_addEmitter (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ()), PARTICLE_TYPE_EXPLOSION, 0);
-		gam_addEmitter (sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ()), PARTICLE_TYPE_EXPLOSION, 0);
+		gam_addEmitter (playerDroid.getWorldPosInPixels (), PARTICLE_TYPE_EXPLOSION, 0);
+		gam_addEmitter (playerDroid.getWorldPosInPixels (), PARTICLE_TYPE_EXPLOSION, 0);
 		trn_transferLostGame ();
 		playerDroid.sprite.setTintColor (255, 255, 255);
 		playerDroid.influenceFadeFlag = false;
@@ -463,10 +463,10 @@ void gam_processInfluenceTime ()
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Create a breadcrumb trail as the player moves around
-void gam_createTrail ()
+void gam_createTrail()
 //-----------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 tempPosition;
+	cpVect tempPosition;
 
 	tempPosition = sys_convertPixelsToTiles (playerDroid.getWorldPosInPixels ());
 
@@ -476,7 +476,7 @@ void gam_createTrail ()
 		return;
 	}
 
-	if (tempPosition != playerTrail[0])
+	if ((tempPosition.x != playerTrail[0].x) && (tempPosition.y != playerTrail[0].y))
 	{
 		if (playerTrail.size () < maxTrailSize)
 		{
@@ -497,10 +497,10 @@ void gam_createTrail ()
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Return the coordinates from the last position in the trial array
-b2Vec2 gam_getLastPlayerTrail ()
+cpVect gam_getLastPlayerTrail()
 //-----------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 returnCoords;
+	cpVect returnCoords;
 
 	if (playerTrail.size () == 0)
 	{
@@ -514,7 +514,7 @@ b2Vec2 gam_getLastPlayerTrail ()
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Reset the trail data when changing to a new level
-void gam_clearPlayerTrail ()
+void gam_clearPlayerTrail()
 //-----------------------------------------------------------------------------------------------------------------
 {
 	playerTrail.clear ();
@@ -523,10 +523,10 @@ void gam_clearPlayerTrail ()
 //-----------------------------------------------------------------------------------------------------------------
 //
 // Show the player trail
-void gam_debugShowPlayerTrail ()
+void gam_debugShowPlayerTrail()
 //-----------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 drawPosition;
+	cpVect drawPosition;
 
 	for (auto trailItr: playerTrail)
 	{

@@ -1,25 +1,49 @@
-#include <sdl2_gfx/SDL2_gfxPrimitives.h>
-#include <game/shipDecks.h>
-#include <system/util.h>
+#include <cassert>
 #include <game/player.h>
+#include <classes/paraBullet.h>
+#include <system/util.h>
 #include <system/gameEvents.h>
-#include <game/particles.h>
-#include <game/audio.h>
-#include <game/lifts.h>
 #include "game/physicsCollisions.h"
 
-#include "classes/paraBullet.h"
+cpBool doWallCollisions = cpTrue;
 
-bool doWallCollisions = true;
+cpCollisionHandler *handlerWallPlayer;
+cpCollisionHandler *handlerDroidToPlayer;
+cpCollisionHandler *handlerDroidToDroid;
+cpCollisionHandler *handlerPlayerToLiftSensorBegin;
+cpCollisionHandler *handlerPlayerToLiftSensorEnd;
+cpCollisionHandler *handlerPlayerToHealingSensorBegin;
+cpCollisionHandler *handlerPlayerToHealingSensorEnd;
+cpCollisionHandler *handlerPlayerToTerminalSensorBegin;
+cpCollisionHandler *handlerPlayerToTerminalSensorEnd;
+cpCollisionHandler *handlerPlayerBulletToWall;
+cpCollisionHandler *handlerDroidBulletToWall;
+cpCollisionHandler *handlerPlayerBulletToDroid;
+cpCollisionHandler *handlerDroidBulletToDroid;
+cpCollisionHandler *handlerDroidBulletToPlayer;
+cpCollisionHandler *handlerEnemyBulletToPlayerBullet;
+cpCollisionHandler *handlerEnemyBulletToEnemyBullet;
+cpCollisionHandler *handlerBulletToDoor;
 
-contactListener myContactListenerInstance;
+cpCollisionHandler *handlerParticleToDroid;
 
-paraDebugDraw g_paraDebugDraw;
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Post step remove to remove a object from the world
+static void postStepRemove(cpSpace *space, cpShape *shape, void *unused)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	cpSpaceRemoveBody (space, cpShapeGetBody (shape));
+	cpSpaceRemoveShape (space, shape);
+
+	cpBodyFree (cpShapeGetBody (shape));
+	cpShapeFree (shape);
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set player vs wall collisions
-void gam_setWallCollisions (bool newState)
+void gam_setWallCollisions(bool newState)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	doWallCollisions = newState;
@@ -27,637 +51,344 @@ void gam_setWallCollisions (bool newState)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Default constructor
-paraDebugDraw::paraDebugDraw () = default;
-//----------------------------------------------------------------------------------------------------------------------
-
-//----------------------------------------------------------------------------------------------------------------------
+// Collision between player and wall
+// Used to ignore collisions for debugging
 //
-// Default deconstructor
-paraDebugDraw::~paraDebugDraw () = default;
-//----------------------------------------------------------------------------------------------------------------------
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Draw a debug polygon outline shape
-void paraDebugDraw::DrawPolygon (const b2Vec2 *vertices, int32 vertexCount, const b2Color &color)
+unsigned char handleCollisionPlayerWall(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	std::vector<short> xCoords;
-	std::vector<short> yCoords;
-	b2Vec2             tempPosition;
-
-	for (auto i = 0; i != vertexCount; i++)
-	{
-		tempPosition.x = vertices[i].x;
-		tempPosition.y = vertices[i].y;
-		tempPosition *= pixelsPerMeter;
-
-		tempPosition = sys_worldToScreen (tempPosition, 32);
-
-		xCoords.push_back (tempPosition.x);
-		yCoords.push_back (tempPosition.y);
-	}
-	polygonRGBA (renderer.renderer, &xCoords[0], &yCoords[0], vertexCount, color.r * 255, color.g * 0, color.b * 255, color.a * 255);
+	return doWallCollisions;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Draw a sold polygon shape
-void paraDebugDraw::DrawSolidPolygon (const b2Vec2 *vertices, int32 vertexCount, const b2Color &color)
+// Handle two droid colliding - could be DROID to PLAYER, or DROID to DROID
+unsigned char handleCollisionDroidToDroid(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	std::vector<short> xCoords;
-	std::vector<short> yCoords;
-	b2Vec2             tempPosition;
-
-	for (auto i = 0; i != vertexCount; i++)
-	{
-		tempPosition.x = vertices[i].x;
-		tempPosition.y = vertices[i].y;
-		tempPosition *= pixelsPerMeter;
-
-		tempPosition = sys_worldToScreen (tempPosition, 32);
-
-		xCoords.push_back (tempPosition.x);
-		yCoords.push_back (tempPosition.y);
-	}
-	filledPolygonRGBA (renderer.renderer, &xCoords[0], &yCoords[0], vertexCount, color.r * 0, color.g * 255, color.b * 255, color.a * 255);
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Draw a circle outline
-void paraDebugDraw::DrawCircle (const b2Vec2 &center, float radius, const b2Color &color)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	b2Vec2 tempPosition {};
-
-	tempPosition.x = center.x;
-	tempPosition.y = center.y;
-	tempPosition *= pixelsPerMeter;
-	radius *= static_cast<float>(pixelsPerMeter);
-
-	tempPosition = sys_worldToScreen (tempPosition, static_cast<int>(radius));
-
-	circleRGBA (renderer.renderer, tempPosition.x, tempPosition.y, radius, color.r * 255, color.g * 255, color.b * 255, color.a * 255);
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Draw a solid circle shape
-void paraDebugDraw::DrawSolidCircle (const b2Vec2 &center, float radius, const b2Vec2 &axis, const b2Color &color)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	b2Vec2 tempPosition {};
-
-	tempPosition.x = center.x;
-	tempPosition.y = center.y;
-	tempPosition *= pixelsPerMeter;
-	radius *= static_cast<float>(pixelsPerMeter);
-
-	tempPosition = sys_worldToScreen (tempPosition, static_cast<int>(radius));
-
-	filledCircleRGBA (renderer.renderer, tempPosition.x, tempPosition.y, radius, color.r * 255, color.g * 255, color.b * 255, color.a * 255);
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Draw a line segment
-void paraDebugDraw::DrawSegment (const b2Vec2 &p1, const b2Vec2 &p2, const b2Color &color)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	b2Vec2 point1 {};
-	b2Vec2 point2 {};
-
-	point1.x = p1.x;
-	point1.y = p1.y;
-	point2.x = p2.x;
-	point2.y = p2.y;
-
-	point1 *= pixelsPerMeter;
-	point2 *= pixelsPerMeter;
-
-	point1 = sys_worldToScreen (point1, static_cast<int>(point1.x - point2.x));
-	point2 = sys_worldToScreen (point2, static_cast<int>(point1.x - point2.x));
-
-	lineRGBA (renderer.renderer, point1.x, point1.y, point2.x, point2.y, color.r * 255, color.g * 255, color.b * 255, color.a * 255);
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-//
-void paraDebugDraw::DrawTransform (const b2Transform &xf)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	auto temp = xf;
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Draw a single point
-void paraDebugDraw::DrawPoint (const b2Vec2 &p, float size, const b2Color &color)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	b2Vec2 point1 {};
-
-	point1.x = p.x;
-	point1.y = p.y;
-
-	point1 *= pixelsPerMeter;
-
-	point1 = sys_worldToScreen (point1, static_cast<int>(size));
-
-	pixelRGBA (renderer.renderer, point1.x, point1.y, color.r * 255, color.g * 255, color.b * 255, color.a * 255);
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Called when a contact is first made - put an event on the queue for action
-void contactListener::BeginContact (b2Contact *contact)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	_userData *bodyUserData_A;
-	_userData *bodyUserData_B;
-	b2Vec2    renderPosition;
-
-	b2Fixture *fixtureA = contact->GetFixtureA ();
-	b2Fixture *fixtureB = contact->GetFixtureB ();
-
-	bodyUserData_A = static_cast<_userData *>(fixtureA->GetBody ()->GetUserData ());
-	bodyUserData_B = static_cast<_userData *>(fixtureB->GetBody ()->GetUserData ());
-
-	if (stopContactPhysicsBugFlag)
-		return;
-
-	switch (bodyUserData_A->userType)
-	{
-		case PHYSIC_TYPE_BULLET_ENEMY:
-			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
-			{
-				// Target, source
-				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", -1, PHYSIC_DAMAGE_BULLET, bodyUserData_A->dataValue));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
-				return;
-			}
-
-			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
-			{
-				if (bodyUserData_A->dataValue == bodyUserData_B->dataValue)
-					return;
-
-				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BULLET, bodyUserData_A->dataValue));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
-				return;
-			}
-
-			if (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_PLAYER)
-			{
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_A->ID)].worldPosInMeters;
-				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
-				return;
-			}
-
-			if (bodyUserData_B->userType == PHYSICS_TYPE_BULLET_ENEMY)
-			{
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_A->ID)].worldPosInMeters;
-				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_BULLET_PLAYER:
-			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
-			{
-				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BULLET, bodyUserData_A->dataValue));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
-				return;
-			}
-
-			if (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY)
-			{
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_A->ID)].worldPosInMeters;
-				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_WALL:
-		case PHYSIC_TYPE_DOOR_BULLET:
-			if ((bodyUserData_B->userType == PHYSIC_TYPE_BULLET_PLAYER) || (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY))
-			{
-				auto bulletIndex = gam_getArrayIndex (bodyUserData_B->ID);
-
-				renderPosition = bullets[bulletIndex].worldPosInMeters;
-				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_TERMINAL:
-			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
-			{
-				playerDroid.setOverTerminalTile (true);
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_LIFT:
-			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
-			{
-				playerDroid.setOverLiftTile (true);
-				playerDroid.setLiftIndex (bodyUserData_A->dataValue);
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_HEALING:
-			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
-			{
-				playerDroid.setOverHealingTile (true);
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "energyHeal");
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_PLAYER:
-			if (!playerDroid.getInTransferMode ())
-			{
-				if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
-				{
-					gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BUMP, -1));
-					return;
-				}
-			}
-			else
-			{
-				if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
-				{
-					gam_addEvent (EVENT_ACTION_INIT_TRANSFER_MODE, 0, sys_getString ("%i|", bodyUserData_B->dataValue));
-					return;
-				}
-			}
-			break;
-
-		case PHYSIC_TYPE_ENEMY:
-			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
-			{
-				if (!bodyUserData_B->ignoreCollisionDroid)
-					gam_addEvent (EVENT_ACTION_DROID_COLLISION, 0, sys_getString ("%i|", bodyUserData_B->dataValue));
-			}
-			break;
-	}
-
-	//--------------------------------------------------------
+	// Get the cpShapes involved in the collision
 	//
-	// Test for second collision type
+	// The order is A = ENEMY and B = PLAYER if userData.dataType == -1
 	//
-	//--------------------------------------------------------
-	switch (bodyUserData_B->userType)
+	//  Or A = ENEMY and B = ENEMY
+
+	cpShape       *a, *b;
+	cpDataPointer dataPointerA, dataPointerB;
+
+	cpArbiterGetShapes (arb, &a, &b);
+
+	dataPointerA = cpShapeGetUserData (a);      // Enemy droid
+	dataPointerB = cpShapeGetUserData (b);      // Player droid
+
+	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
+	auto *userDataB = reinterpret_cast<_userData *>(dataPointerB);
+
+	if (-1 == userDataB->dataValue)     // Player
 	{
-		case PHYSIC_TYPE_BULLET_ENEMY:
-			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
-			{
-				// Target, source
-				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", -1, PHYSIC_DAMAGE_BULLET, bodyUserData_B->dataValue));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
-				return;
-			}
-
-			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
-			{
-				if (bodyUserData_B->dataValue == bodyUserData_A->dataValue)
-					return;
-
-				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_A->dataValue, PHYSIC_DAMAGE_BULLET, bodyUserData_B->dataValue));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
-				return;
-			}
-
-			if (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_PLAYER)
-			{
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_B->ID)].worldPosInMeters;
-				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
-				return;
-			}
-
-			if (bodyUserData_A->userType == PHYSICS_TYPE_BULLET_ENEMY)
-			{
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_B->ID)].worldPosInMeters;
-				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
-			}
-			break;
-
-		case PHYSIC_TYPE_BULLET_PLAYER:
+		if (playerDroid.getInTransferMode ())
 		{
-			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
-			{
-				gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_A->dataValue, PHYSIC_DAMAGE_BULLET, -1));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
-				return;
-			}
-
-			if (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_ENEMY)
-			{
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_A->ID)].worldPosInMeters;
-				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_B->ID));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
-				return;
-			}
+			cpBodySetVelocity (playerDroid.body, cpvzero);
+			gam_setDroidVelocity (userDataA->dataValue, cpvzero);
+			gam_addEvent (EVENT_ACTION_INIT_TRANSFER_MODE, 0, sys_getString ("%i|", userDataA->dataValue));
+			return cpFalse;
 		}
-			break;
 
-		case PHYSIC_TYPE_WALL:
-		case PHYSIC_TYPE_DOOR_BULLET:
-			if ((bodyUserData_A->userType == PHYSIC_TYPE_BULLET_PLAYER) || (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_ENEMY))
-			{
-				renderPosition = bullets[gam_getArrayIndex (bodyUserData_A->ID)].worldPosInMeters;
-				gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
-				gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", bodyUserData_A->ID));
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_TERMINAL:
-			if (bodyUserData_A->userType == PHYSIC_TYPE_TERMINAL)
-			{
-				playerDroid.setOverTerminalTile (true);
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_LIFT:
-			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
-			{
-				playerDroid.setOverLiftTile (true);
-				playerDroid.setLiftIndex (bodyUserData_B->dataValue);
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_HEALING:
-			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
-			{
-				playerDroid.setOverHealingTile (true);
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "energyHeal");
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_PLAYER:
-			if (!playerDroid.getInTransferMode ())
-			{
-				if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
-				{
-					// int targetDroid, int damageSource, int sourceDroid,
-					gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", bodyUserData_A->dataValue, PHYSIC_DAMAGE_BUMP, -1));
-				}
-			}
-			else
-			{
-				if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
-				{
-					gam_addEvent (EVENT_ACTION_INIT_TRANSFER_MODE, 0, sys_getString ("%i|", bodyUserData_A->dataValue));
-				}
-			}
-			break;
-
-		case PHYSIC_TYPE_ENEMY:
-			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
-			{
-				if (!bodyUserData_A->ignoreCollisionDroid)
-					gam_addEvent (EVENT_ACTION_DROID_COLLISION, 0, sys_getString ("%i|", bodyUserData_A->dataValue));
-			}
-			break;
+		if (gam_getDroidCurrentMode (userDataA->dataValue) == DROID_MODE_EXPLODING)      // Damage to player from exploding droid
+		{
+			gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", userDataB->dataValue, PHYSIC_DAMAGE_EXPLOSION, userDataA->dataValue));
+			return cpFalse;
+		}
 	}
+
+	//
+	// Two Droids colliding
+	if (gam_getDroidCurrentMode (userDataA->dataValue) == DROID_MODE_EXPLODING)
+	{
+		gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", userDataB->dataValue, PHYSIC_DAMAGE_EXPLOSION, userDataA->dataValue));
+		return cpFalse;
+	}
+
+	//
+	// Two Droids colliding
+	if (gam_getDroidCurrentMode (userDataB->dataValue) == DROID_MODE_EXPLODING)
+	{
+		gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", userDataA->dataValue, PHYSIC_DAMAGE_EXPLOSION, userDataB->dataValue));
+		return cpFalse;
+	}
+
+	if ((userDataA->ignoreCollisionDroid) || (userDataB->ignoreCollisionDroid))
+		return cpFalse;
+
+	if (userDataB->ignoreCollisionPlayer)
+		return cpFalse;
+
+	gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", userDataA->dataValue, PHYSIC_DAMAGE_BUMP, userDataB->dataValue));
+
+	std::cout << "Droid [ " << userDataB->dataValue << " ] Collided with droid [ " << userDataA->dataValue << " ] " << std::endl;
+
+	return true;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Called when a contact is broken - no contact anymore
-void contactListener::EndContact (b2Contact *contact)
+// Player has left a lift sensor
+void handleSensorPlayerToLiftEnd(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	_userData *bodyUserData_A;
-	_userData *bodyUserData_B;
-
-	bodyUserData_A = static_cast<_userData *>(contact->GetFixtureA ()->GetBody ()->GetUserData ());
-	bodyUserData_B = static_cast<_userData *>(contact->GetFixtureB ()->GetBody ()->GetUserData ());
-
-	if (stopContactPhysicsBugFlag)
-		return;
-
-	switch (bodyUserData_A->userType)
-	{
-		case PHYSIC_TYPE_TERMINAL:
-			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
-			{
-				playerDroid.setOverTerminalTile (false);
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_LIFT:
-			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
-			{
-				playerDroid.setOverLiftTile (false);
-				playerDroid.setLiftIndex (-1);
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_HEALING:
-			if (bodyUserData_B->userType == PHYSIC_TYPE_PLAYER)
-			{
-				playerDroid.setOverHealingTile (false);
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
-				return;
-			}
-			break;
-	}
-
-	switch (bodyUserData_B->userType)
-	{
-		case PHYSIC_TYPE_TERMINAL:
-			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
-			{
-				playerDroid.setOverTerminalTile (false);
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_LIFT:
-			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
-			{
-				playerDroid.setOverLiftTile (false);
-				playerDroid.setLiftIndex (-1);
-				return;
-			}
-			break;
-
-		case PHYSIC_TYPE_HEALING:
-			if (bodyUserData_A->userType == PHYSIC_TYPE_PLAYER)
-			{
-				playerDroid.setOverHealingTile (false);
-				gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
-				return;
-			}
-			break;
-	}
+	playerDroid.setOverLiftTile (false);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Called before the collision resolution is run
-//
-// Sst contact->SetEnabled (false); to ignore collision
-void contactListener::PreSolve (b2Contact *contact, const b2Manifold *manifold)
+// Player is over a lift sensor
+unsigned char handleSensorPlayerToLiftBegin(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	auto      temp = manifold;
-	_userData *bodyUserData_A;
-	_userData *bodyUserData_B;
+	cpShape       *a, *b;
+	cpDataPointer dataPointerB;
 
-	bodyUserData_A = static_cast<_userData *>(contact->GetFixtureA ()->GetBody ()->GetUserData ());
-	bodyUserData_B = static_cast<_userData *>(contact->GetFixtureB ()->GetBody ()->GetUserData ());
+	cpArbiterGetShapes (arb, &a, &b);
+	dataPointerB = cpShapeGetUserData (b);
 
-	if (stopContactPhysicsBugFlag)
-		return;
+	auto *userDataB = reinterpret_cast<_userData *>(dataPointerB);
 
-	switch (bodyUserData_A->userType)
-	{
-		case PHYSIC_TYPE_PLAYER:
-			if (bodyUserData_B->userType == PHYSIC_TYPE_WALL)
-			{
-				contact->SetEnabled (doWallCollisions);
-				return;
-			}
+	playerDroid.setLiftIndex (userDataB->dataValue);
+	playerDroid.setOverLiftTile (true);
 
-			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
-			{
-				if (bodyUserData_B->ignoreCollisionPlayer)
-				{
-					contact->SetEnabled (false);
-					return;
-				}
-			}
-			break;
+	return cpTrue;
+}
 
-		case PHYSIC_TYPE_ENEMY:
-			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
-			{
-				if (bodyUserData_A->ignoreCollisionDroid)
-				{
-					contact->SetEnabled (false);
-					return;
-				}
-			}
-			break;
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Player has left a healing tile sensor
+void handleSensorPlayerToHealingEnd(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	playerDroid.setOverHealingTile (false);
+}
 
-		case PHYSIC_TYPE_BULLET_PLAYER:
-		{
-			if (bodyUserData_B->userType == PHYSIC_TYPE_ENEMY)
-			{
-//				gam_addEvent(EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString("%i|%i|%i", bodyUserData_B->dataValue, PHYSIC_DAMAGE_BULLET, bodyUserData_A->dataValue));
-//				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Player is over a healing tile sensor
+unsigned char handleSensorPlayerToHealingBegin(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	playerDroid.setOverHealingTile (true);
 
-//				bullets[bodyUserData_A->dataValue].inUse = false;
-//				contact->SetEnabled(false);
+	return cpTrue;
+}
 
-				return;
-			}
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Player has left a terminal tile sensor
+void handleSensorPlayerToTerminalEnd(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	playerDroid.setOverTerminalTile (cpFalse);
+}
 
-			if (bodyUserData_B->userType == PHYSIC_TYPE_BULLET_ENEMY)
-			{
-				//				par_addEmitter (bullets[bodyUserData_B->dataValue].m_worldPos, PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
-//				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
-//				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
-//				contact->SetEnabled(false);
-//				return;
-			}
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Player is over a terminal tile sensor
+unsigned char handleSensorPlayerToTerminalBegin(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	playerDroid.setOverTerminalTile (cpTrue);
 
-			if (bodyUserData_B->userType == PHYSIC_TYPE_WALL)
-			{
-//				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
+	return cpTrue;
+}
 
-//				bullets[bodyUserData_A->dataValue].inUse = false;
-//				contact->SetEnabled(false);
-//				return;
-			}
-		}
-			break;
-	}
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Bullet hits a wall
+unsigned char handleBulletToWall(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	cpShape       *a, *b;
+	cpDataPointer dataPointerA;
 
-	switch (bodyUserData_B->userType)
-	{
-		case PHYSIC_TYPE_PLAYER:
-			if (bodyUserData_A->userType == PHYSIC_TYPE_WALL)
-			{
-				contact->SetEnabled (doWallCollisions);
-				return;
-			}
-			break;
+	cpArbiterGetShapes (arb, &a, &b);
+	dataPointerA = cpShapeGetUserData (a);
 
-		case PHYSIC_TYPE_ENEMY:
-			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
-			{
-				if (bodyUserData_B->ignoreCollisionDroid)
-					contact->SetEnabled (false);
-				return;
-			}
-			break;
+	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
 
-		case PHYSIC_TYPE_BULLET_PLAYER:
-		{
-			if (bodyUserData_A->userType == PHYSIC_TYPE_ENEMY)
-			{
-//				gam_addEvent(EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString("%i|%i|%i", bodyUserData_A->dataValue, PHYSIC_DAMAGE_BULLET, -1));
-//				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
+	auto renderPosition = bullets[gam_getArrayIndex (userDataA->bulletID)].worldPosInPixels;    // TODO Do this with a function, not a call into the array
+	gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
+	gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
 
-//				bullets[bodyUserData_B->dataValue].inUse = false;
-//				contact->SetEnabled(false);
+	cpSpaceAddPostStepCallback (space, reinterpret_cast<cpPostStepFunc>(postStepRemove), a, nullptr);
+}
 
-//				return;
-			}
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Handle a bullet hitting a bullet
+unsigned char handleBulletToBullet(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	cpShape       *a, *b;
+	cpDataPointer dataPointerA;
+	cpDataPointer dataPointerB;
 
-			if (bodyUserData_A->userType == PHYSIC_TYPE_BULLET_ENEMY)
-			{
-				//				par_addEmitter (bullets[bodyUserData_B->dataValue].m_worldPos, PARTICLE_TYPE_SPARK, bodyUserData_B->dataValue);
-//				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
-//				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_A->dataValue));
-//				contact->SetEnabled(false);
-//				return;
-			}
+	cpArbiterGetShapes (arb, &a, &b);
+	dataPointerA = cpShapeGetUserData (a);
+	dataPointerB = cpShapeGetUserData (b);
 
-			if (bodyUserData_A->userType == PHYSIC_TYPE_WALL)
-			{
-//				gam_addEvent(EVENT_ACTION_REMOVE_BULLET, 0, sys_getString("%i|", bodyUserData_B->dataValue));
+	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
+	auto *userDataB = reinterpret_cast<_userData *>(dataPointerB);
 
-//				bullets[bodyUserData_B->dataValue].inUse = false;
-//				contact->SetEnabled(false);
+	auto renderPosition = bullets[gam_getArrayIndex (userDataA->bulletID)].worldPosInPixels;    // TODO Do this with a function, not a call into the array
+	gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
+	gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
 
-				return;
-			}
-		}
-			break;
-	}
+	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
+	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataB->bulletID));
+
+	cpSpaceAddPostStepCallback (space, reinterpret_cast<cpPostStepFunc>(postStepRemove), a, nullptr);
+	cpSpaceAddPostStepCallback (space, reinterpret_cast<cpPostStepFunc>(postStepRemove), b, nullptr);
+
+	return cpFalse;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Handle a bullet hitting a droid - either player or droid
+unsigned char handleBulletToDroid(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	cpShape       *a, *b;
+	cpDataPointer dataPointerA;
+	cpDataPointer dataPointerB;
+
+	cpArbiterGetShapes (arb, &a, &b);
+	dataPointerA = cpShapeGetUserData (a);  // a is the bullet - either player or another droids
+	dataPointerB = cpShapeGetUserData (b);  // b is which droid
+
+	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
+	auto *userDataB = reinterpret_cast<_userData *>(dataPointerB);
+
+	if (userDataA->dataValue == userDataB->dataValue)
+		return cpFalse;
+
+	gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", userDataB->dataValue, PHYSIC_DAMAGE_BULLET, userDataA->dataValue));
+	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
+	cpSpaceAddPostStepCallback (space, reinterpret_cast<cpPostStepFunc>(postStepRemove), a, nullptr);
+
+	printf ("Running bullet to droid.\n");
+
+	return cpFalse;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Handle a bullet hitting a door
+unsigned char handleBulletToDoor(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	cpShape       *a, *b;
+	cpDataPointer dataPointerA;
+
+	cpArbiterGetShapes (arb, &a, &b);
+	dataPointerA = cpShapeGetUserData (a);  // a is the bullet - either player or another droids
+
+	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
+
+	auto renderPosition = bullets[gam_getArrayIndex (userDataA->bulletID)].worldPosInPixels;    // TODO Do this with a function, not a call into the array
+	gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
+	gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
+
+	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
+
+	cpSpaceAddPostStepCallback (space, reinterpret_cast<cpPostStepFunc>(postStepRemove), a, nullptr);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Setup all the collision handlers
+void sys_setupCollisionHandlers()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	//
+	// Handle PLAYER hitting a WALL
+	//
+	handlerWallPlayer = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_PLAYER, PHYSIC_TYPE_WALL);
+	handlerWallPlayer->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleCollisionPlayerWall);
+	//
+	// Collision between player and a droid
+	//
+	handlerDroidToPlayer = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_ENEMY, PHYSIC_TYPE_PLAYER);
+	handlerDroidToPlayer->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleCollisionDroidToDroid);
+	//
+	// Collision between droid and droid
+	//
+	handlerDroidToDroid = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_ENEMY, PHYSIC_TYPE_ENEMY);
+	handlerDroidToDroid->beginFunc = reinterpret_cast<cpCollisionBeginFunc >(handleCollisionDroidToDroid);
+	//
+	// Player is over lift sensor
+	handlerPlayerToLiftSensorBegin = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_PLAYER, PHYSIC_TYPE_LIFT);
+	handlerPlayerToLiftSensorBegin->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleSensorPlayerToLiftBegin);
+	//
+	// Player has left a lift sensor
+	handlerPlayerToLiftSensorEnd = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_PLAYER, PHYSIC_TYPE_LIFT);
+	handlerPlayerToLiftSensorEnd->separateFunc = reinterpret_cast<cpCollisionSeparateFunc>(handleSensorPlayerToLiftEnd);
+	//
+	// Player is over healing sensor
+	handlerPlayerToHealingSensorBegin = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_PLAYER, PHYSIC_TYPE_HEALING);
+	handlerPlayerToHealingSensorBegin->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleSensorPlayerToHealingBegin);
+	//
+	// Player has left a healing sensor
+	handlerPlayerToHealingSensorEnd = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_PLAYER, PHYSIC_TYPE_HEALING);
+	handlerPlayerToHealingSensorEnd->separateFunc = reinterpret_cast<cpCollisionSeparateFunc>(handleSensorPlayerToHealingEnd);
+	//
+	// Player is over terminal sensor
+	handlerPlayerToTerminalSensorBegin = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_PLAYER, PHYSIC_TYPE_TERMINAL);
+	handlerPlayerToTerminalSensorBegin->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleSensorPlayerToTerminalBegin);
+	//
+	// Player has left a terminal sensor
+	handlerPlayerToTerminalSensorEnd = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_PLAYER, PHYSIC_TYPE_TERMINAL);
+	handlerPlayerToTerminalSensorEnd->separateFunc = reinterpret_cast<cpCollisionSeparateFunc>(handleSensorPlayerToTerminalEnd);
+	//
+	// Player bullet hits a wall - remove it
+	handlerPlayerBulletToWall = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_BULLET_PLAYER, PHYSIC_TYPE_WALL);
+	handlerPlayerBulletToWall->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleBulletToWall);
+	//
+	// Droid bullet hits a wall - remove it
+	handlerDroidBulletToWall = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_BULLET_ENEMY, PHYSIC_TYPE_WALL);
+	handlerDroidBulletToWall->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleBulletToWall);
+	//
+	// Player bullet hits a droid
+	handlerPlayerBulletToDroid = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_BULLET_PLAYER, PHYSIC_TYPE_ENEMY);
+	handlerPlayerBulletToDroid->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleBulletToDroid);
+	//
+	// Droid bullet hits a droid
+	handlerDroidBulletToDroid = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_BULLET_ENEMY, PHYSIC_TYPE_ENEMY);
+	handlerDroidBulletToDroid->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleBulletToDroid);
+	//
+	// Droid bullet hits the player
+	handlerDroidBulletToPlayer = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_BULLET_ENEMY, PHYSIC_TYPE_PLAYER);
+	handlerDroidBulletToPlayer->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleBulletToDroid);
+	//
+	// Enemy bullet to player bullet collision
+	handlerEnemyBulletToPlayerBullet = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_BULLET_ENEMY, PHYSIC_TYPE_BULLET_PLAYER);
+	handlerEnemyBulletToPlayerBullet->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleBulletToBullet);
+	//
+	// Enemy bullet to enemy bullet collision
+	handlerEnemyBulletToEnemyBullet = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_BULLET_ENEMY, PHYSIC_TYPE_BULLET_ENEMY);
+	handlerEnemyBulletToEnemyBullet->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleBulletToBullet);
+	//
+	// Player bullet hitting a closed door
+	handlerBulletToDoor = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_BULLET_PLAYER, PHYSIC_TYPE_DOOR_CLOSED);
+	handlerBulletToDoor->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleBulletToDoor);
+	//
+	// Enemy bullet hitting a closed door
+	handlerBulletToDoor = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_BULLET_ENEMY, PHYSIC_TYPE_DOOR_CLOSED);
+	handlerBulletToDoor->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleBulletToDoor);
+
+
+
+
+	//
+	// Stop particles affecting droids
+//	handlerParticleToDroid = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_PARTICLE, PHYSIC_TYPE_PLAYER);
+
 }

@@ -21,7 +21,6 @@
 
 #define APP_NAME    "Para++"
 
-//#include "../data/scripts/enum.h"
 #include "classes/paraScript.h"
 #include "classes/paraLogFile.h"
 #include "classes/paraFileSystem.h"
@@ -32,7 +31,7 @@
 #include "system/shutdown.h"
 #include "physfs/physfs.h"
 #include "classes/paraRenderer.h"
-#include "chipmunkpp/chipmunk.hpp"
+#include "chipmunk.h"
 
 #define ERROR_COUNT_LIMIT   10
 
@@ -61,7 +60,7 @@
 
 using namespace std;
 
-typedef int (*functionPtr) (...);
+typedef int (*functionPtr)(...);
 
 extern paraScript     paraScriptInstance;
 extern paraLogFile    logFile;
@@ -73,6 +72,7 @@ extern paraAudio      audio;
 extern paraGui        gui;
 extern paraStarfield  backgroundStarfield;
 extern paraStarfield  sideviewStarfield;
+extern paraStarfield  deckviewStarfield;
 extern paraSprite     databaseSprite;
 extern paraHighScore  highScores;
 
@@ -93,4 +93,41 @@ extern double baseGameSpeed;
 
 extern unsigned long g_debugDroidCount;
 
-extern Uint32 sys_getCurrentTime ();
+extern Uint32 sys_getCurrentTime();
+
+struct _userData
+{
+	cpCollisionType userType;
+	Uint32          bulletID;
+	int             dataValue;
+	bool            ignoreCollisionDroid;
+	bool            ignoreCollisionPlayer;
+};
+
+//-----------------------------------------------------------------------------
+//
+// structure used for doors
+//
+//-----------------------------------------------------------------------------
+
+struct _doorTrigger
+{
+	int    direction {};
+	int    tileIndex {};
+	int    currentFrame {};            // which frame are we on
+	float  height {};
+	float  width {};
+	float  frameDelay {};                // speed to animate them at
+	bool   inUse {};
+	cpVect topLeft {};
+	cpVect topRight {};
+	cpVect botLeft {};
+	cpVect botRight {};
+
+	cpVect worldPosition  = {0, 0};
+	cpVect renderPosition = {0, 0};
+
+	cpBody                     *body {nullptr};
+	cpShape                    *shape {nullptr};
+	std::shared_ptr<_userData> userData {};
+};

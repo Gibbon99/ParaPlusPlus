@@ -426,7 +426,7 @@ void paraScript::debugState ()
 		}
 		else
 		{
-//			auto *getValue = (b2Vec2 *) varPointer;
+//			auto *getValue = (cpVect *) varPointer;
 //			log_addEvent(sys_getString(" %s = {...}\n", ctx->GetVarDeclaration(n, stackLevel)));
 //			log_addEvent(sys_getString("Debug [ %3.3f %3.3f ]\n", getValue->x, getValue->y));
 		}

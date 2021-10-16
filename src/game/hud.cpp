@@ -16,7 +16,7 @@ double      hudScorePosY;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the text for the HUD - gets text from language file - pass in key for language lookup
-void gam_setHudText (const std::string &newText)
+void gam_setHudText(const std::string &newText)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (currentMode)
@@ -38,7 +38,7 @@ void gam_setHudText (const std::string &newText)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render the HUD to the screen
-void gam_renderHud ()
+void gam_renderHud()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Rect destination;
@@ -60,7 +60,7 @@ void gam_renderHud ()
 				destination.h = textures.at ("hudNew").getHeight ();
 				destination.w = textures.at ("hudNew").getWidth ();
 			}
-			catch (std::out_of_range outOfRange)
+			catch (std::out_of_range &outOfRange)
 			{
 				return;
 			}

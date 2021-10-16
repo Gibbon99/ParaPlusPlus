@@ -1,8 +1,7 @@
 #ifndef PARA_PARAEMITTER_H
 #define PARA_PARAEMITTER_H
 
-#include <b2_math.h>
-#include <system/physics.h>
+#include <system/cpPhysics.h>
 #include <wrapper.h>
 #include <classes/paraRandom.h>
 #include "paraParticle.h"
@@ -11,25 +10,25 @@ class paraEmitter
 {
 public:
 
-	paraEmitter (b2Vec2 newWorldPos, int newEmitterType, Uint32 newBulletID);
+	paraEmitter(cpVect newWorldPos, int newEmitterType, Uint32 newBulletID);
 
-	~paraEmitter ();
+	~paraEmitter();
 
-	void render ();
+	void render();
 
-	void animate ();
+	void animate();
 
-	void process ();
+	void process();
 
-	bool getCanBeRemoved ();
+	bool getCanBeRemoved() const;
 
-	void setCanBeRemoved (bool newValue);
+	void setCanBeRemoved(bool newValue);
 
-	Uint32 getBulletID () const;
+	Uint32 getBulletID() const;
 
-	size_t getNumberParticles ();
+	size_t getNumberParticles();
 
-	void setAttachedToBullet (bool newValue);
+	void setAttachedToBullet(bool newValue);
 
 private:
 
@@ -46,7 +45,7 @@ private:
 	bool                      m_canBeRemoved {false};
 	int                       m_emitterType {};
 	Uint32                    m_bulletID {};
-	b2Vec2                    m_worldPos {};
+	cpVect                    m_worldPos {};
 	std::vector<paraParticle> particles {};
 };
 

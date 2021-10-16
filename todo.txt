@@ -17,6 +17,8 @@ Check bottom edge of animated tiles in graphics
 Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
 Deck view - Player icon location wrong on observation, airlock
 Put lastUsedName into highscore entry screen
+Graphics "lag" when fading in
+
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
@@ -161,6 +163,8 @@ DONE - Hunt mode - when in attack mode, and lose sight, go into hunt - check cur
 DONE - Made highScore into a proper class
 >Commit
 DONE - Rework CMake file
+DONE - Added starfield on terminal deck view
+DONE - Replace physics system with Chipmunk
 
 
 GUI

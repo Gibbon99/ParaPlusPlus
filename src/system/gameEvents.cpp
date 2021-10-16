@@ -77,6 +77,7 @@ int gam_gameEventQueueSize ()
 void gam_processGameEventQueue ()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	cpVect            tempVect;
 	paraEventGame     *tempEvent;
 	static PARA_Mutex *gameMutex = nullptr;
 
@@ -166,11 +167,15 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_ADD_EMITTER:
-					gam_addEmitter (b2Vec2 (sys_convertToInt (tempEvent->gameText1), sys_convertToInt (tempEvent->gameText2)), sys_convertToInt (tempEvent->gameText3), 0);
+					tempVect.x = static_cast<cpFloat>(sys_convertToInt (tempEvent->gameText1));
+					tempVect.y = static_cast<cpFloat>(sys_convertToInt (tempEvent->gameText2));
+					gam_addEmitter (tempVect, sys_convertToInt (tempEvent->gameText3), 0);
 					break;
 
 				case EVENT_ACTION_ADD_LIGHTMAP:
-					gam_addNewLightmap (b2Vec2 (sys_convertToInt (tempEvent->gameText1), sys_convertToInt (tempEvent->gameText2)), sys_convertToInt (tempEvent->gameText3), 0);
+					tempVect.x = static_cast<cpFloat>(sys_convertToInt (tempEvent->gameText1));
+					tempVect.y = static_cast<cpFloat>(sys_convertToInt (tempEvent->gameText2));
+					gam_addNewLightmap (tempVect, sys_convertToInt (tempEvent->gameText3), 0);
 					break;
 
 				case EVENT_ACTION_INIT_TRANSFER_MODE:

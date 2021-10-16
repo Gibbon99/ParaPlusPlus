@@ -16,29 +16,29 @@
 
 struct _pathNode
 {
-	bool   walkable = false;
-	b2Vec2 tileLocation = {0,0};
-	int    parent = -1;
+	bool   walkable       = false;
+	cpVect tileLocation   = {0, 0};
+	int    parent         = -1;
 	int    g_movementCost = 0;
-	int    h_estMoveCost = 0;
-	int    f_score = 0;
+	int    h_estMoveCost  = 0;
+	int    f_score        = 0;
 };
 
 struct _nodeList
 {
-	int                    whichDroid = -1;        // Who owns this path
-	std::string            whichLevel = "";        // Which level is this droid on
-	bool                   pathReady = false;
-	bool                   wayPointsReady = false;
-	bool                   inUse = false;
-	bool                   isValid = false;
-	b2Vec2                 startTile = {0,0};
-	b2Vec2                 destTile = {0, 0};
-	int                    currentNodePtrClosedList = -1;;
-	std::vector<_pathNode> openNodes{};
-	std::vector<_pathNode> closedNodes{};
-	std::vector<_pathNode> foundPath{};
-	std::vector<b2Vec2>    wayPoints{};
+	int         whichDroid               = -1;        // Who owns this path
+	std::string whichLevel               = "";        // Which level is this droid on
+	bool        pathReady                = false;
+	bool        wayPointsReady           = false;
+	bool        inUse                    = false;
+	bool        isValid                  = false;
+	cpVect      startTile                = {0, 0};
+	cpVect      destTile                 = {0, 0};
+	int         currentNodePtrClosedList = -1;;
+	std::vector<_pathNode> openNodes {};
+	std::vector<_pathNode> closedNodes {};
+	std::vector<_pathNode> foundPath {};
+	std::vector<cpVect>    wayPoints {};
 };
 
 extern std::vector<_nodeList> path;
@@ -47,7 +47,7 @@ extern bool d_showNodeArrays;
 extern bool d_showAStarPath;
 
 // Start a new path
-int gam_requestNewPath (b2Vec2 start, b2Vec2 destination, int newWhichDroid, std::string whichLevel);
+int gam_requestNewPath(cpVect start, cpVect destination, int newWhichDroid, std::string whichLevel);
 
 // Show aStar waypoint lines
 void gam_AStarDebugWayPoints (int whichPath);

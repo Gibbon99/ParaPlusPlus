@@ -821,14 +821,14 @@ void as_createGUI()
     healingAnimSpeed = 0.3;
     pixelsPerMeter = 12.0;        // 12 pixels is 1 meter
     playerFriction = 0.7;
-    gravity = 100.0;
+    gravity = 25.0;
     doorAnimSpeed = 1.0f;
     collisionLimit = 3;
     collisionCount = 6.0;
     bulletDensity = 0.1f;
     bulletFriction = 0.01f;
     bulletAnimationSpeed = 0.5f;
-    bulletMoveSpeed = 0.4f;
+    bulletMoveSpeed = 100.0f;
     hudTextPosX = 15;
     hudTextPosY = 27;
     hudScorePosX = 620;

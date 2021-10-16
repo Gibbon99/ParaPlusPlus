@@ -8,40 +8,41 @@ std::vector<__tileSensor> terminals;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a terminal sensor
-void gam_createTerminalSensor (unsigned long whichTerminal, int index)
+void gam_createTerminalSensor(int whichTerminal, int index)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	terminals[whichTerminal].bodyDef.type = b2_staticBody;
-	terminals[whichTerminal].bodyDef.position.Set (terminals[whichTerminal].worldPosition.x / pixelsPerMeter, terminals[whichTerminal].worldPosition.y / pixelsPerMeter);
-	terminals[whichTerminal].body = sys_getPhysicsWorld ()->CreateBody (&terminals[whichTerminal].bodyDef);
+	terminals[whichTerminal].body = cpBodyNewStatic ();
+	cpBodySetPosition (terminals[whichTerminal].body, terminals[whichTerminal].worldPosition);
 
-	terminals[whichTerminal].userData            = reinterpret_cast<_userData *>(sys_malloc (sizeof (_userData), sys_getString ("%i", index))); // new _userData;   // TODO: Free this on shutdown
-	terminals[whichTerminal].userData->userType  = PHYSIC_TYPE_TERMINAL;
-	terminals[whichTerminal].userData->dataValue = (int) index;
-	terminals[whichTerminal].body->SetUserData (terminals[whichTerminal].userData);
+	terminals[whichTerminal].shape = cpBoxShapeNew (terminals[whichTerminal].body, terminals[whichTerminal].width, terminals[whichTerminal].height, 1.0);   // Check Radius
+	cpSpaceAddShape (sys_returnPhysicsWorld (), terminals[whichTerminal].shape);
+	cpShapeSetCollisionType (terminals[whichTerminal].shape, PHYSIC_TYPE_TERMINAL);
+	cpShapeSetSensor (terminals[whichTerminal].shape, cpTrue);
 
-	terminals[whichTerminal].shape.SetAsBox ((terminals[whichTerminal].height) / pixelsPerMeter, (terminals[whichTerminal].width) / pixelsPerMeter);
-	terminals[whichTerminal].fixtureDef.shape    = &terminals[whichTerminal].shape;
-	terminals[whichTerminal].fixtureDef.isSensor = true;
-	terminals[whichTerminal].body->CreateFixture (&terminals[whichTerminal].fixtureDef);
+	terminals[whichTerminal].userData            = std::make_shared<_userData> ();
+	terminals[whichTerminal].userData->userType  = cpShapeGetCollisionType (terminals[whichTerminal].shape);
+	terminals[whichTerminal].userData->dataValue = whichTerminal;
+	cpShapeSetUserData (terminals[whichTerminal].shape, terminals[whichTerminal].userData.get ());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Clear out memory and free bodies
-void gam_clearTerminals ()
+void gam_clearTerminals()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	for (auto &terminalItr: terminals)
 	{
-		if (terminalItr.userData != nullptr)
+		if (terminalItr.shape != nullptr)
 		{
-			sys_freeMemory (sys_getString ("%i", terminalItr.userData->dataValue));
-			terminalItr.userData = nullptr;
+			cpSpaceRemoveShape (sys_returnPhysicsWorld (), terminalItr.shape);
+			terminalItr.shape = nullptr;
 		}
-
 		if (terminalItr.body != nullptr)
-			sys_getPhysicsWorld ()->DestroyBody (terminalItr.body);
+		{
+//			cpSpaceRemoveBody (sys_returnPhysicsWorld (), terminalItr.body);
+			terminalItr.body = nullptr;
+		}
 	}
 	terminals.clear ();
 }
@@ -49,7 +50,7 @@ void gam_clearTerminals ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the positions of terminals on the current level
-void gam_findTerminalPositions (const std::string &levelName)
+void gam_findTerminalPositions(const std::string &levelName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	__tileSensor tempTerminal;

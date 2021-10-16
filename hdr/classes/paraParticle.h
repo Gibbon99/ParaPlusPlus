@@ -3,10 +3,7 @@
 
 #include <string>
 #include <vector>
-
-#include <box2d/b2_math.h>
-#include <box2d/b2_body.h>
-#include <system/physics.h>
+#include "system/cpPhysics.h"
 
 #define USE_LOOKUP_TABLE 1
 
@@ -14,33 +11,31 @@ class paraParticle
 {
 public:
 
-	paraParticle (int newType, b2Vec2 newWorldPos);
+	paraParticle(int newType, cpVect newWorldPos);
 
-	~paraParticle ();
+	~paraParticle();
 
-	b2Vec2 getCircleAngle ();
+	cpVect getCircleAngle() const;
 
-	bool inUse ();
+	bool inUse();
 
-	void setInUse (bool newState);
+	void setInUse(bool newState);
 
-	bool isAlive () const;
+	bool isAlive() const;
 
-	Uint32 getAttachedBullet ();
+	Uint32 getAttachedBullet();
 
-	bool isAttached ();
+	bool isAttached();
 
-	void setIsAttached (bool newState);
+	void setIsAttached(bool newState);
 
-	void animate ();
+	void animate();
 
-	void render ();
-
-	b2BodyDef *getBodyDef ();
+	void render();
 
 	//
 	// Overload copy assignment operator
-	paraParticle &operator= (const paraParticle &other)
+	paraParticle &operator=(const paraParticle &other)
 	{
 		if (this != &other)     // protect against invalid self-assignment
 		{
@@ -60,7 +55,7 @@ public:
 			m_isAlive                   = other.m_isAlive;
 			m_direction                 = other.m_direction;
 			m_worldPos                  = other.m_worldPos;
-			physicObject                = other.physicObject;
+//			physicObject                = other.physicObject;
 			color                       = other.color;
 //			userData
 		}
@@ -70,7 +65,7 @@ public:
 
 	//
 	// Copy constructor - deep-copy
-	paraParticle (const paraParticle &p1)
+	paraParticle(const paraParticle &p1)
 	{
 		m_id                        = p1.m_id;
 		m_particleType              = p1.m_particleType;
@@ -88,7 +83,7 @@ public:
 		m_isAlive                   = p1.m_isAlive;
 		m_direction                 = p1.m_direction;
 		m_worldPos                  = p1.m_worldPos;
-		physicObject                = p1.physicObject;
+//		physicObject                = p1.physicObject;
 		color                       = p1.color;
 
 //		return paraParticle;
@@ -98,22 +93,24 @@ private:
 
 	int                        m_id {};
 	int                        m_particleType {};
-	int                        particleSpeedExplosionMin {1};
-	int                        particleSpeedExplosionMax {5};
-	int                        particleSpeedSparkMin {1};
-	int                        particleSpeedSparkMax {3};
+	int                        particleSpeedExplosionMin {200};
+	int                        particleSpeedExplosionMax {300};
+	int                        particleSpeedSparkMin {250};
+	int                        particleSpeedSparkMax {300};
 	int                        particleTrailReduceRate {40};
 	int                        particleExplosionReduceRate {10};
-	int                        particleSparkReduceRate {12};
+	int                        particleSparkReduceRate {8};
 	float                      particleElastic {0.9f};
 	float                      particleFriction {0.2f};
 	float                      particleMass {0.05f};
 	float                      particleSize {4.0f};
 	bool                       m_isAlive {};
-	b2Vec2                     m_direction {};
-	b2Vec2                     m_worldPos {};
-	std::unique_ptr<_userData> userData;
-	_PHYSIC_OBJECT             physicObject {};
+	cpVect                     m_direction {};
+	cpVect                     m_worldPos {};
+	cpBody                     *body {};
+	cpShape                    *shape {};
+	std::shared_ptr<_userData> userData {};
+
 	PARA_Color color {};
 };
 

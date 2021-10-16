@@ -87,52 +87,6 @@ set(CXX_SRCS
 		src/physfs/physfs_platform_winrt.cpp
 		src/physfs/physfs_unicode.cpp
 
-		src/box2d/collision/b2_broad_phase.cpp
-		src/box2d/collision/b2_chain_shape.cpp
-		src/box2d/collision/b2_circle_shape.cpp
-		src/box2d/collision/b2_collide_circle.cpp
-		src/box2d/collision/b2_collide_edge.cpp
-		src/box2d/collision/b2_collide_polygon.cpp
-		src/box2d/collision/b2_collision.cpp
-		src/box2d/collision/b2_distance.cpp
-		src/box2d/collision/b2_dynamic_tree.cpp
-		src/box2d/collision/b2_edge_shape.cpp
-		src/box2d/collision/b2_polygon_shape.cpp
-		src/box2d/collision/b2_time_of_impact.cpp
-		src/box2d/common/b2_block_allocator.cpp
-		src/box2d/common/b2_draw.cpp
-		src/box2d/common/b2_math.cpp
-		src/box2d/common/b2_settings.cpp
-		src/box2d/common/b2_stack_allocator.cpp
-		src/box2d/common/b2_timer.cpp
-		src/box2d/dynamics/b2_body.cpp
-		src/box2d/dynamics/b2_chain_circle_contact.cpp
-		src/box2d/dynamics/b2_chain_polygon_contact.cpp
-		src/box2d/dynamics/b2_circle_contact.cpp
-		src/box2d/dynamics/b2_contact.cpp
-		src/box2d/dynamics/b2_contact_manager.cpp
-		src/box2d/dynamics/b2_contact_solver.cpp
-		src/box2d/dynamics/b2_distance_joint.cpp
-		src/box2d/dynamics/b2_edge_circle_contact.cpp
-		src/box2d/dynamics/b2_edge_polygon_contact.cpp
-		src/box2d/dynamics/b2_fixture.cpp
-		src/box2d/dynamics/b2_friction_joint.cpp
-		src/box2d/dynamics/b2_gear_joint.cpp
-		src/box2d/dynamics/b2_island.cpp
-		src/box2d/dynamics/b2_joint.cpp
-		src/box2d/dynamics/b2_motor_joint.cpp
-		src/box2d/dynamics/b2_mouse_joint.cpp
-		src/box2d/dynamics/b2_polygon_circle_contact.cpp
-		src/box2d/dynamics/b2_polygon_contact.cpp
-		src/box2d/dynamics/b2_prismatic_joint.cpp
-		src/box2d/dynamics/b2_pulley_joint.cpp
-		src/box2d/dynamics/b2_revolute_joint.cpp
-		src/box2d/dynamics/b2_rope_joint.cpp
-		src/box2d/dynamics/b2_weld_joint.cpp
-		src/box2d/dynamics/b2_wheel_joint.cpp
-		src/box2d/dynamics/b2_world.cpp
-		src/box2d/dynamics/b2_world_callbacks.cpp
-
 		src/classes/ConvertUTF.cpp
 
 		src/sdl2_gfx/SDL2_gfxPrimitives.cpp
@@ -164,7 +118,6 @@ set(CXX_SRCS
 		src/classes/paraRenderer.cpp
 		src/io/consoleFunctions.cpp
 		src/system/gameEvents.cpp
-		src/system/physics.cpp
 		src/game/physicsCollisions.cpp
 		src/io/resources.cpp
 		src/classes/paraAudio.cpp
@@ -264,18 +217,7 @@ set(CXX_SRCS
 		src/chipmunk/cpSweep1D.c
 		src/chipmunk/prime.h
 
-		src/chipmunkpp/arbiter.cpp
-		src/chipmunkpp/bb.cpp
-		src/chipmunkpp/body.cpp
-		src/chipmunkpp/chipmunk.cpp
-		src/chipmunkpp/circleshape.cpp
-		src/chipmunkpp/polyshape.cpp
-		src/chipmunkpp/segmentshape.cpp
-		src/chipmunkpp/shape.cpp
-		src/chipmunkpp/space.cpp
-		src/chipmunkpp/types.cpp
-		src/chipmunkpp/vect.cpp
-		)
+		src/system/cpPhysics.cpp src/system/cpPhysicsDebug.cpp hdr/system/cpPhysicsDebug.h)
 
 if (WIN32)
 	# Library path
@@ -287,12 +229,10 @@ if (WIN32)
 			./hdr
 			./hdr/script
 			./hdr/physfs
-			./hdr/box2d
 			./hdr/sdl2_gfx
 			./hdr/fileWatcher
 			./SDL2_WIN/include
 			./hdr/chipmunk
-			./hdr/chipmunkpp
 	)
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -323,19 +263,17 @@ if (UNIX)
 			./hdr
 			./hdr/script
 			./hdr/physfs
-			./hdr/box2d
 			./hdr/sdl2_gfx
 			./hdr/fileWatcher
-			./hdr/chipmunk
-			./hdr/chipmunkpp)
+			./hdr/chipmunk)
 
 	set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 5)
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("Doing DEBUG build")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g -O0 -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -std=gnu++0x -Wall -Wextra -fsanitize=address")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g -O0 -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -Wall -Wextra")
 		add_executable(Linux_Para_debug ${CXX_SRCS})
-		target_link_libraries(Linux_Para_debug asan)
+		#target_link_libraries(Linux_Para_debug asan)
 		target_compile_definitions(Linux_Para_debug PUBLIC MY_DEBUG)
 	endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
