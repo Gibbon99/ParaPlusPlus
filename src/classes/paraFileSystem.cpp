@@ -1,13 +1,12 @@
 #include <vector>
 #include <cstdarg>
-#include <cstring>
 #include <SDL_rwops.h>
-#include "../../hdr/classes/paraFileSystem.h"
+#include "classes/paraFileSystem.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a function to call when displaying any output
-void paraFileSystem::setOutputFunction (filesystemFuncPtrIntStr outputFunction)
+void paraFileSystem::setOutputFunction(filesystemFuncPtrIntStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	funcOutput = outputFunction;
@@ -16,7 +15,7 @@ void paraFileSystem::setOutputFunction (filesystemFuncPtrIntStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a function to call when allocating memory
-void paraFileSystem::setMallocFunction (functionPtrMalloc mallocFunctionPtr)
+void paraFileSystem::setMallocFunction(functionPtrMalloc mallocFunctionPtr)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	mallocFunction = mallocFunctionPtr;
@@ -26,7 +25,7 @@ void paraFileSystem::setMallocFunction (functionPtrMalloc mallocFunctionPtr)
 //
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
-std::string paraFileSystem::int_getString (std::string format, ...)
+std::string paraFileSystem::int_getString(const std::string &format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	const char *const zcFormat = format.c_str ();
@@ -54,7 +53,7 @@ std::string paraFileSystem::int_getString (std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start the packfile system
-bool paraFileSystem::init (const std::string &baseDirectory, const std::string &writeDirectory)
+bool paraFileSystem::init(const std::string &baseDirectory, const std::string &writeDirectory)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_Version compiled;
@@ -108,7 +107,7 @@ bool paraFileSystem::init (const std::string &baseDirectory, const std::string &
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add another directory to use in seach path
-bool paraFileSystem::addPath (const std::string &newDirectory)
+bool paraFileSystem::addPath(const std::string &newDirectory)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	//
@@ -125,7 +124,7 @@ bool paraFileSystem::addPath (const std::string &newDirectory)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the length of a file
-PHYSFS_sint64 paraFileSystem::getFileSize (std::string fileName)
+PHYSFS_sint64 paraFileSystem::getFileSize(std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_file   *compFile;
@@ -167,7 +166,7 @@ PHYSFS_sint64 paraFileSystem::getFileSize (std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load a file into a pointer
-std::string paraFileSystem::getString (std::string fileName)
+std::string paraFileSystem::getString(std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_file   *compFile = nullptr;
@@ -235,7 +234,7 @@ std::string paraFileSystem::getString (std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load a file into a pointer - data is stored in by reference variable results
-int paraFileSystem::getFileIntoMemory (std::string fileName, void *results)
+int paraFileSystem::getFileIntoMemory(const std::string &fileName, void *results)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_file   *compFile = nullptr;
@@ -289,7 +288,7 @@ int paraFileSystem::getFileIntoMemory (std::string fileName, void *results)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check if a file exists
-bool paraFileSystem::doesFileExist (const std::string &fileName)
+bool paraFileSystem::doesFileExist(const std::string &fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (!fileSystemReady)
@@ -304,7 +303,7 @@ bool paraFileSystem::doesFileExist (const std::string &fileName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Write a file to disk
-bool paraFileSystem::save (std::string fileName, const void *buffer, PHYSFS_uint32 size)
+bool paraFileSystem::save(const std::string &fileName, const void *buffer, PHYSFS_uint32 size)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_file   *fileHandle;
@@ -332,11 +331,11 @@ bool paraFileSystem::save (std::string fileName, const void *buffer, PHYSFS_uint
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Display the current search path
-void paraFileSystem::getSearchPath ()
+void paraFileSystem::getSearchPath()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	char **i;
-	for (i = PHYSFS_getSearchPath (); *i != NULL; i++)
+	for (i = PHYSFS_getSearchPath (); *i != nullptr; i++)
 	{
 		funcOutput (-1, int_getString ("[%s] is in the search path.", *i));
 	}

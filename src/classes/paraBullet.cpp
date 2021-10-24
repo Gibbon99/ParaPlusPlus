@@ -8,8 +8,6 @@
 #include <sdl2_gfx/SDL2_gfxPrimitives.h>
 #include "classes/paraBullet.h"
 
-//#define DEBUG_BULLET 1
-
 #define MAX_NUM_BULLETS     32
 
 float                   bulletDensity {};
@@ -67,11 +65,15 @@ paraBullet gam_createBullet(int bulletSourceIndex, Uint32 bulletID)
 	double     moment;
 
 #ifdef DEBUG_BULLET
-	std::cout << "Creating a bullet with ID of : " << m_bulletID << std::endl;
+	logFile.write (sys_getString ("[ %s ] Creating a bullet with ID of [ %i ]", __func__, bulletID));
 #endif
 
 	if (-1 == bulletSourceIndex)        // Bullet from player
 	{
+#ifdef DEBUG_BULLET
+		logFile.write (sys_getString ("[ %s ] Player fired bullet [ %i ]", __func__, bulletID));
+#endif
+
 		bulletType     = dataBaseEntry[playerDroid.getDroidType ()].bulletType;
 		if (!dataBaseEntry[playerDroid.getDroidType ()].canShoot)
 			bulletType = BULLET_TYPE_NORMAL;
@@ -89,6 +91,9 @@ paraBullet gam_createBullet(int bulletSourceIndex, Uint32 bulletID)
 	}
 	else        // Bullet from Droid
 	{
+#ifdef DEBUG_BULLET
+		logFile.write (sys_getString ("[ %s ] Enemy fired bullet [ %i ]", __func__, bulletID));
+#endif
 		bulletType = dataBaseEntry[g_shipDeckItr->second.droid[bulletSourceIndex].getDroidType ()].bulletType;
 
 		if (g_shipDeckItr->second.droid[bulletSourceIndex].ai2.getTargetDroid () == TARGET_PLAYER)
@@ -132,10 +137,6 @@ paraBullet gam_createBullet(int bulletSourceIndex, Uint32 bulletID)
 		tempBullet.userData->bulletID             = bulletID;
 		tempBullet.userData->dataValue            = bulletSourceIndex;
 		tempBullet.userData->ignoreCollisionDroid = false;
-
-#ifdef DEBUG_BULLET
-		std::cout << "Bullet ID set to : " << tempBullet.userData->ID << std::endl;
-#endif
 	}
 
 	switch (bulletType)
@@ -254,10 +255,7 @@ int gam_getArrayIndex(Uint32 bulletID)
 
 		indexCounter++;
 	}
-
 	return -1;
-
-	sys_shutdownWithError (sys_getString ("Unable to locate bullet index by ID [ %i ]", bulletID));
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -292,9 +290,8 @@ void gam_addBullet(int bulletSourceIndex)
 				gam_addNewLightmap (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels (), LIGHTMAP_TYPE_BULLET, bulletID);
 			}
 #ifdef DEBUG_BULLET
-			std::cout << "Bullet with ID : " << m_bulletID << " added to array position : " << indexCounter << std::endl;
+			logFile.write (sys_getString ("[ %s ] Bullet with ID [ %i ] added to bullet array at [ %i ]", __func__, bulletID, indexCounter));
 #endif
-
 			return;
 		}
 		indexCounter++;
@@ -311,7 +308,7 @@ void gam_removeBullet(Uint32 bulletID)
 
 	bulletIndex = gam_getArrayIndex (bulletID);
 #ifdef DEBUG_BULLET
-	std::cout << "Remove a bullet : " << m_bulletID << " with position in array : " << bulletIndex << std::endl;
+	logFile.write (sys_getString ("[ %s ] Remove a bullet [ %i ] with position [ %i ] in array.", __func__, bulletID, bulletIndex));
 #endif
 
 	try
@@ -319,13 +316,6 @@ void gam_removeBullet(Uint32 bulletID)
 		bullets.at (bulletIndex).inUse    = false;
 		bullets.at (bulletIndex).velocity = {0, 0};
 
-		/*
-		cpSpaceRemoveShape (sys_returnPhysicsWorld (), bullets.at (bulletIndex).shape);
-		cpSpaceRemoveBody (sys_returnPhysicsWorld (), bullets.at (bulletIndex).body);
-
-		cpShapeFree (bullets.at (bulletIndex).shape);
-		cpBodyFree (bullets.at (bulletIndex).body);
-*/
 		gam_removeEmitter (bulletID);
 		gam_removeLightmap (bulletID);
 	}

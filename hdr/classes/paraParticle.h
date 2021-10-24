@@ -1,5 +1,4 @@
-#ifndef PARA_PARAPARTICLE_H
-#define PARA_PARAPARTICLE_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -113,5 +112,3 @@ private:
 
 	PARA_Color color {};
 };
-
-#endif //PARA_PARAPARTICLE_H

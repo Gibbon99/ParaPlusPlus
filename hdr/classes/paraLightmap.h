@@ -1,9 +1,8 @@
-#ifndef PARA_PARALIGHTMAP_H
-#define PARA_PARALIGHTMAP_H
+#pragma once
 
-#include <SDL_quit.h>
-#include <wrapper.h>
 #include <vector>
+#include <SDL_quit.h>
+#include "wrapper.h"
 #include "chipmunk_types.h"
 
 #define NUM_BULLET_COLORS 8
@@ -49,5 +48,3 @@ private:
 
 // Populate the table holding the bullet lightmap colors
 void setupBulletLightmapColors();
-
-#endif //PARA_PARALIGHTMAP_H

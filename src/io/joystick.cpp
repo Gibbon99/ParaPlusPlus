@@ -20,7 +20,7 @@ SDL_Joystick *joy;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Init a joystick if found
-void io_initJoystick ()
+void io_initJoystick()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	//
@@ -49,7 +49,7 @@ void io_initJoystick ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Close any open joysticks
-void io_closeJoystick ()
+void io_closeJoystick()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (SDL_JoystickGetAttached (joy))
@@ -63,10 +63,10 @@ void io_closeJoystick ()
 // Got a joystick movement - map it to a input event and push into input state - called from event pump
 //
 // X axis usually axis 0, Y axis usually 1
-void io_joyMovement (SDL_JoystickID whichJoystick, Uint8 whichAxis, Sint16 axisValue)
+void io_joyMovement([[maybe_unused]]SDL_JoystickID whichJoystick, Uint8 whichAxis, Sint16 axisValue)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	static float joystickRateLimit{1.0f};
+	static float joystickRateLimit {1.0f};
 
 	joystickState.joyAxisY = 0;
 	joystickState.joyAxisX = 0;
@@ -104,7 +104,7 @@ void io_joyMovement (SDL_JoystickID whichJoystick, Uint8 whichAxis, Sint16 axisV
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Map the current joystick values to the input state
-void io_mapJoyToInput ()
+void io_mapJoyToInput()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	/*

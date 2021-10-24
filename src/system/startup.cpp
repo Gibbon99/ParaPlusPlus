@@ -143,7 +143,7 @@ void sys_startSystems()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start to load and prepare everything else
-int sys_startInit(void *ptr)
+int sys_startInit([[maybe_unused]]void *ptr)
 //----------------------------------------------------------------------------------------------------------------------
 {
 //
@@ -163,7 +163,7 @@ int sys_startInit(void *ptr)
 	paraScriptInstance.cacheFunctions ();
 
 #if MY_DEBUG
-	log_addEvent ("Run setupPhysicsEngine\n");
+	logFile.write (sys_getString ("[ %s ] Run setupPhysicsEngine.", __func__));
 #endif
 
 //	sys_setupPhysicsEngine ();

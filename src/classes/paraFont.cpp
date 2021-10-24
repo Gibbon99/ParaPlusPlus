@@ -1,33 +1,31 @@
 #include <vector>
 #include <cstdarg>
-#include <system/startup.h>
-#include <io/fileSystem.h>
-#include "../../hdr/classes/paraFont.h"
+#include "system/startup.h"
+#include "io/fileSystem.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Constructor
-paraFont::paraFont ()
+paraFont::paraFont()
 //----------------------------------------------------------------------------------------------------------------------
 = default;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Deconstructor
-paraFont::~paraFont ()
+paraFont::~paraFont()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	for (auto &fontItr: fonts)
 	{
 		TTF_CloseFont (fontItr.second.handle);
 	}
-	return;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a function to call when displaying any output
-void paraFont::setOutputFunction (funcPtrIntStr outputFunction)
+void paraFont::setOutputFunction(funcPtrIntStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraFont::funcOutput = outputFunction;
@@ -37,7 +35,7 @@ void paraFont::setOutputFunction (funcPtrIntStr outputFunction)
 //
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
-std::string paraFont::int_getString (std::string format, ...)
+std::string paraFont::int_getString(std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	const char *const zcFormat = format.c_str ();
@@ -65,7 +63,7 @@ std::string paraFont::int_getString (std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the new font to use
-void paraFont::use (std::string keyName)
+void paraFont::use(const std::string &keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	auto fontItr = fonts.find (keyName);
@@ -81,7 +79,7 @@ void paraFont::use (std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start the TTF if required, load a font file with a size
-bool paraFont::load (int fontSize, std::string keyName, std::string fileName)
+bool paraFont::load(int fontSize, const std::string &keyName, const std::string &fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	__PARA_FONT tempFont {};
@@ -106,7 +104,7 @@ bool paraFont::load (int fontSize, std::string keyName, std::string fileName)
 //	tempFont.handle = TTF_OpenFont(fileName.c_str(), fontSize);
 //
 // Load from packfile rather than filesystem - should be done via load function redirect like texture class
-	tempFont.handle     = TTF_OpenFontRW (io_loadRawFile (fileName.c_str ()), 0, fontSize);       // Font closed in class deconstructor
+	tempFont.handle     = TTF_OpenFontRW (io_loadRawFile (fileName), 0, fontSize);       // Font closed in class deconstructor
 
 	if (nullptr == tempFont.handle)
 	{
@@ -128,7 +126,7 @@ bool paraFont::load (int fontSize, std::string keyName, std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Close the TTF file
-void paraFont::close ()
+void paraFont::close()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	TTF_CloseFont (paraFont::fontHandle);
@@ -137,7 +135,7 @@ void paraFont::close ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the color to print this font in
-void paraFont::setColor (Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
+void paraFont::setColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (fonts[currentFont].available)
@@ -152,7 +150,7 @@ void paraFont::setColor (Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a surface to hold the text and return pointer to the surface
-PARA_Surface *paraFont::write (double X, double Y, std::string fontText)
+PARA_Surface *paraFont::write(double X, double Y, const std::string &fontText)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (nullptr != paraFont::surface)
@@ -180,7 +178,7 @@ PARA_Surface *paraFont::write (double X, double Y, std::string fontText)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the height of the currently set font
-int paraFont::height ()
+int paraFont::height()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return fonts[currentFont].lineHeight;
@@ -189,7 +187,7 @@ int paraFont::height ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the descent of the font below baseline
-int paraFont::descent ()
+int paraFont::descent()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return fonts[currentFont].descent;
@@ -198,7 +196,7 @@ int paraFont::descent ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the length of a string when rendered in the current font
-int paraFont::width (std::string fontText)
+int paraFont::width(const std::string &fontText)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int textWidth;
@@ -218,7 +216,7 @@ int paraFont::width (std::string fontText)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a string of text
-void paraFont::render (SDL_Renderer *whichRenderer, double posX, double posY, int r, int g, int b, int a, std::string text)
+void paraFont::render(SDL_Renderer *whichRendererIn, double posX, double posY, int r, int g, int b, int a, std::string text)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Surface *tempSurface;
@@ -234,7 +232,7 @@ void paraFont::render (SDL_Renderer *whichRenderer, double posX, double posY, in
 		funcOutput (-1, int_getString ("Unable to create temp surface when rendering text [ %s ].", text.c_str ()));
 		return;
 	}
-	tempTexture = SDL_CreateTextureFromSurface (whichRenderer, tempSurface);
+	tempTexture = SDL_CreateTextureFromSurface (whichRendererIn, tempSurface);
 	if (nullptr == tempTexture)
 	{
 		funcOutput (-1, int_getString ("Unable to create temp texture when rendering console."));
@@ -249,6 +247,6 @@ void paraFont::render (SDL_Renderer *whichRenderer, double posX, double posY, in
 		pos.w = tempSurface->w * (static_cast<float>(gameWinWidth) / hiresVirtualWidth);
 	}
 
-	SDL_RenderCopyF (whichRenderer, tempTexture, nullptr, &pos);
+	SDL_RenderCopyF (whichRendererIn, tempTexture, nullptr, &pos);
 //	SDL_DestroyTexture (tempTexture);       // TODO Causing corrupt memory when running lots of threads?? Drawing status of AI on droids ?
 }

@@ -3,11 +3,12 @@
 #include <utility>
 #include <fstream>
 #include <cstring>
+#include <io/logFile.h>
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Constructor
-paraHighScore::paraHighScore (std::string filePath, int numScores, const std::string defaultName, int startScore, int stepScore)
+paraHighScore::paraHighScore(std::string filePath, int numScores, const std::string defaultName, int startScore, int stepScore)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int tableScore {};
@@ -38,7 +39,7 @@ paraHighScore::paraHighScore (std::string filePath, int numScores, const std::st
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the lowest score from the table
-int paraHighScore::lowestScore ()
+int paraHighScore::lowestScore()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	auto lowestScore = highScores.end ();
@@ -49,7 +50,7 @@ int paraHighScore::lowestScore ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the name from the table at index
-std::string paraHighScore::getNameFromIndex (int whichIndex)
+std::string paraHighScore::getNameFromIndex(int whichIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int i {};
@@ -66,7 +67,7 @@ std::string paraHighScore::getNameFromIndex (int whichIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the score from the table at index
-int paraHighScore::getScoreFromIndex (int whichIndex)
+int paraHighScore::getScoreFromIndex(int whichIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int i {};
@@ -83,7 +84,7 @@ int paraHighScore::getScoreFromIndex (int whichIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new score to the table
-void paraHighScore::addNewScore (const std::string &newName, int newScore)
+void paraHighScore::addNewScore(const std::string &newName, int newScore)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	highScores.insert (highScore (newName, newScore));
@@ -100,7 +101,7 @@ void paraHighScore::addNewScore (const std::string &newName, int newScore)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Write the highscore table to external file
-void paraHighScore::saveFile ()
+void paraHighScore::saveFile()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::ofstream writeFileHandle (highScoreFileName, std::ios::out | std::ios::binary);
@@ -120,13 +121,13 @@ void paraHighScore::saveFile ()
 	writeFileHandle.close ();
 
 	if (!writeFileHandle.good ())
-		printf ("Error occurred while writing highScore file.\n");
+		logFile.write ("Error occurred while writing highScore file.\n");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load the highscore table from file
-void paraHighScore::loadFile ()
+void paraHighScore::loadFile()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	highScore tempScore ("DAB", 0);

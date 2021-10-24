@@ -81,7 +81,6 @@ void gam_clearHealing()
 		}
 		if (healingItr.body != nullptr)
 		{
-//			cpSpaceRemoveBody (sys_returnPhysicsWorld (), healingItr.body);
 			healingItr.body = nullptr;
 		}
 	}
@@ -91,7 +90,7 @@ void gam_clearHealing()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a lift sensor
-void gam_createHealingSensor(int whichHealingTile, int index)
+void gam_createHealingSensor(int whichHealingTile)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	healingTiles[whichHealingTile].body = cpBodyNewStatic ();
@@ -146,7 +145,7 @@ void gam_findHealingTilesPhysics()
 
 				healingTiles.push_back (tempHealingPhysics);
 
-				gam_createHealingSensor (healingTiles.size () - 1, countHealing);
+				gam_createHealingSensor (healingTiles.size () - 1);
 
 				countHealing++;
 				break;

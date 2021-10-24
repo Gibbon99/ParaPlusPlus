@@ -112,14 +112,12 @@ set(CXX_SRCS
 		src/system/frameRender.cpp
 		src/io/configFile.cpp
 		src/io/console.cpp
-		src/classes/paraEvent.cpp
 		src/system/eventsEngine.cpp
 		src/io/logFile.cpp
 		src/classes/paraRenderer.cpp
 		src/io/consoleFunctions.cpp
 		src/system/gameEvents.cpp
 		src/game/physicsCollisions.cpp
-		src/io/resources.cpp
 		src/classes/paraAudio.cpp
 		src/game/audio.cpp
 		src/classes/paraTexture.cpp
@@ -178,7 +176,6 @@ set(CXX_SRCS
 		src/classes/paraAI2.cpp
 		src/classes/paraDroid.cpp
 		src/classes/paraDroid.cpp
-		src/classes/paraPhysicsDestruction.cpp
 		src/classes/paraStarfield.cpp
 		src/classes/paraHighScore.cpp
 		src/classes/paraEmitter.cpp
@@ -271,7 +268,7 @@ if (UNIX)
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("Doing DEBUG build")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g -O0 -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -Wall -Wextra")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g -O0 -Wint-in-bool-context -Wcast-function-type -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -Wall -Wextra -g -fsanitize=leak")
 		add_executable(Linux_Para_debug ${CXX_SRCS})
 		#target_link_libraries(Linux_Para_debug asan)
 		target_compile_definitions(Linux_Para_debug PUBLIC MY_DEBUG)

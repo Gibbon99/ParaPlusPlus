@@ -1,4 +1,4 @@
-#include <gui/guiHighScore.h>
+#include "gui/guiHighScore.h"
 #include "game/score.h"
 #include "game/alertLevel.h"
 
@@ -12,7 +12,7 @@ static float updateScoreCounter = 0.0f;
 //------------------------------------------------------------------------------------------------------
 //
 // Modify the score buffer - send in positive or negative amount
-void gam_modifyScore (int modifyAmount)
+void gam_modifyScore(int modifyAmount)
 //------------------------------------------------------------------------------------------------------
 {
 	currentScore += modifyAmount;
@@ -21,7 +21,7 @@ void gam_modifyScore (int modifyAmount)
 //------------------------------------------------------------------------------------------------------
 //
 // Process the scoreDelay to see if the printableScore needs updating
-void gam_processScore ()
+void gam_processScore()
 //------------------------------------------------------------------------------------------------------
 {
 	if (currentScore == printableScore)
@@ -64,7 +64,7 @@ void gam_processScore ()
 //------------------------------------------------------------------------------------------------------
 //
 // Return the actual score - used for game over
-int gam_getCurrentScore ()
+int gam_getCurrentScore()
 //------------------------------------------------------------------------------------------------------
 {
 	return printableScore + currentScore;
@@ -73,7 +73,7 @@ int gam_getCurrentScore ()
 //------------------------------------------------------------------------------------------------------
 //
 // Return the current score
-int gam_getPrintableScore ()
+int gam_getPrintableScore()
 //------------------------------------------------------------------------------------------------------
 {
 	return printableScore;
@@ -82,7 +82,7 @@ int gam_getPrintableScore ()
 //------------------------------------------------------------------------------------------------------
 //
 // Set the starting values for the score
-void gam_initScoreValues ()
+void gam_initScoreValues()
 //------------------------------------------------------------------------------------------------------
 {
 	currentScore   = 0;
@@ -92,7 +92,7 @@ void gam_initScoreValues ()
 //------------------------------------------------------------------------------------------------------
 //
 // See if we need to show the high score entry screen - or just the high score screen
-void gam_decideScoreAction ()
+void gam_decideScoreAction()
 //------------------------------------------------------------------------------------------------------
 {
 	int finalScore;

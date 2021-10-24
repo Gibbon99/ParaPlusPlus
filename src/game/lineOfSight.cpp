@@ -1,8 +1,5 @@
 #include "game/player.h"
-#include "classes/paraLOS.h"
 #include "game/lineOfSight.h"
-
-// #define SHOW_ALL_DROIDS 1
 
 int visibleFadeValue;
 
@@ -64,9 +61,6 @@ void gam_checkLOS(paraDroid &droidItr)
 	shapeFilter.group      = CP_NO_GROUP;
 	shapeFilter.mask       = PHYSIC_TYPE_ENEMY | PHYSIC_TYPE_WALL | PHYSIC_TYPE_DOOR_CLOSED;      // Check for enemy's and walls - don't look through closed doors
 	shapeFilter.categories = PHYSIC_TYPE_PLAYER;
-
-//	cpSpaceSegmentQuery (sys_returnPhysicsWorld (), playerDroid.getWorldPosInPixels (), droidItr.getWorldPosInPixels (), 2.0f, FILTER_CAT_PLAYER, reinterpret_cast<cpSpaceSegmentQueryFunc>(cpSpaceSegmentQueryFirstCallback), nullptr);
-
 
 	auto result = cpSpaceSegmentQueryFirst (sys_returnPhysicsWorld (), playerDroid.getWorldPosInPixels (), droidItr.getWorldPosInPixels (), 2.0f, shapeFilter, &segmentQueryResult);
 

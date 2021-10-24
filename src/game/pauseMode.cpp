@@ -1,6 +1,6 @@
-#include <game/hud.h>
-#include <game/audio.h>
-#include <system/gameEvents.h>
+#include "game/hud.h"
+#include "game/audio.h"
+#include "system/gameEvents.h"
 #include "game/pauseMode.h"
 
 bool pauseModeOn = false;
@@ -23,13 +23,13 @@ void gam_changePauseMode(int newPauseMode)
 	switch (newPauseMode)
 	{
 		case MODE_GAME_PAUSE_ON:
-			gam_setHudText("hudPauseMode");
-			gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP_ALL, false, 0, 0, "");
+			gam_setHudText ("hudPauseMode");
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP_ALL, false, 0, 0, "");
 			pauseModeOn = true;
 			break;
 
 		case MODE_GAME_PAUSE_OFF:
-			gam_addEvent(EVENT_ACTION_AUDIO_START_BACKGROUND, 0, "");
+			gam_addEvent (EVENT_ACTION_AUDIO_START_BACKGROUND, 0, "");
 			pauseModeOn = false;
 			break;
 	}

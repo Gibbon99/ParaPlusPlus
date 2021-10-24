@@ -1,5 +1,4 @@
-#ifndef PARAPLUSPLUS_CPPHYSICS_H
-#define PARAPLUSPLUS_CPPHYSICS_H
+#pragma once
 
 #include "main.h"
 #include "game/doors.h"
@@ -87,5 +86,3 @@ unsigned long sys_addNewDoorSensor(const _doorTrigger &newDoorTrigger);
 
 // Return the physics worldSpace
 cpSpace *sys_returnPhysicsWorld();
-
-#endif //PARAPLUSPLUS_CPPHYSICS_H

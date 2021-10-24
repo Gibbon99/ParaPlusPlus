@@ -1,5 +1,5 @@
-#include <classes/paraLightmap.h>
-#include <game/alertLevel.h>
+#include "classes/paraLightmap.h"
+#include "game/alertLevel.h"
 #include "game/lightMaps.h"
 
 std::vector<paraLightmap> lightMaps;
@@ -7,7 +7,7 @@ std::vector<paraLightmap> lightMaps;
 //-----------------------------------------------------------------------------------------------------------
 //
 // Remove all the lightmaps - ready for new level
-void gam_removeAllLightmaps ()
+void gam_removeAllLightmaps()
 //-----------------------------------------------------------------------------------------------------------
 {
 	for (auto &lightMapItr: lightMaps)
@@ -19,7 +19,7 @@ void gam_removeAllLightmaps ()
 //-----------------------------------------------------------------------------------------------------------
 //
 // Change the color of lightmaps
-void gam_changeAlertColor (int newAlertLevel)
+void gam_changeAlertColor(int newAlertLevel)
 //-----------------------------------------------------------------------------------------------------------
 {
 	for (auto &lightMapItr: lightMaps)
@@ -37,7 +37,7 @@ void gam_changeAlertColor (int newAlertLevel)
 //-----------------------------------------------------------------------------------------------------------
 //
 // Remove a lightmap - mark inUse to false - pass in m_bulletID to match
-void gam_removeLightmap (Uint32 whichBullet)
+void gam_removeLightmap(Uint32 whichBullet)
 //-----------------------------------------------------------------------------------------------------------
 {
 	for (auto &lightMapItr: lightMaps)
@@ -79,7 +79,7 @@ void gam_addNewLightmap(cpVect newWorldPosition, int newType, Uint32 newWhichBul
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render the lightmaps
-void gam_renderLightmaps ()
+void gam_renderLightmaps()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	for (auto &lightMapItr: lightMaps)
@@ -92,7 +92,7 @@ void gam_renderLightmaps ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Animate the lightmaps
-void gam_animateLightmaps ()
+void gam_animateLightmaps()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	for (auto &lightMapItr: lightMaps)

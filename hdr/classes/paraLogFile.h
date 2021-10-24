@@ -1,5 +1,4 @@
-#ifndef PARA_PARALOGFILE_H
-#define PARA_PARALOGFILE_H
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -22,5 +21,3 @@ private:
 	bool          fileLoggingOn = false;
 	std::ofstream outFile;
 };
-
-#endif //PARA_PARALOGFILE_H

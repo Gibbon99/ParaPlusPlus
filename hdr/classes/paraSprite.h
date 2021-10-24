@@ -1,35 +1,34 @@
-#ifndef PARA_PARASPRITE_H
-#define PARA_PARASPRITE_H
+#pragma once
 
-#include <wrapper.h>
 #include <vector>
 #include <string>
+#include "wrapper.h"
 
 class paraSprite
 {
 
 public:
-	void render (double posX, double posY, double scale, Uint8 alphaMod);
+	void render(double posX, double posY, double scale, Uint8 alphaMod);
 
-	void render (double posX, double posY, double scale, double angle);
+	void render(double posX, double posY, double scale, double angle);
 
-	bool animate ();
+	bool animate();
 
-	void setAnimateSpeed (double newSpeed);
+	void setAnimateSpeed(double newSpeed);
 
-	void setCurrentFrame (int newCurrentFrame);
+	void setCurrentFrame(int newCurrentFrame);
 
-	void setTintColor (Uint8 r, Uint8 g, Uint8 b);
+	void setTintColor(Uint8 r, Uint8 g, Uint8 b);
 
-	void create (std::string setTextureKeyname, int setNumFrames, double setAnimateSpeed);
+	void create(std::string setTextureKeyname, int setNumFrames, double setAnimateSpeed);
 
-	int getFrameWidth ();
+	int getFrameWidth();
 
-	int getFrameHeight ();
+	int getFrameHeight();
 
-	void setLowHealth (bool newState);
+	void setLowHealth(bool newState);
 
-	void animateLowHealth ();
+	void animateLowHealth();
 
 private:
 	int         numFrames {-1};
@@ -44,6 +43,3 @@ private:
 	PARA_Color   tintColor {};
 	PARA_Color   lowHealthColor {};
 };
-
-
-#endif //PARA_PARASPRITE_H

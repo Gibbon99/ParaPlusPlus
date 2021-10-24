@@ -1,5 +1,5 @@
-#include "classes/paraRandom.h"
 #include "sdl2_gfx/SDL2_gfxPrimitives.h"
+#include "classes/paraRandom.h"
 #include "system/util.h"
 #include "game/particles.h"
 #include "classes/paraParticle.h"
@@ -13,7 +13,7 @@ paraParticle::paraParticle(int newType, cpVect newWorldPos)
 //-----------------------------------------------------------------------------------------------------------
 {
 #ifdef DEBUG_PARTICLE
-	std::cout << "Construct new particle. Connect with bullet index : " << newBulletID << std::endl;
+	logFile.write (sys_getString ("[ %s ] Construct new particle. Connect with bulletID [ %i ]", __func__, newBulletID));
 #endif
 	int trailColor {};
 
@@ -67,7 +67,6 @@ paraParticle::paraParticle(int newType, cpVect newWorldPos)
 		userData->bulletID              = -1;
 		userData->userType              = cpShapeGetCollisionType (shape);
 		userData->dataValue             = -1;
-//		userData->wallIndexValue        = -1;
 		userData->ignoreCollisionDroid  = false;
 		userData->ignoreCollisionPlayer = false;
 		cpShapeSetUserData (shape, userData.get ());
@@ -90,7 +89,7 @@ paraParticle::~paraParticle()
 //-----------------------------------------------------------------------------------------------------------
 {
 #ifdef DEBUG_PARTICLE
-	std::cout << "De-construct particle" << std::endl;
+	logFile.write (sys_getString ("[ %s ] De-construct particle"));
 #endif
 
 	if (m_particleType != PARTICLE_TYPE_TRAIL)

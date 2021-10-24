@@ -3,6 +3,7 @@ BUGS
 BUG - Transfer screen one - shows player droid at wrong position on start
 
 Waypoint index for aStar is changing based on a collision ??
+Player not affected by disrupter weapon
 
 TO DO
 -------
@@ -17,7 +18,6 @@ Check bottom edge of animated tiles in graphics
 Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
 Deck view - Player icon location wrong on observation, airlock
 Put lastUsedName into highscore entry screen
-Graphics "lag" when fading in
 
 
 DONE - Universe background on menu screens
@@ -165,6 +165,9 @@ DONE - Made highScore into a proper class
 DONE - Rework CMake file
 DONE - Added starfield on terminal deck view
 DONE - Replace physics system with Chipmunk
+>Commit
+FIXED - For starfield animation - Graphics "lag" when fading in
+DONE - Big code cleanup
 
 
 GUI
@@ -213,6 +216,3 @@ SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
 
 Then multiply your touch events by window / renderer width & height and they should mirror mouse coordinates.
---
-Removed ASAN from DEBUG build - killing Physics performance - removed -fsanitize=address
--DCMAKE_BUILD_TYPE=debug -DCOMPILE_FLAGS="-pg -g -O0 -fsanitize=address -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -DMY_DEBUG "

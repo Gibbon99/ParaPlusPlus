@@ -1,25 +1,9 @@
 #include <string>
 #include <SDL_rwops.h>
-#include <io/fileSystem.h>
-#include <io/console.h>
-#include <system/util.h>
+#include "io/fileSystem.h"
+#include "io/console.h"
+#include "system/util.h"
 #include "game/texture.h"
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Create a collision map for passed in keyName TODO Remove
-void gam_createCollisionMap(std::string &keyName)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	try
-	{
-		textures.at (keyName).createMap ();
-	}
-	catch (std::out_of_range &outOfRange)
-	{
-		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_MAP, 1, "planet|planet| ");
-	}
-}
 
 //----------------------------------------------------------------------------------------------------------------------
 //

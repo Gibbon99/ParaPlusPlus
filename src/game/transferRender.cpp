@@ -1,47 +1,47 @@
-#include <system/util.h>
-#include <sdl2_gfx/SDL2_gfxPrimitives.h>
-#include <game/transferDroidAI.h>
-#include <game/player.h>
-#include <game/transferPlayer.h>
-#include <classes/paraRandom.h>
+#include "system/util.h"
+#include "sdl2_gfx/SDL2_gfxPrimitives.h"
+#include "classes/paraRandom.h"
+#include "game/transferDroidAI.h"
+#include "game/player.h"
+#include "game/transferPlayer.h"
 #include "game/transferRender.h"
 
 #define filledBoxRGBA boxRGBA
 
-int   transferBorderThickness;
-int   numberTransferRows;
-int   transferBitmapWidth;
-int   transferBitmapHeight;
-float transferRowStartY;
-float transferRowHeight;
-float activeTokenPosX;
-float transferSidebarGap;
-float transferSidebarWidth;
-float transferLineThickness;
-float transferStatusTabHeight;
-float transferStatusTabWidth;
-float transferBackgroundStartX;
-float transferBackgroundStartY;
-float transferBackgroundWidth;
-float transferBackgroundHeight;
-float transferRowCellWidth;
-float gapWidth;
+int   transferBorderThickness {};
+int   numberTransferRows {};
+int   transferBitmapWidth {};
+int   transferBitmapHeight {};
+float transferRowStartY {};
+float transferRowHeight {};
+float activeTokenPosX {};
+float transferSidebarGap {};
+float transferSidebarWidth {};
+float transferLineThickness {};
+float transferStatusTabHeight {};
+float transferStatusTabWidth {};
+float transferBackgroundStartX {};
+float transferBackgroundStartY {};
+float transferBackgroundWidth {};
+float transferBackgroundHeight {};
+float transferRowCellWidth {};
+float gapWidth {};
 
-PARA_Color transferColorLeft;
-PARA_Color transferColorRight;
+PARA_Color transferColorLeft {};
+PARA_Color transferColorRight {};
 
-PARA_Color transferColorStatusCell;
-PARA_Color transferColorBorder;
-PARA_Color transferColorLeftActive;
-PARA_Color transferColorRightActive;
-PARA_Color transferColorBackground;
+PARA_Color transferColorStatusCell {};
+PARA_Color transferColorBorder {};
+PARA_Color transferColorLeftActive {};
+PARA_Color transferColorRightActive {};
+PARA_Color transferColorBackground {};
 
-paraRandom colorRandom;
+paraRandom colorRandom {};
 
 //-------------------------------------------------------------------------------------------------------------------
 //
 // Return the row type by string
-std::string trn_getRowName (int rowType)
+std::string trn_getRowName(int rowType)
 //-------------------------------------------------------------------------------------------------------------------
 {
 	switch (rowType)
@@ -114,7 +114,7 @@ std::string trn_getRowName (int rowType)
 //-------------------------------------------------------------------------------------------------------------------
 //
 // Render a transfer row bar
-void trn_renderRowBar (float startX, float middleY, Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
+void trn_renderRowBar(float startX, float middleY, Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 //-------------------------------------------------------------------------------------------------------------------
 {
 	middleY++;
@@ -129,7 +129,7 @@ void trn_renderRowBar (float startX, float middleY, Uint8 red, Uint8 green, Uint
 //-------------------------------------------------------------------------------------------------------------------
 //
 // Render a token
-void trn_renderToken (int tokenDirection, float startX, float startY, Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
+void trn_renderToken(int tokenDirection, float startX, float startY, Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 //-------------------------------------------------------------------------------------------------------------------
 {
 
@@ -164,14 +164,14 @@ void trn_renderToken (int tokenDirection, float startX, float startY, Uint8 red,
 //-------------------------------------------------------------------------------------------------------------------
 //
 // Render the types of lines for each row
-void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int special)
+void trn_renderLineForRow(__TRANSFER_ROW whichRow, float lineLength, int special)
 //-------------------------------------------------------------------------------------------------------------------
 {
-	float leftLineStartX  = 0.0f;
-	float rightLineStartX = 0.0f;
-	float lineStartY      = 0.0f;
-	float tokenStartY     = 0.0f;
-	float tokenOffsetY    = (transferRowHeight - BLOCK_HEIGHT) / 2;
+	float leftLineStartX {0.0f};
+	float rightLineStartX {0.0f};
+	float lineStartY {0.0f};
+	float tokenStartY {0.0f};
+	float tokenOffsetY = (transferRowHeight - BLOCK_HEIGHT) / 2;
 
 	leftLineStartX  = transferSidebarGap + transferSidebarWidth;
 	rightLineStartX = transferBitmapWidth - (transferSidebarGap + transferSidebarWidth);
@@ -401,7 +401,6 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 			               leftLineStartX + (lineLength * 0.5f), lineStartY, leftLineStartX + lineLength, lineStartY + transferLineThickness, transferColorBorder.r, transferColorBorder.g, transferColorBorder.b, transferColorBorder.a);
 			if (whichRow.leftSideActive)
 			{
-//				filledBoxRGBA (renderer.renderer, leftLineStartX + (activeTokenPosX * 2), lineStartY, leftLineStartX + (lineLength * 0.25f), lineStartY + transferLineThickness, transferColorLeftActive.r, transferColorLeftActive.g, transferColorLeftActive.b, static_cast<Uint8>(whichRow.leftSideActiveAlphaColor));
 				filledBoxRGBA (renderer.renderer,
 				               leftLineStartX + (activeTokenPosX * 2), lineStartY,
 				               leftLineStartX + (lineLength * 0.25f), lineStartY + transferLineThickness, transferColorLeftActive.r, transferColorLeftActive.g, 0, static_cast<Uint8>(whichRow.leftSideActiveAlphaColor));
@@ -747,14 +746,14 @@ void trn_renderLineForRow (__TRANSFER_ROW whichRow, float lineLength, int specia
 //-------------------------------------------------------------------------------------------------------------------
 //
 // Render the current transfer game elements
-void trn_renderTransferGame ()
+void trn_renderTransferGame()
 //-------------------------------------------------------------------------------------------------------------------
 {
-	PARA_Color rowColor;
-	float      droidX;
-	float      droidY;
-	float      droidDrawScale = 2.5f;
-	float      tokenOffsetY   = (transferRowHeight - BLOCK_HEIGHT) / 2;
+	PARA_Color rowColor {};
+	float      droidX {};
+	float      droidY {};
+	float      droidDrawScale {2.5f};
+	float      tokenOffsetY = (transferRowHeight - BLOCK_HEIGHT) / 2;
 
 	if (transferRows.empty ())
 		return;
@@ -1019,7 +1018,7 @@ void trn_renderTransferGame ()
 //-------------------------------------------------------------------------------------------------------------------
 //
 // Set a color for the transfer game
-void trn_setTransferColor (int whichSide, float red, float green, float blue, float alpha)
+void trn_setTransferColor(int whichSide, float red, float green, float blue, float alpha)
 //-------------------------------------------------------------------------------------------------------------------
 {
 	switch (whichSide)

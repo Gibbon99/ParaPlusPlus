@@ -1,23 +1,18 @@
-#include <gui/guiHighScore.h>
-#include <game/score.h>
-#include <game/player.h>
-#include <game/audio.h>
-#include <system/util.h>
-#include <game/particles.h>
-#include <system/gameEvents.h>
-#include <game/alertLevel.h>
-#include <ctime>
-#include <classes/paraRandom.h>
-#include <game/pathFind.h>
+#include "game/score.h"
+#include "game/player.h"
+#include "game/audio.h"
 #include "game/shipDecks.h"
 #include "game/game.h"
+#include "game/alertLevel.h"
+#include "system/util.h"
+#include "classes/paraRandom.h"
 
 int explosionDamage;
 
 //-------------------------------------------------------------------------------------------------------------
 //
 // Start on a random deck - lift 0
-std::string gam_returnStartingDeck ()
+std::string gam_returnStartingDeck()
 //-------------------------------------------------------------------------------------------------------------
 {
 	std::vector<std::string> randomDeckNames;
@@ -39,7 +34,7 @@ std::string gam_returnStartingDeck ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Start a new game
-void gam_startNewGame ()
+void gam_startNewGame()
 //-------------------------------------------------------------------------------------------------------------
 {
 	renderer.clearTextures ();
@@ -57,7 +52,7 @@ void gam_startNewGame ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Process game over event
-void gam_processGameOver ()
+void gam_processGameOver()
 //-------------------------------------------------------------------------------------------------------------
 {
 	if (playerDroid.sprite.animate ())      // Has the animation finished playing

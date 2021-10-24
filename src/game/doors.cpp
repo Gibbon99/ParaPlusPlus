@@ -1,13 +1,13 @@
-#include <game/shipDecks.h>
-#include <system/util.h>
-#include <game/audio.h>
-#include <game/player.h>
+#include "system/util.h"
+#include "game/shipDecks.h"
+#include "game/audio.h"
+#include "game/player.h"
 #include "game/doors.h"
 
-double doorAnimSpeed           = 1.0f;
-float  distanceForDoorSoundMax = 10;   // In meters
+double doorAnimSpeed {1.0f};
+float  distanceForDoorSoundMax {120};   // In pixels
 
-std::vector<_doorTrigger> doorTriggers;
+std::vector<_doorTrigger> doorTriggers {};
 
 // ----------------------------------------------------------------------------
 //
@@ -15,9 +15,6 @@ std::vector<_doorTrigger> doorTriggers;
 void gam_doorCheckTriggerAreas()
 // ----------------------------------------------------------------------------
 {
-//	int i = 0;
-//	int j = 0;
-
 	if (0 == doorTriggers.size ())
 		return;        // no doors on this level to process
 
@@ -59,7 +56,6 @@ void gam_doorCheckTriggerAreas()
 void gam_playDoorSound(int whichTrigger, std::string keyName)
 // ----------------------------------------------------------------------------
 {
-//	int   soundPan;
 	cpFloat distanceToDoor;
 	float   distanceSoundLevel;
 	float   distanceOrientation;
@@ -248,10 +244,10 @@ void gam_renderDoorFrames()
 void gam_doorTriggerSetup()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int i           = 0;
-	int currentTile = 0;
-	int sourceX     = 0;
-	int sourceY     = 0;
+	int i {0};
+	int currentTile {0};
+	int sourceX {0};
+	int sourceY {0};
 
 	_doorTrigger tempDoorTrigger;
 	_doorTrigger tempDoorBulletSensor;

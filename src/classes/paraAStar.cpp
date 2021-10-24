@@ -1,12 +1,10 @@
 #include <thread>
 #include <SDL2_gfxPrimitives.h>
+#include "io/logFile.h"
 #include "game/shipDecks.h"
 #include "game/doors.h"
 #include "system/util.h"
 #include "classes/paraAStar.h"
-
-//#define ASTAR_DEBUG 1
-#define ASTAR_DO_PATH_COMPRESS 1
 
 #define ASTAR_THREAD_STARTED        0
 #define ASTAR_PATH_TOO_SHORT        -1
@@ -133,7 +131,9 @@ bool paraAStar::stillRunning()
 bool paraAStar::areWaypointsReady()
 //--------------------------------------------------------------------------------------------------------
 {
-	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
+#ifdef ASTAR_DEBUG
+	log_addEvent (sys_getString ("[ %s ] Index [ %i ]", __func__, ID));
+#endif
 
 	return wayPointsReady;
 }
@@ -190,7 +190,7 @@ int paraAStar::findDistance(cpVect fromTile, cpVect toTile)
 	int costX {}, costY {};
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Checking distance between tiles.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ] Checking distance between tiles.", __func__, ID));
 #endif
 
 	costX = static_cast<int>(fromTile.x - toTile.x);
@@ -206,7 +206,7 @@ inline void paraAStar::addTileToOpenNode(cpVect whichTile, int moveCost, int par
 //--------------------------------------------------------------------------------------------------------
 {
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Adding new tile to openNode list.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ] Adding new tile to openNode list.", __func__, ID));
 #endif
 
 	_pathNode3 tempNode {};
@@ -223,13 +223,13 @@ inline void paraAStar::addTileToOpenNode(cpVect whichTile, int moveCost, int par
 	tempNode.f_score       = tempNode.g_movementCost + tempNode.h_estMoveCost;
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Tempnode movement cost [ %i ] estMoveCost [ %i ] f_score [ %i ].\n", ID, tempNode.g_movementCost, tempNode.h_estMoveCost, tempNode.f_score);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Tempnode movement cost [ %i ] estMoveCost [ %i ] f_score [ %i ].", __func__, ID, tempNode.g_movementCost, tempNode.h_estMoveCost, tempNode.f_score));
 #endif
 
-	openNodes.emplace_back (tempNode); //  push_back (tempNode);
+	openNodes.emplace_back (tempNode);
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Opennodes size [ %i ] parent [ %i ] moveCost [ %i ] distanceCost [ %i ].\n", ID, openNodes.size (), parent, tempNode.g_movementCost, tempNode.h_estMoveCost);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Opennodes size [ %i ] parent [ %i ] moveCost [ %i ] distanceCost [ %i ].", __func__, ID, openNodes.size (), parent, tempNode.g_movementCost, tempNode.h_estMoveCost));
 #endif
 }
 
@@ -244,12 +244,12 @@ int paraAStar::findLowestCostNode()
 
 	if (openNodes.empty ())
 	{
-		printf ("Thread [ %i ]: ERROR: No open nodes to search in paraAStar::findLowestCostNode.\n", ID);
+		log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: ERROR: No open nodes to search in paraAStar::findLowestCostNode.\n", __func__, ID));
 		return -1;
 	}
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Search the open nodes and find the one with the lowest total cost.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Search the open nodes and find the one with the lowest total cost.\n", __func__, ID));
 #endif
 
 	for (auto itr: openNodes)
@@ -270,11 +270,9 @@ void paraAStar::moveNodeToClosedList(int whichNodeIndex)
 //--------------------------------------------------------------------------------------------------------
 {
 	_pathNode4 tempNode {};
-//	std::vector<_pathNode2>::iterator itr{};
-//	int                               indexCount = 0;
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Move open node [ %i ] to closedNode list.\n", ID, whichNodeIndex);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Move open node [ %i ] to closedNode list.\n", __func__, ID, whichNodeIndex));
 #endif
 
 	if (whichNodeIndex > static_cast<int>(openNodes.size () - 1))
@@ -298,7 +296,7 @@ void paraAStar::moveNodeToClosedList(int whichNodeIndex)
 	currentNodePtrClosedList = static_cast<int>(closedNodes.size () - 1);
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: currentNodePtrClosedList is now [ %i ] - number closedNodes [ %i ]\n", ID, currentNodePtrClosedList, static_cast<int>(closedNodes.size ()));
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: currentNodePtrClosedList is now [ %i ] - number closedNodes [ %i ]", __func__, ID, currentNodePtrClosedList, static_cast<int>(closedNodes.size ())));
 #endif
 
 	if (whichNodeIndex == 0)
@@ -353,8 +351,8 @@ bool paraAStar::generateNewNode(int whichDirection)
 	int         moveTileCost {10};
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: ---\n", ID);
-	printf ("Thread [ %i ]: Generate a new node based on the node with the current lowest cost.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: ---\n", __func__, ID));
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Generate a new node based on the node with the current lowest cost.", __func__, ID));
 #endif
 
 	switch (whichDirection)
@@ -388,17 +386,17 @@ bool paraAStar::generateNewNode(int whichDirection)
 			break;
 	}
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Parent [ %i ] Direction [ %s ]\n", ID, currentNodePtrClosedList, directionStr.c_str ());
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Parent [ %i ] Direction [ %s ]", __func__, ID, currentNodePtrClosedList, directionStr.c_str ()));
 #endif
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: See if the node [ %s X: %f Y: %f ] is solid or not.\n", ID, directionStr.c_str (), tempNode.tileLocation.x, tempNode.tileLocation.y);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: See if the node [ %s X: %f Y: %f ] is solid or not.", __func__, ID, directionStr.c_str (), tempNode.tileLocation.x, tempNode.tileLocation.y));
 #endif
 
 	if (isTileSolid (static_cast<int>((tempNode.tileLocation.y * shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + tempNode.tileLocation.x)))
 	{
 #ifdef ASTAR_DEBUG
-		printf ("Thread [ %i ]: Tile is Solid - don't use.\n", ID);
+		log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Tile is Solid - don't use.", __func__, ID));
 #endif
 		return false; // Solid - don't use
 	}
@@ -413,13 +411,13 @@ bool paraAStar::generateNewNode(int whichDirection)
 // See if we have found a path to the destination tile
 //
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Look for destination [ %f %f ] to current [ %f %f ]\n", ID, destTile.x, destTile.y, tempNode.tileLocation.x, tempNode.tileLocation.y);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Look for destination [ %f %f ] to current [ %f %f ]", __func__, ID, destTile.x, destTile.y, tempNode.tileLocation.x, tempNode.tileLocation.y));
 #endif
 
 	if ((tempNode.tileLocation.x == destTile.x) && (tempNode.tileLocation.y == destTile.y))
 	{
 #ifdef ASTAR_DEBUG
-		printf ("Thread [ %i ]: Found the destination.\n\n", ID);
+		log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Found the destination.", __func__, ID));
 #endif
 		addTileToOpenNode (tempNode.tileLocation, moveTileCost, currentNodePtrClosedList);
 		if (openNodes.size () > 0)
@@ -462,14 +460,14 @@ bool paraAStar::generateNewNode(int whichDirection)
 
 		if (nodeIndex == 0)
 		{
-			printf ("ERROR: nodeIndex is 0\n\n");
+			log_addEvent (sys_getString ("[ %s ] ERROR: nodeIndex is 0.", __func__));
 			return false;
 		}
 
 		if (openNodes[openNodeSize - 1].g_movementCost < closedNodes[nodeIndex - 1].g_movementCost)
 		{
 #ifdef ASTAR_DEBUG
-			printf ("Thread [ %i ]: New node is better than the old one.\n", ID);
+			log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: New node is better than the old one.", __func__, ID));
 #endif
 			addTileToOpenNode (openNodes[openNodeSize - 1].tileLocation, moveTileCost, currentNodePtrClosedList);
 		}
@@ -486,7 +484,9 @@ void paraAStar::extractPath()
 	int        nodeParent {-1};
 	_pathNode5 tempNode {};
 
-	printf ("[ %i ] Starting extractPath\n", ID);
+#ifdef ASTAR_DEBUG
+	log_addEvent (sys_getString ("[ %s ] [ %i ] Starting extractPath.", __func__, ID));
+#endif
 
 	//
 	// Store the destination tile
@@ -499,11 +499,13 @@ void paraAStar::extractPath()
 
 	if (currentNodePtrClosedList == 0)
 	{
-		printf ("ERROR: node pointer is 0\n\n");
+		log_addEvent (sys_getString ("[ %s ] ERROR: node pointer is 0.", __func__));
 		return;
 	}
 
-	printf ("[ %i ] About to set first foundPath node\n", ID);
+#ifdef ASTAR_DEBUG
+	log_addEvent (sys_getString ("[ %s ] [ %i ] About to set first foundPath node", __func__, ID));
+#endif
 
 	tempNode.tileLocation = closedNodes[currentNodePtrClosedList - 1].tileLocation;
 	foundPath.emplace_back (tempNode);
@@ -512,7 +514,9 @@ void paraAStar::extractPath()
 	//
 	nodeParent = closedNodes[currentNodePtrClosedList - 1].parent;
 
-	printf ("ClosedNodes size [ %zu ] OpenNodes size [ %zu ]\n", closedNodes.size (), openNodes.size ());
+#ifdef ASTAR_DEBUG
+	log_addEvent (sys_getString ("[ %s ] ClosedNodes size [ %zu ] OpenNodes size [ %zu ]\n", __func__, closedNodes.size (), openNodes.size ()));
+#endif
 
 	//
 	// While we haven't reached the starting tile ( no parent )
@@ -632,7 +636,7 @@ cpVect paraAStar::getWaypoint()
 {
 	if (wayPoints.size () == 0)
 	{
-		printf ("STOP: Waypoint array is empty.\n\n");
+		log_addEvent (sys_getString ("[ %s ] STOP: Waypoint array is empty.", __func__));
 		aStarDirection = ASTAR_DIRECTION::ERROR;
 		return cpVect {};
 	}
@@ -695,19 +699,13 @@ int paraAStar::getWayPointsIndex()
 int paraAStar::searchThread()
 //--------------------------------------------------------------------------------------------------------
 {
-	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
-
-	printf ("Index %i Starting searchThread...\n", ID);
-
-//	printf ("Address of isRunning is : %p\n", &isRunning);
-
 	if (isRunning)
 		return ASTAR_STATUS_NOT_READY;
 
 	pathStatus = ASTAR_STATUS_NOT_READY;
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: AStar searchThread started...\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: AStar searchThread started...", __func__, ID));
 #endif
 
 	while (pathStatus == ASTAR_STATUS_NOT_READY)
@@ -722,7 +720,7 @@ int paraAStar::searchThread()
 			wayPointsReady = false;
 			isRunning      = false;
 #ifdef ASTAR_DEBUG
-			printf ("Thread [ %i ]: Error: couldn't find lowest cost node.\n", ID);
+			log_addEvent (sys_getString ("[ %s ] Thread [ %i ] Error: couldn't find lowest cost node.", __func__, ID));
 #endif
 			return ASTAR_STATUS_ERROR; // Something has gone wrong
 		}
@@ -745,10 +743,8 @@ int paraAStar::searchThread()
 	isRunning      = false;
 
 #ifdef ASTAR_DEBUG
-	printf ("\nThread [ %i ]: AStar found a valid path.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]. AStar found a valid path.", __func__, ID));
 #endif
-
-	printf ("\nThread [ %i ]: AStar found a valid path.\n", ID);
 
 	return ASTAR_STATUS_READY;
 }
@@ -777,7 +773,7 @@ void paraAStar::stopUsingPath()
 int paraAStar::requestNewPath(cpVect start, cpVect destination)
 //--------------------------------------------------------------------------------------------------------
 {
-	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
+	log_addEvent (sys_getString ("[ %s ] Index %i", __func__, ID));
 
 	float distanceTestResult = 0.0f;
 
@@ -793,7 +789,7 @@ int paraAStar::requestNewPath(cpVect start, cpVect destination)
 	distanceTestResult = cpvdist (start, destination);
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: AStar distance between start and destination [ %f ]\n", ID, distanceTestResult);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: AStar distance between start and destination [ %f ]", __func__, ID, distanceTestResult));
 #endif
 
 	if (distanceTestResult < ASTAR_PATH_TOO_SHORT_DISTANCE)
@@ -804,7 +800,7 @@ int paraAStar::requestNewPath(cpVect start, cpVect destination)
 	addTileToOpenNode (startTile, 0, -1);
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: About to start thread from class.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: About to start thread from class.", __func__, ID));
 #endif
 
 	return ASTAR_THREAD_STARTED;
@@ -819,10 +815,8 @@ std::thread::id paraAStar::startThread()
 	threadID = new std::thread (&paraAStar::searchThread, this);
 
 #ifdef ASTAR_DEBUG
-	printf ("ThreadID %i\n", threadID->get_id ());
+	log_addEvent (sys_getString ("[ %s ] ThreadID %i", __func__, threadID->get_id ()));
 #endif
 
 	return threadID->get_id ();
-
-	//	threadID->detach ();
 }

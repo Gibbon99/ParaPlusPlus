@@ -138,6 +138,8 @@ static void cpBodySanityCheck(const cpBody *body)
 
 cpBool cpBodyIsSleeping(const cpBody *body)
 {
+	cpAssertSaneBody(body);
+
 	return (body->sleeping.root != ((cpBody *) 0));
 }
 

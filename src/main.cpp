@@ -47,7 +47,7 @@ Uint32 sys_getCurrentTime()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Timer callback to track the Update and Render FPS
-Uint32 fpsCallback(Uint32 interval, void *param)
+Uint32 fpsCallback(Uint32 interval, [[maybe_unused]]void *param)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	thinkFPSPrint = thinkFPS;
@@ -61,7 +61,7 @@ Uint32 fpsCallback(Uint32 interval, void *param)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Entry point - fixed update time step with unrestricted rendering
-int main(int argc, char *argv[])
+int main([[maybe_unused]]int argc, [[maybe_unused]]char *argv[])
 //----------------------------------------------------------------------------------------------------------------------
 {
 	double msPerUpdate  = 1000.0f / TICKS_PER_SECOND;

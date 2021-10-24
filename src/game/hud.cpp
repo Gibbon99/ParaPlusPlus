@@ -1,13 +1,13 @@
-#include <gui/guiLanguage.h>
-#include <game/transfer.h>
-#include <game/transferGame.h>
-#include "system/startup.h"
-#include "system/util.h"
+#include "gui/guiLanguage.h"
+#include "game/transfer.h"
+#include "game/transferGame.h"
 #include "game/hud.h"
 #include "game/score.h"
+#include "system/startup.h"
+#include "system/util.h"
 
 std::string hudText;
-std::string hudScore;
+//std::string hudScore;
 double      hudTextPosX;
 double      hudTextPosY;
 double      hudScorePosX;

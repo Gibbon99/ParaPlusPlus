@@ -1,10 +1,9 @@
 #include <vector>
 #include <iostream>
-#include <system/startup.h>
-#include <system/util.h>
+#include "io/logFile.h"
+#include "system/startup.h"
+#include "system/util.h"
 #include "classes/paraAudio.h"
-
-//#define AUDIO_DEBUG 1
 
 #define MAX_NUM_CHANNELS    64
 #define DEFAULT_NUM_CHANNELS    16
@@ -51,7 +50,7 @@ void paraAudio::ReleaseRef()
 //
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
-std::string paraAudio::int_getString(std::string format, ...)
+std::string paraAudio::int_getString(const std::string &format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	const char *const zcFormat = format.c_str ();
@@ -98,10 +97,10 @@ int paraAudio::init(int numMaxActiveChannels, audioFunctionPtrStr outputFunction
 
 	for (auto i = 0; i < SDL_GetNumAudioDrivers (); ++i)
 	{
-		logFile.write (sys_getString ("%i: %s", i, SDL_GetAudioDriver (i)));
+		log_addEvent (sys_getString ("%i: %s", i, SDL_GetAudioDriver (i)));
 	}
 
-	logFile.write (sys_getString ("Using audio driver: %s\n", SDL_GetCurrentAudioDriver ()));
+	log_addEvent (sys_getString ("Using audio driver: %s\n", SDL_GetCurrentAudioDriver ()));
 
 	if ((numMaxActiveChannels < 0) || (numMaxActiveChannels > MAX_NUM_CHANNELS))
 	{
@@ -328,8 +327,7 @@ bool paraAudio::load(std::string fileName)
 	audio.insert (std::pair<std::string, __audio> (tempAudio.keyName, tempAudio));
 
 #ifdef MY_DEBUG
-	funcOutput (-1, int_getString ("Loaded [ %s ] with key [ %s ]", tempAudio.fileName.c_str (), tempAudio.keyName.c_str ()));
-	std::cout << "Loaded file : " << tempAudio.fileName << std::endl;
+	log_addEvent (sys_getString ("[ %s ] Loaded file [ %s ] with key [ %s ]", __func__, tempAudio.fileName.c_str (), tempAudio.keyName.c_str (), tempAudio.fileName.c_str ()));
 #endif
 
 	return true;

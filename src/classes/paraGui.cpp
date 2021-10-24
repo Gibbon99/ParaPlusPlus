@@ -2,11 +2,10 @@
 #include <physfs.h>
 #include <iostream>
 #include <utility>
-#include <game/audio.h>
-#include <io/console.h>
-#include <system/util.h>
+#include "game/audio.h"
+#include "io/console.h"
+#include "system/util.h"
 #include "classes/paraGui.h"
-
 
 void paraGui::AddRef()
 {
@@ -34,7 +33,7 @@ int paraGui::getActiveObjectIndex()
 //----------------------------------------------------------------------------------------------------------------------
 {
 #ifdef MY_GUI_DEBUG
-	std::cout << "getActiveObjectIndex. CurrentScreen : " << currentScreen << std::endl;
+	logFile.write (sys_getString ("[ %s ] getActiveObjectIndex. CurrentScreen [ %i ]", __func__, currentScreen));
 #endif
 
 	return guiScreens[currentScreen].objectIDIndex[guiScreens[currentScreen].selectedObject];
@@ -61,7 +60,7 @@ int paraGui::getCurrentScreen()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a new active object for a dialogbox
-void paraGui::setActiveObjectDialogbox(int whichDialogbox, int objectType, std::string objectID)
+void paraGui::setActiveObjectDialogbox(int whichDialogbox, [[maybe_unused]]int objectType, std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int indexCount = 0;
@@ -72,7 +71,6 @@ void paraGui::setActiveObjectDialogbox(int whichDialogbox, int objectType, std::
 	for (auto indexItr: guiDialogBoxes[whichDialogbox].objectIDIndex)
 	{
 		switch (indexItr)
-//		switch (guiDialogBoxes[whichDialogbox].objectType[indexCount])
 		{
 			case GUI_OBJECT_BUTTON:
 				if (guiButtons[guiDialogBoxes[whichDialogbox].objectIDIndex[indexCount]].ID == objectID)
@@ -125,7 +123,7 @@ void paraGui::setActiveObject(int whichScreen, int objectType, std::string objec
 	}
 
 #ifdef MY_GUI_DEBUG
-	std::cout << "setActiveObject : " << --indexCount << " whichScreen : " << whichScreen << " objectType : " << objectType << " ObjectID : " << objectID << std::endl;
+	logFile.write (sys_getString ("[ %s ] setActiveObject [ %i ] whichScreen [ %i ] objectType [ %i ] ObjectID [ %s ]", __func__, indexCount, whichScreen, objectType, objectID.c_str ()));
 #endif
 }
 
@@ -147,7 +145,7 @@ void paraGui::setCurrentScreen(int newScreen)
 	currentScreen = newScreen;
 
 #ifdef MY_GUI_DEBUG
-	std::cout << "Setting currentScreen to : " << currentScreen << std::endl;
+	logFile.write (sys_getString ("Setting currentScreen to [ %i ] ", __func__, currentScreen));
 #endif
 }
 
@@ -371,14 +369,8 @@ int paraGui::getIndex(int objectType, const std::string &objectID)
 		case GUI_OBJECT_SCREEN:
 			for (const auto &itr: guiScreens)
 			{
-#ifdef MY_GUI_DEBUG
-				std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ]" << std::endl;
-#endif
 				if (itr.ID == objectID)
 				{
-#ifdef MY_GUI_DEBUG
-					std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ] - FOUND" << std::endl;
-#endif
 					return indexCounter;
 				}
 				indexCounter++;
@@ -389,14 +381,8 @@ int paraGui::getIndex(int objectType, const std::string &objectID)
 		case GUI_OBJECT_DIALOGBOX:
 			for (const auto &itr: guiDialogBoxes)
 			{
-#ifdef MY_GUI_DEBUG
-				std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ]" << std::endl;
-#endif
 				if (itr.ID == objectID)
 				{
-#ifdef MY_GUI_DEBUG
-					std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ] - FOUND" << std::endl;
-#endif
 					return indexCounter;
 				}
 
@@ -409,14 +395,8 @@ int paraGui::getIndex(int objectType, const std::string &objectID)
 
 			for (const auto &itr: guiButtons)
 			{
-#ifdef MY_GUI_DEBUG
-				std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ]" << std::endl;
-#endif
 				if (itr.ID == objectID)
 				{
-#ifdef MY_GUI_DEBUG
-					std::cout << "getIndex : Looking for [ " << indexCounter << " ] match for " << objectID << " to [ " << itr.ID << " ] - FOUND" << std::endl;
-#endif
 					return indexCounter;
 				}
 				indexCounter++;
@@ -485,6 +465,7 @@ int paraGui::getIndex(int objectType, const std::string &objectID)
 
 				indexCounter++;
 			}
+			break;
 
 		default:
 			return GUI_OBJECT_NOT_FOUND;
@@ -945,7 +926,7 @@ void paraGui::setScrollDelay(int objectIndex, double newScrollDelay)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the scrolling speed for a scrollbox
-void paraGui::setScrollSpeed(int objectType, const std::string &objectID, double newScrollSpeed)
+void paraGui::setScrollSpeed([[maybe_unused]]int objectType, const std::string &objectID, double newScrollSpeed)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex = 0;
@@ -2366,7 +2347,7 @@ int paraGui::getRadius(int objectType, int objectIndex)
 __PARA_COLOR paraGui::getColor(int objectType, int objectIndex, int whichColor)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	__PARA_COLOR badColor;
+	__PARA_COLOR badColor {};
 
 	badColor.r = PARA_GUI_CODES::GUI_OBJECT_NOT_FOUND;
 	badColor.g = PARA_GUI_CODES::GUI_OBJECT_NOT_FOUND;
@@ -2859,7 +2840,7 @@ void paraGui::setActiveDialogbox(std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Find the object on the current screen and make it active
-void paraGui::setActive(std::string objectID)
+void paraGui::setActive(const std::string &objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	unsigned long indexCount = 0;
@@ -3046,7 +3027,7 @@ bool paraGui::isReady(int objectType, int objectIndex)
 //-----------------------------------------------------------------------------
 //
 // Return if an object can be selected or not
-bool paraGui::canBeSelected(int objectType, int [[maybe_unused]] whichObject)
+bool paraGui::canBeSelected(int objectType, [[maybe_unused]]int whichObject)
 //-----------------------------------------------------------------------------
 {
 	switch (objectType)
@@ -3158,8 +3139,8 @@ void paraGui::processMousePosition()
 void paraGui::processMovementKeysDialogbox()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int indexCount     = 1;
-	int selectedSlider = guiDialogBoxes[currentDialogbox].objectIDIndex[guiDialogBoxes[currentDialogbox].selectedObject];
+	int indexCount = 1;
+//	int selectedSlider = guiDialogBoxes[currentDialogbox].objectIDIndex[guiDialogBoxes[currentDialogbox].selectedObject];
 
 	if (keyBinding[KEY_RIGHT].active)
 	{
@@ -3668,7 +3649,7 @@ void paraGui::setDefaultKeybindings()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the repeat state for keys
-int paraGui::getRepeatOff()
+int paraGui::getRepeatOff() const
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return repeatOff;

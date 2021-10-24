@@ -1,5 +1,4 @@
-#ifndef PARA_PARAAI2_H
-#define PARA_PARAAI2_H
+#pragma once
 
 #include "paraAStar.h"
 
@@ -17,10 +16,7 @@
 // Use strongly typed enumeration type
 enum class AI2_PATROL_ACTIONS
 {
-	AI2_NORMAL_PATROL = 0,
-	AI2_FIND_WAYPOINT,
-	AI2_FOLLOW_ASTAR,
-	AI2_MOVE_DIRECT_TO_LOCATION
+	AI2_FIND_WAYPOINT = 0
 };
 
 enum _AI2_MODES
@@ -161,5 +157,3 @@ private:
 	int                       ai[AI2_MODE_NUMBER] {};
 	PATROL_WAYPOINT_DIRECTION patrolWaypointDirection;
 };
-
-#endif //PARA_PARAAI2_H

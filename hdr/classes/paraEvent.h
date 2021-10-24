@@ -1,12 +1,11 @@
-#ifndef PARA_PARAEVENT_H
-#define PARA_PARAEVENT_H
+#pragma once
 
 #include <string>
 
 class paraEvent
 {
 public:
-	paraEvent (int actionType)
+	paraEvent(int actionType)
 	{
 		action  = actionType;
 		counter = 0;
@@ -24,13 +23,13 @@ public:
 class paraEventConsole
 {
 public:
-	paraEventConsole (int newAction, const std::string &newLine)
+	paraEventConsole(int newAction, const std::string &newLine)
 	{
-		action = newAction;
+		action         = newAction;
 		newConsoleLine = newLine;
 	}
 
-	int action;
+	int         action;
 	std::string newConsoleLine;
 };
 
@@ -42,7 +41,7 @@ public:
 class paraEventLogfile : public paraEvent
 {
 public:
-	paraEventLogfile (int newAction, std::string newText) : paraEvent (newAction)
+	paraEventLogfile(int newAction, std::string newText) : paraEvent (newAction)
 	{
 		newLogfileLine = newText;
 	}
@@ -62,7 +61,7 @@ class paraEventGame
 {
 public:
 
-	paraEventGame (int newAction, int newCounter, const std::string &newText1, const std::string &newText2, const std::string &newText3)
+	paraEventGame(int newAction, int newCounter, const std::string &newText1, const std::string &newText2, const std::string &newText3)
 	{
 		action    = newAction;
 		counter   = newCounter;
@@ -90,11 +89,11 @@ class paraEventAudio
 public:
 	paraEventAudio(int newAction, int newDistance, int newPan, bool newLoop, const std::string &newKeyName)
 	{
-		action = newAction;
+		action   = newAction;
 		distance = newDistance;
-		pan = newPan;
-		loop = newLoop;
-		keyName = newKeyName;
+		pan      = newPan;
+		loop     = newLoop;
+		keyName  = newKeyName;
 	}
 
 	int         action;
@@ -103,5 +102,3 @@ public:
 	bool        loop;
 	std::string keyName;
 };
-
-#endif //PARA_PARAEVENT_H

@@ -326,7 +326,8 @@ void gam_processCollision(int droidA)
 	{
 		if (g_shipDeckItr->second.droid[droidA].userData == nullptr)
 		{
-			printf ("Error: Userdata is set to null - droid [ %i ]\n", droidA);
+
+			logFile.write (sys_getString ("[ %i ] - [ %s ] - Error: Userdata is set to null - droid [ %i ]\n", droidA, __func__));
 			return;
 		}
 		if (g_shipDeckItr->second.droid[droidA].userData->ignoreCollisionDroid)
@@ -444,7 +445,7 @@ void gam_checkActionWitness()
 				droidItr.ai2.modifyAIScore (AI2_MODE_ATTACK, 40 + difficultyValue);
 
 #ifdef MY_DEBUG
-				printf ("Droid witness an action - increase ATTACK.\n");
+				logFile.write (sys_getString ("[ %i ] - [ %s ] Droid witness an action - increase ATTACK.", droidItr.ai2.getArrayIndex (), __func__));
 #endif
 			}
 			else
@@ -461,19 +462,15 @@ void gam_checkActionWitness()
 void gam_damageToDroid(int targetDroid, int damageSource, int sourceDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
+	logFile.write (sys_getString ("[ %s ] - target %i damageSource %i sourceDroid %i", __func__, targetDroid, damageSource, sourceDroid));
 
-	printf ("gam_damageToDroid target %i damageSource %i sourceDroid %i\n", targetDroid, damageSource, sourceDroid);
-
-
-//	if (g_shipDeckItr->second.droid[targetDroid].currentMode != DROID_MODE_NORMAL)
-//		return;
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 64, 127, "damage");
 
 	switch (damageSource)
 	{
 		case PHYSIC_DAMAGE_BUMP:
 #ifdef MY_DEBUG
-			std::cout << "Damage to Droid " << targetDroid << " from BUMP" << std::endl;
+			logFile.write (sys_getString ("[ %s ] - Damage to droid [ %i ] from BUMP", __func__, targetDroid));
 #endif
 			if ((sourceDroid != TARGET_PLAYER) && (targetDroid != TARGET_PLAYER))     // Two droids colliding
 			{
@@ -529,7 +526,7 @@ void gam_damageToDroid(int targetDroid, int damageSource, int sourceDroid)
 			//
 			// BUG when target is -2 ??
 			//
-			std::cout << "Damage to Droid " << targetDroid << " from BULLET " << " from " << sourceDroid << std::endl;
+			logFile.write (sys_getString ("[ %s ] - Damage to droid [ %i ] from BULLET", __func__, targetDroid));
 
 			if ((targetDroid != TARGET_PLAYER) && (sourceDroid != TARGET_PLAYER) && (targetDroid != NO_ATTACK_TARGET))     // Droids shot this at another droid
 			{
@@ -593,7 +590,7 @@ void gam_removeDroids()
 				if (removeTargetItr.ai2.getTargetDroid () == droidItr.getIndex ())
 				{
 #ifdef MY_DEBUG
-					std::cout << "Removing dead droid : " << droidItr.getIndex () << " as target for : " << removeTargetItr.getIndex () << std::endl;
+					logFile.write (sys_getString ("[ %i ] - Removing dead droid with target of [ %i ]", droidItr.getIndex (), removeTargetItr.getIndex ()));
 #endif
 					removeTargetItr.ai2.setTargetDroid (NO_ATTACK_TARGET);
 					removeTargetItr.ai2.modifyAIScore (AI2_MODE_ATTACK, -55);

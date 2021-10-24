@@ -46,9 +46,7 @@ void con_processConsoleEventQueue()
 				{
 					case EVENT_ACTION_CONSOLE_ADD_LINE:
 						console.add (tempEvent->newConsoleLine);
-
-						std::cout << "Console text : " << tempEvent->newConsoleLine << std::endl;
-
+						log_addEvent (sys_getString ("Console [ %s ].", tempEvent->newConsoleLine.c_str ()));
 						break;
 
 					case EVENT_ACTION_CONSOLE_ADD_CHAR:
@@ -72,7 +70,7 @@ void con_processConsoleEventQueue()
 			}
 		}
 	}
-	cout << "CONSOLE thread stopped." << endl;
+	log_addEvent (sys_getString ("[ %s ] CONSOLE thread stopped.", __func__));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -110,12 +108,11 @@ void con_addEvent(int newAction, string newLine)
 	}
 	else if (mutexStatus == SDL_MUTEX_TIMEDOUT)
 	{
-		printf ("Timed out waiting for console mutex to unlock [ %s ] [ %s ]\n", CONSOLE_MUTEX_NAME, SDL_GetError ());
+		log_addEvent (sys_getString ("[ %s ] Timed out waiting for console mutex to unlock [ %s ] [ %s ]", __func__, CONSOLE_MUTEX_NAME, SDL_GetError ()));
 	}
 	else
 	{
-		printf ("Unable to lock mutex [ %s ] [ %s ]\n", CONSOLE_MUTEX_NAME, SDL_GetError ());
-		logFile.write (sys_getString ("Unable to lock mutex [ %s ] [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
+		log_addEvent (sys_getString ("[ %s ] Unable to lock mutex [ %s ] [ %s ].", __func__, CONSOLE_MUTEX_NAME, SDL_GetError ()));
 	}
 }
 
@@ -157,8 +154,6 @@ void con_renderConsole()
 		if (nullptr == tempSurface)
 		{
 			log_addEvent (sys_getString ("%s", "1. Unable to create temp surface when rendering console."));
-
-			printf ("Temp surface error count [ %i ]\n", errorCount);
 			errorCount++;
 			return;
 		}
@@ -222,7 +217,7 @@ void con_initConsole()
 	while (!evt_isThreadReady (CONSOLE_THREAD_NAME))
 	{
 #ifdef MY_DEBUG
-		cout << "Waiting for console thread to start..." << endl;
+		log_addEvent (sys_getString ("[ %s ] Waiting for console thread to start...", __func__));
 #endif
 	}// Wait for thread to be ready to use
 
@@ -250,7 +245,6 @@ void con_initConsole()
 	console.addCommand ("d_getOS", "Show which OS is in use.", sys_getOS);
 
 	console.addCommand ("testScript", "test", "as_testFunction");
-	console.addCommand ("testPlay", "Play sound", testPlay);
 	//
 	// Variables accessible from the console
 	//

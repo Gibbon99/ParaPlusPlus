@@ -1,9 +1,8 @@
-#ifndef PARA_PARARENDERER_H
-#define PARA_PARARENDERER_H
+#pragma once
 
 #include <string>
 #include <map>
-#include "../wrapper.h"
+#include "wrapper.h"
 
 enum FADE_STATE
 {
@@ -29,33 +28,33 @@ struct __rendererInfo
 	bool             supportsVSync           = false;
 };
 
-typedef void (*functionPtrStr) (std::string);
+typedef void (*functionPtrStr)(std::string);
 
-typedef void (*functionPtrOut) (int, std::string);
+typedef void (*functionPtrOut)(int, std::string);
 
 class paraRenderer
 {
 public:
 
-	paraRenderer ();
+	paraRenderer();
 
 	// Create things
-	void create (int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, bool useVSync, const std::string &windowTitle);
+	void create(int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, bool useVSync, const std::string &windowTitle);
 
-	void createRenderTargetTexture (std::string textureName, int logicalWidth, int logicalHeight, int setRenderScaleQuality);
+	void createRenderTargetTexture(std::string textureName, int logicalWidth, int logicalHeight, int setRenderScaleQuality);
 
-	Uint32 createRendererFlags (int rendererIndex);
+	Uint32 createRendererFlags(int rendererIndex);
 
 	// Get things
-	void getRendererInfo ();
+	void getRendererInfo();
 
-	std::string getCurrentBackingTexture ();
+	std::string getCurrentBackingTexture();
 
-	PARA_Texture *getRenderTarget (std::string textureName);
+	PARA_Texture *getRenderTarget(std::string textureName);
 
-	int renderWidth ();
+	int renderWidth();
 
-	int renderHeight ();
+	int renderHeight();
 
 	int getNumRenderers();
 
@@ -65,47 +64,49 @@ public:
 
 
 	// Set things
-	void setShutdownFunction (functionPtrStr outputFunction);
+	void setShutdownFunction(functionPtrStr outputFunction);
 
-	void setConOutFunction (functionPtrOut outputFunction);
+	void setConOutFunction(functionPtrOut outputFunction);
 
-	void setCurrentBackingTexture (std::string newActiveTexture);
+	void setCurrentBackingTexture(std::string newActiveTexture);
 
-	void useNewRenderer (int newRendererIndex);
+	void useNewRenderer(int newRendererIndex);
 
 	// Misc
-	void prepareFrame ();
+	void prepareFrame();
 
-	void presentFrame ();
+	void presentFrame();
 
-	void copyCurrentRenderTarget ();
+	void copyCurrentRenderTarget();
 
-	void updateFade ();
+	void updateFade();
 
-	void prepareFade ();
+	void prepareFade();
 
 	// Debug
-	void d_getAllBackingTextures ();
+	void d_getAllBackingTextures();
 
-	void d_getCurrentRenderer ();
+	void d_getCurrentRenderer();
 
-	void d_getCurrentBackingTexture ();
+	void d_getCurrentBackingTexture();
 
 	// Display all the available renderers
-	void d_getAllRenderers ();
+	void d_getAllRenderers();
 
 	// Utils
-	void verifyRenderer ();
+	void verifyRenderer();
 
-	void AddRef ();
+	void AddRef();
 
-	void ReleaseRef ();
+	void ReleaseRef();
 
-	void clearTextures();
+	void clearTextures() const;
 
-	PARA_Texture *getFadeOffTexture ();
+	int getFadeState() const;
 
-	std::string int_getString (std::string format, ...);
+	PARA_Texture *getFadeOffTexture();
+
+	std::string int_getString(std::string format, ...);
 
 	// The window we'll be rendering to
 	PARA_Window   *window                                          = nullptr;
@@ -121,16 +122,14 @@ private:
 	int                                     cacheWinFlags;
 	int                                     whichRenderer;
 	double                                  currentFadeAlpha;
-	bool                                    int_useVSync = true;
+	bool                                    int_useVSync           = true;
 	bool                                    targetTextureAvailable = false;
 	double                                  fadeAmount;
 	functionPtrStr                          shutdownFunc;
 	functionPtrOut                          consoleOutFunc;
-	PARA_Texture                            *fadeTextureCopy;   // Destination to copy the current backing texture to
+	PARA_Texture  *fadeTextureCopy;   // Destination to copy the current backing texture to
 	std::vector<__rendererInfo>             rendererInfo;
 	std::map<std::string, __backingTexture> backingTextures;
 	std::string                             activeBackingTexture;
 	std::string                             cacheTitle;
 };
-
-#endif //PARA_PARARENDERER_H

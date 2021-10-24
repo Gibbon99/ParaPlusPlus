@@ -1,18 +1,15 @@
-#include <game/database.h>
-#include <game/hud.h>
-#include <system/util.h>
-#include <game/audio.h>
-#include <game/lifts.h>
-#include <system/gameEvents.h>
-#include <game/alertLevel.h>
-#include <game/game.h>
-#include <game/transferGame.h>
-#include <game/particles.h>
-#include <gui/guiHighScore.h>
-#include <game/score.h>
 #include <SDL2_gfxPrimitives.h>
+#include "io/logFile.h"
+#include "system/util.h"
+#include "game/database.h"
+#include "game/hud.h"
+#include "game/audio.h"
+#include "game/lifts.h"
+#include "game/alertLevel.h"
+#include "game/game.h"
+#include "game/transferGame.h"
+#include "game/particles.h"
 #include "game/player.h"
-
 #include "classes/paraBullet.h"
 
 paraDroid playerDroid;
@@ -285,7 +282,6 @@ void gam_checkPlayerHealth()
 {
 	float dangerHealthLevel;
 	float newAnimationSpeed;
-//	static bool lowEnergySoundPlaying = false;
 
 	//
 	// Process player health and animation
@@ -293,6 +289,8 @@ void gam_checkPlayerHealth()
 	{
 		if (playerDroid.getCurrentMode () != DROID_MODE_EXPLODING)
 		{
+			log_addEvent (sys_getString ("[ %s ] Player mode set to DROID_MODE_EXPLODING.", __func__));
+
 			playerDroid.setCurrentMode (DROID_MODE_EXPLODING);
 
 			playerDroid.setVelocity (cpVect {0, 0});
@@ -320,7 +318,6 @@ void gam_checkPlayerHealth()
 		playerDroid.sprite.setLowHealth (true);
 		if (!audio.isPlaying ("lowEnergy"))
 		{
-//			lowEnergySoundPlaying = true;
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "lowEnergy");
 		}
 	}
@@ -329,7 +326,6 @@ void gam_checkPlayerHealth()
 		playerDroid.sprite.setLowHealth (false);
 		if (audio.isPlaying ("lowEnergy"))
 		{
-//			lowEnergySoundPlaying = false;
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "lowEnergy");
 		}
 	}
@@ -351,14 +347,16 @@ void gam_checkPlayerHealth()
 void gam_damageToPlayer(int damageSource, int sourceDroid)
 //-----------------------------------------------------------------------------------------------------------------
 {
-
 #ifdef MY_DEBUG
-	printf ("DamageToPlayer : damageSource [ %i ] sourceDroid [ %i ]\n\n", damageSource, sourceDroid);
+	log_addEvent (sys_getString ("[ %s ] damageSource [ %i ] sourceDroid [ %i ]", __func__, damageSource, sourceDroid));
 #endif
 
 	switch (damageSource)
 	{
 		case PHYSIC_DAMAGE_BUMP:
+#ifdef MY_DEBUG
+			log_addEvent (sys_getString ("[ %s ] Player damaged by BUMP.", __func__));
+#endif
 			bounceCounter++;
 			if (bounceCounter > maxNumBumps)
 				return;
@@ -373,7 +371,7 @@ void gam_damageToPlayer(int damageSource, int sourceDroid)
 
 		case PHYSIC_DAMAGE_BULLET:
 #ifdef MY_DEBUG
-			std::cout << "Player hit by bullet" << std::endl;
+			log_addEvent (sys_getString ("[ %s ] Player hit by BULLET.", __func__));
 #endif
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "damage");
 			playerDroid.setCurrentHealth (playerDroid.getCurrentHealth () - dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].getDroidType ()].bulletDamage);
@@ -450,13 +448,13 @@ void gam_processInfluenceTime()
 		playerDroid.setLowInfluenceTimeLeft (false);
 
 #ifdef MY_DEBUG
-		std::cout << "Influence time is up." << std::endl;
+		log_addEvent (sys_getString ("[ %s ] Influence time is up.", __func__));
 #endif
 	}
 
 #ifdef MY_DEBUG
 	if (playerDroid.getLowInfluenceTimeLeft ())
-		std::cout << "Influence time is about to run out" << std::endl;
+		log_addEvent (sys_getString ("[ %s ] Influence time is about to run out.", __func__));
 #endif
 }
 

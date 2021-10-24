@@ -1,22 +1,20 @@
-#include <system/startup.h>
-#include <io/console.h>
-#include <game/healing.h>
-#include <game/lifts.h>
-#include <game/player.h>
-#include <system/util.h>
-#include <sdl2_gfx/SDL2_gfxPrimitives.h>
-#include <classes/paraBullet.h>
-#include <system/gameEvents.h>
-#include <game/lightMaps.h>
-#include <game/tiles.h>
-#include <game/texture.h>
-#include <game/audio.h>
-#include <game/score.h>
-#include <game/pathFind.h>
+#include "sdl2_gfx/SDL2_gfxPrimitives.h"
+#include "classes/paraBullet.h"
+#include "io/console.h"
+#include "system/util.h"
+#include "system/gameEvents.h"
+#include "system/startup.h"
+#include "game/healing.h"
+#include "game/lifts.h"
+#include "game/player.h"
+#include "game/lightMaps.h"
+#include "game/tiles.h"
+#include "game/texture.h"
+#include "game/audio.h"
+#include "game/score.h"
 #include "game/shipDecks.h"
 #include "game/doors.h"
 #include "game/terminal.h"
-#include "game/game.h"
 #include "game/alertLevel.h"
 
 int                                                    tileSize;
@@ -430,7 +428,7 @@ void gam_renderSingleTile(int destX, int destY, int tileIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create the texture to represent the current deck level
-void gam_createDeckTexture(std::string deckName)
+void gam_createDeckTexture(const std::string &deckName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int tileIndex;
@@ -538,11 +536,6 @@ void gam_changeToDeck(string deckName, int whichLift)
 
 	// Player
 	gam_clearPlayerTrail ();
-
-	// TEST
-//	gam_resetAllPaths ();
-
-//	gam_checkPlayerHealth();    // See if low energy sound needs to restart
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -602,11 +595,11 @@ void gam_renderVisibleScreen(double interpolation)
 void gam_showWayPoints(const std::string levelName)
 //-------------------------------------------------------------------------------------------------------------------------
 {
-	int          indexCount;
-	cpVect       lineStart;
-	cpVect       lineFinish;
-	_lineSegment tempLine;
-	cpVect       wallStartDraw, wallFinishDraw;
+	int          indexCount {};
+	cpVect       lineStart {};
+	cpVect       lineFinish {};
+	_lineSegment tempLine {};
+	cpVect       wallStartDraw, wallFinishDraw {};
 
 	indexCount = 0;
 
@@ -684,7 +677,7 @@ void gam_setDeckIsDead()
 void gam_checkAllLevels()
 //-------------------------------------------------------------------------------------------------------------------------
 {
-	for (auto deckItr: shipdecks)
+	for (const auto &deckItr: shipdecks)
 	{
 		if (!deckItr.second.deckIsDead)
 			return;     // One still got droids on it

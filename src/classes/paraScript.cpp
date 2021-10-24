@@ -8,7 +8,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Restart the script engine - stop and free memory - clear all arrays
-void paraScript::restart ()
+void paraScript::restart()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	scriptEngineRunning = false;
@@ -49,7 +49,7 @@ void paraScript::restart ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start the script engine
-bool paraScript::init (scriptFunctionPtrStr outputFunction, asFUNCTION_t scriptOutputFunction)
+bool paraScript::init(scriptFunctionPtrStr outputFunction, asFUNCTION_t scriptOutputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	scriptEngineRunning = false;
@@ -71,8 +71,6 @@ bool paraScript::init (scriptFunctionPtrStr outputFunction, asFUNCTION_t scriptO
 
 	RegisterStdString (scriptEngine);
 
-//	RegisterScriptArray(scriptEngine, true);
-
 	// What version are we running
 	funcOutput (-1, sys_getString ("Script: Script Engine version - [ %s ]", asGetLibraryVersion ()));
 
@@ -87,7 +85,7 @@ bool paraScript::init (scriptFunctionPtrStr outputFunction, asFUNCTION_t scriptO
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Execute a script function from the host
-void paraScript::run (const std::string &functionName, const std::string &param)
+void paraScript::run(const std::string &functionName, const std::string &param)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int returnCode = 0;
@@ -103,7 +101,7 @@ void paraScript::run (const std::string &functionName, const std::string &param)
 
 	for (const auto &funcItr: scriptFunctions)
 	{
-		std::cout << sys_getString ("Looking for function [ %s ] to [ %s ] to execute", functionName.c_str (), funcItr.scriptName.c_str ()) << std::endl;
+		logFile.write (sys_getString ("Looking for function [ %s ] to [ %s ] to execute", functionName.c_str (), funcItr.scriptName.c_str ()));
 
 		if (scriptEngine != context->GetEngine ())
 		{
@@ -139,9 +137,9 @@ void paraScript::run (const std::string &functionName, const std::string &param)
 					context->SetArgAddress (0, static_cast<void *>(new std::string (param)));
 				}
 			}
-#ifdef MY_DEBUG
-			std::cout << "Context state : " << getContextState (context->GetState ()) << std::endl;
-			std::cout << "Execute : " << functionName << std::endl;
+#ifdef MY_DEBUG_SCRIPT
+			funcOutput (-1, sys_getString ("Context state : [ %s ] ", getContextState (context->GetState ()).c_str ()));
+			funcOutput (-1, sys_getString ("Execute [ %s ]", functionName.c_str ()));
 #endif
 			if (asEXECUTION_PREPARED != context->GetState ())
 			{
@@ -188,7 +186,7 @@ void paraScript::run (const std::string &functionName, const std::string &param)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Cache the functionID from functions in the scripts
-void paraScript::cacheFunctions ()
+void paraScript::cacheFunctions()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_scriptFunctionName tempFunctionName;
@@ -232,10 +230,10 @@ void paraScript::cacheFunctions ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check if a filename is a valid script name
-bool paraScript::isScriptName (std::string scriptName)
+bool paraScript::isScriptName(const std::string &scriptName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto fileItr: scriptFileCache)
+	for (const auto &fileItr: scriptFileCache)
 	{
 		if (scriptName == fileItr.sectionName)
 			return true;
@@ -246,7 +244,7 @@ bool paraScript::isScriptName (std::string scriptName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new script to the array to be compiled
-void paraScript::addScript (std::string sectionName, std::string scriptContents)
+void paraScript::addScript(std::string sectionName, std::string scriptContents)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_scriptFileCache scriptFile;
@@ -260,7 +258,7 @@ void paraScript::addScript (std::string sectionName, std::string scriptContents)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Compile the script files into a single module
-bool paraScript::loadAndCompile ()
+bool paraScript::loadAndCompile()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int retCode = 0;
@@ -274,9 +272,6 @@ bool paraScript::loadAndCompile ()
 
 	for (auto &scriptItr: scriptFileCache)
 	{
-//		printf("Inside add section loop\n");
-
-//		scriptItr.scriptContents = fileSystem.getString(scriptItr.sectionName);
 		retCode = builder.AddSectionFromMemory (scriptItr.sectionName.c_str (), scriptItr.scriptContents.c_str (), scriptItr.scriptContents.size (), 0);
 		switch (retCode)
 		{
@@ -299,7 +294,7 @@ bool paraScript::loadAndCompile ()
 
 	SDL_Delay (200);
 
-	printf ("About to run BuildModule\n");
+	funcOutput (-1, "About to run BuildModule.");
 
 	//
 	// Build the script from the loaded sections using ScriptBuilder
@@ -307,13 +302,11 @@ bool paraScript::loadAndCompile ()
 	retCode = builder.BuildModule ();
 	if (retCode < 0)
 	{
-		//sys_shutdownWithError ("Failed to build the script module.");
+		sys_shutdownWithError ("Failed to build the script module.");
 		return false;
 	}
 
-	printf ("Finished buildModule\n");
-
-//	funcOutput ( -1, sys_getString ("Compiled scripts."));
+	funcOutput (-1, "Finished buildModule.");
 
 	return true;
 }
@@ -321,7 +314,7 @@ bool paraScript::loadAndCompile ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Register all the functions to make available to the script
-void paraScript::addHostFunction (const std::string &funcName, asSFuncPtr funcPtr)
+void paraScript::addHostFunction(const std::string &funcName, asSFuncPtr funcPtr)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int            returnCode;
@@ -352,23 +345,7 @@ void paraScript::addHostFunction (const std::string &funcName, asSFuncPtr funcPt
 		callTypeSet = true;
 	}
 
-	/*
-	if (callType < 0)
-	{
-		if (!strstr(asGetLibraryOptions(), "AS_MAX_PORTABILTY"))
-		{
-//			callType = asCALL_CDECL;
-			callType = asCALL_STDCALL;
-		}
-		else
-		{
-			callType = asCALL_GENERIC;
-			//callType = asCALL_STDCALL;
-		}
-	}
-*/
 	tempFunc.scriptFunctionName = funcName;
-//	tempFunc.hostFunctionPtr    = reinterpret_cast<int *>(funcPtr);
 	tempFunc.hostFunctionPtr    = asSFuncPtr (funcPtr);
 
 	returnCode = scriptEngine->RegisterGlobalFunction (funcName.c_str (), (asSFuncPtr &&) funcPtr, callType); //asCALL_CDECL);
@@ -385,7 +362,7 @@ void paraScript::addHostFunction (const std::string &funcName, asSFuncPtr funcPt
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Print out the variables that Angelscript knows about internally - DEBUGGING
-void paraScript::debugState ()
+void paraScript::debugState()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	asUINT stackLevel = 0;
@@ -424,19 +401,13 @@ void paraScript::debugState ()
 				funcOutput (-1, sys_getString (" %s = <null>\n", ctx->GetVarDeclaration (n, stackLevel)));
 			}
 		}
-		else
-		{
-//			auto *getValue = (cpVect *) varPointer;
-//			log_addEvent(sys_getString(" %s = {...}\n", ctx->GetVarDeclaration(n, stackLevel)));
-//			log_addEvent(sys_getString("Debug [ %3.3f %3.3f ]\n", getValue->x, getValue->y));
-		}
 	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Shutdown the script engine and remove the instance, cleaning up memory
-void paraScript::stop ()
+void paraScript::stop()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (context != nullptr)
@@ -457,7 +428,7 @@ void paraScript::stop ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new function that is defined in a script - create name to call it from host
-void paraScript::addScriptFunction (const std::string &funcName, std::string hostCallName)
+void paraScript::addScriptFunction(const std::string &funcName, std::string hostCallName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_scriptFunctionName tempFunctionName;
@@ -483,7 +454,7 @@ void paraScript::addScriptFunction (const std::string &funcName, std::string hos
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a variable to the array holding all the script accessible variables
-void paraScript::addHostVariable (const std::string &varName, void *varPtr)
+void paraScript::addHostVariable(const std::string &varName, void *varPtr)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_hostScriptVariables tempVar;
@@ -512,7 +483,7 @@ void paraScript::addHostVariable (const std::string &varName, void *varPtr)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the context state - return a string
-std::string paraScript::getContextState (int whichState)
+std::string paraScript::getContextState(int whichState)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (whichState)
@@ -555,7 +526,7 @@ std::string paraScript::getContextState (int whichState)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Error codes for AngelScript
-std::string paraScript::getScriptError (int errNo)
+std::string paraScript::getScriptError(int errNo)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (errNo)

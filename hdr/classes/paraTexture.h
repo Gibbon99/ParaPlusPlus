@@ -1,10 +1,9 @@
-#ifndef PARA_PARATEXTURE_H
-#define PARA_PARATEXTURE_H
+#pragma once
 
 #include <string>
-#include <wrapper.h>
 #include <map>
 #include <memory>
+#include "wrapper.h"
 
 typedef void      (*textureFunctionPtrStr)(int, std::string);
 
@@ -30,13 +29,9 @@ public:
 
 	void render(SDL_Rect *destination);
 
-	int getWidth();
+	int getWidth() const;
 
-	int getHeight();
-
-	bool createMap();
-
-	void loadMap();
+	int getHeight() const;
 
 	char pixelColor(int posX, int posY);
 
@@ -59,5 +54,3 @@ private:
 	textureFunctionPtrStr  funcOutput {};
 	textureFunctionPtrLoad funcLoad {};
 };
-
-#endif //PARA_PARATEXTURE_H

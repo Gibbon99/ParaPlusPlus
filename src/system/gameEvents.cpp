@@ -1,28 +1,26 @@
 #include <queue>
 #include <string>
-#include <game/texture.h>
-#include <game/shipDecks.h>
-#include <system/util.h>
-#include <classes/paraBullet.h>
-#include <game/particles.h>
-#include <game/lightMaps.h>
-#include <game/transfer.h>
-#include <game/alertLevel.h>
-#include <game/game.h>
-#include <gui/guiWonScreen.h>
-#include <gui/guiHighScore.h>
-#include <game/hud.h>
-#include <game/score.h>
-#include <gui/guiDeckView.h>
-#include "../../hdr/system/gameEvents.h"
-#include "../../hdr/classes/paraEvent.h"
+#include "classes/paraBullet.h"
+#include "game/hud.h"
+#include "game/score.h"
+#include "game/texture.h"
+#include "game/shipDecks.h"
+#include "game/particles.h"
+#include "game/lightMaps.h"
+#include "game/transfer.h"
+#include "game/alertLevel.h"
+#include "gui/guiWonScreen.h"
+#include "gui/guiDeckView.h"
+#include "io/logFile.h"
+#include "system/gameEvents.h"
+#include "system/util.h"
 
 std::queue<paraEventGame *> gameEvents;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new event to the game queue - only added when mutex is free. ie: Thread is not accessing the queue
-void gam_addEvent (int newAction, int newCounter, const string &newLine)
+void gam_addEvent(int newAction, int newCounter, const string &newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Mutex    *tempMutex;
@@ -59,13 +57,13 @@ void gam_addEvent (int newAction, int newCounter, const string &newLine)
 		PARA_UnlockMutex (tempMutex);
 	}
 	else
-		logFile.write (sys_getString ("Unable to lock mutex [ %s ] [ %s ]", GAME_MUTEX_NAME, SDL_GetError ()));
+		log_addEvent (sys_getString ("Unable to lock mutex [ %s ] [ %s ]", GAME_MUTEX_NAME, SDL_GetError ()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Returns the current size of the game event queue
-int gam_gameEventQueueSize ()
+int gam_gameEventQueueSize()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return gameEvents.size ();
@@ -74,7 +72,7 @@ int gam_gameEventQueueSize ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Run an event queue on the same thread as the graphics drawing thread
-void gam_processGameEventQueue ()
+void gam_processGameEventQueue()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	cpVect            tempVect;
@@ -137,10 +135,6 @@ void gam_processGameEventQueue ()
 					gam_loadShipDeck (tempEvent->gameText1);
 					break;
 
-				case EVENT_ACTION_GAME_LOAD_MAP:
-					gam_createCollisionMap (tempEvent->gameText1);
-					break;
-
 				case EVENT_ACTION_GAME_LOAD_FONT:
 					fontClass.load (sys_convertToInt (tempEvent->gameText3), tempEvent->gameText2, tempEvent->gameText1);
 					break;
@@ -199,11 +193,6 @@ void gam_processGameEventQueue ()
 					break;
 
 				case EVENT_ACTION_GAME_OVER:
-
-#ifdef MY_DEBUG
-					std::cout << "EVENT_ACTION_GAME_OVER" << std::endl;
-#endif
-
 //					gam_processGameOver();
 					break;
 
@@ -240,7 +229,7 @@ void gam_processGameEventQueue ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Changing decks, to clear all the events from previous deck
-void gam_clearGameEvents ()
+void gam_clearGameEvents()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static PARA_Mutex *gameMutex = nullptr;

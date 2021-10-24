@@ -1,9 +1,11 @@
-#include <cassert>
-#include <game/player.h>
-#include <classes/paraBullet.h>
-#include <system/util.h>
-#include <system/gameEvents.h>
+#include "game/player.h"
 #include "game/physicsCollisions.h"
+#include "system/util.h"
+#include "system/gameEvents.h"
+#include "io/logFile.h"
+#include "classes/paraBullet.h"
+
+#define PHYSICS_DEBUG 1
 
 cpBool doWallCollisions = cpTrue;
 
@@ -30,9 +32,13 @@ cpCollisionHandler *handlerParticleToDroid;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Post step remove to remove a object from the world
-static void postStepRemove(cpSpace *space, cpShape *shape, void *unused)
+static void postStepRemove(cpSpace *space, cpShape *shape, [[maybe_unused]]void *unused)
 //----------------------------------------------------------------------------------------------------------------------
 {
+#ifdef PHYSICS_DEBUG
+	log_addEvent (sys_getString ("[ %s ] Removing a shape and body from postStep callback.", __func__));
+#endif
+
 	cpSpaceRemoveBody (space, cpShapeGetBody (shape));
 	cpSpaceRemoveShape (space, shape);
 
@@ -54,7 +60,7 @@ void gam_setWallCollisions(bool newState)
 // Collision between player and wall
 // Used to ignore collisions for debugging
 //
-unsigned char handleCollisionPlayerWall(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+unsigned char handleCollisionPlayerWall([[maybe_unused]]cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return doWallCollisions;
@@ -63,7 +69,7 @@ unsigned char handleCollisionPlayerWall(cpArbiter *arb, [[maybe_unused]]cpSpace 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Handle two droid colliding - could be DROID to PLAYER, or DROID to DROID
-unsigned char handleCollisionDroidToDroid(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+unsigned char handleCollisionDroidToDroid([[maybe_unused]]cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	// Get the cpShapes involved in the collision
@@ -124,7 +130,9 @@ unsigned char handleCollisionDroidToDroid(cpArbiter *arb, [[maybe_unused]]cpSpac
 
 	gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", userDataA->dataValue, PHYSIC_DAMAGE_BUMP, userDataB->dataValue));
 
-	std::cout << "Droid [ " << userDataB->dataValue << " ] Collided with droid [ " << userDataA->dataValue << " ] " << std::endl;
+#ifdef PHYSICS_DEBUG
+	log_addEvent (sys_getString ("[ %s ] Droid [ %i ] collided with droid [ %i ]", __func__, userDataB->dataValue, userDataA->dataValue));
+#endif
 
 	return true;
 }
@@ -132,7 +140,7 @@ unsigned char handleCollisionDroidToDroid(cpArbiter *arb, [[maybe_unused]]cpSpac
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Player has left a lift sensor
-void handleSensorPlayerToLiftEnd(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+void handleSensorPlayerToLiftEnd([[maybe_unused]]cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	playerDroid.setOverLiftTile (false);
@@ -161,7 +169,7 @@ unsigned char handleSensorPlayerToLiftBegin(cpArbiter *arb, [[maybe_unused]]cpSp
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Player has left a healing tile sensor
-void handleSensorPlayerToHealingEnd(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+void handleSensorPlayerToHealingEnd([[maybe_unused]]cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	playerDroid.setOverHealingTile (false);
@@ -170,7 +178,7 @@ void handleSensorPlayerToHealingEnd(cpArbiter *arb, [[maybe_unused]]cpSpace *spa
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Player is over a healing tile sensor
-unsigned char handleSensorPlayerToHealingBegin(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+unsigned char handleSensorPlayerToHealingBegin([[maybe_unused]]cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	playerDroid.setOverHealingTile (true);
@@ -181,7 +189,7 @@ unsigned char handleSensorPlayerToHealingBegin(cpArbiter *arb, [[maybe_unused]]c
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Player has left a terminal tile sensor
-void handleSensorPlayerToTerminalEnd(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+void handleSensorPlayerToTerminalEnd([[maybe_unused]]cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	playerDroid.setOverTerminalTile (cpFalse);
@@ -190,7 +198,7 @@ void handleSensorPlayerToTerminalEnd(cpArbiter *arb, [[maybe_unused]]cpSpace *sp
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Player is over a terminal tile sensor
-unsigned char handleSensorPlayerToTerminalBegin(cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
+unsigned char handleSensorPlayerToTerminalBegin([[maybe_unused]]cpArbiter *arb, [[maybe_unused]]cpSpace *space, [[maybe_unused]]void *data)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	playerDroid.setOverTerminalTile (cpTrue);
@@ -212,12 +220,16 @@ unsigned char handleBulletToWall(cpArbiter *arb, [[maybe_unused]]cpSpace *space,
 
 	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
 
+	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
+
 	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
 	auto renderPosition = bullets[gam_getArrayIndex (userDataA->bulletID)].worldPosInPixels;    // TODO Do this with a function, not a call into the array
 	gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
 	gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
 
 	cpSpaceAddPostStepCallback (space, reinterpret_cast<cpPostStepFunc>(postStepRemove), a, nullptr);
+
+	return cpFalse;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -236,6 +248,9 @@ unsigned char handleBulletToBullet(cpArbiter *arb, [[maybe_unused]]cpSpace *spac
 
 	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
 	auto *userDataB = reinterpret_cast<_userData *>(dataPointerB);
+
+	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
+	bullets[gam_getArrayIndex (userDataB->bulletID)].inUse = false;
 
 	auto renderPosition = bullets[gam_getArrayIndex (userDataA->bulletID)].worldPosInPixels;    // TODO Do this with a function, not a call into the array
 	gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
@@ -270,11 +285,11 @@ unsigned char handleBulletToDroid(cpArbiter *arb, [[maybe_unused]]cpSpace *space
 	if (userDataA->dataValue == userDataB->dataValue)
 		return cpFalse;
 
+	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
+
 	gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", userDataB->dataValue, PHYSIC_DAMAGE_BULLET, userDataA->dataValue));
 	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
 	cpSpaceAddPostStepCallback (space, reinterpret_cast<cpPostStepFunc>(postStepRemove), a, nullptr);
-
-	printf ("Running bullet to droid.\n");
 
 	return cpFalse;
 }
@@ -293,6 +308,8 @@ unsigned char handleBulletToDoor(cpArbiter *arb, [[maybe_unused]]cpSpace *space,
 
 	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
 
+	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
+
 	auto renderPosition = bullets[gam_getArrayIndex (userDataA->bulletID)].worldPosInPixels;    // TODO Do this with a function, not a call into the array
 	gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
 	gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
@@ -300,6 +317,8 @@ unsigned char handleBulletToDoor(cpArbiter *arb, [[maybe_unused]]cpSpace *space,
 	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
 
 	cpSpaceAddPostStepCallback (space, reinterpret_cast<cpPostStepFunc>(postStepRemove), a, nullptr);
+
+	return cpFalse;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -383,10 +402,6 @@ void sys_setupCollisionHandlers()
 	// Enemy bullet hitting a closed door
 	handlerBulletToDoor = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_BULLET_ENEMY, PHYSIC_TYPE_DOOR_CLOSED);
 	handlerBulletToDoor->beginFunc = reinterpret_cast<cpCollisionBeginFunc>(handleBulletToDoor);
-
-
-
-
 	//
 	// Stop particles affecting droids
 //	handlerParticleToDroid = cpSpaceAddCollisionHandler (sys_returnPhysicsWorld (), PHYSIC_TYPE_PARTICLE, PHYSIC_TYPE_PLAYER);

@@ -13,7 +13,7 @@ bool        showIcon         = true;
 //-----------------------------------------------------------------------------
 //
 // Switch state for blinking player icon
-Uint32 gui_blinkPlayerIcon(Uint32 interval, void *param)
+Uint32 gui_blinkPlayerIcon(Uint32 interval, [[maybe_unused]]void *param)
 //-----------------------------------------------------------------------------
 {
 	showIcon = !showIcon;

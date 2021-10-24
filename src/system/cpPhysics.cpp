@@ -1,12 +1,12 @@
 #include <memory>
-#include <system/shutdown.h>
-#include <game/player.h>
-#include <game/shipDecks.h>
-#include <system/cpPhysics.h>
-#include <system/util.h>
-#include <game/physicsCollisions.h>
-#include <system/cpPhysicsDebug.h>
-
+#include "system/shutdown.h"
+#include "system/cpPhysics.h"
+#include "system/util.h"
+#include "system/cpPhysicsDebug.h"
+#include "game/player.h"
+#include "game/shipDecks.h"
+#include "game/physicsCollisions.h"
+#include "io/logFile.h"
 
 double  gravity;         // Set from script
 cpSpace *worldSpace;
@@ -209,7 +209,7 @@ void sys_setupDroidPhysics(const std::string &levelName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 #ifdef MY_DEBUG
-	std::cout << "Setting up enemy physics for level : " << levelName << std::endl;
+	log_addEvent (sys_getString ("[ %s ] Setting up enemy physics for level[ %s ].", __func__, levelName.c_str ()));
 #endif
 
 	if (!physicsStarted)
@@ -218,7 +218,7 @@ void sys_setupDroidPhysics(const std::string &levelName)
 	if (shipdecks.at (levelName).deckIsDead)   // No droids alive
 	{
 #ifdef MY_DEBUG
-		std::cout << "Level is dead - no physics to create." << std::endl;
+		log_addEvent (sys_getString ("[ %s ] Level [ %s ] is dead - no physics to create.", __func__, levelName.c_str ()));
 #endif
 		return;
 	}
@@ -226,7 +226,7 @@ void sys_setupDroidPhysics(const std::string &levelName)
 	if (shipdecks.at (levelName).droidPhysicsCreated)
 	{
 #ifdef MY_DEBUG
-		std::cout << "Droid physics already created for level : " << levelName << std::endl;
+		log_addEvent (sys_getString ("[ %s ] Droid physics already created for level [ %s ].", __func__, levelName.c_str ()));
 #endif
 		return;
 	}
@@ -260,7 +260,7 @@ void sys_setupDroidPhysics(const std::string &levelName)
 	}
 	shipdecks.at (levelName).droidPhysicsCreated = true;
 #ifdef MY_DEBUG
-	std::cout << "Droid physics created for level : " << levelName << std::endl;
+	log_addEvent (sys_getString ("[ %s ] Droid physics created for level [ %s ]", __func__, levelName.c_str ()));
 #endif
 }
 
@@ -429,7 +429,6 @@ void sys_createDoorBulletSensor(unsigned long whichDoor)
 	cpShapeSetFriction (doorBulletSensor[whichDoor].shape, 0.5f);
 	cpShapeSetCollisionType (doorBulletSensor[whichDoor].shape, PHYSIC_TYPE_DOOR_CLOSED);
 	cpShapeSetFilter (doorBulletSensor[whichDoor].shape, FILTER_CAT_DOOR_CLOSED);
-	//	cpShapeSetSensor (doorBulletSensor[whichDoor].shape, cpTrue);
 
 	doorBulletSensor[whichDoor].userData            = std::make_shared<_userData> ();
 	doorBulletSensor[whichDoor].userData->userType  = cpShapeGetCollisionType (doorBulletSensor[whichDoor].shape);
@@ -452,13 +451,11 @@ void gam_changeDoorFilters(int doorState, int whichDoor)
 		case DOOR_UP_OPENED:
 			cpShapeSetCollisionType (doorBulletSensor[whichDoor].shape, PHYSIC_TYPE_DOOR_OPEN);
 			cpShapeSetFilter (doorBulletSensor[whichDoor].shape, FILTER_CAT_DOOR_OPEN);
-//			FILTER_CAT_PLAYER.mask = PHYSIC_TYPE_ENEMY | PHYSIC_TYPE_BULLET_ENEMY | PHYSIC_TYPE_WALL;
 			break;
 
 		default:
 			cpShapeSetCollisionType (doorBulletSensor[whichDoor].shape, PHYSIC_TYPE_DOOR_CLOSED);
 			cpShapeSetFilter (doorBulletSensor[whichDoor].shape, FILTER_CAT_DOOR_CLOSED);
-//			FILTER_CAT_PLAYER.mask = PHYSIC_TYPE_ENEMY | PHYSIC_TYPE_BULLET_ENEMY | PHYSIC_TYPE_WALL | PHYSIC_TYPE_DOOR_CLOSED;
 			break;
 	}
 }

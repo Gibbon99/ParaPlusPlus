@@ -1,6 +1,5 @@
-#include <game/shipDecks.h>
-#include <game/lifts.h>
-#include <system/util.h>
+#include "game/shipDecks.h"
+#include "game/lifts.h"
 #include "game/terminal.h"
 
 std::vector<__tileSensor> terminals;
@@ -8,7 +7,7 @@ std::vector<__tileSensor> terminals;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a terminal sensor
-void gam_createTerminalSensor(int whichTerminal, int index)
+void gam_createTerminalSensor(int whichTerminal)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	terminals[whichTerminal].body = cpBodyNewStatic ();
@@ -40,7 +39,6 @@ void gam_clearTerminals()
 		}
 		if (terminalItr.body != nullptr)
 		{
-//			cpSpaceRemoveBody (sys_returnPhysicsWorld (), terminalItr.body);
 			terminalItr.body = nullptr;
 		}
 	}
@@ -53,16 +51,12 @@ void gam_clearTerminals()
 void gam_findTerminalPositions(const std::string &levelName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	__tileSensor tempTerminal;
+	__tileSensor tempTerminal {};
 
-	int countX        = 0;
-	int countY        = 0;
-	int currentTile   = 0;
-	int countTerminal = 0;
-
-	countTerminal = 0;
-	countX        = 0;
-	countY        = 0;
+	int countX {0};
+	int countY {0};
+	int currentTile {0};
+	int countTerminal {0};
 
 	if (!terminals.empty ())
 	{
@@ -83,7 +77,7 @@ void gam_findTerminalPositions(const std::string &levelName)
 
 			terminals.push_back (tempTerminal);
 
-			gam_createTerminalSensor (terminals.size () - 1, countTerminal);
+			gam_createTerminalSensor (terminals.size () - 1);
 
 			countTerminal++;
 		}

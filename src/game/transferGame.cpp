@@ -1,41 +1,38 @@
-#include <game/player.h>
-#include <game/database.h>
-#include <game/alertLevel.h>
-#include "game/hud.h"
 #include "system/util.h"
 #include "gui/guiLanguage.h"
+#include "game/player.h"
+#include "game/database.h"
+#include "game/hud.h"
 #include "game/transfer.h"
 #include "game/transferPlayer.h"
 #include "game/audio.h"
 #include "game/transferDroidAI.h"
 #include "game/transferGame.h"
 
-int                         transferPlayerWhichSide;
-int                         playerBlockPos;
-int                         transferTimeoutCountdown = 0;
-int                         transferTimeOut;
-int                         transferResultDelay;
-float                       transferDelayTime;
-std::vector<__TRANSFER_ROW> transferRows;
+int                         transferPlayerWhichSide {};
+int                         playerBlockPos {};
+int                         transferTimeoutCountdown {};
+int                         transferTimeOut {};
+int                         transferResultDelay {};
+float                       transferDelayTime {};
+std::vector<__TRANSFER_ROW> transferRows {};
 
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Deadlock the transfer - wait for sound to finish
-void trn_processDeadlock ()
+void trn_processDeadlock()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	if (audio.isPlaying ("transferdeadlock"))
 		return;
 
 	trn_initTransferValues (playerDroid.transferTargetDroidIndex);
-
-//	trn_prepareTransferGame ();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Check if all the circuits have timed out
-bool trn_checkForActiveCircuits ()
+bool trn_checkForActiveCircuits()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	trn_processCircuits ();
@@ -53,7 +50,7 @@ bool trn_checkForActiveCircuits ()
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Handle the end of transfer game
-void trn_processEndOfTransferGame ()
+void trn_processEndOfTransferGame()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	bool okToProceed = false;
@@ -141,7 +138,7 @@ void trn_processEndOfTransferGame ()
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Place a token onto a circuit
-void trn_placeToken (int rowIndex, int whichSide)
+void trn_placeToken(int rowIndex, int whichSide)
 //---------------------------------------------------------------------------------------------------------------------
 {
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transfer1");
@@ -181,7 +178,7 @@ void trn_placeToken (int rowIndex, int whichSide)
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Return the string showing the transfer countdown
-std::string trn_getTransferCountdown ()
+std::string trn_getTransferCountdown()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	return sys_getString ("%s %i", gui_getString ("transferFinish").c_str (), transferTimeoutCountdown);
@@ -189,17 +186,8 @@ std::string trn_getTransferCountdown ()
 
 //---------------------------------------------------------------------------------------------------------------------
 //
-// Process the end of the transfer game
-void trn_processTransferGameEnd ()
-//---------------------------------------------------------------------------------------------------------------------
-{
-
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-//
 // Play the transfer game - mode MODE_TRANSFER_GAME
-void trn_processTransferGame ()
+void trn_processTransferGame()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	static float transferTimeoutCounter = 0.0f;
@@ -226,17 +214,8 @@ void trn_processTransferGame ()
 
 //---------------------------------------------------------------------------------------------------------------------
 //
-// Transfer deadlock - start again
-void trn_transferDeadlock ()
-//---------------------------------------------------------------------------------------------------------------------
-{
-
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-//
 // Lost the transfer - back to 001
-void trn_transferLostGame ()
+void trn_transferLostGame()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	gam_setupPlayerDroid ();        // reset back to 001
@@ -246,7 +225,7 @@ void trn_transferLostGame ()
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Transfer into the droid
-void trn_transferIntoDroid ()
+void trn_transferIntoDroid()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	playerDroid.setVelocity (cpVect {0, 0});
@@ -267,8 +246,6 @@ void trn_transferIntoDroid ()
 		g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].setCurrentHealth (-10);
 
 		gam_checkActionWitness ();
-
-//		gam_damageToDroid (playerDroid.transferTargetDroidIndex, PHYSIC_DAMAGE_BULLET, -1);
 	}
 	else
 	{

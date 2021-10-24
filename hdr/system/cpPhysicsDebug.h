@@ -1,5 +1,4 @@
-#ifndef PARAPLUSPLUS_CPPHYSICSDEBUG_H
-#define PARAPLUSPLUS_CPPHYSICSDEBUG_H
+#pragma once
 
 #include <chipmunk_structs.h>
 
@@ -22,5 +21,3 @@ void debugDrawDot(cpFloat size, cpVect pos, cpSpaceDebugColor fillColor, void *d
 
 // Draw a circle outline
 void debugDrawCircle(cpVect pos, cpFloat angle, cpFloat radius, cpSpaceDebugColor outlineColor, cpSpaceDebugColor fillColor, void *data);
-
-#endif //PARAPLUSPLUS_CPPHYSICSDEBUG_H

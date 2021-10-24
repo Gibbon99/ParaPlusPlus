@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../main.h"
+#include "main.h"
 
 // Process the keyboard state
 void gui_processKeyboard();

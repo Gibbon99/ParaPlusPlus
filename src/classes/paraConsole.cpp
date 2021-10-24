@@ -1,8 +1,13 @@
 #include <iostream>
 #include <regex>
-#include <system/util.h>
+#include "system/util.h"
+#include "io/logFile.h"
 
-paraConsole::paraConsole (float defaultPosX, int red, int green, int blue, int alpha)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Constructor
+paraConsole::paraConsole(float defaultPosX, int red, int green, int blue, int alpha)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	paraConsole::defaultRed   = red;
 	paraConsole::defaultGreen = green;
@@ -14,7 +19,7 @@ paraConsole::paraConsole (float defaultPosX, int red, int green, int blue, int a
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Deconstruct
-paraConsole::~paraConsole ()
+paraConsole::~paraConsole()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	for (auto variableItr: consoleVariables)
@@ -23,38 +28,66 @@ paraConsole::~paraConsole ()
 	}
 }
 
-void paraConsole::setScreenSize (int consoleWinWidth, int consoleWinHeight)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Set console size
+void paraConsole::setScreenSize(int consoleWinWidth, int consoleWinHeight)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	paraConsole::screenWidth  = consoleWinWidth;
 	paraConsole::screenHeight = consoleWinHeight;
 }
 
-float paraConsole::getDefaultPosX () const
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Return x Position
+float paraConsole::getDefaultPosX() const
+//--------------------------------------------------------------------------------------------------------------------
 {
 	return defaultPosX;
 }
 
-int paraConsole::getDefaultRed () const
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Return default red color
+int paraConsole::getDefaultRed() const
+//--------------------------------------------------------------------------------------------------------------------
 {
 	return defaultRed;
 }
 
-int paraConsole::getDefaultGreen () const
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Return default green color
+int paraConsole::getDefaultGreen() const
+//--------------------------------------------------------------------------------------------------------------------
 {
 	return defaultGreen;
 }
 
-int paraConsole::getDefaultBlue () const
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Return default blue color
+int paraConsole::getDefaultBlue() const
+//--------------------------------------------------------------------------------------------------------------------
 {
 	return defaultBlue;
 }
 
-int paraConsole::getDefaultAlpha () const
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Return default alpha color
+int paraConsole::getDefaultAlpha() const
+//--------------------------------------------------------------------------------------------------------------------
 {
 	return defaultAlpha;
 }
 
-void paraConsole::addTempLine (const _consoleLine &newTempLine)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Add line to console - loop until drawing thread is finished
+void paraConsole::addTempLine(const _consoleLine &newTempLine)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	while (isDrawing)  // Wait until any drawing operation is completed
 	{
@@ -63,11 +96,13 @@ void paraConsole::addTempLine (const _consoleLine &newTempLine)
 
 	if (paraConsole::consoleText.size () < CONSOLE_MEM_SIZE)
 		paraConsole::consoleText.push_back (newTempLine);
-//	else
-//		std::cout << "Error: Exceeded memory buffer for console text." << std::endl;
 }
 
-void paraConsole::add (float linePosX, int red, int green, int blue, int alpha, const std::string &newLine)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Add new colored line of text
+void paraConsole::add(float linePosX, int red, int green, int blue, int alpha, const std::string &newLine)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	_consoleLine tempLine;
 
@@ -81,7 +116,11 @@ void paraConsole::add (float linePosX, int red, int green, int blue, int alpha, 
 	addTempLine (tempLine);
 }
 
-void paraConsole::add (float linePosX, const std::string &newLine)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Add normal line of text to console
+void paraConsole::add(float linePosX, const std::string &newLine)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	_consoleLine tempLine;
 
@@ -95,7 +134,11 @@ void paraConsole::add (float linePosX, const std::string &newLine)
 	addTempLine (tempLine);
 }
 
-void paraConsole::add (const std::string &newLine)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Add line of text to console
+void paraConsole::add(const std::string &newLine)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	_consoleLine tempLine;
 
@@ -109,12 +152,20 @@ void paraConsole::add (const std::string &newLine)
 	addTempLine (tempLine);
 }
 
-void paraConsole::addChar (const std::string &newChar)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Show typed character on screen
+void paraConsole::addChar(const std::string &newChar)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	paraConsole::enterLine += newChar;
 }
 
-void paraConsole::deleteChar ()
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Remove character from current entry line of text
+void paraConsole::deleteChar()
+//--------------------------------------------------------------------------------------------------------------------
 {
 	if (!paraConsole::enterLine.empty ())
 	{
@@ -122,7 +173,11 @@ void paraConsole::deleteChar ()
 	}
 }
 
-void paraConsole::addCharLine ()
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Add a newly typed line of text
+void paraConsole::addCharLine()
+//--------------------------------------------------------------------------------------------------------------------
 {
 	_consoleLine tempLine;
 
@@ -147,19 +202,31 @@ void paraConsole::addCharLine ()
 	paraConsole::scrollbackOffset = 0;
 }
 
-std::string paraConsole::entryLine ()
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Show prompt
+std::string paraConsole::entryLine()
+//--------------------------------------------------------------------------------------------------------------------
 {
 	return "> " + paraConsole::enterLine;
 }
 
-void paraConsole::prepare (float newPosX, float newPosY)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Prepare console
+void paraConsole::prepare(float newPosX, float newPosY)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	paraConsole::consoleItr = paraConsole::consoleText.rbegin () + scrollbackOffset;
 	paraConsole::posX       = newPosX;
 	paraConsole::posY       = newPosY;
 }
 
-void paraConsole::userBufferNext ()
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Get next command
+void paraConsole::userBufferNext()
+//--------------------------------------------------------------------------------------------------------------------
 {
 	if (paraConsole::userBufferIndex < (int) paraConsole::userBuffer.size () - 1)
 	{
@@ -168,7 +235,11 @@ void paraConsole::userBufferNext ()
 	}
 }
 
-void paraConsole::userBufferPrevious ()
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Get previously used command
+void paraConsole::userBufferPrevious()
+//--------------------------------------------------------------------------------------------------------------------
 {
 	if (paraConsole::userBufferIndex > 0)
 	{
@@ -177,26 +248,27 @@ void paraConsole::userBufferPrevious ()
 	}
 }
 
-void paraConsole::addVariable (const std::string &variableName, int variableType, void *variablePtr)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Add a new variable to be used in the console
+void paraConsole::addVariable(const std::string &variableName, int variableType, void *variablePtr)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	_variables tempVar;
 
 	tempVar.varPtrFloat = reinterpret_cast<float *>(sys_malloc (sizeof (float), sys_getString ("%s-float", variableName.c_str ())));
-//	tempVar.varPtrFloat = static_cast<float *>(malloc (sizeof (float))); //new float;
-	//tempVar.varPtrBool  = static_cast<bool *>(malloc (sizeof (bool))); //new bool;
 	tempVar.varPtrInt   = reinterpret_cast<int *>(sys_malloc (sizeof (bool), sys_getString ("%s-bool", variableName.c_str ())));
 	tempVar.varPtrInt   = reinterpret_cast<int *>(sys_malloc (sizeof (int), sys_getString ("%s-int", variableName.c_str ())));
-//	tempVar.varPtrInt   = static_cast<int *>(malloc (sizeof (int))); //new int;
 
 	if ((variableName.empty ()) || (nullptr == variablePtr))
 	{
-		std::cout << "Adding a variable must include a valid name and pointer." << endl;
+		log_addEvent (sys_getString ("[ %s ] Adding a variable must include a valid name and pointer.", __func__));
 		return;
 	}
 
 	if ((variableType < 0) || (variableType > VAR_TYPE_LAST))
 	{
-		std::cout << "Invalid variableType for [ " << variableName << " ]" << endl;
+		log_addEvent (sys_getString ("[ %s ] Invalid variableType for [ %s ]", __func__, variableName.c_str ()));
 		return;
 	}
 
@@ -204,7 +276,7 @@ void paraConsole::addVariable (const std::string &variableName, int variableType
 	{
 		if (varItr.varName == variableName)
 		{
-			cout << "Variable [ " << variableName << " ] already exists." << endl;
+			log_addEvent (sys_getString ("[ %s ] Variable [ %s ] already exists.", __func__, variableName.c_str ()));
 			return;
 		}
 	}
@@ -236,17 +308,14 @@ void paraConsole::addVariable (const std::string &variableName, int variableType
 	}
 	consoleVariables.push_back (tempVar);
 
-//	free ( tempVar.varPtrBool );
-//	free(  tempVar.varPtrInt);
-//	free(  tempVar.varPtrFloat);
-//	delete tempVar->varPtrString;
-
-//	delete tempVar;
-
-	cout << "Var : " << variableName << " has been added." << endl;
+	log_addEvent (sys_getString ("[ %s ] Var [ %s ] has been added.", __func__, variableName.c_str ()));
 }
 
-void paraConsole::addCommand (const std::string &commandName, const std::string &commandHelp, funcPtr commandPtr)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Add a new command to be used from the console
+void paraConsole::addCommand(const std::string &commandName, const std::string &commandHelp, funcPtr commandPtr)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	_consoleCommand tempCommand;
 
@@ -262,7 +331,11 @@ void paraConsole::addCommand (const std::string &commandName, const std::string 
 	console.add (console.defaultPosX, 255, 0, 0, 0, "Add console commands must include a valid commandName and functionName.");
 }
 
-void paraConsole::addCommand (const std::string &commandName, const std::string &functionHelp, const std::string &functionName)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Add a new command with function name
+void paraConsole::addCommand(const std::string &commandName, const std::string &functionHelp, const std::string &functionName)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	_consoleCommand tempCommand;
 
@@ -275,10 +348,14 @@ void paraConsole::addCommand (const std::string &commandName, const std::string 
 		paraConsole::consoleCommands.insert (std::pair<std::string, _consoleCommand> (commandName, tempCommand));
 		return;
 	}
-	std::cout << "Adding console commands must include a valid commandName and functionName." << endl;
+	log_addEvent (sys_getString ("[ %s ] Adding console commands must include a valid commandName and functionName.", __func__));
 }
 
-std::vector<std::string> paraConsole::tokeniseEntryLine (std::string entryLine)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Break up entry line into tokens
+std::vector<std::string> paraConsole::tokeniseEntryLine(std::string entryLine)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	//
 	// https://stackoverflow.com/a/27468529/4621054
@@ -292,8 +369,11 @@ std::vector<std::string> paraConsole::tokeniseEntryLine (std::string entryLine)
 	return enteredCommand;
 }
 
-
-void paraConsole::setVarFunc (const std::string &varName, int variablePtr)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Change the value of a variable - INT version
+void paraConsole::setVarFunc(const std::string &varName, int variablePtr)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	for (auto &varItr: consoleVariables)
 	{
@@ -305,7 +385,11 @@ void paraConsole::setVarFunc (const std::string &varName, int variablePtr)
 	}
 }
 
-void paraConsole::setVarFunc (const std::string &varName, float variablePtr)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Change the value of a variable - FLOAT version
+void paraConsole::setVarFunc(const std::string &varName, float variablePtr)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	for (auto &varItr: consoleVariables)
 	{
@@ -317,7 +401,7 @@ void paraConsole::setVarFunc (const std::string &varName, float variablePtr)
 	}
 }
 
-void paraConsole::setVarFunc (const std::string &varName, const std::string &variablePtr)
+void paraConsole::setVarFunc(const std::string &varName, const std::string &variablePtr)
 {
 	for (auto &varItr: consoleVariables)
 	{
@@ -329,7 +413,11 @@ void paraConsole::setVarFunc (const std::string &varName, const std::string &var
 	}
 }
 
-void paraConsole::setVarBool (const std::string &varName, bool variablePtr)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Change the value of a variable - BOOL version
+void paraConsole::setVarBool(const std::string &varName, bool variablePtr)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	for (auto &varItr: consoleVariables)
 	{
@@ -341,7 +429,11 @@ void paraConsole::setVarBool (const std::string &varName, bool variablePtr)
 	}
 }
 
-void paraConsole::setVar (const std::string &varName, const std::string &varParam)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Entry routine to update value of a variable
+void paraConsole::setVar(const std::string &varName, const std::string &varParam)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	int varType;
 
@@ -384,12 +476,20 @@ void paraConsole::setVar (const std::string &varName, const std::string &varPara
 	paraConsole::add (1.0, 255, 0, 0, 255, sys_getString ("setVar [ %s ] not found.", varName.c_str ()));
 }
 
-void paraConsole::setNumVarColumns (int newNumVarColumns)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Set number of columns to view variables in
+void paraConsole::setNumVarColumns(int newNumVarColumns)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	numVarColumns = newNumVarColumns;
 }
 
-void paraConsole::displayInColumns (const std::vector<std::string> &displayText)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Break up tokens into columns
+void paraConsole::displayInColumns(const std::vector<std::string> &displayText)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	float columnPosX     = 3;
 	auto  columnVarWidth = static_cast<float>(screenWidth / numVarColumns);
@@ -405,7 +505,11 @@ void paraConsole::displayInColumns (const std::vector<std::string> &displayText)
 	}
 }
 
-void paraConsole::listVariables ()
+//--------------------------------------------------------------------------------------------------------------------
+//
+// List variables on screen
+void paraConsole::listVariables()
+//--------------------------------------------------------------------------------------------------------------------
 {
 	std::string allVariables;
 
@@ -416,7 +520,11 @@ void paraConsole::listVariables ()
 	displayInColumns (tokeniseEntryLine (allVariables));
 }
 
-void paraConsole::getVariable (const std::vector<std::string> &commandLine)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Get the value of a variable
+void paraConsole::getVariable(const std::vector<std::string> &commandLine)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	bool matchFound;
 
@@ -463,7 +571,11 @@ void paraConsole::getVariable (const std::vector<std::string> &commandLine)
 	}
 }
 
-void paraConsole::processVariable (std::vector<std::string> commandLine)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Special treatment for variables
+void paraConsole::processVariable(std::vector<std::string> commandLine)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	if (commandLine[0] == "listVars")
 	{
@@ -512,7 +624,11 @@ void paraConsole::processVariable (std::vector<std::string> commandLine)
 	}
 }
 
-void paraConsole::processCommand (std::vector<std::string> commandLine)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Pressed enter on a line of text
+void paraConsole::processCommand(std::vector<std::string> commandLine)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	std::map<std::string, _consoleCommand>::iterator localConsoleItr;
 	std::string                                      parameterList;
@@ -552,7 +668,11 @@ void paraConsole::processCommand (std::vector<std::string> commandLine)
 	}
 }
 
-bool paraConsole::stringStartsWith (const std::string &lookIn, const std::string &lookFor)
+//--------------------------------------------------------------------------------------------------------------------
+//
+// String searching
+bool paraConsole::stringStartsWith(const std::string &lookIn, const std::string &lookFor)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	if (lookIn.find (lookFor) == 0)
 		return true;
@@ -560,7 +680,11 @@ bool paraConsole::stringStartsWith (const std::string &lookIn, const std::string
 		return false;
 }
 
-void paraConsole::changeScrollBackOffset (int value)
+//--------------------------------------------------------------------------------------------------------------------
+//
+//
+void paraConsole::changeScrollBackOffset(int value)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	paraConsole::scrollbackOffset += value;
 	if (paraConsole::scrollbackOffset < 0)
@@ -570,7 +694,11 @@ void paraConsole::changeScrollBackOffset (int value)
 		paraConsole::scrollbackOffset = (int) paraConsole::consoleText.size () - 1;
 }
 
-void paraConsole::tabCompletion ()
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Pressed TAB - complete command or variable
+void paraConsole::tabCompletion()
+//--------------------------------------------------------------------------------------------------------------------
 {
 	int                      numMatchingVariables = 0;
 	int                      numMatchingGetSet;

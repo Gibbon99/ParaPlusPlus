@@ -1,6 +1,3 @@
-#ifndef PARA_PARAEMITTER_H
-#define PARA_PARAEMITTER_H
-
 #include <system/cpPhysics.h>
 #include <wrapper.h>
 #include <classes/paraRandom.h>
@@ -48,6 +45,3 @@ private:
 	cpVect                    m_worldPos {};
 	std::vector<paraParticle> particles {};
 };
-
-
-#endif //PARA_PARAEMITTER_H

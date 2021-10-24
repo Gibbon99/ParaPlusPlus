@@ -1,6 +1,6 @@
-#include <main.h>
-#include <system/util.h>
-#include <classes/paraBullet.h>
+#include "main.h"
+#include "system/util.h"
+#include "classes/paraBullet.h"
 #include "classes/paraLightmap.h"
 
 std::vector<PARA_Color> bulletColors;

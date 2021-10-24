@@ -1,26 +1,26 @@
-#include <system/util.h>
-#include <game/player.h>
-#include <game/audio.h>
+#include "system/util.h"
 #include "gui/guiLanguage.h"
+#include "game/player.h"
+#include "game/audio.h"
 #include "game/texture.h"
 #include "game/database.h"
 
-std::vector<_dataBaseEntry> dataBaseEntry;
-CSimpleIniA                 databaseFile;
-int currentDatabaseRecord;
+std::vector<_dataBaseEntry> dataBaseEntry {};
+CSimpleIniA                 databaseFile {};
+int                         currentDatabaseRecord {};
 
 //-----------------------------------------------------------------------------------------------------
 //
 // Load a droid database file.
-bool io_getDBDroidInfo (std::string fileName)
+bool io_getDBDroidInfo(const std::string &fileName)
 //-----------------------------------------------------------------------------------------------------
 {
 	_dataBaseEntry tempDataBaseEntry;
-	std::string fileInMem;
+	std::string    fileInMem;
 
-	fileInMem = fileSystem.getString(fileName);
+	fileInMem = fileSystem.getString (fileName);
 
-	auto returnCode = databaseFile.LoadData(fileInMem.c_str(), fileInMem.size());
+	auto returnCode = databaseFile.LoadData (fileInMem.c_str (), fileInMem.size ());
 	if (returnCode < 0)
 		sys_shutdownWithError (sys_getString ("Unable to open database file [ %s ].", fileName.c_str ()));
 
@@ -152,70 +152,7 @@ bool io_getDBDroidInfo (std::string fileName)
 		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "dbImageFileName"));
 	tempDataBaseEntry.dbImageFileName = returnValue;
 
-	//
-	// Read in key for text language
-	//
-	/*
-	returnValue = databaseFile.GetValue ("droidInfo", "description", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "description"));
-	tempDataBaseEntry.description = returnValue;
-
-	returnValue = databaseFile.GetValue ("droidInfo", "className", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "className"));
-	tempDataBaseEntry.className = returnValue;
-
-	returnValue = databaseFile.GetValue ("droidInfo", "drive", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "drive"));
-	tempDataBaseEntry.drive = returnValue;
-
-	returnValue = databaseFile.GetValue ("droidInfo", "brain", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "brain"));
-	tempDataBaseEntry.brain = returnValue;
-
-	returnValue = databaseFile.GetValue ("droidInfo", "weapon", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "weapon"));
-	tempDataBaseEntry.weapon = returnValue;
-
-	returnValue = databaseFile.GetValue ("droidInfo", "sensor1", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "sensor1"));
-	tempDataBaseEntry.sensor1 = returnValue;
-
-	returnValue = databaseFile.GetValue ("droidInfo", "sensor2", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "sensor2"));
-	tempDataBaseEntry.sensor2 = returnValue;
-
-	returnValue = databaseFile.GetValue ("droidInfo", "sensor3", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "sensor3"));
-	tempDataBaseEntry.sensor3 = returnValue;
-
-	returnValue = databaseFile.GetValue ("droidInfo", "notes", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "notes"));
-	tempDataBaseEntry.notes = returnValue;
-*/
-
-	//
-	// Now get the text string using that text key for the current language
-	//
-	/*
-	tempDataBaseEntry.description = gui_getString (tempDataBaseEntry.description);
-	tempDataBaseEntry.className   = gui_getString (tempDataBaseEntry.className);
-	tempDataBaseEntry.drive       = gui_getString (tempDataBaseEntry.drive);
-	tempDataBaseEntry.brain       = gui_getString (tempDataBaseEntry.brain);
-	tempDataBaseEntry.weapon      = gui_getString (tempDataBaseEntry.weapon);
-	tempDataBaseEntry.sensor1     = gui_getString (tempDataBaseEntry.sensor1);
-	tempDataBaseEntry.sensor2     = gui_getString (tempDataBaseEntry.sensor2);
-	tempDataBaseEntry.sensor3     = gui_getString (tempDataBaseEntry.sensor3);
-	*/
-	tempDataBaseEntry.notes       = gui_getString (tempDataBaseEntry.dbImageFileName);
+	tempDataBaseEntry.notes = gui_getString (tempDataBaseEntry.dbImageFileName);
 
 	dataBaseEntry.push_back (tempDataBaseEntry);
 
@@ -225,11 +162,11 @@ bool io_getDBDroidInfo (std::string fileName)
 //------------------------------------------------------------------------------------------------------------------------------------
 //
 // Get and build up information for droid database files
-void gam_getDBInformation ()
+void gam_getDBInformation()
 //------------------------------------------------------------------------------------------------------------------------------------
 {
 	io_getDBDroidInfo ("001.txt");
-	io_getDBDroidInfo ("123.txt");	
+	io_getDBDroidInfo ("123.txt");
 	io_getDBDroidInfo ("139.txt");
 	io_getDBDroidInfo ("247.txt");
 	io_getDBDroidInfo ("249.txt");
@@ -269,10 +206,10 @@ void gam_previousDatabase()
 		currentDatabaseRecord--;
 
 	newFileName = dataBaseEntry[currentDatabaseRecord].dbImageFileName + ".bmp";
-	gam_loadTexture(newFileName, newKeyName);
+	gam_loadTexture (newFileName, newKeyName);
 
-	gui.restartScrollBox("databaseScreen.scrollbox");
-	gui.setLabel(GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", 10, GUI_LABEL_LEFT, dataBaseEntry[currentDatabaseRecord].notes);
+	gui.restartScrollBox ("databaseScreen.scrollbox");
+	gui.setLabel (GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", 10, GUI_LABEL_LEFT, dataBaseEntry[currentDatabaseRecord].notes);
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -286,10 +223,10 @@ void gam_nextDatabase()
 
 	newKeyName = "db_droid";
 
-	if (currentDatabaseRecord < static_cast<int>(dataBaseEntry.size() - 1))
+	if (currentDatabaseRecord < static_cast<int>(dataBaseEntry.size () - 1))
 		currentDatabaseRecord++;
 
-	if (currentDatabaseRecord - 1 == playerDroid.getDroidType())
+	if (currentDatabaseRecord - 1 == playerDroid.getDroidType ())
 	{
 		currentDatabaseRecord--;
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressBad");
@@ -297,10 +234,10 @@ void gam_nextDatabase()
 	}
 
 	newFileName = dataBaseEntry[currentDatabaseRecord].dbImageFileName + ".bmp";
-	gam_loadTexture(newFileName, newKeyName);
+	gam_loadTexture (newFileName, newKeyName);
 
-	gui.restartScrollBox("databaseScreen.scrollbox");
-	gui.setLabel(GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", 10, GUI_LABEL_LEFT, dataBaseEntry[currentDatabaseRecord].notes);
+	gui.restartScrollBox ("databaseScreen.scrollbox");
+	gui.setLabel (GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", 10, GUI_LABEL_LEFT, dataBaseEntry[currentDatabaseRecord].notes);
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -317,8 +254,8 @@ void gam_prepareDatabaseScreen(int whichDroidIndex)
 	currentDatabaseRecord = whichDroidIndex;
 
 	newFileName = dataBaseEntry[currentDatabaseRecord].dbImageFileName + ".bmp";
-	gam_loadTexture(newFileName, newKeyName);
+	gam_loadTexture (newFileName, newKeyName);
 
-	gui.setLabel(GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", 10, GUI_LABEL_LEFT, dataBaseEntry[currentDatabaseRecord].notes);
+	gui.setLabel (GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", 10, GUI_LABEL_LEFT, dataBaseEntry[currentDatabaseRecord].notes);
 
 }

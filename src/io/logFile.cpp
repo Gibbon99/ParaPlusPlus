@@ -1,17 +1,15 @@
 #include <queue>
-#include <system/util.h>
-#include "../../hdr/io/logFile.h"
-//#include "../../hdr/system/eventsEngine.h"
-//#include "../../hdr/wrapper.h"
-//#include "../../hdr/classes/paraEvent.h"
+#include <utility>
+#include "system/util.h"
+#include "io/logFile.h"
 
-std::queue<paraEventLogfile *> loggingEventQueue;
+std::queue<paraEventLogfile *> loggingEventQueue {};
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Push an event onto the logging queue
 //void log_addEvent(std::string & newLine)
-void log_addEvent (std::string newLine)
+void log_addEvent(std::string newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Mutex *tempMutex;
@@ -24,14 +22,14 @@ void log_addEvent (std::string newLine)
 	//
 	// Put the new event onto the logfile queue
 	PARA_LockMutex (evt_getMutex (LOGGING_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
-	loggingEventQueue.push (new paraEventLogfile (EVENT_ACTION_LOGFILE_WRITE, newLine));
+	loggingEventQueue.push (new paraEventLogfile (EVENT_ACTION_LOGFILE_WRITE, std::move (newLine)));
 	PARA_UnlockMutex (evt_getMutex (LOGGING_MUTEX_NAME));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Process the events put onto the logging queue - run by detached thread
-void io_processLoggingEventQueue ()
+void io_processLoggingEventQueue()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraEventLogfile  *logFileEvent;
@@ -95,15 +93,14 @@ void io_processLoggingEventQueue ()
 		}
 	}
 #ifdef MY_DEBUG
-	cout << "LOGGING thread stopped.\n" << endl;
+	std::cout << sys_getString ("[ %s ] LOGGING thread stopped.", __func__) << std::endl;
 #endif
-	return;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start the logfile processing queue and thread
-void io_initLogFile ()
+void io_initLogFile()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	//
@@ -115,7 +112,7 @@ void io_initLogFile ()
 	while (!evt_isThreadReady (LOGGING_THREAD_NAME))
 	{
 #ifdef MY_DEBUG
-		cout << "Waiting for logfile thread to start..." << endl;
+		std::cout << sys_getString ("[ %s ] Waiting for logfile thread to start...", __func__) << std::endl;
 #endif
 	}// Wait for thread to be ready to use
 	sys_addEvent (EVENT_TYPE_LOGFILE, EVENT_ACTION_LOGFILE_OPEN, 0, "./paraLogfile.txt");

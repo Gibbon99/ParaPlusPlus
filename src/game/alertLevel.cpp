@@ -1,12 +1,11 @@
-#include <game/shipDecks.h>
-#include <system/util.h>
-#include <game/lightMaps.h>
-#include <game/audio.h>
+#include "game/shipDecks.h"
+#include "game/lightMaps.h"
+#include "game/audio.h"
 #include "game/alertLevel.h"
 
-std::vector<cpVect> tileLocationsInPixels;
-static int          currentAlertLevel = -1;
-int                 alertLevelVolume;
+std::vector<cpVect> tileLocationsInPixels {};
+static int          currentAlertLevel {-1};
+int                 alertLevelVolume {};
 
 //------------------------------------------------------------------------------------------------------
 //

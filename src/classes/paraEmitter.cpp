@@ -1,5 +1,4 @@
-#include <system/util.h>
-#include <classes/paraBullet.h>
+#include "classes/paraBullet.h"
 #include "classes/paraEmitter.h"
 
 #define USE_LOOKUP_TABLE 1

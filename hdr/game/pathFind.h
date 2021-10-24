@@ -1,7 +1,7 @@
 #pragma once
 
-#include <game/shipDecks.h>
 #include "main.h"
+#include "game/shipDecks.h"
 
 #define NODE_UP             0x0
 #define NODE_DOWN           0x1
@@ -42,18 +42,18 @@ struct _nodeList
 };
 
 extern std::vector<_nodeList> path;
-extern int numAStarPaths;
-extern bool d_showNodeArrays;
-extern bool d_showAStarPath;
+extern int                    numAStarPaths;
+extern bool                   d_showNodeArrays;
+extern bool                   d_showAStarPath;
 
 // Start a new path
 int gam_requestNewPath(cpVect start, cpVect destination, int newWhichDroid, std::string whichLevel);
 
 // Show aStar waypoint lines
-void gam_AStarDebugWayPoints (int whichPath);
+void gam_AStarDebugWayPoints(int whichPath);
 
 // A thread to run the aStar searching function
-void gam_AStarSearchThread (int whichPathArg);
+void gam_AStarSearchThread(int whichPathArg);
 
 // Show the open and closed nodes
 void gam_AStarDebugNodes(int whichPath);
@@ -62,10 +62,10 @@ void gam_AStarDebugNodes(int whichPath);
 bool gam_isAStarReady(int whichPath);
 
 // Clear coord memory and flag ready for reuse
-void gam_AStarRemovePath (int whichPath);
+void gam_AStarRemovePath(int whichPath);
 
 // Is a tile considered 'solid' or not - no bounds checking version
-bool gam_AStarIsTileSolid (int tileIndex);
+bool gam_AStarIsTileSolid(int tileIndex);
 
 // Remove a path based on droid using it
 void gam_removeWhichDroidPath(int newWhichDroid);
@@ -77,4 +77,4 @@ bool gam_isAStarValid(int whichPath);
 void gam_AStarDebugAllPaths();
 
 // Reset all path entries
-void gam_resetAllPaths ();
+void gam_resetAllPaths();

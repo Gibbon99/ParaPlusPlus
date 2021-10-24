@@ -1,5 +1,4 @@
-#ifndef PARA_PARALIFT_H
-#define PARA_PARALIFT_H
+#pragma once
 
 #include <map>
 
@@ -13,9 +12,7 @@ public:
 
 	int getTunnelIndex(int liftIndex);
 
-	std::map<int,int> tunnels;
+	std::map<int, int> tunnels;
 private:
 
 };
-
-#endif //PARA_PARALIFT_H

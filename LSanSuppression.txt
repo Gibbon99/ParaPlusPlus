@@ -1,7 +1,8 @@
 leak:libX11
 leak:create_thread
-leak:libnvidia*
-leak:libnvidia-glcore*
+leak:libnvidia
+leak:libnvidia-glcore
 leak:libasan
-leak:libSDL2*
+leak:libSDL2
 leak:libc
+leak:libstdc++

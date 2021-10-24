@@ -1,5 +1,4 @@
-#ifndef PARA_PARAGUI_H
-#define PARA_PARAGUI_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -8,11 +7,11 @@
 
 #define DEBUG_GUI_SETUP 1
 
-typedef void (*funcPtrIntStr) (int, std::string);
+typedef void (*funcPtrIntStr)(int, std::string);
 
 typedef std::string &string1;
 
-typedef std::string (*funcStrIn) (std::string);     // Function to provide the key descriptions
+typedef std::string (*funcStrIn)(std::string);     // Function to provide the key descriptions
 
 struct __BOUNDING_BOX
 {
@@ -77,10 +76,10 @@ struct __GUI_OBJECT
 
 struct __KeyBindings
 {
-	std::string     text;
-	PARA_Scancode   keyValue;
-	bool            active;
-	int             state;
+	std::string text;
+	PARA_Scancode keyValue;
+	bool        active;
+	int         state;
 };
 
 struct _sliderElement
@@ -170,195 +169,195 @@ class paraGui
 {
 public:
 
-	void AddRef ();
+	void AddRef();
 
-	void ReleaseRef ();
+	void ReleaseRef();
 
-	void init (funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, int newRenderWidthGame, int newRenderHeightGame, std::string newFileName);
+	void init(funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, int newRenderWidthGame, int newRenderHeightGame, std::string newFileName);
 
-	std::string int_getString (std::string format, ...);
+	std::string int_getString(std::string format, ...);
 
 	//
 	// Set things
-	void setOutputFunction (funcPtrIntStr outputFunction);
+	void setOutputFunction(funcPtrIntStr outputFunction);
 
-	void setRenderDimensions (int width, int height);
+	void setRenderDimensions(int width, int height);
 
 	//
 	// Functions used in GUI script
-	void setLabel (int objectType, std::string objectID, int newGapSize, int newLabelPos, std::string newLabel);
+	void setLabel(int objectType, std::string objectID, int newGapSize, int newLabelPos, std::string newLabel);
 
-	void setAction (int objectType, std::string objectID, std::string newAction);
+	void setAction(int objectType, std::string objectID, std::string newAction);
 
-	void setFontName (int objectType, std::string objectID, std::string newFontName);
+	void setFontName(int objectType, std::string objectID, std::string newFontName);
 
-	void setPosition (int objectType, std::string objectID, int newRadius, int coordType, double newPosX, double newPosY, double newWidth, double newHeight);
+	void setPosition(int objectType, std::string objectID, int newRadius, int coordType, double newPosX, double newPosY, double newWidth, double newHeight);
 
-	void addToScreen (int objectType, std::string objectID, std::string screenID);
+	void addToScreen(int objectType, std::string objectID, std::string screenID);
 
-	void setColor (int objectType, std::string objectID, int whichColor, int red, int green, int blue, int alpha);
+	void setColor(int objectType, std::string objectID, int whichColor, int red, int green, int blue, int alpha);
 
-	void setActive (std::string objectID);
+	void setActive(const std::string &objectID);
 
-	void setReady (int objectType, std::string objectID, bool newState);
+	void setReady(int objectType, std::string objectID, bool newState);
 
-	void create (int objectType, std::string objectID);
+	void create(int objectType, std::string objectID);
 
-	int getCurrentScreen ();
+	int getCurrentScreen();
 
-	void setCurrentScreen (int newScreen);
+	void setCurrentScreen(int newScreen);
 
-	void setScrollSpeed (int objectType, const std::string &objectID, double newScrollSpeed);
+	void setScrollSpeed(int objectType, const std::string &objectID, double newScrollSpeed);
 
-	void getNextLineOfText (int objectIndex);
+	void getNextLineOfText(int objectIndex);
 
-	double getScrollDelay (int objectIndex);
+	double getScrollDelay(int objectIndex);
 
-	void setScrollDelay (int objectIndex, double newScrollDelay);
+	void setScrollDelay(int objectIndex, double newScrollDelay);
 
-	double getScrollY (int objectIndex);
+	double getScrollY(int objectIndex);
 
-	void setScrollY (int objectIndex, double newScrollY);
+	void setScrollY(int objectIndex, double newScrollY);
 
-	void restartScrollBox (const std::string &objectID);
+	void restartScrollBox(const std::string &objectID);
 
-	double getPreviousScrollY (int objectIndex);
+	double getPreviousScrollY(int objectIndex);
 
-	int getNumberPrintLines (int objectIndex);
+	int getNumberPrintLines(int objectIndex);
 
-	void setNumberPrintLines (int objectIndex, int newNumberLines);
+	void setNumberPrintLines(int objectIndex, int newNumberLines);
 
-	void setPreviousScrollY (int objectIndex, double newScrollY);
+	void setPreviousScrollY(int objectIndex, double newScrollY);
 
-	bool getTickedStatus (int objectIndex);
+	bool getTickedStatus(int objectIndex);
 
-	void setTickedStatus (const std::string &objectID, int whichGroup, bool newValue);
+	void setTickedStatus(const std::string &objectID, int whichGroup, bool newValue);
 
-	void setActiveObject (int whichScreen, int objectType, std::string objectID);
+	void setActiveObject(int whichScreen, int objectType, std::string objectID);
 
-	int getActiveObjectIndex ();
+	int getActiveObjectIndex();
 
-	std::vector<std::string>::reverse_iterator getRBegin (int objectIndex);
+	std::vector<std::string>::reverse_iterator getRBegin(int objectIndex);
 
-	std::vector<std::string>::reverse_iterator getREnd (int objectIndex);
+	std::vector<std::string>::reverse_iterator getREnd(int objectIndex);
 
-	double getLineFade (int objectIndex);
+	double getLineFade(int objectIndex);
 
-	void setLineFade (int objectIndex, double newLineFade);
+	void setLineFade(int objectIndex, double newLineFade);
 
-	void addNewElement (const std::string &objectID, const std::string &newLabel, const std::string &newValue, int type);
+	void addNewElement(const std::string &objectID, const std::string &newLabel, const std::string &newValue, int type);
 
-	void setSliderValue (const std::string &objectID, const std::string &value);
+	void setSliderValue(const std::string &objectID, const std::string &value);
 
-	int getSelectPosition (int whichSlider);
+	int getSelectPosition(int whichSlider);
 
-	int sliderSize (int whichSlider);
+	int sliderSize(int whichSlider);
 
-	std::string sliderElementLabel (int whichSlider);
+	std::string sliderElementLabel(int whichSlider);
 
-	std::string getSliderValue (const std::string &objectID);
+	std::string getSliderValue(const std::string &objectID);
 
-	int getNumElements (int whichSlider);
+	int getNumElements(int whichSlider);
 
 	//
 	// Used to get attributes when rendering
-	int numElements ();
+	int numElements();
 
-	int selectedObject ();
+	int selectedObject();
 
-	int typeByIndex (int whichObject);
+	int typeByIndex(int whichObject);
 
-	int indexByIndex (int whichObject);
+	int indexByIndex(int whichObject);
 
-	int getIndex (int objectType, const std::string &objectID);
+	int getIndex(int objectType, const std::string &objectID);
 
-	int getRadius (int objectType, int objectIndex);
+	int getRadius(int objectType, int objectIndex);
 
-	int getGapSize (int objectType, int objectIndex);
+	int getGapSize(int objectType, int objectIndex);
 
-	int getLabelPos (int objectType, int objectIndex);
+	int getLabelPos(int objectType, int objectIndex);
 
-	std::string getLabelText (int objectType, int objectIndex);
+	std::string getLabelText(int objectType, int objectIndex);
 
-	__BOUNDING_BOX getBB (int objectType, int objectIndex);
+	__BOUNDING_BOX getBB(int objectType, int objectIndex);
 
-	__PARA_COLOR getColor (int objectType, int objectIndex, int whichColor);
+	__PARA_COLOR getColor(int objectType, int objectIndex, int whichColor);
 
-	std::string getFontName (int objectType, int objectIndex);
+	std::string getFontName(int objectType, int objectIndex);
 
-	void restart ();
+	void restart();
 
-	bool isReady (int objectType, int objectIndex);
+	bool isReady(int objectType, int objectIndex);
 
-	bool pointInBox (int x, int y, __BOUNDING_BOX checkBox);
+	bool pointInBox(int x, int y, __BOUNDING_BOX checkBox);
 
-	bool canBeSelected (int objectType, int whichObject);
+	bool canBeSelected(int objectType, int whichObject);
 
-	void processMousePosition ();
+	void processMousePosition();
 
-	void processMovementKeys ();
+	void processMovementKeys();
 
-	void processAction ();
+	void processAction();
 
-	void processGuiInput ();
+	void processGuiInput();
 
 	//
 	// Dialogbox routines
 	//
-	int getActiveObjectIndexDialogbox ();
+	int getActiveObjectIndexDialogbox();
 
-	int getCurrentDialogbox ();
+	int getCurrentDialogbox();
 
-	void setActiveObjectDialogbox (int whichDialogbox, int objectType, std::string objectID);
+	void setActiveObjectDialogbox(int whichDialogbox, int objectType, std::string objectID);
 
-	void setCurrentDialogbox (int newDialogbox);
+	void setCurrentDialogbox(int newDialogbox);
 
-	int indexByIndexDialogbox (int whichObject);
+	int indexByIndexDialogbox(int whichObject);
 
-	int typeByIndexDialogbox (int whichObject);
+	int typeByIndexDialogbox(int whichObject);
 
-	int selectedObjectDialogbox ();
+	int selectedObjectDialogbox();
 
-	int numElementsDialogbox ();
+	int numElementsDialogbox();
 
-	void addToDialogbox (int objectType, std::string objectID, std::string dialogboxID);
+	void addToDialogbox(int objectType, std::string objectID, std::string dialogboxID);
 
-	void setActiveDialogbox (std::string objectID);
+	void setActiveDialogbox(std::string objectID);
 
-	void processMousePositionDialogbox ();
+	void processMousePositionDialogbox();
 
-	void processMovementKeysDialogbox ();
+	void processMovementKeysDialogbox();
 
 	void setRenderDimensionsGameMode(int width, int height);
 
-	void processActionDialogbox ();
+	void processActionDialogbox();
 
 	//
 	// Input related functions
 	//
-	void setRepeatOff (bool newState);
+	void setRepeatOff(bool newState);
 
-	int getRepeatOff ();
+	int getRepeatOff() const;
 
-	void setDefaultKeybindings ();
+	void setDefaultKeybindings();
 
-	void setKeyDescription ();
+	void setKeyDescription();
 
-	void load ();
+	void load();
 
-	void save ();
+	void save();
 
-	void update ();
+	void update();
 
-	void print ();
+	void print();
 
-	bool keyDown (int whichKey);
+	bool keyDown(int whichKey);
 
-	void setState (int whichKey, bool newState, int newActionSource);
+	void setState(int whichKey, bool newState, int newActionSource);
 
-	void setMouse (int newPosX, int newPosY);
+	void setMouse(int newPosX, int newPosY);
 
-	int getScancode (int whichKey);
+	int getScancode(int whichKey);
 
 	std::string getKeyName(int keyIndex);
 
@@ -368,7 +367,7 @@ public:
 
 private:
 
-	void setColorByIndex (int objectType, int objectIndex, int whichColor, int red, int green, int blue, int alpha);
+	void setColorByIndex(int objectType, int objectIndex, int whichColor, int red, int green, int blue, int alpha);
 
 	int                          mouseX;
 	int                          mouseY;
@@ -394,5 +393,3 @@ private:
 	std::vector<__GUI_CHECKBOX>  guiCheckBoxes;
 	funcPtrIntStr                funcOutput;
 };
-
-#endif //PARA_PARAGUI_H

@@ -1,5 +1,4 @@
-#ifndef PARA_PARASCRIPT_H
-#define PARA_PARASCRIPT_H
+#pragma once
 
 #define MODULE_NAME                 "clientModule"
 
@@ -7,44 +6,45 @@
 #include "../script/scriptbuilder.h"
 #include "../script/scriptstdstring.h"
 
-typedef int (*functionPtr) (...);
+typedef int (*functionPtr)(...);
 
-typedef void      (*scriptFunctionPtrStr) (int, std::string);
+typedef void      (*scriptFunctionPtrStr)(int, std::string);
 
 class paraScript
 {
 public:
-	bool init (scriptFunctionPtrStr outputFunction, asFUNCTION_t scriptOutputFunction);
+	bool init(scriptFunctionPtrStr outputFunction, asFUNCTION_t scriptOutputFunction);
 
-	void addHostVariable (const std::string &varName, void *varPtr);
+	void addHostVariable(const std::string &varName, void *varPtr);
 
-	void addScriptFunction (const std::string &funcName, std::string hostCallName);
+	void addScriptFunction(const std::string &funcName, std::string hostCallName);
 
-	void addHostFunction (const std::string &funcName, asSFuncPtr funcPtr);
+	void addHostFunction(const std::string &funcName, asSFuncPtr funcPtr);
 
-	void stop ();
+	void stop();
 
-	void debugState ();
+	void debugState();
 
-	bool isScriptName(std::string scriptName);
+	bool isScriptName(const std::string &scriptName);
 
 	void restart();
 
-	bool loadAndCompile ();
+	bool loadAndCompile();
 
-	void addScript (std::string sectionName, std::string scriptContents);
+	void addScript(std::string sectionName, std::string scriptContents);
 
-	void cacheFunctions ();
+	void cacheFunctions();
 
-	void run (const std::string &functionName, const std::string &param);
+	void run(const std::string &functionName, const std::string &param);
 
 	asIScriptEngine *scriptEngine = nullptr;
 
 private:
-	static std::string getScriptError (int errNo);
+	static std::string getScriptError(int errNo);
 
-	std::string getContextState (int whichState);
-	scriptFunctionPtrStr              funcOutput{};
+	std::string getContextState(int whichState);
+
+	scriptFunctionPtrStr funcOutput {};
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -90,13 +90,13 @@ private:
 
 	struct _hostScriptFunctions
 	{
-		std::string scriptFunctionName{};
+		std::string scriptFunctionName {};
 		asSFuncPtr  hostFunctionPtr;
 	};
 
 	struct _hostScriptVariables
 	{
-		std::string scriptFunctionName{};
+		std::string scriptFunctionName {};
 		void        *hostFunctionPtr = nullptr;
 	};
 	std::vector<_hostScriptVariables> hostVariables;
@@ -124,5 +124,3 @@ private:
 	std::vector<_scriptFunctionName>  scriptFunctionName;
 	std::vector<_hostScriptFunctions> hostScriptFunctions;
 };
-
-#endif //PARA_PARASCRIPT_H

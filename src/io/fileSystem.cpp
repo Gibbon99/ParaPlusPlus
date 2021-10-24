@@ -1,10 +1,11 @@
-#include <system/util.h>
-#include "../../hdr/io/fileSystem.h"
+#include "system/util.h"
+#include "io/logFile.h"
+#include "io/fileSystem.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Find the names of all the files in the scripts directory and store ready for loading
-void io_getScriptFileNames (std::string directoryName)
+void io_getScriptFileNames(std::string directoryName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string tempFileName;
@@ -19,7 +20,7 @@ void io_getScriptFileNames (std::string directoryName)
 
 		paraScriptInstance.addScript (tempFileName, fileSystem.getString (tempFileName));
 
-		logFile.write (sys_getString ("Script [ %s ]", tempFileName.c_str ()));
+		log_addEvent (sys_getString ("Script [ %s ]", tempFileName.c_str ()));
 	}
 
 	PHYSFS_freeList (rc);
@@ -28,7 +29,7 @@ void io_getScriptFileNames (std::string directoryName)
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Load function callback for the audio class - this function loads a file and returns a pointer to memory
-SDL_RWops *io_loadRawFile (std::string fileName)
+SDL_RWops *io_loadRawFile(std::string fileName)
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_RWops *memFilePtr {};
@@ -69,7 +70,7 @@ SDL_RWops *io_loadRawFile (std::string fileName)
 //
 // Return a file pointer to a block of memory to be used like a file
 //SDL_RWops *io_openMemFile (char *memoryPointer, int memorySize)
-UniqueRWops io_openMemFile (char *memoryPointer, int memorySize)
+UniqueRWops io_openMemFile(char *memoryPointer, int memorySize)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return UniqueRWops (SDL_RWFromMem (memoryPointer, memorySize));

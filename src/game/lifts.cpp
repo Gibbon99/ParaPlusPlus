@@ -1,10 +1,11 @@
 #include <string>
-#include <gui/guiSideview.h>
-#include <game/audio.h>
-#include <game/player.h>
-#include <game/alertLevel.h>
-#include "game/shipDecks.h"
+#include "io/logFile.h"
+#include "gui/guiSideview.h"
 #include "system/util.h"
+#include "game/audio.h"
+#include "game/player.h"
+#include "game/alertLevel.h"
+#include "game/shipDecks.h"
 #include "game/lifts.h"
 
 std::vector<__tileSensor> lifts;
@@ -99,20 +100,6 @@ void gam_setupTunnelLinks()
 
 	tunnelLinks[7].linkedDecks.push_back (18);
 	tunnelLinks[7].linkedDecks.push_back (14);
-
-#ifdef MY_DEBUG
-	for (auto i = 0; i != 8; i++)
-	{
-		std::cout << "Tunnel " << i << " decks : ";
-
-		for (auto tunnelItr: tunnelLinks[i].linkedDecks)
-		{
-			std::cout << tunnelItr << " ";
-		}
-
-		std::cout << std::endl;
-	}
-#endif
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -188,7 +175,6 @@ void gam_clearLifts()
 		}
 		if (liftItr.body != nullptr)
 		{
-//			cpSpaceRemoveBody (sys_returnPhysicsWorld (), liftItr.body);
 			liftItr.body = nullptr;
 		}
 	}
@@ -198,7 +184,7 @@ void gam_clearLifts()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a lift sensor
-void gam_createLiftSensor(int whichLift, int index)
+void gam_createLiftSensor(int whichLift)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	lifts[whichLift].body = cpBodyNewStatic (); // Need to add body to world??
@@ -250,7 +236,7 @@ void gam_findLiftPositions(const std::string &levelName)
 
 			lifts.push_back (tempLift);
 
-			gam_createLiftSensor (lifts.size () - 1, countLift);
+			gam_createLiftSensor (lifts.size () - 1);
 
 			countLift++;
 		}

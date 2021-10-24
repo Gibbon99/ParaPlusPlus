@@ -1,5 +1,4 @@
-#ifndef PARA_PARAASTAR_H
-#define PARA_PARAASTAR_H
+#pragma once
 
 #include <thread>
 #include "main.h"
@@ -65,73 +64,73 @@ public:
 		int    f_score        = 0;
 	};
 
-	paraAStar ();
+	paraAStar();
 
-	~paraAStar ();
+	~paraAStar();
 
-	std::thread::id startThread ();
+	std::thread::id startThread();
 
-	void switchTravelDirection ();
+	void switchTravelDirection();
 
-	void stopUsingPath ();
+	void stopUsingPath();
 
 	int requestNewPath(cpVect start, cpVect destination);
 
 	inline void addTileToOpenNode(cpVect whichTile, int moveCost, int parent);
 
-	int findLowestCostNode ();
+	int findLowestCostNode();
 
-	void moveNodeToClosedList (int whichNodeIndex);
+	void moveNodeToClosedList(int whichNodeIndex);
 
 //	void searchThread ();
-	int searchThread ();
+	int searchThread();
 
 	bool isNodeInClosedList(cpVect whichNode);
 
 	bool isNodeInOpenList(cpVect whichNode);
 
-	bool generateNewNode (int whichDirection);
+	bool generateNewNode(int whichDirection);
 
-	bool stillRunning ();
+	bool stillRunning();
 
-	bool areWaypointsReady ();
+	bool areWaypointsReady();
 
 	cpVect getWaypoint();
 
-	ASTAR_DIRECTION getAStarDirection ();
+	ASTAR_DIRECTION getAStarDirection();
 
-	int getPathStatus ();
+	int getPathStatus();
 
 //
 // Helper routines
 //
 	int findDistance(cpVect fromTile, cpVect toTile);
 
-	bool isTileSolid (int tileIndex);
+	bool isTileSolid(int tileIndex);
 
 //
 // Prepare found path for use
 //
-	void extractPath ();
+	void extractPath();
 
-	void convertToCoords ();
+	void convertToCoords();
 
-	void compressWaypoints ();
+	void compressWaypoints();
 
 //
 // Debug routines
 //
 	void debugDraw(cpVect lineStart, cpVect lineFinish);
 
-	void debugWayPoints ();
+	void debugWayPoints();
 
-	void debugNodes ();
+	void debugNodes();
 
-	int getID ();
+	int getID();
 
-	void setID (int newID);
+	void setID(int newID);
 
-	int getWayPointsIndex ();
+	int getWayPointsIndex();
 
 private:
 
@@ -152,5 +151,3 @@ private:
 	std::vector<cpVect>     wayPoints {};        // In world ( pixel ) coordinates
 	std::thread             *threadID;
 };
-
-#endif //PARA_PARAASTAR_H

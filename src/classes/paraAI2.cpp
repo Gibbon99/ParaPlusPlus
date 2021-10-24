@@ -1,7 +1,7 @@
 #include <SDL2_gfxPrimitives.h>
 #include <thread>
+#include "io/logFile.h"
 #include "classes/paraRandom.h"
-#include "classes/paraLOS.h"
 #include "classes/paraAI2.h"
 #include "system/util.h"
 #include "game/player.h"
@@ -9,7 +9,6 @@
 #include "game/database.h"
 #include "classes/paraBullet.h"
 
-#define DEBUG_AI2 1
 #define NO_THREAD 1
 
 #define DESTINATION_ARRIVE_DISTANCE 8.0f
@@ -164,7 +163,7 @@ void paraAI2::hunt()
 	if ((currentAttackDistance > desiredAttackDistance2) && (currentAttackDistance < desiredAttackDistance2 + paddingSize2))
 	{
 #ifdef DEBUG_AI2
-		std::cout << "[ " << arrayIndex << " ]" << " - Within attack range of player while in HUNT mode." << std::endl;
+		log_addEvent (sys_getString ("[ %i ] - Within attack range of player while in HUNT mode.", arrayIndex));
 #endif
 
 		modifyAIScore (AI2_MODE_HUNT, -60);
@@ -259,7 +258,9 @@ cpVect paraAI2::findOpenWaypoint()
 		}
 	}
 
-	printf ("Break - couldn't find an open waypoint.\n");
+#ifdef DEBUG_AI2
+	log_addEvent (sys_getString ("Break - [ %s ] couldn't find an open waypoint.", __func__));
+#endif
 
 	return invalidWaypoint;
 }
@@ -276,7 +277,7 @@ cpVect paraAI2::findLocationWithLOS(AI2_PATROL_ACTIONS locationType)
 	int    currentDistance {};
 
 #ifdef DEBUG_AI2
-	std::cout << "[ " << arrayIndex << " ] - Search for a visible waypoint." << std::endl;
+	log_addEvent (sys_getString ("[ %i ] - [ %s ] Search for a visible waypoint.", arrayIndex, __func__));
 #endif
 
 	switch (locationType)
@@ -310,7 +311,7 @@ cpVect paraAI2::findLocationWithLOS(AI2_PATROL_ACTIONS locationType)
 								}
 							}
 #ifdef DEBUG_AI2
-							std::cout << "[ " << arrayIndex << " ] - Found a closer waypoint [ " << patrolWayPointIndex << " ] [" << shortestDistance << " ] " << std::endl;
+							log_addEvent (sys_getString ("[ %i ] - Found a closer waypoint [ %i ]", patrolWayPointIndex, shortestDistance));
 #endif
 						}
 					}
@@ -374,10 +375,6 @@ cpVect paraAI2::debugGetDestinationCoordsInPixels()
 void paraAI2::getNextDestination()
 //-----------------------------------------------------------------------------------------------------------------------
 {
-//	DBGVAR(std::cout, arrayIndex);
-
-//	previousDestinationInPixels = destinationPosInPixels;
-
 	switch (currentAIMode)
 	{
 		case AI2_MODE_PATROL:
@@ -465,7 +462,7 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 
 	if (destinationPosInPixels.x < 0)
 	{
-		printf ("Have an invalid destination\n");
+		log_addEvent (sys_getString ("[ %i ] - [ %s ]  - Have an invalid destination.", arrayIndex, __func__));
 		return;
 	}
 
@@ -477,7 +474,7 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 
 		case AI2_MODE_ATTACK:
 
-			std::cout << sys_getString ("Index %i Function : %s Check targetDroid == -1", arrayIndex, __func__) << std::endl;
+			log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s Check targetDroid == -1", arrayIndex, __func__));
 
 			if (targetDroid == -1)      // Get distance and direction to the player
 			{
@@ -487,13 +484,13 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 			else if (targetDroid != NO_ATTACK_TARGET)                        // Get distance and direction to the other droid
 			{
 
-				std::cout << sys_getString ("Index %i Function : %s Check targetDroid != NO_ATTACK_TARGET", arrayIndex, __func__) << std::endl;
+				log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s Check targetDroid != NO_ATTACK_TARGET", arrayIndex, __func__));
 
 				currentAttackDistance = cpvdist (g_shipDeckItr->second.droid[targetDroid].getWorldPosInPixels (), worldPosInPixels);
 				directionAttackVector = cpvsub (g_shipDeckItr->second.droid[targetDroid].getWorldPosInPixels (), worldPosInPixels);
 			}
 
-			std::cout << sys_getString ("Index %i Function : %s currentAttackDistance > desiredAttackDistance2", arrayIndex, __func__) << std::endl;
+			log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s currentAttackDistance > desiredAttackDistance2", arrayIndex, __func__));
 
 			if (currentAttackDistance > desiredAttackDistance2)    // Droid is too far away - move closer
 			{
@@ -506,7 +503,7 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 			if (currentAttackDistance < desiredAttackDistance2)     // Too close - move away - but check that path is clear ?
 			{
 
-				std::cout << sys_getString ("Index %i Function : %s currentAttackDistance < desiredAttackDistance2", arrayIndex, __func__) << std::endl;
+				log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s currentAttackDistance < desiredAttackDistance2", arrayIndex, __func__));
 
 				directionAttackVector = -directionAttackVector;
 				directionAttackVector = cpvnormalize (directionAttackVector);
@@ -886,7 +883,7 @@ void paraAI2::checkAIScores()
 	changeAIModeTo (newAIAction);
 
 #ifdef DEBUG_AI2
-	std::cout << "AI Score [ " << ai[0] << " " << ai[1] << " " << ai[2] << " " << ai[3] << " " << ai[4] << " ]" << std::endl;
+	log_addEvent (sys_getString ("AI Scores [ %i %i %i %i %i ]", ai[0], ai[1], ai[2], ai[3], ai[4]));
 #endif
 }
 
@@ -933,7 +930,7 @@ void paraAI2::changeAIModeTo(int newAIMode)
 
 	std::thread aStarThread2;
 
-	std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
+	log_addEvent (sys_getString ("[ %i ] - Running function : %s", arrayIndex, __func__));
 
 	if (aStar.stillRunning ())
 		return;     // Wait for thread to finish before changing mode
@@ -944,7 +941,7 @@ void paraAI2::changeAIModeTo(int newAIMode)
 	currentAIMode  = newAIMode;
 
 #ifdef DEBUG_AI2
-	std::cout << "[ " << arrayIndex << " ]" << " Changing to new AI mode : " << getAIActionString (currentAIMode) << " : " << std::endl;
+	log_addEvent (sys_getString ("[ %i ] - Changing to new AI mode - [ %s ]", arrayIndex, getAIActionString (currentAIMode).c_str ()));
 #endif
 
 	switch (currentAIMode)
@@ -954,7 +951,7 @@ void paraAI2::changeAIModeTo(int newAIMode)
 		case AI2_MODE_PATROL:    // Find the nearest clear waypoint and move to it
 
 #ifdef DEBUG_AI2
-			std::cout << "[ " << arrayIndex << " ]" << " - Changing to PATROL mode. Looking for nearest waypoint to move to." << std::endl;
+			log_addEvent (sys_getString ("[ %i ] - Changing to PATROL mode. Looking for nearest waypoint to move to.", arrayIndex));
 #endif
 
 //			destinationCoordsInMeters = sys_convertPixelsToMeters (findOpenWaypoint ());
@@ -963,9 +960,7 @@ void paraAI2::changeAIModeTo(int newAIMode)
 			{
 				//
 				// TODO: Something clever
-				printf ("[ %i ] - paraAI2:: Couldn't find a nearest waypoint to set patrol to.\n", arrayIndex);
-
-//				destinationCoordsInMeters = previousDestinationInMeters;
+				log_addEvent (sys_getString ("[ %i ] - Couldn't find a nearest waypoint to set PATROL to. Increase FLEE amount.", arrayIndex));
 
 				modifyAIScore (AI2_MODE_PATROL, -60);
 				modifyAIScore (AI2_MODE_FLEE, 80);
@@ -979,11 +974,14 @@ void paraAI2::changeAIModeTo(int newAIMode)
 		case AI2_MODE_HEAL:
 
 #ifdef DEBUG_AI2
-			std::cout << "[ " << arrayIndex << " ]" << " - Changing to HEAL mode. Requesting aStar to healing tile." << std::endl;
+			log_addEvent (sys_getString ("[ %i ] - Changing to HEAL mode. Looking for nearest waypoint to move to.", arrayIndex));
 #endif
 			tileDestination = findHealingTile ();
 			if (tileDestination.x < 0)                // No healing tiles on level - change to flee
 			{
+#ifdef DEBUG_AI2
+				log_addEvent (sys_getString ("[ %i ] - Couldn't find a nearest tile to set HEAL to. Increase FLEE amount.", arrayIndex));
+#endif
 				modifyAIScore (AI2_MODE_HEAL, -100);
 				modifyAIScore (AI2_MODE_FLEE, 40);
 				changeAIModeTo (AI2_MODE_FLEE);
@@ -991,14 +989,17 @@ void paraAI2::changeAIModeTo(int newAIMode)
 			}
 
 #ifdef DEBUG_AI2
-			std::cout << "[ " << arrayIndex << " ]" << " - Found the destination healing tile [ " << tileDestination.x << " " << tileDestination.y << " ]" << std::endl;
+			log_addEvent (sys_getString ("[ %i ] - Found the destination healing tile [ %4.3f %4.3f ]", arrayIndex, tileDestination.x, tileDestination.y));
 #endif
-
 			returnCode = runAStarCode (tileDestination);    // tileDestination is in Tile coords
 
 #ifdef NO_THREAD
 			if (ASTAR_STATUS_TOO_SHORT == returnCode) // TODO: Move straight to healing tile if not blocked by wall ??
 			{
+#ifdef DEBUG_AI2
+				log_addEvent (sys_getString ("[ %i ] - Heal tile is too close for aStar. Increase FLEE amount.", arrayIndex));
+#endif
+
 				modifyAIScore (AI2_MODE_HEAL, -100);
 				modifyAIScore (AI2_MODE_FLEE, 40);
 				modifyAIScore (AI2_MODE_PATROL, -70);
@@ -1011,18 +1012,21 @@ void paraAI2::changeAIModeTo(int newAIMode)
 
 		case AI2_MODE_FLEE:
 #ifdef DEBUG_AI2
-			std::cout << "[ " << arrayIndex << " ]" << " - Changing to FLEE mode. Requesting aStar to flee tile." << std::endl;
+			log_addEvent (sys_getString ("[ %i ] - Changing to FLEE mode. Looking for nearest waypoint to move to.", arrayIndex));
 #endif
 			tileDestination = findFleeTile ();
 			if (tileDestination.x < 0)                // Couldn't find a suitable tile - change to PATROL
 			{
+#ifdef DEBUG_AI2
+				log_addEvent (sys_getString ("[ %i ] - Couldn't find a suitable FLEE tile. Increase PATROL amount.'.", arrayIndex));
+#endif
 				modifyAIScore (AI2_MODE_FLEE, -100);
 				modifyAIScore (AI2_MODE_PATROL, 40);
 				return;
 			}
 
 #ifdef DEBUG_AI2
-			std::cout << "[ " << arrayIndex << " ]" << " - Found the destination flee tile." << std::endl;
+			log_addEvent (sys_getString ("[ %i ] - Found the destination flee tile [ %4.3f %4.3f ]", arrayIndex, tileDestination.x, tileDestination.y));
 #endif
 
 			returnCode = runAStarCode (tileDestination);
@@ -1040,18 +1044,21 @@ void paraAI2::changeAIModeTo(int newAIMode)
 
 		case AI2_MODE_HUNT:
 #ifdef DEBUG_AI2
-			std::cout << "[ " << arrayIndex << " ]" << " - Changing to HUNT mode." << std::endl;
+			log_addEvent (sys_getString ("[ %i ] - Changing to HUNT mode.", arrayIndex));
 #endif
 			tileDestination = gam_getLastPlayerTrail ();
 			if (tileDestination.x < 0)                // Couldn't get a tile from player trail
 			{
+#ifdef DEBUG_AI2
+				log_addEvent (sys_getString ("[ %i ] - Couldn't find player trail tile. Increase FLEE amount.", arrayIndex));
+#endif
 				modifyAIScore (AI2_MODE_HUNT, -100);
 				modifyAIScore (AI2_MODE_FLEE, 40);
 				return;
 			}
 
 #ifdef DEBUG_AI2
-			std::cout << "[ " << arrayIndex << " ]" << " - Found the player trail tile." << std::endl;
+			log_addEvent (sys_getString ("[ %i ] - Found the player trail tile [ %4.3f %4.3f ]", arrayIndex, tileDestination.x, tileDestination.y));
 #endif
 			returnCode = runAStarCode (tileDestination);
 #ifdef NO_THREAD
@@ -1072,6 +1079,9 @@ void paraAI2::changeAIModeTo(int newAIMode)
 		case AI2_MODE_ATTACK:
 			if (!dataBaseEntry[g_shipDeckItr->second.droid[arrayIndex].getDroidType ()].canShoot)
 			{
+#ifdef DEBUG_AI2
+				log_addEvent (sys_getString ("[ %i ] - Droid can not shoot. Increase FLEE amount.", arrayIndex));
+#endif
 				modifyAIScore (AI2_MODE_ATTACK, -100);
 				modifyAIScore (AI2_MODE_FLEE, 40);
 			}

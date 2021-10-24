@@ -1,12 +1,11 @@
-#include <main.h>
-
 #include <utility>
+#include "main.h"
 #include "classes/paraSprite.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the current frame to render
-void paraSprite::setCurrentFrame (int newCurrentFrame)
+void paraSprite::setCurrentFrame(int newCurrentFrame)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	currentFrame = newCurrentFrame;
@@ -15,7 +14,7 @@ void paraSprite::setCurrentFrame (int newCurrentFrame)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return width of a frame
-int paraSprite::getFrameWidth ()
+int paraSprite::getFrameWidth()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return frameWidth;
@@ -24,7 +23,7 @@ int paraSprite::getFrameWidth ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return height of a frame
-int paraSprite::getFrameHeight ()
+int paraSprite::getFrameHeight()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return frameHeight;
@@ -33,7 +32,7 @@ int paraSprite::getFrameHeight ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a sprite
-void paraSprite::create (std::string setTextureKeyname, int setNumFrames, double setAnimateSpeed)
+void paraSprite::create(std::string setTextureKeyname, int setNumFrames, double setAnimateSpeed)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	numFrames      = setNumFrames;
@@ -46,7 +45,7 @@ void paraSprite::create (std::string setTextureKeyname, int setNumFrames, double
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a sprite at the passed in location
-void paraSprite::render (double posX, double posY, double scale, Uint8 alphaMod)
+void paraSprite::render(double posX, double posY, double scale, Uint8 alphaMod)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Rect                                            srcRect;
@@ -94,7 +93,7 @@ void paraSprite::render (double posX, double posY, double scale, Uint8 alphaMod)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a sprite at the passed in location
-void paraSprite::render (double posX, double posY, double scale, double angle)
+void paraSprite::render(double posX, double posY, double scale, double angle)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Rect                                            srcRect;
@@ -142,7 +141,7 @@ void paraSprite::render (double posX, double posY, double scale, double angle)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Animate the sprite - return TRUE if reached end of the animation
-bool paraSprite::animate ()
+bool paraSprite::animate()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (lowHealth)
@@ -165,7 +164,7 @@ bool paraSprite::animate ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the animate speed
-void paraSprite::setAnimateSpeed (double newSpeed)
+void paraSprite::setAnimateSpeed(double newSpeed)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	animateSpeed = newSpeed;
@@ -174,7 +173,7 @@ void paraSprite::setAnimateSpeed (double newSpeed)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the tint color to render the sprite in
-void paraSprite::setTintColor (Uint8 r, Uint8 g, Uint8 b)
+void paraSprite::setTintColor(Uint8 r, Uint8 g, Uint8 b)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	tintColor.r = r;
@@ -185,7 +184,7 @@ void paraSprite::setTintColor (Uint8 r, Uint8 g, Uint8 b)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the flag to say this sprite has low health
-void paraSprite::setLowHealth (bool newState)
+void paraSprite::setLowHealth(bool newState)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (newState != lowHealth)
@@ -199,7 +198,7 @@ void paraSprite::setLowHealth (bool newState)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Process the colors to signal low health
-void paraSprite::animateLowHealth ()
+void paraSprite::animateLowHealth()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static int   lowHealthColorFade = 255;

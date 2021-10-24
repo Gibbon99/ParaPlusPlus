@@ -1,5 +1,4 @@
-#ifndef PARA_PARADROID_H
-#define PARA_PARADROID_H
+#pragma once
 
 #include <cpVect.h>
 #include <chipmunk.h>
@@ -125,5 +124,3 @@ private:
 	float       influenceFade {};
 	std::string droidName {};
 };
-
-#endif //PARA_PARADROID_H

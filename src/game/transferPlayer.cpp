@@ -1,6 +1,6 @@
-#include <game/transferGame.h>
-#include <game/audio.h>
-#include <game/transferRender.h>
+#include "game/transferGame.h"
+#include "game/audio.h"
+#include "game/transferRender.h"
 #include "game/transferPlayer.h"
 
 int numPlayerTokens = 0;
@@ -8,7 +8,7 @@ int numPlayerTokens = 0;
 // ----------------------------------------------------------------------------
 //
 // Move the player token based on passed on direction
-void trn_movePlayerToken (int direction)
+void trn_movePlayerToken(int direction)
 // ----------------------------------------------------------------------------
 {
 	if (TRANSFER_MOVE_UP == direction)
@@ -30,7 +30,7 @@ void trn_movePlayerToken (int direction)
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Do transfer movements for player
-void trn_processPlayerActions ()
+void trn_processPlayerActions()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	if (numPlayerTokens == -1)       // 0 or -1

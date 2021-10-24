@@ -8,7 +8,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Constructor
-paraRenderer::paraRenderer ()
+paraRenderer::paraRenderer()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	shutdownFunc = nullptr;
@@ -18,12 +18,12 @@ paraRenderer::paraRenderer ()
 	getRendererInfo ();
 }
 
-void paraRenderer::AddRef ()
+void paraRenderer::AddRef()
 {
 
 }
 
-void paraRenderer::ReleaseRef ()
+void paraRenderer::ReleaseRef()
 {
 
 }
@@ -31,7 +31,7 @@ void paraRenderer::ReleaseRef ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a function to call when a fatal error occurs and we shutdown
-void paraRenderer::setShutdownFunction (functionPtrStr outputFunction)
+void paraRenderer::setShutdownFunction(functionPtrStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraRenderer::shutdownFunc = outputFunction;
@@ -40,7 +40,7 @@ void paraRenderer::setShutdownFunction (functionPtrStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a function to call when a fatal error occurs and we shutdown
-void paraRenderer::setConOutFunction (functionPtrOut outputFunction)
+void paraRenderer::setConOutFunction(functionPtrOut outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraRenderer::consoleOutFunc = outputFunction;
@@ -50,7 +50,7 @@ void paraRenderer::setConOutFunction (functionPtrOut outputFunction)
 //
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
-std::string paraRenderer::int_getString (std::string format, ...)
+std::string paraRenderer::int_getString(std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	const char *const zcFormat = format.c_str ();
@@ -78,7 +78,7 @@ std::string paraRenderer::int_getString (std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create the flags to be used with the renderer
-Uint32 paraRenderer::createRendererFlags (int rendererIndex)
+Uint32 paraRenderer::createRendererFlags(int rendererIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	Uint32 newFlags = 0;
@@ -109,7 +109,7 @@ Uint32 paraRenderer::createRendererFlags (int rendererIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a OS window and create the renderer for that window
-void paraRenderer::create (int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, bool useVSync, const std::string &windowTitle)
+void paraRenderer::create(int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, bool useVSync, const std::string &windowTitle)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Surface *iconSurface;
@@ -154,7 +154,7 @@ void paraRenderer::create (int newWinWidth, int newWinHeight, int winFlags, int 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a new renderer
-void paraRenderer::useNewRenderer (int newRendererIndex)
+void paraRenderer::useNewRenderer(int newRendererIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	__backingTexture                        tempBackingTexture;
@@ -199,7 +199,7 @@ void paraRenderer::useNewRenderer (int newRendererIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the information about the available renderers
-void paraRenderer::getRendererInfo ()
+void paraRenderer::getRendererInfo()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int            numRenderDrivers;
@@ -211,15 +211,6 @@ void paraRenderer::getRendererInfo ()
 	{
 		rendererInfo.clear ();
 	}
-
-	/*
-	std::cout << "Inside getRenderInfo" << std::endl;
-
-	if (oktouse)
-		consoleOutFunc (-1, "Inside getRenderInfo");
-
-	oktouse = true;
-*/
 
 	numRenderDrivers = SDL_GetNumRenderDrivers ();
 	if (numRenderDrivers <= 0)
@@ -245,7 +236,7 @@ void paraRenderer::getRendererInfo ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Verify that the renderer pulled from the config file is valid and can be used
-void paraRenderer::verifyRenderer ()
+void paraRenderer::verifyRenderer()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((whichRenderer < 0) || (whichRenderer > (int) (rendererInfo.size () - 1)))
@@ -257,7 +248,7 @@ void paraRenderer::verifyRenderer ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Debug - show the current renderer to the console
-void paraRenderer::d_getCurrentBackingTexture ()
+void paraRenderer::d_getCurrentBackingTexture()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	consoleOutFunc (-1, int_getString ("[ %s ]", rendererInfo[whichRenderer].rendererName.c_str ()));
@@ -266,7 +257,7 @@ void paraRenderer::d_getCurrentBackingTexture ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Display all the created backing textures information to the console
-void paraRenderer::d_getAllBackingTextures ()
+void paraRenderer::d_getAllBackingTextures()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	for (const auto &textureItr: backingTextures)
@@ -278,7 +269,7 @@ void paraRenderer::d_getAllBackingTextures ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get information on the current renderer
-void paraRenderer::d_getCurrentRenderer ()
+void paraRenderer::d_getCurrentRenderer()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (rendererInfo.empty ())
@@ -300,7 +291,7 @@ void paraRenderer::d_getCurrentRenderer ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the index of the current renderer
-int paraRenderer::getCurrentRendererIndex ()
+int paraRenderer::getCurrentRendererIndex()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return whichRenderer;
@@ -309,7 +300,7 @@ int paraRenderer::getCurrentRendererIndex ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the number of renderers available
-int paraRenderer::getNumRenderers ()
+int paraRenderer::getNumRenderers()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return rendererInfo.size ();
@@ -318,7 +309,7 @@ int paraRenderer::getNumRenderers ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the name of a renderer by index
-std::string paraRenderer::getRendererByIndex (int whichRenderer)
+std::string paraRenderer::getRendererByIndex(int whichRenderer)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((whichRenderer < 0) || (whichRenderer > static_cast<int>(rendererInfo.size ())))
@@ -330,7 +321,7 @@ std::string paraRenderer::getRendererByIndex (int whichRenderer)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Display all the available renderers
-void paraRenderer::d_getAllRenderers ()
+void paraRenderer::d_getAllRenderers()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int currentCount = 0;
@@ -357,7 +348,7 @@ void paraRenderer::d_getAllRenderers ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the string name of the currently active backing texture
-std::string paraRenderer::getCurrentBackingTexture ()
+std::string paraRenderer::getCurrentBackingTexture()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return activeBackingTexture;
@@ -366,7 +357,7 @@ std::string paraRenderer::getCurrentBackingTexture ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the fade off backing texture
-PARA_Texture *paraRenderer::getFadeOffTexture ()
+PARA_Texture *paraRenderer::getFadeOffTexture()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return fadeTextureCopy;
@@ -375,7 +366,7 @@ PARA_Texture *paraRenderer::getFadeOffTexture ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Make a new backing texture active
-void paraRenderer::setCurrentBackingTexture (std::string newActiveTexture)
+void paraRenderer::setCurrentBackingTexture(std::string newActiveTexture)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	for (const auto &textureItr: backingTextures)
@@ -394,7 +385,7 @@ void paraRenderer::setCurrentBackingTexture (std::string newActiveTexture)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the render target texture handle
-PARA_Texture *paraRenderer::getRenderTarget (std::string textureName)
+PARA_Texture *paraRenderer::getRenderTarget(std::string textureName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 //	SDL_assert_release(renderTargetTexture != nullptr);
@@ -417,7 +408,7 @@ PARA_Texture *paraRenderer::getRenderTarget (std::string textureName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a render target texture
-void paraRenderer::createRenderTargetTexture (std::string textureName, int logicalWidth, int logicalHeight, int setRenderScaleQuality)
+void paraRenderer::createRenderTargetTexture(std::string textureName, int logicalWidth, int logicalHeight, int setRenderScaleQuality)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string      hintValue;
@@ -455,16 +446,12 @@ void paraRenderer::createRenderTargetTexture (std::string textureName, int logic
 		shutdownFunc (int_getString ("Unable to create render target texture [ %s ]", SDL_GetError ()));
 
 	backingTextures.insert (std::pair<std::string, __backingTexture> (textureName, tempBackingTexture));
-
-	//
-	// Adjust virtual scaling
-//	SDL_RenderSetLogicalSize (renderer, logicalWidth, logicalHeight);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a copy of the existing backing texture
-void paraRenderer::copyCurrentRenderTarget ()
+void paraRenderer::copyCurrentRenderTarget()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	Uint32 format;
@@ -495,7 +482,7 @@ void paraRenderer::copyCurrentRenderTarget ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Prepare to start a fade cycle
-void paraRenderer::prepareFade ()
+void paraRenderer::prepareFade()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	copyCurrentRenderTarget ();
@@ -516,7 +503,7 @@ void paraRenderer::prepareFade ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Called to update the fade counter and state
-void paraRenderer::updateFade ()
+void paraRenderer::updateFade()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (SDL_SetRenderDrawColor (renderer, 0, 0, 0, currentFadeAlpha) < 0)
@@ -551,8 +538,17 @@ void paraRenderer::updateFade ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Return the current fade state
+int paraRenderer::getFadeState() const
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return currentFadeState;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Reset target texture to screen, and present current texture if required
-void paraRenderer::presentFrame ()
+void paraRenderer::presentFrame()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (targetTextureAvailable)
@@ -583,7 +579,7 @@ void paraRenderer::presentFrame ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a new render target if required, and clear the screen
-void paraRenderer::prepareFrame ()
+void paraRenderer::prepareFrame()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static int errorCount = 0;
@@ -622,7 +618,7 @@ void paraRenderer::prepareFrame ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Clear all the textures
-void paraRenderer::clearTextures ()
+void paraRenderer::clearTextures() const
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_SetRenderDrawColor (paraRenderer::renderer, 0x00, 0x00, 0x00, 0x00);
@@ -632,7 +628,7 @@ void paraRenderer::clearTextures ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the width of the current backing texture
-int paraRenderer::renderWidth ()
+int paraRenderer::renderWidth()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	auto backingItr = backingTextures.find (getCurrentBackingTexture ());
@@ -647,7 +643,7 @@ int paraRenderer::renderWidth ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the height of the current backing texture
-int paraRenderer::renderHeight ()
+int paraRenderer::renderHeight()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	auto backingItr = backingTextures.find (getCurrentBackingTexture ());

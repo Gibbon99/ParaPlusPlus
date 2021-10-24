@@ -1,3 +1,4 @@
+#include <main.h>
 #include "../../hdr/classes/paraLogFile.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -6,24 +7,24 @@
 bool paraLogFile::open(std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-    logFileName = std::move(fileName);
+	logFileName = std::move (fileName);
 
-    paraLogFile::outFile.open(logFileName);
-    if (!paraLogFile::outFile)
-        return false;
+	paraLogFile::outFile.open (logFileName);
+	if (!paraLogFile::outFile)
+		return false;
 
-    fileLoggingOn = true;
-    return true;
+	fileLoggingOn = true;
+	return true;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Write a string to the open logfile
-void paraLogFile::write(const std::string& logText)
+void paraLogFile::write(const std::string &logText)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (paraLogFile::enabled())
-		paraLogFile::outFile << logText << std::endl;
+	if (paraLogFile::enabled ())
+		paraLogFile::outFile << sys_getCurrentTime () << " - " << logText << std::endl;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -32,10 +33,10 @@ void paraLogFile::write(const std::string& logText)
 void paraLogFile::close()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (paraLogFile::enabled())
+	if (paraLogFile::enabled ())
 	{
-		flush(outFile);
-		paraLogFile::outFile.close();
+		flush (outFile);
+		paraLogFile::outFile.close ();
 	}
 }
 
@@ -45,5 +46,5 @@ void paraLogFile::close()
 bool paraLogFile::enabled() const
 //----------------------------------------------------------------------------------------------------------------------
 {
-    return fileLoggingOn;
+	return fileLoggingOn;
 }

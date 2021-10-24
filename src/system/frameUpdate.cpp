@@ -243,13 +243,14 @@ void sys_gameTickRun()
 
 		case MODE_GUI_DECKVIEW:
 			gam_animateHealing ();
-			deckviewStarfield.animate ();
+			if (renderer.getFadeState () == FADE_STATE_NONE)
+				deckviewStarfield.animate ();
 			break;
 
 		case MODE_GUI_SHIPVIEW:
 		case MODE_GUI_LIFTVIEW:
-			sideviewStarfield.animate ();
-//			gui_animateStarfield ();
+			if (renderer.getFadeState () == FADE_STATE_NONE)
+				sideviewStarfield.animate ();
 			break;
 
 		case MODE_GUI_INTROSCROLL:
