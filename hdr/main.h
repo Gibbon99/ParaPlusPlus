@@ -21,8 +21,10 @@
 
 #define APP_NAME    "Para++"
 
-/*
+
 #define DEBUG_AI2 1     // Toggle logging for paraAI2
+/*
+* #define DEBUG_MEMORY 1              // Toggle logging for paraMemory
 #define ASTAR_DEBUG 1   // Toggle logging for aStar functions
 #define ASTAR_DO_PATH_COMPRESS 1    // Remove redundant waypoints from final aStar
 #define AUDIO_DEBUG 1               // Toggle logging for Audio functions

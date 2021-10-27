@@ -8,7 +8,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Constructor
-paraHighScore::paraHighScore(std::string filePath, int numScores, const std::string defaultName, int startScore, int stepScore)
+paraHighScore::paraHighScore(std::string filePath, int numScores, const std::string &defaultName, int startScore, int stepScore)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int tableScore {};
@@ -22,7 +22,7 @@ paraHighScore::paraHighScore(std::string filePath, int numScores, const std::str
 		tableScore = startScore;
 		for (int i = 0; i < m_numScores; i++)
 		{
-			highScores.insert (highScore (defaultName.c_str (), tableScore));
+			highScores.insert (highScore (defaultName, tableScore));
 			tableScore -= stepScore;
 		}
 
@@ -38,11 +38,22 @@ paraHighScore::paraHighScore(std::string filePath, int numScores, const std::str
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Return the lastname used as a string
+std::string paraHighScore::getLastNameUsed()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return lastNameUsed;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Get the lowest score from the table
 int paraHighScore::lowestScore()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	auto lowestScore = highScores.end ();
+
+	lowestScore--;
 
 	return lowestScore->score;
 }
@@ -143,7 +154,7 @@ void paraHighScore::loadFile()
 
 	readFileHandle.read ((char *) &lastNameUsed, sizeof (lastNameUsed));
 
-	while (!readFileHandle.eof ())
+	for (int i = 0; i < m_numScores; i++)
 	{
 		readFileHandle.read ((char *) &tempScore.name, sizeof (tempScore.name));
 		readFileHandle.read ((char *) &tempScore.score, sizeof (tempScore.score));

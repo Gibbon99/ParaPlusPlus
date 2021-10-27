@@ -1,11 +1,6 @@
-#include <game/doors.h>
-#include <game/terminal.h>
-#include "game/player.h"
-#include "game/transfer.h"
+#include "game/terminal.h"
 #include "game/texture.h"
-#include "system/gameEvents.h"
 #include "system/util.h"
-#include "game/game.h"
 
 struct paraMemoryMap
 {
@@ -69,9 +64,9 @@ void sys_saveTexture(SDL_Renderer *ren, SDL_Texture *tex, const char *filename)
 	int         format;
 	void        *pixels;
 
-	pixels  = NULL;
-	surf    = NULL;
-	ren_tex = NULL;
+	pixels  = nullptr;
+	surf    = nullptr;
+	ren_tex = nullptr;
 	format  = SDL_PIXELFORMAT_RGBA32;
 
 	/* Get information about texture we want to save */
@@ -430,7 +425,9 @@ char *sys_malloc(int memorySize, std::string keyName)
 
 	memoryMap.insert (std::pair<std::string, paraMemoryMap> (keyName, newMemoryMapEntry));
 
+#ifdef DEBUG_MEMORY
 	logFile.write (sys_getString ("Allocated [ %i ] for [ %s ]", memorySize, keyName.c_str ()));
+#endif
 
 	return newMemoryMapEntry.pointer;
 }
@@ -448,8 +445,9 @@ void sys_freeMemory(std::string keyName)
 
 	if (nullptr != memoryItr->second.pointer)
 	{
+#ifdef DEBUG_MEMORY
 		logFile.write (sys_getString ("Free memory [ %i bytes ] - [ %s ]", memoryItr->second.size, memoryItr->first.c_str ()));
-
+#endif
 		free (memoryItr->second.pointer);
 		memoryMap.erase (memoryItr);
 		return;
@@ -467,8 +465,9 @@ void sys_freeMemory()
 
 	for (auto &memoryItr: memoryMap)
 	{
+#ifdef DEBUG_MEMORY
 		logFile.write (sys_getString ("Free memory [ %i bytes ] - [ %s ]", memoryItr.second.size, memoryItr.first.c_str ()));
-
+#endif
 		if (memoryItr.second.pointer != nullptr)
 		{
 			free (memoryItr.second.pointer);

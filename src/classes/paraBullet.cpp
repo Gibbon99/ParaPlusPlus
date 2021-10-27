@@ -48,6 +48,8 @@ void gam_doDisrupterDamage(int sourceDroid)
 			gam_damageToDroid (droidItr.userData->dataValue, PHYSIC_DAMAGE_BULLET, sourceDroid);
 		}
 	}
+
+	gam_damageToPlayer (PHYSIC_DAMAGE_BULLET, sourceDroid);
 }
 
 //---------------------------------------------------------------------------------------------------------------

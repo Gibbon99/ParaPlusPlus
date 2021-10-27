@@ -46,12 +46,12 @@ void paraAI2::debugShowValues()
 {
 	int counter = 0;
 
-	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%s %s %s %s %s", "        PTL", "   HNT", "   FLE", "   HEL", "   ATK"));
+	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%s %s %s %s %s %s", "        ATK", "   HNT", "   FLE", "   HEL", "   PAT", "   WIT"));
 
 	for (auto droidItr: g_shipDeckItr->second.droid)
 	{
 		if (droidItr.getCurrentMode () == DROID_MODE_NORMAL)
-			con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%i   --  %2i --   %2i --   %2i --  %2i  --  %2i  -- %s - ", counter, droidItr.ai2.ai[0], droidItr.ai2.ai[1], droidItr.ai2.ai[2], droidItr.ai2.ai[3], droidItr.ai2.ai[4], getAIActionString (droidItr.ai2.getCurrentAIMode ()).c_str ()));
+			con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%i   --  %2i --   %2i --   %2i --  %2i  --  %2i  -- %2i -- %s - ", counter, droidItr.ai2.ai[0], droidItr.ai2.ai[1], droidItr.ai2.ai[2], droidItr.ai2.ai[3], droidItr.ai2.ai[4], droidItr.ai2.ai[5], getAIActionString (droidItr.ai2.getCurrentAIMode ()).c_str ()));
 		else
 			con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("%i %s", counter, "Dead"));
 
@@ -112,7 +112,7 @@ void paraAI2::attack()
 
 	if (targetDroid == NO_ATTACK_TARGET)
 	{
-		modifyAIScore (AI2_MODE_ATTACK, -50 + difficultyValue);
+		modifyAIScore (AI2_MODE_ATTACK, -(50 + difficultyValue));
 		return;
 	}
 	//
@@ -271,10 +271,17 @@ cpVect paraAI2::findOpenWaypoint()
 cpVect paraAI2::findLocationWithLOS(AI2_PATROL_ACTIONS locationType)
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	cpVect newDestinationCoordsInPixels {};
-	int    newWaypointIndex {};
-	int    shortestDistance {};
-	int    currentDistance {};
+	cpVect             newDestinationCoordsInPixels {};
+	int                newWaypointIndex {};
+	int                shortestDistance {};
+	int                currentDistance {};
+	cpShapeFilter      shapeFilter {};
+	cpSegmentQueryInfo segmentQueryResult {};
+
+	shapeFilter.group      = CP_NO_GROUP;
+	shapeFilter.mask       = PHYSIC_TYPE_WALL;      // Check for walls
+	shapeFilter.categories = PHYSIC_TYPE_ENEMY;
+
 
 #ifdef DEBUG_AI2
 	log_addEvent (sys_getString ("[ %i ] - [ %s ] Search for a visible waypoint.", arrayIndex, __func__));
@@ -292,14 +299,14 @@ cpVect paraAI2::findLocationWithLOS(AI2_PATROL_ACTIONS locationType)
 			{
 				if (!cpveql (worldPosInPixels, g_shipDeckItr->second.wayPoints[newWaypointIndex]))
 				{
-					auto raycastReslt = cpSpaceSegmentQueryFirst (sys_returnPhysicsWorld (), worldPosInPixels, g_shipDeckItr->second.wayPoints[newWaypointIndex], 2.0f, CP_SHAPE_FILTER_ALL, nullptr);
+					auto raycastResult = cpSpaceSegmentQueryFirst (sys_returnPhysicsWorld (), worldPosInPixels, g_shipDeckItr->second.wayPoints[newWaypointIndex], 2.0f, shapeFilter, &segmentQueryResult);
 
-					if (!raycastReslt)
+					if (nullptr != raycastResult)
 					{
 						currentDistance = cpvdist (worldPosInPixels, g_shipDeckItr->second.wayPoints[newWaypointIndex]);
 						if (currentDistance < shortestDistance)
 						{
-							if (shortestDistance > 0)
+//							if (shortestDistance > 0)
 							{
 								shortestDistance             = currentDistance;
 								newDestinationCoordsInPixels = g_shipDeckItr->second.wayPoints[newWaypointIndex];
@@ -468,15 +475,29 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 
 	switch (currentAIMode)
 	{
-		case AI2_MODE_HUNT: //TOD Add in thread aware here as well - like heal, flee
+		case AI2_MODE_HUNT:
 			currentAttackDistance = cpvdist (playerDroid.getWorldPosInPixels (), worldPosInPixels);
+#ifdef NO_THREAD
+			if (cpvdist (destinationPosInPixels, worldPosInPixels) < DESTINATION_ARRIVE_DISTANCE)    // Conditional jump or move on uninitialised value
+				getNextDestination ();
+
+			checkPotentialCollision ();
+#else
+			if (ASTAR_STATUS_READY == aStar.getPathStatus ())
+			{
+				if (cpvdist (destinationCoordsInMeters, worldPositionInMeters) < DESTINATION_ARRIVE_DISTANCE)    // Conditional jump or move on uninitialised value
+					getNextDestination ();
+
+				checkPotentialCollision ();
+			}
+#endif
 			break;
 
 		case AI2_MODE_ATTACK:
 
-			log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s Check targetDroid == -1", arrayIndex, __func__));
+//			log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s Check targetDroid == -1", arrayIndex, __func__));
 
-			if (targetDroid == -1)      // Get distance and direction to the player
+			if (targetDroid == TARGET_PLAYER)      // Get distance and direction to the player
 			{
 				currentAttackDistance = cpvdist (playerDroid.getWorldPosInPixels (), worldPosInPixels);
 				directionAttackVector = cpvsub (playerDroid.getWorldPosInPixels (), worldPosInPixels);
@@ -484,13 +505,13 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 			else if (targetDroid != NO_ATTACK_TARGET)                        // Get distance and direction to the other droid
 			{
 
-				log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s Check targetDroid != NO_ATTACK_TARGET", arrayIndex, __func__));
+//			log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s Check targetDroid != NO_ATTACK_TARGET", arrayIndex, __func__));
 
 				currentAttackDistance = cpvdist (g_shipDeckItr->second.droid[targetDroid].getWorldPosInPixels (), worldPosInPixels);
 				directionAttackVector = cpvsub (g_shipDeckItr->second.droid[targetDroid].getWorldPosInPixels (), worldPosInPixels);
 			}
 
-			log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s currentAttackDistance > desiredAttackDistance2", arrayIndex, __func__));
+//			log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s currentAttackDistance > desiredAttackDistance2", arrayIndex, __func__));
 
 			if (currentAttackDistance > desiredAttackDistance2)    // Droid is too far away - move closer
 			{
@@ -502,8 +523,7 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 
 			if (currentAttackDistance < desiredAttackDistance2)     // Too close - move away - but check that path is clear ?
 			{
-
-				log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s currentAttackDistance < desiredAttackDistance2", arrayIndex, __func__));
+//				log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s currentAttackDistance < desiredAttackDistance2", arrayIndex, __func__));
 
 				directionAttackVector = -directionAttackVector;
 				directionAttackVector = cpvnormalize (directionAttackVector);
@@ -517,12 +537,9 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 		case AI2_MODE_HEAL:
 		case AI2_MODE_FLEE:
 #ifdef NO_THREAD
-			if (cpvdist (destinationPosInPixels, worldPosInPixels) < DESTINATION_ARRIVE_DISTANCE)    // Conditional jump or move on uninitialised value
+			if (cpvdist (destinationPosInPixels, worldPosInPixels) < DESTINATION_ARRIVE_DISTANCE)
 				getNextDestination ();
 
-			//
-			// Action to take to avoid a potential collision while following a aStar path
-			//
 			checkPotentialCollision ();
 #else
 			if (ASTAR_STATUS_READY == aStar.getPathStatus ())
@@ -536,7 +553,7 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 			break;
 
 		default:
-			if (cpvdist (destinationPosInPixels, worldPosInPixels) < DESTINATION_ARRIVE_DISTANCE)    // Conditional jump or move on uninitialised value
+			if (cpvdist (destinationPosInPixels, worldPosInPixels) < DESTINATION_ARRIVE_DISTANCE)
 				getNextDestination ();
 
 			checkPotentialCollision ();
@@ -616,17 +633,16 @@ int paraAI2::checkPotentialCollision()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	DBGVAR(std::cout, arrayIndex);
-
-	//std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
-
-//	lookAheadVelocity = cpvmult (lookAheadVelocity, LOOK_AHEAD_DISTANCE + (g_shipDeckItr->second.droid[arrayIndex].getDroidType () / 10));
 	//
 	// Change direction if going to run into player
 	if (cpvdist (lookAheadVelocity, playerDroid.ai2.getWorldPosInPixels ()) < LOOK_AHEAD_DISTANCE)
 	{
 		currentSpeed = maxSpeed * 0.5; // 0.0;
 		velocity     = {0.0, 0.0};
-		switchWaypointDirection ();
+		collisionCounterPlayer++;
+		modifyAIScore (AI2_MODE_ATTACK, 5);     // Get more agro the more collisions occur
+		if (collisionCounterPlayer < IGNORE_SWAP_DIRECTION_LIMIT)
+			switchWaypointDirection ();
 		return COLLIDE_WITH_PLAYER;
 	}
 	//
@@ -639,15 +655,14 @@ int paraAI2::checkPotentialCollision()
 			{
 				if (cpvdist (droidItr.getWorldPosInPixels (), lookAheadVelocity) < LOOK_AHEAD_DISTANCE)
 				{
-					currentSpeed             = maxSpeed * 0.5;
-					velocity                 = {0.0, 0.0};
-					if (swapDirectionCounter < IGNORE_SWAP_DIRECTION_LIMIT)
+					currentSpeed = maxSpeed * 0.5;
+					velocity     = {0.0, 0.0};
+					collisionCounterDroid++;
+					if (collisionCounterDroid < IGNORE_SWAP_DIRECTION_LIMIT)
 					{
 						switchWaypointDirection ();
-						swapDirectionCounter++;
+						collisionCounterDroid++;
 					}
-					else
-						swapDirectionCounter = 0;
 
 					return droidItr.getDroidType ();
 				}
@@ -830,7 +845,7 @@ void paraAI2::modifyAIScore(int whichScore, int modifyAmount)
 
 	//std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
 
-	if ((whichScore < 0) || (whichScore > AI2_MODE_PATROL))
+	if ((whichScore < 0) || (whichScore > (AI2_MODE_NUMBER - 1)))
 		return;
 
 	ai[whichScore] += modifyAmount;
@@ -867,7 +882,7 @@ void paraAI2::checkAIScores()
 	}
 	//
 	// Check for other actions to take
-	for (auto i = 0; i != AI2_MODE_NUMBER; i++)
+	for (auto i     = 0; i != AI2_MODE_NUMBER; i++)
 	{
 		if (ai[i] > highestScore)
 		{
@@ -876,14 +891,34 @@ void paraAI2::checkAIScores()
 		}
 	}
 	//
+	// If changing from ATTACK to something else - reset target Droid
+	if ((newAIAction != AI2_MODE_ATTACK) && (currentAIMode == AI2_MODE_ATTACK))
+		targetDroid = NO_ATTACK_TARGET;
+
+	//
+	// Change from witnessing an attack to actually attacking the droid witnessed doing the attacks
+	if (newAIAction == AI2_MODE_WITNESS)
+	{
+		newAIAction = AI2_MODE_ATTACK;
+		targetDroid = witnessDroid;
+		modifyAIScore (AI2_MODE_WITNESS, -90);
+		modifyAIScore (AI2_MODE_ATTACK, 100 + difficultyValue);
+		changeAIModeTo (newAIAction);
+		return;
+	}
+	//
 	// Already doing this action
 	if (currentAIMode == newAIAction)
 		return;
 
+#ifdef DEBUG_AI2
+	log_addEvent (sys_getString ("[ %i ] Found a new AI mode to change to [ %s ]", arrayIndex, getAIActionString (newAIAction).c_str ()));
+#endif
+
 	changeAIModeTo (newAIAction);
 
 #ifdef DEBUG_AI2
-	log_addEvent (sys_getString ("AI Scores [ %i %i %i %i %i ]", ai[0], ai[1], ai[2], ai[3], ai[4]));
+	log_addEvent (sys_getString ("[ %i ] AI Scores [ %i %i %i %i %i %i ]", arrayIndex, ai[0], ai[1], ai[2], ai[3], ai[4], ai[5]));
 #endif
 }
 
@@ -898,6 +933,15 @@ void paraAI2::setHealValue(float newHealthPercent)
 #ifdef DEBUG_AI
 	//	std::cout << "[ " << arrayIndex << " ] Health percent is now : " << healthPercent << std::endl;
 #endif
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
+// Set the droid that this droid has witnessed
+void paraAI2::setWitnessDroid(int newWitnessDroid)
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	witnessDroid = newWitnessDroid;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -930,7 +974,9 @@ void paraAI2::changeAIModeTo(int newAIMode)
 
 	std::thread aStarThread2;
 
+#ifdef DEBUG_AI2
 	log_addEvent (sys_getString ("[ %i ] - Running function : %s", arrayIndex, __func__));
+#endif
 
 	if (aStar.stillRunning ())
 		return;     // Wait for thread to finish before changing mode
@@ -953,8 +999,6 @@ void paraAI2::changeAIModeTo(int newAIMode)
 #ifdef DEBUG_AI2
 			log_addEvent (sys_getString ("[ %i ] - Changing to PATROL mode. Looking for nearest waypoint to move to.", arrayIndex));
 #endif
-
-//			destinationCoordsInMeters = sys_convertPixelsToMeters (findOpenWaypoint ());
 			destinationPosInPixels = (findLocationWithLOS (AI2_PATROL_ACTIONS::AI2_FIND_WAYPOINT));
 			if ((destinationPosInPixels.x < 0) || (destinationPosInPixels.y < 0))
 			{
@@ -964,7 +1008,7 @@ void paraAI2::changeAIModeTo(int newAIMode)
 
 				modifyAIScore (AI2_MODE_PATROL, -60);
 				modifyAIScore (AI2_MODE_FLEE, 80);
-				changeAIModeTo (AI2_MODE_FLEE);
+//				changeAIModeTo (AI2_MODE_FLEE);
 				return;
 			}
 			break;
@@ -984,7 +1028,7 @@ void paraAI2::changeAIModeTo(int newAIMode)
 #endif
 				modifyAIScore (AI2_MODE_HEAL, -100);
 				modifyAIScore (AI2_MODE_FLEE, 40);
-				changeAIModeTo (AI2_MODE_FLEE);
+//				changeAIModeTo (AI2_MODE_FLEE);
 				return;
 			}
 
@@ -1065,7 +1109,7 @@ void paraAI2::changeAIModeTo(int newAIMode)
 			if (ASTAR_STATUS_TOO_SHORT == returnCode)
 			{
 				modifyAIScore (AI2_MODE_HUNT, -100);
-				modifyAIScore (AI2_MODE_ATTACK, -50 + difficultyValue);
+				modifyAIScore (AI2_MODE_ATTACK, -(50 + difficultyValue));
 				modifyAIScore (AI2_MODE_FLEE, 40);
 				modifyAIScore (AI2_MODE_PATROL, 70);
 			}
@@ -1077,6 +1121,11 @@ void paraAI2::changeAIModeTo(int newAIMode)
 			//-------------------------- AI_MODE_ATTACK ---------------------------
 
 		case AI2_MODE_ATTACK:
+
+#ifdef DEBUG_AI2
+			log_addEvent (sys_getString ("[ %i ] - In ATTACK mode case statement.", arrayIndex));
+			debugShowValues ();
+#endif
 			if (!dataBaseEntry[g_shipDeckItr->second.droid[arrayIndex].getDroidType ()].canShoot)
 			{
 #ifdef DEBUG_AI2
@@ -1129,13 +1178,15 @@ void paraAI2::checkAttackVisibility()
 	{
 		if (!g_shipDeckItr->second.droid[arrayIndex].visibleToPlayer)
 		{
-			g_shipDeckItr->second.droid[arrayIndex].ai2.modifyAIScore (AI2_MODE_HUNT, 10);
+			g_shipDeckItr->second.droid[arrayIndex].ai2.modifyAIScore (AI2_MODE_HUNT, 40 + difficultyValue);
 			g_shipDeckItr->second.droid[arrayIndex].ai2.modifyAIScore (AI2_MODE_ATTACK, -10);
+			return;
 		}
 		else    // Found player again while still in attack mode
 		{
 			g_shipDeckItr->second.droid[arrayIndex].ai2.modifyAIScore (AI2_MODE_HUNT, -30);
 			g_shipDeckItr->second.droid[arrayIndex].ai2.modifyAIScore (AI2_MODE_ATTACK, 40 + difficultyValue);
+			return;
 		}
 	}
 	else if (targetDroid != NO_ATTACK_TARGET)   // Targeting another droid

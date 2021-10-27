@@ -1,4 +1,5 @@
 #include <SDL2_gfxPrimitives.h>
+#include <game/score.h>
 #include "io/logFile.h"
 #include "system/util.h"
 #include "game/database.h"
@@ -13,38 +14,18 @@
 #include "classes/paraBullet.h"
 
 paraDroid playerDroid;
-double    playerFriction;                  // From script
-float     influenceTimelimit;
-float     influenceTimelimtDelay;
-float     influenceTimeLeftWarning;
-int       bounceCounterTimeout = 0;        // How many bumps before ignoring them
-int       bounceCounter        = 0;
-int       maxNumBumps;                     // From script
-float     bounceCounterDelay;              // From script
-
-static double angleCounter       = 1.0;
-int           radius             = 40;
+double    playerFriction {};                    // From script
+float     influenceTimelimit {};
+float     influenceTimelimtDelay {};
+float     influenceTimeLeftWarning {};
+int       bounceCounterTimeout {};              // How many bumps before ignoring them
+int       bounceCounter {};
+int       maxNumBumps {};                       // From script
+float     bounceCounterDelay {};                // From script
+int       radius {40};
 
 std::vector<cpVect> playerTrail;
-unsigned long       maxTrailSize = 10;
-
-//-----------------------------------------------------------------------------------------------------------------
-//
-// Render the test circle
-void gam_moveTestCircle()
-//-----------------------------------------------------------------------------------------------------------------
-{
-	static int angle = 0;
-
-	angleCounter -= 1.0 / 0.3;
-	if (angleCounter < 0)
-	{
-		angleCounter = 1.0;
-		angle++;
-		if (angle > 359)
-			angle = 0;
-	}
-}
+unsigned long       maxTrailSize {10};
 
 //-----------------------------------------------------------------------------
 //
@@ -289,8 +270,9 @@ void gam_checkPlayerHealth()
 	{
 		if (playerDroid.getCurrentMode () != DROID_MODE_EXPLODING)
 		{
+#if MY_DEBUG
 			log_addEvent (sys_getString ("[ %s ] Player mode set to DROID_MODE_EXPLODING.", __func__));
-
+#endif
 			playerDroid.setCurrentMode (DROID_MODE_EXPLODING);
 
 			playerDroid.setVelocity (cpVect {0, 0});
@@ -305,6 +287,8 @@ void gam_checkPlayerHealth()
 			gam_addEmitter (playerDroid.getWorldPosInPixels (), PARTICLE_TYPE_EXPLOSION, 0);
 
 			sys_clearDroidPhysics (gam_getCurrentDeckName ());
+
+			gam_setFinalScore ();
 
 			sys_setNewMode (MODE_GAME_OVER, false);
 		}

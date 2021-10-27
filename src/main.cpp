@@ -33,7 +33,7 @@ Uint32 currentTime {0};
 // Game levers
 //
 double baseGameSpeed {0};
-Uint8  difficultyValue {0};
+Uint8  difficultyValue {5};
 
 //----------------------------------------------------------------------------------------------------------------------
 //

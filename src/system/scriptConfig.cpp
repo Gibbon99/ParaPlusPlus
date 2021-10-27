@@ -143,7 +143,6 @@ void sys_scriptInitVariables()
 	paraScriptInstance.addHostVariable ("int alertLevelVolume", &alertLevelVolume);
 	paraScriptInstance.addHostVariable ("float staticAnimationDelay", &staticAnimationDelay);
 	paraScriptInstance.addHostVariable ("int lostScreenShowTime", &lostScreenShowTime);
-//	paraScriptInstance.addHostVariable ("float tableSpacingY", &tableSpacingY);
 	paraScriptInstance.addHostVariable ("float influenceTimelimit", &influenceTimelimit);
 	paraScriptInstance.addHostVariable ("float influenceTimelimtDelay", &influenceTimelimtDelay);
 	paraScriptInstance.addHostVariable ("float influenceTimeLeftWarning", &influenceTimeLeftWarning);
@@ -336,6 +335,7 @@ void sys_scriptInitFunctions()
 
 	paraScriptInstance.addHostFunction ("string gui_getHighScoreValueByIndex (int highScoreIndex)", asFUNCTION(gui_getHighScoreValueByIndex));
 	paraScriptInstance.addHostFunction ("string gui_getHighScoreNameByIndex (int highScoreIndex)", asFUNCTION(gui_getHighScoreNameByIndex));
+	paraScriptInstance.addHostFunction ("string gui_getLastNameUsed ()", asFUNCTION(gui_getLastNameUsed));
 
 	paraScriptInstance.addHostFunction ("void gui_showHighscoreTable ()", asFUNCTION(gui_showHighscoreTable));
 

@@ -149,6 +149,8 @@ void gam_moveLift(int direction)
 
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 
+			playerDroid.setVelocity (cpvzero);
+
 			sys_setNewMode (MODE_GAME, true);
 
 			break;

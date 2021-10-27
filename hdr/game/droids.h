@@ -49,7 +49,7 @@ void gam_setHealthAnimation(int targetDroid);
 void gam_checkDroidHealth(paraDroid *whichDroid);
 
 // See if a droid sees another droid get shot, or get transferred into
-void gam_checkActionWitness();
+void gam_checkActionWitness(int sourceDroid);
 
 // Set velocity to zero
 void gam_setDroidVelocity(int targetDroid, cpVect newVelocity);

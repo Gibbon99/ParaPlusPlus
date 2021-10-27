@@ -6,7 +6,7 @@
 
 struct highScore
 {
-	char name[3];
+	char name[3] {};
 	int  score {};
 
 	bool operator>(highScore const &s) const
@@ -14,7 +14,7 @@ struct highScore
 		return score > s.score;
 	}
 
-	highScore(std::string newName, int newScore)
+	highScore(const std::string &newName, int newScore)
 	{
 		strncpy (name, newName.c_str (), 3);
 		score = newScore;
@@ -24,7 +24,7 @@ struct highScore
 class paraHighScore
 {
 public:
-	paraHighScore(std::string filePath, int numScores, const std::string defaultName, int startScore, int stepScore);
+	paraHighScore(std::string filePath, int numScores, const std::string &defaultName, int startScore, int stepScore);
 
 	void addNewScore(const std::string &newName, int newScore);
 
@@ -35,6 +35,8 @@ public:
 	int getScoreFromIndex(int whichIndex);
 
 	std::string getNameFromIndex(int whichIndex);
+
+	std::string getLastNameUsed();
 
 	int lowestScore();
 

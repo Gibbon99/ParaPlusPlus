@@ -8,7 +8,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Change to high score entry screen
-void gui_showHighscoreEntry ()
+void gui_showHighscoreEntry()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	sys_setNewMode (MODE_GUI_HIGHSCORE_ENTRY, true);
@@ -23,7 +23,7 @@ void gui_showHighscoreEntry ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Change to GUI mode and display highscore table screen
-void gui_showHighscoreTable ()
+void gui_showHighscoreTable()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	sys_setNewMode (MODE_GUI_HIGHSCORE_DISPLAY, true);
@@ -37,7 +37,7 @@ void gui_showHighscoreTable ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the string representation of the highscore - by index
-std::string gui_getHighScoreValueByIndex (int highScoreIndex)
+std::string gui_getHighScoreValueByIndex(int highScoreIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((highScoreIndex < 0) || (highScoreIndex > NUM_HIGHSCORE_ROWS))
@@ -49,7 +49,7 @@ std::string gui_getHighScoreValueByIndex (int highScoreIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the string for the highscore name - by index
-std::string gui_getHighScoreNameByIndex (int highScoreIndex)
+std::string gui_getHighScoreNameByIndex(int highScoreIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((highScoreIndex < 0) || (highScoreIndex > NUM_HIGHSCORE_ROWS))
@@ -61,10 +61,19 @@ std::string gui_getHighScoreNameByIndex (int highScoreIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Insert a new score into the highscore table
-void gui_insertNewScore (const std::string &newName)
+void gui_insertNewScore(const std::string &newName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	highScores.addNewScore (newName, gam_getCurrentScore ());
 
 //	paraScriptInstance.run ("as_refreshHighscoreLabels", "");
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return the lastname used string
+std::string gui_getLastNameUsed()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return highScores.getLastNameUsed ();
 }

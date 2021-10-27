@@ -102,10 +102,7 @@ public:
 	paraAI2    ai2;
 	//
 	// Enemy droid fields
-	int        collisionCounterDroid {0};
-	int        collisionCounterPlayer {0};
-	float      collisionCounterDelayDroid {0.0};
-	float      collisionCounterDelayPlayer {0.0};
+
 
 private:
 	bool        lowInfluenceTimeleft {false};

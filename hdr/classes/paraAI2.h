@@ -26,6 +26,7 @@ enum _AI2_MODES
 	AI2_MODE_FLEE,
 	AI2_MODE_HEAL,
 	AI2_MODE_PATROL,
+	AI2_MODE_WITNESS,
 	AI2_MODE_NUMBER
 };
 
@@ -129,9 +130,16 @@ public:
 
 	cpVect getPreviousWorldPosInPixels();
 
+	void setWitnessDroid(int newWitnessDroid);
+
 	float     desiredAttackDistance2 {90};    // pixels
 	float     paddingSize2 {12};
 	paraAStar aStar;
+
+	int   collisionCounterDroid {0};
+	int   collisionCounterPlayer {0};
+	float collisionCounterDelayDroid {5.0};
+	float collisionCounterDelayPlayer {5.0};
 
 private:
 
@@ -141,6 +149,7 @@ private:
 	int                       arrayIndex {-1};
 	int                       targetDroid {NO_ATTACK_TARGET};
 	int                       swapDirectionCounter {};
+	int                       witnessDroid {NO_ATTACK_TARGET};
 	float                     currentSpeed {};
 	float                     acceleration {};
 	float                     maxSpeed {};

@@ -212,6 +212,7 @@ void sys_renderFrame(double interpolation)
 
 			for (auto itr: shipdecks.at (gam_getCurrentDeckName ()).droid)
 			{
+				gam_debugShowTarget (itr);
 //				itr.ai2.aStar.debugNodes();
 //				itr.ai2.aStar.debugWayPoints();
 			}

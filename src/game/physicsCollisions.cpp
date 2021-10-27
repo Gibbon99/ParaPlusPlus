@@ -1,3 +1,5 @@
+#include "game/database.h"
+#include "game/audio.h"
 #include "game/player.h"
 #include "game/physicsCollisions.h"
 #include "system/util.h"
@@ -134,7 +136,7 @@ unsigned char handleCollisionDroidToDroid([[maybe_unused]]cpArbiter *arb, [[mayb
 	log_addEvent (sys_getString ("[ %s ] Droid [ %i ] collided with droid [ %i ]", __func__, userDataB->dataValue, userDataA->dataValue));
 #endif
 
-	return true;
+	return cpTrue;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

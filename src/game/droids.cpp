@@ -289,27 +289,35 @@ void gam_processAI()
 			droidItr.ai2.doMovement (cpBodyGetPosition (droidItr.body));
 
 			//
+			// Check if collisions should be ignored
+			if (droidItr.ai2.collisionCounterDroid > 5)
+				droidItr.userData->ignoreCollisionDroid = true;
+
+			if (droidItr.ai2.collisionCounterPlayer > 5)
+				droidItr.userData->ignoreCollisionPlayer = true;
+
+			//
 			// Slowly decrement the collision counter for other droids
 			if (droidItr.userData->ignoreCollisionDroid)
 			{
-				droidItr.collisionCounterDelayDroid -= 0.1f;
-				if (droidItr.collisionCounterDelayDroid < 0.0)
+				droidItr.ai2.collisionCounterDelayDroid -= 1.0f;
+				if (droidItr.ai2.collisionCounterDelayDroid < 0.0)
 				{
-					droidItr.collisionCounterDelayDroid     = static_cast<float>(droidItr.getDroidType () / 2);
+					droidItr.ai2.collisionCounterDelayDroid = static_cast<float>(droidItr.getDroidType () / 2);
 					droidItr.userData->ignoreCollisionDroid = false;
-					droidItr.collisionCounterDroid          = 0;
+					droidItr.ai2.collisionCounterDroid      = 0;
 				}
 			}
 			//
 			// Slowly decrement the collision counter hitting the player
 			if (droidItr.userData->ignoreCollisionPlayer)
 			{
-				droidItr.collisionCounterDelayPlayer -= 0.1f;
-				if (droidItr.collisionCounterDelayPlayer < 0.0f)
+				droidItr.ai2.collisionCounterDelayPlayer -= 1.0f;
+				if (droidItr.ai2.collisionCounterDelayPlayer < 0.0f)
 				{
-					droidItr.collisionCounterDelayPlayer     = static_cast<float>(droidItr.getDroidType () / 2);
+					droidItr.ai2.collisionCounterDelayPlayer = static_cast<float>(droidItr.getDroidType () / 2);
 					droidItr.userData->ignoreCollisionPlayer = false;
-					droidItr.collisionCounterPlayer          = 0;
+					droidItr.ai2.collisionCounterPlayer      = 0;
 				}
 			}
 		}
@@ -318,29 +326,13 @@ void gam_processAI()
 
 //-------------------------------------------------------------------------------------------------------------
 //
-// Process the counter to ignore collisions
+// Process the counter to ignore collisions - called from physicsCollisions as a game event
 void gam_processCollision(int droidA)
 //-------------------------------------------------------------------------------------------------------------
 {
 	if (g_shipDeckItr->second.droid[droidA].getCurrentMode () == DROID_MODE_NORMAL)
 	{
-		if (g_shipDeckItr->second.droid[droidA].userData == nullptr)
-		{
-
-			logFile.write (sys_getString ("[ %i ] - [ %s ] - Error: Userdata is set to null - droid [ %i ]\n", droidA, __func__));
-			return;
-		}
-		if (g_shipDeckItr->second.droid[droidA].userData->ignoreCollisionDroid)
-			return;
-
-		g_shipDeckItr->second.droid[droidA].setVelocity (cpVect {g_shipDeckItr->second.droid[droidA].getVelocity ().x * 0.5f, g_shipDeckItr->second.droid[droidA].getVelocity ().y * 0.5f});
-		g_shipDeckItr->second.droid[droidA].ai2.switchWaypointDirection ();
-		g_shipDeckItr->second.droid[droidA].collisionCounterDroid++;
-		if (g_shipDeckItr->second.droid[droidA].collisionCounterDroid > collisionLimit)
-		{
-			g_shipDeckItr->second.droid[droidA].collisionCounterDelayDroid     = collisionCount;
-			g_shipDeckItr->second.droid[droidA].userData->ignoreCollisionDroid = true;
-		}
+		g_shipDeckItr->second.droid[droidA].ai2.collisionCounterDroid++;
 	}
 }
 
@@ -425,15 +417,14 @@ void gam_checkDroidHealth(int targetDroid)
 	newHealthPercent = newHealthPercent < 0 ? 0 : newHealthPercent;
 
 	g_shipDeckItr->second.droid[targetDroid].ai2.setHealValue (newHealthPercent);
-//	g_shipDeckItr->second.droid[targetDroid].ai.checkHealth ();
 
 	gam_setHealthAnimation (targetDroid);
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //
-// See if a droid sees another droid get shot, or get transferred into
-void gam_checkActionWitness()
+// See if a droid sees another droid get shot, or get transferred into. Increase WITNESS value.
+void gam_checkActionWitness(int sourceDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
 	for (auto &droidItr: g_shipDeckItr->second.droid)
@@ -442,10 +433,10 @@ void gam_checkActionWitness()
 		{
 			if (dataBaseEntry[droidItr.getDroidType ()].canShoot)
 			{
-				droidItr.ai2.modifyAIScore (AI2_MODE_ATTACK, 40 + difficultyValue);
-
+				droidItr.ai2.modifyAIScore (AI2_MODE_WITNESS, 40 + difficultyValue);
+				droidItr.ai2.setWitnessDroid (sourceDroid);
 #ifdef MY_DEBUG
-				logFile.write (sys_getString ("[ %i ] - [ %s ] Droid witness an action - increase ATTACK.", droidItr.ai2.getArrayIndex (), __func__));
+				logFile.write (sys_getString ("[ %i ] - [ %s ] Droid witness an action - increase WITNESS.", droidItr.ai2.getArrayIndex (), __func__));
 #endif
 			}
 			else
@@ -509,15 +500,6 @@ void gam_damageToDroid(int targetDroid, int damageSource, int sourceDroid)
 					gam_damageToPlayer (PHYSIC_DAMAGE_EXPLOSION, targetDroid);
 					return;
 				}
-				//
-				// Ignore too many collision with player
-				g_shipDeckItr->second.droid[targetDroid].collisionCounterPlayer++;
-
-				if (g_shipDeckItr->second.droid[targetDroid].collisionCounterPlayer > collisionLimit)
-				{
-					g_shipDeckItr->second.droid[targetDroid].collisionCounterDelayPlayer     = collisionCount;
-					g_shipDeckItr->second.droid[targetDroid].userData->ignoreCollisionPlayer = true;
-				}
 			}
 			break;
 
@@ -555,7 +537,7 @@ void gam_damageToDroid(int targetDroid, int damageSource, int sourceDroid)
 
 			if ((sourceDroid == TARGET_PLAYER) && (targetDroid != TARGET_PLAYER))      // Player shot this bullet at a droid
 			{
-				gam_checkActionWitness ();
+				gam_checkActionWitness (sourceDroid);
 				//
 				// Bullet does damage according to current droid type if it has a weapon
 				if (dataBaseEntry[playerDroid.getDroidType ()].canShoot)

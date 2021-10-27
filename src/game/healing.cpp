@@ -7,9 +7,9 @@
 #include "system/util.h"
 #include "game/healing.h"
 
-double healingAnimSpeed;
-float  healingDelayCounter;
-int    healingAmountPerTick;
+double healingAnimSpeed {};
+float  healingDelayCounter {};
+int    healingAmountPerTick {};
 
 std::vector<__tileSensor> healingTiles;
 
@@ -231,17 +231,26 @@ void gam_processHealingTile()
 	if (!playerDroid.getOverHealingTile ())
 		return;
 
+	if (playerDroid.getCurrentHealth () < dataBaseEntry[playerDroid.getDroidType ()].maxHealth)
+	{
+		if (!audio.isPlaying ("energyHeal"))
+		{
+			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 0, 127, "energyHeal");
+		}
+	}
+
 	healingDelay -= 1.0f * healingDelayCounter;
+
 	if (healingDelay < 0.0f)
 	{
 		healingDelay = 1.0f;
-		playerDroid.setCurrentHealth (playerDroid.getCurrentHealth () + 1);
+		playerDroid.setCurrentHealth (playerDroid.getCurrentHealth () + healingAmountPerTick);
 		gam_modifyScore (-1);
 		if (playerDroid.getCurrentHealth () > dataBaseEntry[playerDroid.getDroidType ()].maxHealth)
 		{
 			playerDroid.setCurrentHealth (dataBaseEntry[playerDroid.getDroidType ()].maxHealth);
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "energyHeal");
-			playerDroid.setOverHealingTile (false);
+//			playerDroid.setOverHealingTile (false);
 		}
 		gam_checkPlayerHealth ();
 	}
