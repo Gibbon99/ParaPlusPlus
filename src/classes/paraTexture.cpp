@@ -1,15 +1,15 @@
-#include <main.h>
-
 #include <utility>
-#include <system/util.h>
+#include "main.h"
+#include "system/util.h"
+#include "io/logFile.h"
 #include "classes/paraTexture.h"
 
-void paraTexture::AddRef ()
+void paraTexture::AddRef()
 {
 
 }
 
-void paraTexture::ReleaseRef ()
+void paraTexture::ReleaseRef()
 {
 
 }
@@ -17,7 +17,7 @@ void paraTexture::ReleaseRef ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Constructor
-paraTexture::paraTexture (textureFunctionPtrStr outputFunction, textureFunctionPtrLoad loadFunction)
+paraTexture::paraTexture(textureFunctionPtrStr outputFunction, textureFunctionPtrLoad loadFunction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraTexture::funcOutput = outputFunction;
@@ -27,7 +27,7 @@ paraTexture::paraTexture (textureFunctionPtrStr outputFunction, textureFunctionP
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return a pointer to the texture
-PARA_Texture *paraTexture::getTexture ()
+PARA_Texture *paraTexture::getTexture()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return texture;
@@ -37,7 +37,7 @@ PARA_Texture *paraTexture::getTexture ()
 //
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
-std::string paraTexture::int_getString (std::string format, ...)
+std::string paraTexture::int_getString(std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	const char *const zcFormat = format.c_str ();
@@ -65,7 +65,7 @@ std::string paraTexture::int_getString (std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the filename for a texture
-void paraTexture::setFileName (std::string newFilename)
+void paraTexture::setFileName(std::string newFilename)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	fileName = newFilename;
@@ -74,7 +74,7 @@ void paraTexture::setFileName (std::string newFilename)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Destroy this texture
-void paraTexture::destroy ()
+void paraTexture::destroy()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_DestroyTexture (texture);
@@ -86,7 +86,7 @@ void paraTexture::destroy ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check if a texture has been loaded properly
-bool paraTexture::isLoaded ()
+bool paraTexture::isLoaded()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return loaded;
@@ -95,7 +95,7 @@ bool paraTexture::isLoaded ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load a bitmap from a memory pointer - create a texture from the surface
-bool paraTexture::load (std::string newFileName, std::string newKeyName)
+bool paraTexture::load(std::string newFileName, std::string newKeyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (newFileName.empty ())
@@ -130,11 +130,9 @@ bool paraTexture::load (std::string newFileName, std::string newKeyName)
 
 	funcOutput (-1, int_getString ("Loaded [ %s ] with key [ %s ]", fileName.c_str (), keyName.c_str ()));
 #ifdef MY_DEBUG
-	std::cout << "Loaded file : " << fileName << std::endl;
+	log_addEvent (sys_getString ("[ %s ] Loaded file [ %s ]", __func__, fileName.c_str ()));
 #endif
 	sys_freeMemory (fileName);
-
-//	SDL_FreeSurface(surface);
 
 	loaded = true;
 	return true;
@@ -143,7 +141,7 @@ bool paraTexture::load (std::string newFileName, std::string newKeyName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the height of a texture
-int paraTexture::getHeight ()
+int paraTexture::getHeight() const
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return height;
@@ -152,7 +150,7 @@ int paraTexture::getHeight ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the width of a texture
-int paraTexture::getWidth ()
+int paraTexture::getWidth() const
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return width;
@@ -161,10 +159,23 @@ int paraTexture::getWidth ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a texture to the current backing target - or screen if backing texture is not used
-void paraTexture::render ()
+void paraTexture::render()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_SetTextureBlendMode (texture, SDL_BLENDMODE_BLEND);
+	if (!loaded)
+		return;
+
+	try
+	{
+		if (keyName == "screen")
+			SDL_SetTextureBlendMode (static_cast<PARA_Texture *>(texture), SDL_BLENDMODE_MOD); //SDL_BLENDMODE_BLEND);
+		else
+			SDL_SetTextureBlendMode (static_cast<PARA_Texture *>(texture), SDL_BLENDMODE_BLEND);
+	}
+	catch (std::out_of_range &outOfRange)
+	{
+	}
+
 	if (SDL_RenderCopy (renderer.renderer, texture, nullptr, nullptr) < 0)
 	{
 		funcOutput (-1, int_getString ("Unable to render texture [ %s ] - [ %s ]", keyName.c_str (), SDL_GetError ()));
@@ -177,7 +188,7 @@ void paraTexture::render ()
 // Render a texture to the current backing target - or screen if backing texture is not used
 //
 // Pass in destination coords - coords are in pixel space
-void paraTexture::render (SDL_Rect *destination)
+void paraTexture::render(SDL_Rect *destination)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (SDL_RenderCopy (renderer.renderer, texture, nullptr, destination) < 0)
@@ -190,7 +201,7 @@ void paraTexture::render (SDL_Rect *destination)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the boolean value from single bit array of the image pixels
-char paraTexture::pixelColor (int posX, int posY)
+char paraTexture::pixelColor(int posX, int posY)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if ((posY * surface->w + posX) > static_cast<int>(collisionMap.size ()))
@@ -198,115 +209,4 @@ char paraTexture::pixelColor (int posX, int posY)
 		sys_shutdownWithError ("Attempted out of bound access on collision map.");
 	}
 	return collisionMap[posY * surface->w + posX];
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Load a collision map
-void paraTexture::loadMap ()
-//----------------------------------------------------------------------------------------------------------------------
-{
-	PHYSFS_file   *fileHandle;
-	PHYSFS_sint64 returnCode;
-	std::string   collisionMapFileName;
-
-	collisionMapFileName = keyName + ".map";
-
-	auto fileSize = fileSystem.getFileSize (collisionMapFileName);
-	collisionMap.resize (fileSize);
-
-	fileHandle = PHYSFS_openRead (collisionMapFileName.c_str ());
-	if (nullptr == fileHandle)
-	{
-		funcOutput (-1, int_getString ("Unable to open file [ %s ] [ %s ]", collisionMapFileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
-		return;
-	}
-
-	returnCode = PHYSFS_readBytes (fileHandle, &collisionMap[0], fileSize * sizeof (char));
-	if (returnCode < 0)
-	{
-		funcOutput (-1, int_getString ("Unable to read file [ %s ] [ %s ]", collisionMapFileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
-		return;
-	}
-
-	PHYSFS_close (fileHandle);
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Create a collision map - used for starfield background
-bool paraTexture::createMap ()
-//----------------------------------------------------------------------------------------------------------------------
-{
-	int         counter = 0;
-	std::string collisionMapFileName;
-
-	collisionMapFileName = keyName + ".map";
-
-	if (fileSystem.doesFileExist (collisionMapFileName))
-	{
-		loadMap ();
-		return true;
-	}
-
-	collisionMap.resize (surface->h * surface->w);
-
-	surface = SDL_ConvertSurfaceFormat (surface, SDL_PIXELFORMAT_ARGB8888, 0);
-
-	//If the surface must be locked
-	if (SDL_MUSTLOCK(surface))
-	{
-		//Lock the surface
-		SDL_LockSurface (surface);
-	}
-	Uint32 *pixels    = (Uint32 *) surface->pixels;
-	Uint32 blackColor = SDL_MapRGBA (surface->format, 0, 0, 0, 255);
-
-	std::cout << "Start map creation" << std::endl;
-
-	for (int y = 0; y < surface->h; y++)
-	{
-		for (int x = 0; x < surface->w; x++)
-		{
-			if (blackColor != pixels[y * surface->w + x])
-				collisionMap[counter] = 0;
-			else
-				collisionMap[counter] = 1;
-
-			if (counter == (surface->h * surface->w) / 2)
-				std::cout << "Done 50%" << std::endl;
-
-			counter++;
-		}
-	}
-
-	//
-	// Write out to file to cache for next run
-	PHYSFS_file *fileHandle;
-	PHYSFS_sint64 returnCode;
-
-	fileHandle = PHYSFS_openWrite (collisionMapFileName.c_str ());
-	if (fileHandle == nullptr)
-	{
-		funcOutput (-1, int_getString ("Unable to open file for writing [ %s ] - [ %s ]", collisionMapFileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
-		return false;
-	}
-
-	returnCode = PHYSFS_writeBytes (fileHandle, &collisionMap[0], (collisionMap.size ()) * sizeof (char));
-
-	if (returnCode < 0)
-	{
-		funcOutput (-1, int_getString ("Incomplete file write [ %s ] - [ %s ]", collisionMapFileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
-		return false;
-	}
-	PHYSFS_close (fileHandle);
-
-	//If the surface must be locked
-	if (SDL_MUSTLOCK(surface))
-	{
-		//Lock the surface
-		SDL_UnlockSurface (surface);
-	}
-
-	return true;
 }

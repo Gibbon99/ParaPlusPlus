@@ -25,11 +25,26 @@ string validCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890. -";
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Update the values in the GUI labels from the current score table
+void as_refreshHighscoreLabels()
+//----------------------------------------------------------------------------------------------------------------------
+{
+    for (int i = 0; i != NUM_HIGHSCORE_ROWS; i++ )
+    {
+        rowIndexStr = formatInt(i + 1, "l");
+        as_paraGui.setLabel(GUI_OBJECT_LABEL, labelNameScore + rowIndexStr, 0, GUI_LABEL_LEFT, gui_getHighScoreValueByIndex(i));
+        as_paraGui.setLabel(GUI_OBJECT_LABEL, labelNameName + rowIndexStr, 0, GUI_LABEL_LEFT, gui_getHighScoreNameByIndex(i));
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Process input from highscore screen
 void as_handleHighscoreDisplay()
 //----------------------------------------------------------------------------------------------------------------------
 {
-    if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "highScoreDisplay.backButton")) {
+    if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "highScoreDisplay.backButton"))
+    {
         gam_setHudText("hudMainMenu");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "mainMenu"));
         as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
@@ -56,26 +71,13 @@ void as_handleHighscoreDisplay()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Update the values in the GUI labels from the current score table
-void as_refreshHighscoreLabels()
-//----------------------------------------------------------------------------------------------------------------------
-{
-    for (int i = 0; i != NUM_HIGHSCORE_ROWS; i++)
-    {
-        rowIndexStr = formatInt(i + 1, "l");
-        as_paraGui.setLabel(GUI_OBJECT_LABEL, labelNameScore + rowIndexStr, 0, GUI_LABEL_LEFT, gui_getHighScoreValueByIndex(i));
-        as_paraGui.setLabel(GUI_OBJECT_LABEL, labelNameName + rowIndexStr, 0, GUI_LABEL_LEFT, gui_getHighScoreNameByIndex(i));
-    }
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
 // Create the screen to enter high score initials
 void createHighscoreEntry()
 //----------------------------------------------------------------------------------------------------------------------
 {
-    as_paraGui.create(GUI_OBJECT_SCREEN, "highScoreEntry");
+    string hostLastNameUsed = gui_getLastNameUsed();
 
+    as_paraGui.create(GUI_OBJECT_SCREEN, "highScoreEntry");
 
     as_paraGui.create(GUI_OBJECT_IMAGE, "highScoreEntry.backGround");
     as_paraGui.addToScreen(GUI_OBJECT_IMAGE, "highScoreEntry.backGround", "highScoreEntry");
@@ -107,12 +109,15 @@ void createHighscoreEntry()
         as_paraGui.setLabel(GUI_OBJECT_SLIDER, "highScoreEntry.initial" + rowIndexStr, 12, GUI_LABEL_CENTER, gui_getString("emptyString"));
         as_paraGui.setAction(GUI_OBJECT_SLIDER, "highScoreEntry.initial" + rowIndexStr, "");
 
-        for (int charIndex = 0; charIndex != validCharacters.length(); charIndex++)
+        for (uint charIndex = 0; charIndex != validCharacters.length(); charIndex++ )
         {
             as_paraGui.addNewElement("highScoreEntry.initial" + rowIndexStr, validCharacters.substr(charIndex, 1), validCharacters.substr(charIndex, 1), SLIDER_TYPE_STRING);
         }
 
-//    as_paraGui.setSliderValue("highScoreEntry.volume", currentVolumeStr);
+        as_paraGui.setSliderValue("highScoreEntry.initial0", hostLastNameUsed.substr(0, 1));
+        as_paraGui.setSliderValue("highScoreEntry.initial1", hostLastNameUsed.substr(1, 1));
+        as_paraGui.setSliderValue("highScoreEntry.initial2", hostLastNameUsed.substr(2, 1));
+
         as_paraGui.setFontName(GUI_OBJECT_SLIDER, "highScoreEntry.initial" + rowIndexStr, "guiFont");
         as_paraGui.setAction(GUI_OBJECT_SLIDER, "highScoreEntry.initial" + rowIndexStr, "as_handleHighscoreDisplay");
         as_paraGui.setReady(GUI_OBJECT_SLIDER, "highScoreEntry.initial" + rowIndexStr, true);
@@ -134,7 +139,8 @@ void createHighscoreDisplay()
 //----------------------------------------------------------------------------------------------------------------------
 {
 
-    int rowCounterInt;
+    int
+    rowCounterInt;
 
     as_paraGui.create(GUI_OBJECT_SCREEN, "highScoreDisplay");
 
@@ -151,7 +157,7 @@ void createHighscoreDisplay()
     as_paraGui.setFontName(GUI_OBJECT_LABEL, "highScoreDisplay.heading", "guiFont");
     as_paraGui.setReady(GUI_OBJECT_LABEL, "highScoreDisplay.heading", true);
 
-    for (int i = 0; i != NUM_HIGHSCORE_ROWS; i++)
+    for (int i = 0; i != NUM_HIGHSCORE_ROWS; i++ )
     {
         rowIndexStr = formatInt(i + 1, "l");
 

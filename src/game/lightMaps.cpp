@@ -1,8 +1,8 @@
-#include <classes/paraLightmap.h>
-#include <game/alertLevel.h>
+#include "classes/paraLightmap.h"
+#include "game/alertLevel.h"
 #include "game/lightMaps.h"
 
-std::vector<paraLightmap>       lightMaps;
+std::vector<paraLightmap> lightMaps;
 
 //-----------------------------------------------------------------------------------------------------------
 //
@@ -10,25 +10,25 @@ std::vector<paraLightmap>       lightMaps;
 void gam_removeAllLightmaps()
 //-----------------------------------------------------------------------------------------------------------
 {
-	for (auto &lightMapItr : lightMaps)
+	for (auto &lightMapItr: lightMaps)
 	{
-		lightMapItr.setInUseState(false);
+		lightMapItr.setInUseState (false);
 	}
 }
 
 //-----------------------------------------------------------------------------------------------------------
 //
 // Change the color of lightmaps
-void gam_changeAlertColor (int newAlertLevel)
+void gam_changeAlertColor(int newAlertLevel)
 //-----------------------------------------------------------------------------------------------------------
 {
-	for (auto &lightMapItr : lightMaps)
+	for (auto &lightMapItr: lightMaps)
 	{
-		if (lightMapItr.inUse())
+		if (lightMapItr.inUse ())
 		{
-			if (lightMapItr.getType() == LIGHTMAP_TYPE_ALERT)
+			if (lightMapItr.getType () == LIGHTMAP_TYPE_ALERT)
 			{
-				lightMapItr.setColor(newAlertLevel);
+				lightMapItr.setColor (newAlertLevel);
 			}
 		}
 	}
@@ -36,15 +36,15 @@ void gam_changeAlertColor (int newAlertLevel)
 
 //-----------------------------------------------------------------------------------------------------------
 //
-// Remove a lightmap - mark inUse to false - pass in bulletID to match
+// Remove a lightmap - mark inUse to false - pass in m_bulletID to match
 void gam_removeLightmap(Uint32 whichBullet)
 //-----------------------------------------------------------------------------------------------------------
 {
-	for (auto &lightMapItr : lightMaps)
+	for (auto &lightMapItr: lightMaps)
 	{
-		if (lightMapItr.getAttachedBullet() == whichBullet)
+		if (lightMapItr.getAttachedBullet () == whichBullet)
 		{
-			lightMapItr.setInUseState(false);
+			lightMapItr.setInUseState (false);
 			return;
 		}
 	}
@@ -53,27 +53,27 @@ void gam_removeLightmap(Uint32 whichBullet)
 //-----------------------------------------------------------------------------------------------------------
 //
 // Add a new lightmap to the array
-void gam_addNewLightmap(b2Vec2 newWorldPosition, int newType, Uint32 newWhichBullet)
+void gam_addNewLightmap(cpVect newWorldPosition, int newType, Uint32 newWhichBullet)
 //-----------------------------------------------------------------------------------------------------------
 {
-	paraLightmap    tempLightmap(newWorldPosition, newType, newWhichBullet);
+	paraLightmap tempLightmap (newWorldPosition, newType, newWhichBullet);
 
-	if (lightMaps.empty())
+	if (lightMaps.empty ())
 	{
-		lightMaps.push_back(tempLightmap);
+		lightMaps.push_back (tempLightmap);
 		return;
 	}
 
-	for (auto &lightMapItr : lightMaps)
+	for (auto &lightMapItr: lightMaps)
 	{
-		if (!lightMapItr.inUse())
+		if (!lightMapItr.inUse ())
 		{
 			lightMapItr = tempLightmap;
 			return;
 		}
 	}
 
-	lightMaps.push_back(tempLightmap);
+	lightMaps.push_back (tempLightmap);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -82,10 +82,10 @@ void gam_addNewLightmap(b2Vec2 newWorldPosition, int newType, Uint32 newWhichBul
 void gam_renderLightmaps()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &lightMapItr : lightMaps)
+	for (auto &lightMapItr: lightMaps)
 	{
-		if (lightMapItr.inUse())
-			lightMapItr.render();
+		if (lightMapItr.inUse ())
+			lightMapItr.render ();
 	}
 }
 
@@ -95,9 +95,9 @@ void gam_renderLightmaps()
 void gam_animateLightmaps()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &lightMapItr : lightMaps)
+	for (auto &lightMapItr: lightMaps)
 	{
-		if (lightMapItr.inUse())
+		if (lightMapItr.inUse ())
 			lightMapItr.animate ();
 	}
 }

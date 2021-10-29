@@ -2,8 +2,8 @@
 
 #include <queue>
 
-#include "../../hdr/main.h"
-#include "../classes/paraEvent.h"
+#include "main.h"
+#include "classes/paraEvent.h"
 
 extern std::queue<paraEventLogfile *> loggingEventQueue;
 

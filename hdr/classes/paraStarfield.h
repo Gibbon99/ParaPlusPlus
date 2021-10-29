@@ -1,5 +1,4 @@
-#ifndef PARA_PARASTARFIELD_H
-#define PARA_PARASTARFIELD_H
+#pragma once
 
 #include <vector>
 #include <random>
@@ -21,25 +20,23 @@ class paraStarfield
 {
 
 public:
-	paraStarfield ();
+	paraStarfield();
 
-	~paraStarfield ();
+	~paraStarfield();
 
-	void init (paraRenderer starRenderer, int numOfStars, int starDepth, int starTop, int starBottom, int starScreenWidth);
+	void init(paraRenderer starRenderer, int numOfStars, int starDepth, int starTop, int starBottom, int starScreenWidth);
 
-	void animate ();
+	void animate();
 
-	void render ();
+	void render();
 
 private:
-	int                         m_boundaryBottomY{};
-	int                         m_boundaryTopY{};
-	int                         m_depthSpread{};
-	int                         m_starScreenWidth{};
-	int                         m_depthRender{};
-	paraRenderer                m_starRenderer{};
+	int                         m_boundaryBottomY {};
+	int                         m_boundaryTopY {};
+	int                         m_depthSpread {};
+	int                         m_starScreenWidth {};
+	int                         m_depthRender {};
+	paraRenderer                m_starRenderer {};
 	std::vector<backgroundStar> stars;
 	std::random_device          randomDevice;
 };
-
-#endif //PARA_PARASTARFIELD_H

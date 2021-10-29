@@ -126,7 +126,8 @@ bool gui_loadSideViewData (std::string sideviewFileName)
 	int           count;
 	int           buf[1];
 	unsigned char levelCount[1];
-	SDL_RWops     *fp;
+//	SDL_RWops     *fp;
+	UniqueRWops   fp;
 
 	float smallX, largeX;
 
@@ -144,11 +145,11 @@ bool gui_loadSideViewData (std::string sideviewFileName)
 	if (-1 == fileSystem.getFileIntoMemory (sideviewFileName, fileBuffer))
 		sys_shutdownWithError (sys_getString ("Fatal memory allocation when loading file [ %s ].", sideviewFileName.c_str ()));
 
-	fp = io_openMemFile (fileBuffer, fileLength);
+	fp = std::move (io_openMemFile (fileBuffer, fileLength));
 	if (nullptr == fp)
 		sys_shutdownWithError (sys_getString ("Mapping memory to file failed for file [ %s ]", sideviewFileName.c_str ()));
 
-	SDL_RWread (fp, &levelCount, sizeof (levelCount), 1);
+	SDL_RWread (fp.get (), &levelCount, sizeof (levelCount), 1);
 	numberLevels = levelCount[0];
 
 	if (MAX_LEVELS != numberLevels)
@@ -158,7 +159,7 @@ bool gui_loadSideViewData (std::string sideviewFileName)
 	{
 		float temp;
 
-		SDL_RWread (fp, (void *) &buf, sizeof (sideviewLevels[count].x1), 1);
+		SDL_RWread (fp.get (), (void *) &buf, sizeof (sideviewLevels[count].x1), 1);
 		temp = (float) buf[0] * sideviewDrawScale;
 		sideviewLevels[count].x1 = temp;
 
@@ -167,11 +168,11 @@ bool gui_loadSideViewData (std::string sideviewFileName)
 			smallX = sideviewLevels[count].x1;
 		}
 
-		SDL_RWread (fp, (void *) &buf, sizeof (sideviewLevels[count].y1), 1);
+		SDL_RWread (fp.get (), (void *) &buf, sizeof (sideviewLevels[count].y1), 1);
 		temp = (float) (buf[0] - 100.0f) * sideviewDrawScale;
 		sideviewLevels[count].y1 = temp;
 
-		SDL_RWread (fp, (void *) &buf, sizeof (sideviewLevels[count].x2), 1);
+		SDL_RWread (fp.get (), (void *) &buf, sizeof (sideviewLevels[count].x2), 1);
 		temp = (float) buf[0] * sideviewDrawScale;
 		sideviewLevels[count].x2 = temp;
 
@@ -180,11 +181,11 @@ bool gui_loadSideViewData (std::string sideviewFileName)
 			largeX = sideviewLevels[count].x2;
 		}
 
-		SDL_RWread (fp, (void *) &buf, sizeof (sideviewLevels[count].y2), 1);
+		SDL_RWread (fp.get (), (void *) &buf, sizeof (sideviewLevels[count].y2), 1);
 		temp = static_cast<float>((buf[0]) - 100.0f) * sideviewDrawScale;
 		sideviewLevels[count].y2 = temp;
 	}
-	SDL_RWclose (fp);
+//	SDL_RWclose (fp);
 
 	gui_setupTunnels ();
 
@@ -197,16 +198,16 @@ bool gui_loadSideViewData (std::string sideviewFileName)
 void gui_renderSideView ()
 // ----------------------------------------------------------------------------
 {
-	int           count;
-	int           lifts   = 8;
-	int           toLifts = 0;
-	float         x1;
-	float         y1;
-	double        sideViewTextPosX;
-	double        sideViewTextPosY;
-	Uint8         r, g, b, a;
-	SDL_BlendMode tempMode;
-	__PARA_COLOR  tempAlert{};
+	int          count;
+	int          lifts   = 8;
+	int          toLifts = 0;
+	float        x1;
+	float        y1;
+	double       sideViewTextPosX;
+	double       sideViewTextPosY;
+//	Uint8         r, g, b, a;
+//	SDL_BlendMode tempMode;
+	__PARA_COLOR tempAlert {};
 
 	fontClass.use ("guiFont");
 

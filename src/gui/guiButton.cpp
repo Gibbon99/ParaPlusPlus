@@ -7,23 +7,19 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Draw a button element
-void gui_renderButton (int whichButton, bool hasFocus)
+void gui_renderButton(int whichButton, bool hasFocus)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	std::string    fontName;
-	__BOUNDING_BOX bb{};
-	__PARA_COLOR   color{};
-	int            cornerRadius;
-	int            labelPos;
-	int            gapSize;
-	double         textPosX;
-	double         textPosY;
-
-	PARA_Surface      *tempSurface  = nullptr;
-	PARA_Texture      *tempTexture  = nullptr;
-
-	float ratioX;
-	float ratioY;
+	std::string    fontName {};
+	__BOUNDING_BOX bb {};
+	__PARA_COLOR   color {};
+	int            cornerRadius {};
+	int            labelPos {};
+	int            gapSize {};
+	double         textPosX {};
+	double         textPosY {};
+	float          ratioX {};
+	float          ratioY {};
 
 	ratioX = static_cast<float>(gameWinWidth) / static_cast<float>(windowWidth);
 	ratioY = static_cast<float>(gameWinHeight) / static_cast<float>(windowHeight);
@@ -81,7 +77,7 @@ void gui_renderButton (int whichButton, bool hasFocus)
 	}
 	//
 	// Render the button
-	if (gui.getCurrentDialogbox() == NO_DIALOG_BOX )
+	if (gui.getCurrentDialogbox () == NO_DIALOG_BOX)
 		roundedBoxRGBA (renderer.renderer, bb.x1, bb.y1, bb.x2, bb.y2, cornerRadius, color.r, color.g, color.b, color.a);
 	else
 		roundedBoxRGBA (renderer.renderer, bb.x1 * ratioX, bb.y1 * ratioY, bb.x2 * ratioX, bb.y2 * ratioY, cornerRadius, color.r, color.g, color.b, color.a);
@@ -104,13 +100,13 @@ void gui_renderButton (int whichButton, bool hasFocus)
 	}
 
 	const auto buttonHeight = (bb.y2 - bb.y1);
-	const auto fontHeight = fontClass.height();
+	const auto fontHeight   = fontClass.height ();
 
 	std::string searchIn = gui.getLabelText (GUI_OBJECT_BUTTON, whichButton);
-	if ((searchIn.find("q")) && (searchIn.find("j")) && (searchIn.find("p")) && (searchIn.find("y")) && (searchIn.find("g")) == std::string::npos)  // not in string
-		textPosY = bb.y1 + ( (buttonHeight - (fontHeight + fontClass.descent())) / 2);
+	if ((searchIn.find ("q")) && (searchIn.find ("j")) && (searchIn.find ("p")) && (searchIn.find ("y")) && (searchIn.find ("g")) == std::string::npos)  // not in string
+		textPosY = bb.y1 + ((buttonHeight - (fontHeight + fontClass.descent ())) / 2);
 	else
-		textPosY = bb.y1 + ( (buttonHeight - fontHeight) / 2);
+		textPosY = bb.y1 + ((buttonHeight - fontHeight) / 2);
 
 	switch (labelPos)
 	{
@@ -147,10 +143,10 @@ void gui_renderButton (int whichButton, bool hasFocus)
 		}
 	}
 
-	if (gui.getCurrentDialogbox() == NO_DIALOG_BOX )
-		fontClass.render(renderer.renderer, textPosX, textPosY, color.r, color.g, color.b, color.a, gui.getLabelText (GUI_OBJECT_BUTTON, whichButton));
+	if (gui.getCurrentDialogbox () == NO_DIALOG_BOX)
+		fontClass.render (renderer.renderer, textPosX, textPosY, color.r, color.g, color.b, color.a, gui.getLabelText (GUI_OBJECT_BUTTON, whichButton));
 	else
-		fontClass.render(renderer.renderer, textPosX, textPosY, color.r, color.g, color.b, color.a, gui.getLabelText (GUI_OBJECT_BUTTON, whichButton));
+		fontClass.render (renderer.renderer, textPosX, textPosY, color.r, color.g, color.b, color.a, gui.getLabelText (GUI_OBJECT_BUTTON, whichButton));
 
 
 	/*

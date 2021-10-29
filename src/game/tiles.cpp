@@ -1,14 +1,14 @@
-#include <game/texture.h>
+#include "game/texture.h"
 #include "game/tiles.h"
 
-std::string tileFilename;
-std::string tileStyle;
-std::string tileColor;
+std::string tileFilename {};
+std::string tileStyle {};
+std::string tileColor {};
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set the passed in tile style
-void gam_setTileType (bool useDarkTiles)
+void gam_setTileType(bool useDarkTiles)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (!useDarkTiles)
@@ -27,5 +27,5 @@ void gam_loadTileSet()
 
 	tileKeyName = "tiles";
 
-	gam_loadTexture(tileFilename, tileKeyName);
+	gam_loadTexture (tileFilename, tileKeyName);
 }

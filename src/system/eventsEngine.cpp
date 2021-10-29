@@ -7,26 +7,26 @@
 typedef struct
 {
 	PARA_Thread *thread = nullptr;
-	bool        run = false;
-	bool        ready = false;
-	std::string name = "";
+	bool        run     = false;
+	bool        ready   = false;
+	std::string name    = "";
 } paraRegisteredThreads;
 
 typedef struct
 {
 	PARA_Mutex  *mutex = nullptr;
-	std::string name = "";
+	std::string name   = "";
 } paraRegisteredMutexes;
 
-std::vector<paraRegisteredThreads> registeredThreads{};
-std::vector<paraRegisteredMutexes> registeredMutexes{};
+std::vector<paraRegisteredThreads> registeredThreads {};
+std::vector<paraRegisteredMutexes> registeredMutexes {};
 
 bool runThreads = true;     // Master flag to control state of detached threads
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set thread ready
-void evt_setThreadReady(const std::string& threadName)
+void evt_setThreadReady(const std::string &threadName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	//
@@ -35,7 +35,7 @@ void evt_setThreadReady(const std::string& threadName)
 	if (registeredThreads.size () == 0)
 		return;
 
-	for (auto &threadItr : registeredThreads)
+	for (auto &threadItr: registeredThreads)
 	{
 		if (threadName == threadItr.name)
 		{
@@ -43,7 +43,7 @@ void evt_setThreadReady(const std::string& threadName)
 			{
 				threadItr.ready = true;
 #ifdef MY_DEBUG
-				printf("Thread [ %s ] set to ready = true\n", threadName.c_str());
+				log_addEvent (sys_getString ("[ %s ] Thread [ %s ] set to ready = true", __func__, threadName.c_str ()));
 #endif
 				return;
 			}
@@ -54,13 +54,13 @@ void evt_setThreadReady(const std::string& threadName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // See if the thread is ready or not
-bool evt_isThreadReady(const std::string& threadName)
+bool evt_isThreadReady(const std::string &threadName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (registeredThreads.empty())
+	if (registeredThreads.size () == 0)
 		return false;
 
-	for (const auto& threadItr : registeredThreads)
+	for (const auto &threadItr: registeredThreads)
 	{
 		if (threadName == threadItr.name)
 		{
@@ -73,41 +73,41 @@ bool evt_isThreadReady(const std::string& threadName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Should this thread be running
-bool evt_shouldThreadRun(const std::string& threadName)
+bool evt_shouldThreadRun(const std::string &threadName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (registeredThreads.size () == 0)
 	{
-		cout << "Attempting to start thread [ " << threadName << " ] but thread is not created." << endl;
+		log_addEvent (sys_getString ("[ %s ] Attempting to start thread [ %s ] but thread is not created.", __func__, threadName.c_str ()));
 		PARA_Delay (100);     // Give thread time to startup
 		return false;
 	}
 
-	for (const auto &threadItr : registeredThreads)
+	for (const auto &threadItr: registeredThreads)
 	{
 		if (threadName == threadItr.name)
 			return threadItr.run;
 	}
 
-	cout << "Attempting to start thread [ " << threadName << " ] but thread is not created." << endl;
-	PARA_Delay(100);     // Give thread time to startup
+	log_addEvent (sys_getString ("[ %s ] Attempting to start thread [ %s ] but thread is not created.", __func__, threadName.c_str ()));
+	PARA_Delay (100);     // Give thread time to startup
 	return false;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Control thread running and processing based on thread name
-void evt_setThreadState(int newState, const std::string& threadName)
+void evt_setThreadState(int newState, const std::string &threadName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (registeredThreads.empty())
+	if (registeredThreads.empty ())
 	{
-		cout << "Attempting to change the state of thread [ " << threadName << " ] but thread is not created." << endl;
-		PARA_Delay(100);     // Give thread time to startup
+		log_addEvent (sys_getString ("[ %s ] Attempting to change the state of thread [ %s ] but thread is not created.", __func__, threadName.c_str ()));
+		PARA_Delay (100);     // Give thread time to startup
 		return;
 	}
 
-	for (auto &threadItr : registeredThreads)
+	for (auto &threadItr: registeredThreads)
 	{
 		if (threadName == threadItr.name)
 		{
@@ -115,7 +115,7 @@ void evt_setThreadState(int newState, const std::string& threadName)
 			return;
 		}
 	}
-	cout << "Attempting to change the state of thread [ " << threadName << " ] but thread is not created." << endl;
+	log_addEvent (sys_getString ("[ %s ] Attempting to change the state of thread [ %s ] but thread is not created.", __func__, threadName.c_str ()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -130,56 +130,56 @@ void evt_stopThreads()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Keep a list of threads that have been created.
-void evt_registerThread(SDL_ThreadFunction threadFunction, const std::string& threadName)
+void evt_registerThread(SDL_ThreadFunction threadFunction, const std::string &threadName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraRegisteredThreads newThread;
 
-	newThread.name   = threadName;
-	newThread.run    = false;
-	newThread.ready  = false;
-	registeredThreads.push_back(newThread);
+	newThread.name  = threadName;
+	newThread.run   = false;
+	newThread.ready = false;
+	registeredThreads.push_back (newThread);
 	//
 	// Create vector element first
 	// Thread was being created too fast and running before the vector element was created
 	// resulting in no elements being available when size() was tested
-	registeredThreads[registeredThreads.size() - 1].thread = PARA_CreateThread(*threadFunction, threadName.c_str(), nullptr);
-	if (nullptr == registeredThreads[registeredThreads.size() - 1].thread)
-		sys_shutdownWithError(sys_getString("Unable to create thread [ %s ] - [ %s ]", threadName.c_str(), SDL_GetError()));
+	registeredThreads[registeredThreads.size () - 1].thread = PARA_CreateThread (*threadFunction, threadName.c_str (), nullptr);
+	if (nullptr == registeredThreads[registeredThreads.size () - 1].thread)
+		sys_shutdownWithError (sys_getString ("Unable to create thread [ %s ] - [ %s ]", threadName.c_str (), SDL_GetError ()));
 
-	SDL_DetachThread(registeredThreads[registeredThreads.size() - 1].thread);
-	evt_setThreadReady(threadName);
+	SDL_DetachThread (registeredThreads[registeredThreads.size () - 1].thread);
+	evt_setThreadReady (threadName);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Keep a list of mutexes that have been created, and remove at shutdown
-void evt_registerMutex(const std::string& mutexName)
+void evt_registerMutex(const std::string &mutexName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraRegisteredMutexes newMutex;
 
-	newMutex.mutex = PARA_CreateMutex();
+	newMutex.mutex = PARA_CreateMutex ();
 	newMutex.name  = mutexName;
 	if (nullptr == newMutex.mutex)
-		sys_shutdownWithError(sys_getString("Unable to create mutex [ %s ] - [ %s ]", newMutex.name.c_str(), SDL_GetError()));
+		sys_shutdownWithError (sys_getString ("Unable to create mutex [ %s ] - [ %s ]", newMutex.name.c_str (), SDL_GetError ()));
 
-	registeredMutexes.push_back(newMutex);
+	registeredMutexes.push_back (newMutex);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Find a mutex based on its name
-PARA_Mutex *evt_getMutex(const std::string& mutexName)
+PARA_Mutex *evt_getMutex(const std::string &mutexName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (registeredMutexes.empty())
+	if (registeredMutexes.size () == 0)
 	{
-		console.add(sys_getString("Attempting to access mutex [ %s ] but mutex pool is empty.", mutexName.c_str()));
+		log_addEvent (sys_getString ("[ %s ] Attempting to access mutex [ %s ] but mutex pool is empty.", __func__, mutexName.c_str ()));
 		return nullptr;
 	}
 
-	for (const auto &mutexItr : registeredMutexes)
+	for (const auto &mutexItr: registeredMutexes)
 	{
 		if (mutexItr.name == mutexName)
 		{
@@ -187,7 +187,7 @@ PARA_Mutex *evt_getMutex(const std::string& mutexName)
 		}
 	}
 
-	sys_shutdownWithError(sys_getString("Unable to locate mutex [ %s ]", mutexName.c_str()));
+	sys_shutdownWithError (sys_getString ("Unable to locate mutex [ %s ]", mutexName.c_str ()));
 	return nullptr;
 }
 
@@ -197,9 +197,9 @@ PARA_Mutex *evt_getMutex(const std::string& mutexName)
 void evt_destroyMutexes()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &mutexItr : registeredMutexes)
+	for (auto &mutexItr: registeredMutexes)
 	{
-		PARA_DestroyMutex(mutexItr.mutex);
+		PARA_DestroyMutex (mutexItr.mutex);
 	}
 }
 
@@ -214,11 +214,11 @@ void sys_addEvent(int eventType, int eventAction, int eventDelay, const string &
 	switch (eventType)
 	{
 		case EVENT_TYPE_CONSOLE:
-			con_addEvent(eventAction, eventText);
+			con_addEvent (eventAction, eventText);
 			break;
 
 		case EVENT_TYPE_LOGFILE:
-			tempMutex = evt_getMutex(LOGGING_MUTEX_NAME);
+			tempMutex = evt_getMutex (LOGGING_MUTEX_NAME);
 
 			if (nullptr == tempMutex)
 				sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", LOGGING_MUTEX_NAME, SDL_GetError ()));
@@ -234,7 +234,7 @@ void sys_addEvent(int eventType, int eventAction, int eventDelay, const string &
 			return;
 
 		default:
-			logFile.write (sys_getString ("Unknown event type used. [ %s ]", eventText.c_str ()));
+			log_addEvent (sys_getString ("Unknown event type used. [ %s ]", eventText.c_str ()));
 			break;
 	}
 }

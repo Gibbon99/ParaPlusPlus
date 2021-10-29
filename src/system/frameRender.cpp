@@ -2,6 +2,8 @@
 #include <gui/guiHighScore.h>
 #include <system/util.h>
 #include <classes/paraStarfield.h>
+#include <system/cpPhysicsDebug.h>
+#include <game/lineOfSight.h>
 #include "gui/guiScrollbox.h"
 #include "system/startup.h"
 #include "game/shipDecks.h"
@@ -9,7 +11,7 @@
 #include "game/player.h"
 #include "gui/guiDeckView.h"
 #include "game/droids.h"
-#include "game/bullet.h"
+#include "classes/paraBullet.h"
 #include "game/particles.h"
 #include "game/lightMaps.h"
 #include "game/transferRender.h"
@@ -31,7 +33,7 @@ SDL_BlendMode tempMode;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Prepare the frame for rendering
-void sys_prepareFrame ()
+void sys_prepareFrame()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	//
@@ -48,7 +50,7 @@ void sys_prepareFrame ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Complete a frame and present to the screen
-void sys_completeFrame ()
+void sys_completeFrame()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
@@ -60,7 +62,7 @@ void sys_completeFrame ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a frame once
-void sys_renderFrame (double interpolation)
+void sys_renderFrame(double interpolation)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	sys_prepareFrame ();
@@ -88,13 +90,7 @@ void sys_renderFrame (double interpolation)
 			break;
 
 		case MODE_GUI_MAINMENU:
-			gui_renderGUI ();
-			break;
-
 		case MODE_GUI_TERMINAL:
-			gui_renderGUI ();
-			break;
-
 		case MODE_GUI_TUT_TRANSFER_START:
 		case MODE_GUI_TUT_TRANSFER_GAME:
 		case MODE_GUI_TUT_LIFTS:
@@ -189,13 +185,13 @@ void sys_renderFrame (double interpolation)
 
 			playerDroid.sprite.render (gameWinWidth / 2, gameWinHeight / 2, 1.0, static_cast<Uint8>(255));
 
-			gam_renderDroids (gam_getCurrentDeckName ());
+			gam_renderDroids ();
 
 			gam_renderLightmaps ();
 			gam_renderBullets ();
 			gam_renderParticles ();
 
-			gam_debugShowPlayerTrail ();
+//			gam_debugShowPlayerTrail ();
 
 			if (d_showWaypoints)
 				gam_showWayPoints (gam_getCurrentDeckName ());
@@ -204,7 +200,7 @@ void sys_renderFrame (double interpolation)
 				gam_debugInfluenceMap ();
 
 			if (d_showPhysics)
-				sys_getPhysicsWorld ()->DebugDraw ();
+				d_drawPhysicsDebug ();
 
 //			if (d_showNodeArrays)
 //				gam_AStarDebugNodes (d_showPathIndex);
@@ -217,6 +213,7 @@ void sys_renderFrame (double interpolation)
 
 			for (auto itr: shipdecks.at (gam_getCurrentDeckName ()).droid)
 			{
+//				gam_debugShowTarget (itr);
 //				itr.ai2.aStar.debugNodes();
 //				itr.ai2.aStar.debugWayPoints();
 			}
@@ -227,8 +224,14 @@ void sys_renderFrame (double interpolation)
 			break;
 	}
 
-	if (doScreenEffect)
-		textures.at ("screen").render ();
+	try
+	{
+		if (doScreenEffect)
+			textures.at ("screen").render ();
+	}
+	catch (std::out_of_range &outOfRange)
+	{
+	}
 
 	if ((currentMode != MODE_CONSOLE_EDIT) && (currentMode != MODE_CONSOLE_INIT) && (currentMode != MODE_SHOW_SPLASH))
 	{

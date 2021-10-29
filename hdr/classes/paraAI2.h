@@ -1,21 +1,22 @@
-#ifndef PARA_PARAAI2_H
-#define PARA_PARAAI2_H
+#pragma once
 
-#include <b2_math.h>
 #include "paraAStar.h"
 
+#define IGNORE_SWAP_DIRECTION_LIMIT 5
+
+/*
 #define DBGVAR(os, var) \
   (os) << "DBG: " << __func__ << "(" << __LINE__ << ") "\
        << #var << " = [" << (var) << "]" << std::endl
+*/
+
+#define DBGVAR(os, var)
 
 //
 // Use strongly typed enumeration type
 enum class AI2_PATROL_ACTIONS
 {
-	AI2_NORMAL_PATROL = 0,
-	AI2_FIND_WAYPOINT,
-	AI2_FOLLOW_ASTAR,
-	AI2_MOVE_DIRECT_TO_LOCATION
+	AI2_FIND_WAYPOINT = 0
 };
 
 enum _AI2_MODES
@@ -25,6 +26,7 @@ enum _AI2_MODES
 	AI2_MODE_FLEE,
 	AI2_MODE_HEAL,
 	AI2_MODE_PATROL,
+	AI2_MODE_WITNESS,
 	AI2_MODE_NUMBER
 };
 
@@ -38,112 +40,129 @@ class paraAI2
 {
 public:
 
-	void process (b2Vec2 newWorldPosInMeters);
+	void process(cpVect newWorldPosInPixels);
 
-	void modifyAIScore (int whichScore, int modifyAmount);
+	void modifyAIScore(int whichScore, int modifyAmount);
 
-	void checkAIScores ();
+	void checkAIScores();
 
-	void changeAIModeTo (int newAIMode);
+	void changeAIModeTo(int newAIMode);
 
-	void debugShowDestination ();
+	void debugShowDestination();
 
-	std::string getAIActionString (int whichMode);
+	std::string getAIActionString(int whichMode);
 
-	bool isDestinationValid ();
+	bool isDestinationValid();
 
-	void attack ();
+	void attack();
 
-	void hunt ();
+	void hunt();
 
-	b2Vec2 findFleeTile ();
+	cpVect findFleeTile();
 
-	b2Vec2 findHealingTile ();
+	cpVect findHealingTile();
 
-	b2Vec2 findOpenWaypoint ();
+	cpVect findOpenWaypoint();
 
-	b2Vec2 findLocationWithLOS (AI2_PATROL_ACTIONS locationType);
+	cpVect findLocationWithLOS(AI2_PATROL_ACTIONS locationType);
 
-	void reachedDestination ();
+	void reachedDestination();
 
-	void initAI ();
+	void initAI();
 
-	void doMovement (b2Vec2 newWorldPosInMeters);
+	void doMovement(cpVect newWorldPosInPixels);
 
-	int checkPotentialCollision ();
+	int checkPotentialCollision();
 
-	void getNextDestination ();
+	void getNextDestination();
 
-	void runAStarCode (b2Vec2 destinationTile);
+	int runAStarCode(cpVect destinationTile);
 
-	void processVelocity ();
+	void processVelocity();
 
-	b2Vec2 getVelocity ();
+	void setArrayIndex(int newIndex);
 
-	void setArrayIndex (int newIndex);
+	int getCurrentAIMode();
 
-	int getCurrentAIMode ();
+	int getArrayIndex();
 
-	int getArrayIndex ();
+	int getTargetDroid();
 
-	int getTargetDroid ();
+	void setTargetDroid(int newTargetDroid);
 
-	void setTargetDroid (int newTargetDroid);
+	void setHealValue(float newHealthPercent);
 
-	void setHealValue (float newHealthPercent);
+	void setAcceleration(double newAcceleration);
 
-	void setAcceleration (double newAcceleration);
+	void setMaxSpeed(double newMaxSpeed);
 
-	void setMaxSpeed (double newMaxSpeed);
+	void setWaypointIndex(int newIndex);
 
-	void setWaypointIndex (int newIndex);
+	void setWaypointDirection(PATROL_WAYPOINT_DIRECTION newDirection);
 
-	void setWaypointDirection (PATROL_WAYPOINT_DIRECTION newDirection);
+	void switchWaypointDirection();
 
-	void switchWaypointDirection ();
+	void setDestinationInPixels(cpVect newDestination);
 
-	void setDestinationInPixels (b2Vec2 newDestination);
+	void setDestinationInMeters(cpVect newDestination);
 
-	void setDestinationInMeters (b2Vec2 newDestination);
+	cpVect debugGetDestinationCoordsInPixels();
 
-	void debugShowValues ();
+	void debugShowValues();
 
-	double getAcceleration ();
+	double getAcceleration();
 
-	double getMaxSpeed ();
+	double getMaxSpeed();
 
-	int getPatrolWaypointIndex ();
+	int getPatrolWaypointIndex();
 
-	void checkAttackVisibility ();
+	void checkAttackVisibility();
 
-	float     desiredAttackDistance2                      = 6;    // meters
-	float     paddingSize2                                = 2;
+	cpVect getWorldPosInPixels();
+
+	cpVect getVelocity();
+
+	void setVelocity(cpVect newVelocity);
+
+	void setWorldPosInPixels(cpVect newWorldPosition);
+
+	void setPreviousPosInPixels(cpVect newPreviousPosition);
+
+	cpVect getPreviousWorldPosInPixels();
+
+	void setWitnessDroid(int newWitnessDroid);
+
+	float     desiredAttackDistance2 {90};    // pixels
+	float     paddingSize2 {12};
 	paraAStar aStar;
+
+	int   collisionCounterDroid {0};
+	int   collisionCounterPlayer {0};
+	float collisionCounterDelayDroid {5.0};
+	float collisionCounterDelayPlayer {5.0};
 
 private:
 
-	int                       currentAIMode{AI2_MODE_PATROL};
-	int                       previousAIMode{AI2_MODE_PATROL};
-	int                       patrolWayPointIndex{};
-	int                       arrayIndex{-1};
-	int                       targetDroid{NO_ATTACK_TARGET};
-	float                     currentSpeed{};
-	float                     acceleration{};
-	float                     maxSpeed{};
-	float                     currentAttackDistance{};
-	float                     huntCountdownValue{};
-	float                     huntCountdownModifier{0.2f};
-	b2Vec2                    directionAttackVector       = {0, 0};
-	b2Vec2                    currentVelocity             = {0, 0};
-	b2Vec2                    destinationCoordsInMeters   = {0, 0};
-	b2Vec2                    previousDestinationInMeters = {0, 0};
-	b2Vec2                    worldPositionInMeters       = {0, 0};
-	b2Vec2                    lookAheadVelocity           = {0, 0};                 // How far ahead does the droid look for a player collision
-	b2Fixture                 *droidFixture               = nullptr;                        // Used to determine if the droid will run into the player on current velocity
-	int                       ai[AI2_MODE_NUMBER]{};
+	int                       currentAIMode {AI2_MODE_PATROL};
+	int                       previousAIMode {AI2_MODE_PATROL};
+	int                       patrolWayPointIndex {};
+	int                       arrayIndex {-1};
+	int                       targetDroid {NO_ATTACK_TARGET};
+	int                       swapDirectionCounter {};
+	int                       witnessDroid {NO_ATTACK_TARGET};
+	float                     currentSpeed {};
+	float                     acceleration {};
+	float                     maxSpeed {};
+	float                     currentAttackDistance {};
+	float                     huntCountdownValue {};
+	float                     huntCountdownModifier {0.2f};
+	cpVect                    velocity               = {0, 0};
+	cpVect                    directionAttackVector  = {0, 0};
+	cpVect                    destinationPosInPixels = {0, 0};
+	cpVect                    previousPosInPixels    = {0, 0};
+	cpVect                    worldPosInPixels       = {0, 0};
+	cpVect                    lookAheadVelocity      = {0, 0};                 // How far ahead does the droid look for a player collision
+	//	cpVect                    previousDestinationInPixels = {0, 0};
+	int                       ai[AI2_MODE_NUMBER] {};
 	PATROL_WAYPOINT_DIRECTION patrolWaypointDirection;
-	SDL_Thread                *sdlThreadID;
 };
-
-
-#endif //PARA_PARAAI2_H

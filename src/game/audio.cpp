@@ -1,10 +1,11 @@
 #include <string>
-#include <classes/paraEvent.h>
 #include <queue>
-#include <system/startup.h>
-#include <io/console.h>
-#include <io/fileSystem.h>
-#include <system/util.h>
+#include "classes/paraEvent.h"
+#include "system/startup.h"
+#include "system/util.h"
+#include "io/console.h"
+#include "io/fileSystem.h"
+#include "io/logFile.h"
 #include "game/audio.h"
 
 std::queue<paraEventAudio *> audioEventQueue;
@@ -15,27 +16,27 @@ std::queue<paraEventAudio *> audioEventQueue;
 void gam_addAudioEvent(int action, bool loop, int distance, int pan, const std::string &keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	PARA_Mutex *tempMutex;
-	paraEventAudio* tempAudioEvent;
+	PARA_Mutex     *tempMutex;
+	paraEventAudio *tempAudioEvent;
 
-	tempAudioEvent = new paraEventAudio(action, distance, pan, loop, keyName);
+	tempAudioEvent = new paraEventAudio (action, distance, pan, loop, keyName);
 
-	tempMutex = evt_getMutex(AUDIO_MUTEX_NAME);
+	tempMutex = evt_getMutex (AUDIO_MUTEX_NAME);
 
 	if (nullptr == tempMutex)
-		sys_shutdownWithError(sys_getString("Unable to get mutex details [ %s ] [ %s ]", AUDIO_MUTEX_NAME, SDL_GetError()));
+		sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", AUDIO_MUTEX_NAME, SDL_GetError ()));
 
 	//
 	// Put the new event onto the logfile queue
-	PARA_LockMutex(evt_getMutex(AUDIO_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
-	audioEventQueue.push(tempAudioEvent);
-	PARA_UnlockMutex(evt_getMutex(AUDIO_MUTEX_NAME));
+	PARA_LockMutex (evt_getMutex (AUDIO_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
+	audioEventQueue.push (tempAudioEvent);
+	PARA_UnlockMutex (evt_getMutex (AUDIO_MUTEX_NAME));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Detached thread to run audio events on
-void gam_processAudioEventQueue ()
+void gam_processAudioEventQueue()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraEventAudio    *audioEvent;
@@ -67,9 +68,9 @@ void gam_processAudioEventQueue ()
 				{
 					case EVENT_ACTION_AUDIO_INIT:
 						audio.init (maxNumChannels, con_addEvent, io_loadRawFile);
-						audio.setMasterVolume(g_volumeLevel); // Loaded from config file
-						SDL_Delay(500);
-						paraScriptInstance.run("as_loadAudioResources", "");
+						audio.setMasterVolume (g_volumeLevel); // Loaded from config file
+						SDL_Delay (500);
+						paraScriptInstance.run ("as_loadAudioResources", "");
 						break;
 
 					case EVENT_ACTION_AUDIO_PLAY:
@@ -77,7 +78,7 @@ void gam_processAudioEventQueue ()
 						break;
 
 					case EVENT_ACTION_AUDIO_STOP_ALL:
-						audio.stopAllChannels();
+						audio.stopAllChannels ();
 						break;
 
 					case EVENT_ACTION_AUDIO_LOAD:
@@ -85,15 +86,15 @@ void gam_processAudioEventQueue ()
 						break;
 
 					case EVENT_ACTION_AUDIO_SET_MASTER_VOLUME:
-						audio.setMasterVolume(g_volumeLevel); // Loaded from config file
+						audio.setMasterVolume (g_volumeLevel); // Loaded from config file
 						break;
 
 					case EVENT_ACTION_AUDIO_STOP:
-						audio.stop(audioEvent->keyName);
+						audio.stop (audioEvent->keyName);
 						break;
 
 					default:
-						cout << "ERROR: Unknown audio action [ " << audioEvent->action << " ]" << audioEvent->keyName << endl;
+						log_addEvent (sys_getString ("[ %s ] ERROR: Unknown audio action [ %i ] for [ %s ].", __func__, audioEvent->action, audioEvent->keyName.c_str ()));
 						break;
 				}
 
@@ -105,7 +106,7 @@ void gam_processAudioEventQueue ()
 		}
 	}
 #ifdef MY_DEBUG
-	std::cout << "AUDIO thread stopped.\n" << std::endl;
+	log_addEvent (sys_getString ("[ %s ] AUDIO thread stopped.", __func__));
 #endif
 }
 
@@ -119,5 +120,5 @@ void gam_initAudio()
 	evt_registerThread (reinterpret_cast<SDL_ThreadFunction>(gam_processAudioEventQueue), AUDIO_THREAD_NAME);
 	evt_setThreadState (true, AUDIO_THREAD_NAME);
 
-	gam_addAudioEvent(EVENT_ACTION_AUDIO_INIT, false, 0, 0, "");
+	gam_addAudioEvent (EVENT_ACTION_AUDIO_INIT, false, 0, 0, "");
 }

@@ -1,5 +1,5 @@
 #include "system/util.h"
-#include "system/physics.h"
+#include "system/cpPhysics.h"
 #include "game/particles.h"
 #include "gui/guiHighScore.h"
 #include "../../hdr/system/shutdown.h"
@@ -7,30 +7,28 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Close down systems
-void sys_closeSystems()
+void sys_closeSystems ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	io_saveConfigValues();
+	io_saveConfigValues ();
 
-	gui_writeHighScore();;
-
-	gam_clearEmitters();
+	gam_clearEmitters ();
 	sys_freePhysicsEngine ();
 
-	io_closeJoystick();
-	paraScriptInstance.stop();
+	io_closeJoystick ();
+	paraScriptInstance.stop ();
 	sys_freeMemory ();
-	logFile.close();
+	logFile.close ();
 
-	evt_stopThreads();
+	evt_stopThreads ();
 
-	evt_destroyMutexes();
+	evt_destroyMutexes ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Shutdown with an error
-void sys_shutdownWithError(std::string errorMessage)
+void sys_shutdownWithError (std::string errorMessage)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_ERROR, "Fatal Error", errorMessage.c_str (), renderer.window) < 0)
@@ -46,10 +44,10 @@ void sys_shutdownWithError(std::string errorMessage)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Shutdown normally
-void sys_shutdown()
+void sys_shutdown ()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	sys_closeSystems();
+	sys_closeSystems ();
 
-	exit(0);
+	exit (0);
 }

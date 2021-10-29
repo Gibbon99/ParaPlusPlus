@@ -1,36 +1,36 @@
 #include <cassert>
-#include <game/tiles.h>
-#include <game/shipDecks.h>
-#include <game/healing.h>
-#include <game/player.h>
-#include <system/util.h>
-#include <game/bullet.h>
-#include <game/lineOfSight.h>
-#include <game/score.h>
-#include <game/transferRender.h>
-#include <game/transfer.h>
-#include <game/transferDroidAI.h>
-#include <game/transferGame.h>
-#include <game/game.h>
-#include <game/alertLevel.h>
-#include <gui/guiLostScreen.h>
-#include <gui/guiHighScore.h>
-#include <io/keyboard.h>
-#include <game/audio.h>
-#include <gui/guiLanguage.h>
-#include <system/startup.h>
-#include <game/database.h>
-#include <game/hud.h>
-#include <game/texture.h>
-#include <system/scriptConfig.h>
-#include <gui/guiSideview.h>
-#include <game/doors.h>
-#include <game/pathFind.h>
+#include "game/tiles.h"
+#include "game/shipDecks.h"
+#include "game/healing.h"
+#include "game/player.h"
+#include "game/lineOfSight.h"
+#include "game/score.h"
+#include "game/transferRender.h"
+#include "game/transfer.h"
+#include "game/transferDroidAI.h"
+#include "game/transferGame.h"
+#include "game/game.h"
+#include "game/alertLevel.h"
+#include "game/audio.h"
+#include "game/database.h"
+#include "game/hud.h"
+#include "game/texture.h"
+#include "game/doors.h"
+#include "gui/guiLostScreen.h"
+#include "gui/guiHighScore.h"
+#include "gui/guiSideview.h"
+#include "gui/guiLanguage.h"
+#include "io/keyboard.h"
+#include "system/scriptConfig.h"
+#include "system/startup.h"
+#include "system/cpPhysics.h"
+#include "system/util.h"
+#include "classes/paraBullet.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // This is how we call a script from the Host program : Name in Script : Name to call from host
-void sys_scriptInitScriptFunctions ()
+void sys_scriptInitScriptFunctions()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraScriptInstance.addScriptFunction ("void as_useNewRenderer(int &in newRenderer)", "as_useNewRenderer");
@@ -63,16 +63,14 @@ void sys_scriptInitScriptFunctions ()
 	paraScriptInstance.addScriptFunction ("void as_handleDialogBoxes ()", "as_handleDialogBoxes");
 
 	paraScriptInstance.addScriptFunction ("void as_handleHighscoreDisplay()", "as_handleHighscoreDisplay");
-
-	paraScriptInstance.addScriptFunction ("void as_refreshControlLabels()", "as_refreshControlLabels");
 	paraScriptInstance.addScriptFunction ("void as_refreshHighscoreLabels()", "as_refreshHighscoreLabels");
-
+	paraScriptInstance.addScriptFunction ("void as_refreshControlLabels()", "as_refreshControlLabels");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Setup all the global variables to be shared between host and scripts
-void sys_scriptInitVariables ()
+void sys_scriptInitVariables()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraScriptInstance.addHostVariable ("bool quitProgram", &quitLoop);
@@ -99,7 +97,6 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("double playerFriction", &playerFriction);
 	paraScriptInstance.addHostVariable ("double gravity", &gravity);
 	paraScriptInstance.addHostVariable ("double doorAnimSpeed", &doorAnimSpeed);
-	paraScriptInstance.addHostVariable ("int numAStarPaths", &numAStarPaths);
 	paraScriptInstance.addHostVariable ("float collisionCount", &collisionCount);
 	paraScriptInstance.addHostVariable ("int collisionLimit", &collisionLimit);
 	paraScriptInstance.addHostVariable ("float bulletDensity", &bulletDensity);
@@ -146,7 +143,6 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("int alertLevelVolume", &alertLevelVolume);
 	paraScriptInstance.addHostVariable ("float staticAnimationDelay", &staticAnimationDelay);
 	paraScriptInstance.addHostVariable ("int lostScreenShowTime", &lostScreenShowTime);
-//	paraScriptInstance.addHostVariable ("float tableSpacingY", &tableSpacingY);
 	paraScriptInstance.addHostVariable ("float influenceTimelimit", &influenceTimelimit);
 	paraScriptInstance.addHostVariable ("float influenceTimelimtDelay", &influenceTimelimtDelay);
 	paraScriptInstance.addHostVariable ("float influenceTimeLeftWarning", &influenceTimeLeftWarning);
@@ -156,7 +152,7 @@ void sys_scriptInitVariables ()
 	paraScriptInstance.addHostVariable ("float bounceCounterDelay", &bounceCounterDelay);
 }
 
-void sys_scriptPrintInt (std::string inStr, int inInt)
+void sys_scriptPrintInt(std::string inStr, int inInt)
 {
 	std::cout << "String : " << inStr << "Int : " << inInt << endl;
 }
@@ -171,7 +167,7 @@ void PrintString_Generic(asIScriptGeneric *gen)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Setup all the globals functions that the scripts can call for action in the host
-void sys_scriptInitFunctions ()
+void sys_scriptInitFunctions()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int r;
@@ -331,7 +327,6 @@ void sys_scriptInitFunctions ()
 	paraScriptInstance.addHostFunction ("void gam_prepareDatabaseScreen(int whichDroidIndex)", asFUNCTION(gam_prepareDatabaseScreen));
 	paraScriptInstance.addHostFunction ("void gam_setHudText(string &in)", asFUNCTION(gam_setHudText));
 	paraScriptInstance.addHostFunction ("void gam_loadTexture(string &in, string &in)", asFUNCTION(gam_loadTexture));
-	paraScriptInstance.addHostFunction ("void gam_createCollisionMap(string &in)", asFUNCTION(gam_createCollisionMap));
 	paraScriptInstance.addHostFunction ("void gam_setTileType()", asFUNCTION(gam_setTileType));
 	paraScriptInstance.addHostFunction ("void gam_loadShipDeck (string &in)", asFUNCTION(gam_loadShipDeck));
 	paraScriptInstance.addHostFunction ("void gam_changeToDeck (string &in, int whichLift)", asFUNCTION(gam_changeToDeck));
@@ -340,6 +335,7 @@ void sys_scriptInitFunctions ()
 
 	paraScriptInstance.addHostFunction ("string gui_getHighScoreValueByIndex (int highScoreIndex)", asFUNCTION(gui_getHighScoreValueByIndex));
 	paraScriptInstance.addHostFunction ("string gui_getHighScoreNameByIndex (int highScoreIndex)", asFUNCTION(gui_getHighScoreNameByIndex));
+	paraScriptInstance.addHostFunction ("string gui_getLastNameUsed ()", asFUNCTION(gui_getLastNameUsed));
 
 	paraScriptInstance.addHostFunction ("void gui_showHighscoreTable ()", asFUNCTION(gui_showHighscoreTable));
 

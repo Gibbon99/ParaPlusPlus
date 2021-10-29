@@ -45,117 +45,114 @@ namespace FW
 		struct Child
 		{
 			WatchID id;
-			String path;
+			String  path;
 		};
-		WatchID mWatchID;
+		WatchID            mWatchID;
 		std::vector<Child> _ids;
-		String mDirName;
-		FileWatchListener* mListener;		
+		String             mDirName;
+		FileWatchListener  *mListener;
 	};
 
 	//--------
 	FileWatcherLinux::FileWatcherLinux()
 	{
 #ifdef IN_NONBLOCK
-    	mFD = inotify_init1( IN_NONBLOCK );
+		mFD = inotify_init1 (IN_NONBLOCK);
 #else
-    	mFD = inotify_init();
-#endif
 		mFD = inotify_init();
+#endif
+		mFD = inotify_init ();
 		if (mFD < 0)
-			fprintf (stderr, "Error: %s\n", strerror(errno));
-		
-		mTimeOut.tv_sec = 0;
+			fprintf (stderr, "Error: %s\n", strerror (errno));
+
+		mTimeOut.tv_sec  = 0;
 		mTimeOut.tv_usec = 0;
-	   		
+
 		FD_ZERO(&mDescriptorSet);
 	}
 
 	//--------
 	FileWatcherLinux::~FileWatcherLinux()
 	{
-		WatchMap::iterator iter = mWatches.begin();
-		WatchMap::iterator end = mWatches.end();
-		for(; iter != end; ++iter)
+		WatchMap::iterator iter = mWatches.begin ();
+		WatchMap::iterator end  = mWatches.end ();
+		for (; iter != end; ++iter)
 		{
 			delete iter->second;
 		}
-		mWatches.clear();
+		mWatches.clear ();
 	}
 
-	void recursive_add_watch(WatchStruct& watch, const String& dirname, int mFD, size_t initLen)
+	void recursive_add_watch(WatchStruct &watch, const String &dirname, int mFD, size_t initLen)
 	{
-		DIR* dir = opendir(dirname.c_str());
-		dirent* child;
+		DIR    *dir = opendir (dirname.c_str ());
+		dirent *child;
 
 		String path = dirname;
-		
-		while(child = readdir(dir))
+
+		while ((child = readdir (dir)))
 		{
-			if (!strcmp(child->d_name, "."))
+			if (!strcmp (child->d_name, "."))
 				continue;
 
-			if (!strcmp(child->d_name, ".."))
+			if (!strcmp (child->d_name, ".."))
 				continue;
 
 			// 4 == dir, 8 == file
 			if (child->d_type == 4)
 			{
 				auto cdir = (dirname + child->d_name) + "/";
-				watch._ids.push_back({
-					(WatchID)inotify_add_watch(mFD, cdir.c_str(), 
-						IN_CLOSE_WRITE | IN_MOVED_TO | IN_CREATE | IN_MOVED_FROM | IN_DELETE), cdir.substr(initLen)});
-				
-				recursive_add_watch(watch, cdir, mFD, initLen);
+				watch._ids.push_back ({(WatchID) inotify_add_watch (mFD, cdir.c_str (), IN_CLOSE_WRITE | IN_MOVED_TO | IN_CREATE | IN_MOVED_FROM | IN_DELETE), cdir.substr (initLen)});
+
+				recursive_add_watch (watch, cdir, mFD, initLen);
 			}
 		}
 
-		closedir(dir);
+		closedir (dir);
 	}
 
 	//--------
-	WatchID FileWatcherLinux::addWatch(const String& directory, FileWatchListener* watcher, bool recursive)
+	WatchID FileWatcherLinux::addWatch(const String &directory, FileWatchListener *watcher, bool recursive)
 	{
-		int wd = inotify_add_watch (mFD, directory.c_str(), 
-			IN_CLOSE_WRITE | IN_MOVED_TO | IN_CREATE | IN_MOVED_FROM | IN_DELETE);
+		int wd = inotify_add_watch (mFD, directory.c_str (), IN_CLOSE_WRITE | IN_MOVED_TO | IN_CREATE | IN_MOVED_FROM | IN_DELETE);
 		if (wd < 0)
 		{
-			if(errno == ENOENT)
-				throw FileNotFoundException(directory);
+			if (errno == ENOENT)
+				throw FileNotFoundException (directory);
 			else
-				throw Exception(strerror(errno));
+				throw Exception (strerror (errno));
 
 //			fprintf (stderr, "Error: %s\n", strerror(errno));
 //			return -1;
 		}
-		
-		WatchStruct* pWatch = new WatchStruct();
+
+		WatchStruct *pWatch = new WatchStruct ();
 		pWatch->mListener = watcher;
-		pWatch->mWatchID = wd;
-		pWatch->mDirName = directory;
+		pWatch->mWatchID  = wd;
+		pWatch->mDirName  = directory;
 		if (recursive)
 		{
 			auto path = directory;
-			if (path == "." || path[path.length() - 1] != '/')
-				path.append("/");
-			recursive_add_watch(*pWatch, path, mFD, path.length());
+			if (path == "." || path[path.length () - 1] != '/')
+				path.append ("/");
+			recursive_add_watch (*pWatch, path, mFD, path.length ());
 		}
 
-		mWatches.insert(std::make_pair(wd, pWatch));
-	
+		mWatches.insert (std::make_pair (wd, pWatch));
+
 		return wd;
 	}
 
 	//--------
-	void FileWatcherLinux::removeWatch(const String& directory)
+	void FileWatcherLinux::removeWatch(const String &directory)
 	{
-		WatchMap::iterator iter = mWatches.begin();
-		WatchMap::iterator end = mWatches.end();
-		for(; iter != end; ++iter)
+		WatchMap::iterator iter = mWatches.begin ();
+		WatchMap::iterator end  = mWatches.end ();
+		for (; iter != end; ++iter)
 		{
-			if(directory == iter->second->mDirName)
+			if (directory == iter->second->mDirName)
 			{
-				removeWatch(iter->first);
+				removeWatch (iter->first);
 				return;
 			}
 		}
@@ -164,16 +161,16 @@ namespace FW
 	//--------
 	void FileWatcherLinux::removeWatch(WatchID watchid)
 	{
-		WatchMap::iterator iter = mWatches.find(watchid);
+		WatchMap::iterator iter = mWatches.find (watchid);
 
-		if(iter == mWatches.end())
+		if (iter == mWatches.end ())
 			return;
 
-		WatchStruct* watch = iter->second;
-		mWatches.erase(iter);
-	
-		inotify_rm_watch(mFD, watchid);
-		
+		WatchStruct *watch = iter->second;
+		mWatches.erase (iter);
+
+		inotify_rm_watch (mFD, watchid);
+
 		delete watch;
 		watch = 0;
 	}
@@ -183,34 +180,34 @@ namespace FW
 	{
 		FD_SET(mFD, &mDescriptorSet);
 
-		int ret = select(mFD + 1, &mDescriptorSet, NULL, NULL, &mTimeOut);
-		if(ret < 0)
+		int ret = select (mFD + 1, &mDescriptorSet, NULL, NULL, &mTimeOut);
+		if (ret < 0)
 		{
-			perror("select");
+			perror ("select");
 		}
-		else if(FD_ISSET(mFD, &mDescriptorSet))
+		else if (FD_ISSET(mFD, &mDescriptorSet))
 		{
-			ssize_t len, i = 0;
-			char action[81+FILENAME_MAX] = {0};
-			char buff[BUFF_SIZE] = {0};
+			ssize_t len, i          = 0;
+//			char action[81+FILENAME_MAX] = {0};
+			char    buff[BUFF_SIZE] = {0};
 
 			len = read (mFD, buff, BUFF_SIZE);
-		   
+
 			while (i < len)
 			{
-				struct inotify_event *pevent = (struct inotify_event *)&buff[i];
-				
-				String root = "";
-				WatchStruct* watch = 0;
-				if (mWatches.count(pevent->wd) == 0)
+				struct inotify_event *pevent = (struct inotify_event *) &buff[i];
+
+				String      root   = "";
+				WatchStruct *watch = 0;
+				if (mWatches.count (pevent->wd) == 0)
 				{
-					for(auto& it : mWatches)
+					for (auto &it: mWatches)
 					{
-						for(auto& id : it.second->_ids)
+						for (auto &id: it.second->_ids)
 						{
 							if (id.id == static_cast<WatchID>(pevent->wd))
 							{
-								root = id.path;
+								root  = id.path;
 								watch = it.second;
 								break;
 							}
@@ -223,33 +220,30 @@ namespace FW
 				{
 					watch = mWatches[pevent->wd];
 				}
-				
-				handleAction(watch, root + pevent->name, pevent->mask);
-				i += sizeof(struct inotify_event) + pevent->len;
+
+				handleAction (watch, root + pevent->name, pevent->mask);
+				i += sizeof (struct inotify_event) + pevent->len;
 			}
 		}
 	}
 
 	//--------
-	void FileWatcherLinux::handleAction(WatchStruct* watch, const String& filename, unsigned long action)
+	void FileWatcherLinux::handleAction(WatchStruct *watch, const String &filename, unsigned long action)
 	{
-		if(!watch->mListener)
+		if (!watch->mListener)
 			return;
 
-		if(IN_CLOSE_WRITE & action)
+		if (IN_CLOSE_WRITE & action)
 		{
-			watch->mListener->handleFileAction(watch->mWatchID, watch->mDirName, filename,
-								Actions::Modified);
+			watch->mListener->handleFileAction (watch->mWatchID, watch->mDirName, filename, Actions::Modified);
 		}
-		if(IN_MOVED_TO & action || IN_CREATE & action)
+		if (IN_MOVED_TO & action || IN_CREATE & action)
 		{
-			watch->mListener->handleFileAction(watch->mWatchID, watch->mDirName, filename,
-								Actions::Add);
+			watch->mListener->handleFileAction (watch->mWatchID, watch->mDirName, filename, Actions::Add);
 		}
-		if(IN_MOVED_FROM & action || IN_DELETE & action)
+		if (IN_MOVED_FROM & action || IN_DELETE & action)
 		{
-			watch->mListener->handleFileAction(watch->mWatchID, watch->mDirName, filename,
-								Actions::Delete);
+			watch->mListener->handleFileAction (watch->mWatchID, watch->mDirName, filename, Actions::Delete);
 		}
 	}
 

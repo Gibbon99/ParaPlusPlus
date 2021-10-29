@@ -1,12 +1,10 @@
 #include <thread>
 #include <SDL2_gfxPrimitives.h>
+#include "io/logFile.h"
 #include "game/shipDecks.h"
 #include "game/doors.h"
 #include "system/util.h"
 #include "classes/paraAStar.h"
-
-//#define ASTAR_DEBUG 1
-#define ASTAR_DO_PATH_COMPRESS 1
 
 #define ASTAR_THREAD_STARTED        0
 #define ASTAR_PATH_TOO_SHORT        -1
@@ -17,7 +15,7 @@
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Constructor
-paraAStar::paraAStar ()
+paraAStar::paraAStar()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 }
@@ -25,7 +23,7 @@ paraAStar::paraAStar ()
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Deconstructor
-paraAStar::~paraAStar ()
+paraAStar::~paraAStar()
 //-----------------------------------------------------------------------------------------------------------------------
 {
 }
@@ -33,7 +31,7 @@ paraAStar::~paraAStar ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Return the ID for this aStar and thread
-int paraAStar::getID ()
+int paraAStar::getID()
 //--------------------------------------------------------------------------------------------------------
 {
 	return ID;
@@ -42,7 +40,7 @@ int paraAStar::getID ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Set the ID for this aStar
-void paraAStar::setID (int newID)
+void paraAStar::setID(int newID)
 //--------------------------------------------------------------------------------------------------------
 {
 	ID = newID;
@@ -51,56 +49,24 @@ void paraAStar::setID (int newID)
 //--------------------------------------------------------------------------------------------------------
 //
 // Show the open and closed nodes
-void paraAStar::debugNodes ()
+void paraAStar::debugNodes()
 //--------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 drawPosition;
-
-	b2Vec2 coordPosition;
+	cpVect drawPosition {};
 
 	for (auto foundItr: wayPoints)
 	{
-//		drawPosition = sys_convertToPixels (foundItr.tileLocation);
-//		drawPosition.x = foundItr.tileLocation.x * tileSize;
-//		drawPosition.y = foundItr.tileLocation.y * tileSize;
-
 		drawPosition = sys_worldToScreen (foundItr, tileSize);
 
 		boxRGBA (renderer.renderer, static_cast<Sint16>(drawPosition.x), static_cast<Sint16>(drawPosition.y), static_cast<Sint16>(drawPosition.x + tileSize), static_cast<Sint16>(drawPosition.y + tileSize),
 		         drawPosition.x * 10, 150, 100, 128);
-
-//		fontClass.use ("consoleFont");
-//		coordPosition = sys_convertPixelsToMeters (foundItr);
-//		fontClass.render (renderer.renderer, drawPosition.x, drawPosition.y, 0, 0, 0, 255, sys_getString ("%3.0f %3.0f", coordPosition.x, coordPosition.y));
-	}
-
-	return;
-
-	for (auto openItr: openNodes)
-	{
-		drawPosition.x = openItr.tileLocation.x * tileSize;
-		drawPosition.y = openItr.tileLocation.y * tileSize;
-
-		drawPosition = sys_worldToScreen (drawPosition, tileSize);
-
-		boxRGBA (renderer.renderer, static_cast<Sint16>(drawPosition.x), static_cast<Sint16>(drawPosition.y), static_cast<Sint16>(drawPosition.x + tileSize), static_cast<Sint16>(drawPosition.y + tileSize), 0, 150, 0, 128);
-	}
-
-	for (auto closedItr: closedNodes)
-	{
-		drawPosition.x = closedItr.tileLocation.x * tileSize;
-		drawPosition.y = closedItr.tileLocation.y * tileSize;
-
-		drawPosition = sys_worldToScreen (drawPosition, tileSize);
-
-		boxRGBA (renderer.renderer, static_cast<Sint16>(drawPosition.x), static_cast<Sint16>(drawPosition.y), static_cast<Sint16>(drawPosition.x + tileSize), static_cast<Sint16>(drawPosition.y + tileSize), 0, 0, 150, 128);
 	}
 }
 
 //--------------------------------------------------------------------------------------------------------
 //
 // Draw debug graphic
-void paraAStar::debugDraw (b2Vec2 lineStart, b2Vec2 lineFinish)
+void paraAStar::debugDraw(cpVect lineStart, cpVect lineFinish)
 //--------------------------------------------------------------------------------------------------------
 {
 	lineStart  = sys_worldToScreen (lineStart, 2);
@@ -116,12 +82,12 @@ void paraAStar::debugDraw (b2Vec2 lineStart, b2Vec2 lineFinish)
 //--------------------------------------------------------------------------------------------------------
 //
 // Show aStar waypoint lines
-void paraAStar::debugWayPoints ()
+void paraAStar::debugWayPoints()
 //--------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 lineStart;
-	b2Vec2 lineFinish;
-	int    i = 0;
+	cpVect lineStart {};
+	cpVect lineFinish {};
+	int    i {0};
 
 	if (wayPoints.size () == 0)
 		return;
@@ -134,26 +100,18 @@ void paraAStar::debugWayPoints ()
 
 		lineStart.x = wayPoints[i].x;
 		lineStart.y = wayPoints[i].y;
-//		lineStart.x += (tileSize / 2);
-//		lineStart.y += (tileSize / 2);
 
 		lineFinish.x = wayPoints[i + 1].x;
 		lineFinish.y = wayPoints[i + 1].y;
-//		lineFinish.x += (tileSize / 2);
-//		lineFinish.y += (tileSize / 2);
 
 		debugDraw (lineStart, lineFinish);
 	}
 
 	lineStart.x = wayPoints[i].x;
 	lineStart.y = wayPoints[i].y;
-//	lineStart.x += (tileSize / 2);
-//	lineStart.y += (tileSize / 2);
 
 	lineFinish.x = wayPoints[i + 1].x;
 	lineFinish.y = wayPoints[i + 1].y;
-//	lineFinish.x += (tileSize / 2);
-//	lineFinish.y += (tileSize / 2);
 
 	debugDraw (lineStart, lineFinish);
 }
@@ -161,7 +119,7 @@ void paraAStar::debugWayPoints ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Return if the thread is still running
-bool paraAStar::stillRunning ()
+bool paraAStar::stillRunning()
 //--------------------------------------------------------------------------------------------------------
 {
 	return isRunning;
@@ -170,10 +128,12 @@ bool paraAStar::stillRunning ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Return if the waypoints are ready to use
-bool paraAStar::areWaypointsReady ()
+bool paraAStar::areWaypointsReady()
 //--------------------------------------------------------------------------------------------------------
 {
-	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
+#ifdef ASTAR_DEBUG
+	log_addEvent (sys_getString ("[ %s ] Index [ %i ]", __func__, ID));
+#endif
 
 	return wayPointsReady;
 }
@@ -181,7 +141,7 @@ bool paraAStar::areWaypointsReady ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Is a tile considered 'solid' or not for creating a path
-bool paraAStar::isTileSolid (int tileIndex)
+bool paraAStar::isTileSolid(int tileIndex)
 //--------------------------------------------------------------------------------------------------------
 {
 	if (tileIndex < 0)
@@ -224,13 +184,13 @@ bool paraAStar::isTileSolid (int tileIndex)
 //--------------------------------------------------------------------------------------------------------
 //
 // Find the distance from one tile to the next - Manhatten distance
-int paraAStar::findDistance (b2Vec2 fromTile, b2Vec2 toTile)
+int paraAStar::findDistance(cpVect fromTile, cpVect toTile)
 //--------------------------------------------------------------------------------------------------------
 {
-	int costX, costY;
+	int costX {}, costY {};
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Checking distance between tiles.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ] Checking distance between tiles.", __func__, ID));
 #endif
 
 	costX = static_cast<int>(fromTile.x - toTile.x);
@@ -242,14 +202,14 @@ int paraAStar::findDistance (b2Vec2 fromTile, b2Vec2 toTile)
 //--------------------------------------------------------------------------------------------------------
 //
 // Add a tile to the openNode list
-inline void paraAStar::addTileToOpenNode (b2Vec2 whichTile, int moveCost, int parent)
+inline void paraAStar::addTileToOpenNode(cpVect whichTile, int moveCost, int parent)
 //--------------------------------------------------------------------------------------------------------
 {
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Adding new tile to openNode list.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ] Adding new tile to openNode list.", __func__, ID));
 #endif
 
-	_pathNode3 tempNode;
+	_pathNode3 tempNode {};
 
 	tempNode.parent       = parent;
 	tempNode.tileLocation = whichTile;
@@ -263,36 +223,33 @@ inline void paraAStar::addTileToOpenNode (b2Vec2 whichTile, int moveCost, int pa
 	tempNode.f_score       = tempNode.g_movementCost + tempNode.h_estMoveCost;
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Tempnode movement cost [ %i ] estMoveCost [ %i ] f_score [ %i ].\n", ID, tempNode.g_movementCost, tempNode.h_estMoveCost, tempNode.f_score);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Tempnode movement cost [ %i ] estMoveCost [ %i ] f_score [ %i ].", __func__, ID, tempNode.g_movementCost, tempNode.h_estMoveCost, tempNode.f_score));
 #endif
 
-	openNodes.push_back (tempNode);
+	openNodes.emplace_back (tempNode);
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Opennodes size [ %i ] parent [ %i ] moveCost [ %i ] distanceCost [ %i ].\n", ID, openNodes.size (), parent, tempNode.g_movementCost, tempNode.h_estMoveCost);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Opennodes size [ %i ] parent [ %i ] moveCost [ %i ] distanceCost [ %i ].", __func__, ID, openNodes.size (), parent, tempNode.g_movementCost, tempNode.h_estMoveCost));
 #endif
 }
 
 //--------------------------------------------------------------------------------------------------------
 //
 // Find the node with the lowest totalCost
-int paraAStar::findLowestCostNode ()
+int paraAStar::findLowestCostNode()
 //--------------------------------------------------------------------------------------------------------
 {
-	int lowestCost;
-	int lowestNodeIndexArray;
-
-	lowestCost           = 50000;
-	lowestNodeIndexArray = 0;
+	int lowestCost {50000};
+	int lowestNodeIndexArray {0};
 
 	if (openNodes.empty ())
 	{
-		printf ("Thread [ %i ]: ERROR: No open nodes to search in paraAStar::findLowestCostNode.\n", ID);
+		log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: ERROR: No open nodes to search in paraAStar::findLowestCostNode.\n", __func__, ID));
 		return -1;
 	}
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Search the open nodes and find the one with the lowest total cost.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Search the open nodes and find the one with the lowest total cost.\n", __func__, ID));
 #endif
 
 	for (auto itr: openNodes)
@@ -309,22 +266,37 @@ int paraAStar::findLowestCostNode ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Move a node from the openNode list to the closedNode list
-void paraAStar::moveNodeToClosedList (int whichNodeIndex)
+void paraAStar::moveNodeToClosedList(int whichNodeIndex)
 //--------------------------------------------------------------------------------------------------------
 {
-	_pathNode3                        tempNode;
-	std::vector<_pathNode2>::iterator itr;
-	int                               indexCount = 0;
+	_pathNode4 tempNode {};
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Move open node [ %i ] to closedNode list.\n", ID, whichNodeIndex);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Move open node [ %i ] to closedNode list.\n", __func__, ID, whichNodeIndex));
 #endif
 
-	closedNodes.push_back (openNodes[whichNodeIndex]);
+	if (whichNodeIndex > static_cast<int>(openNodes.size () - 1))
+		sys_shutdownWithError ("whichNodeIndex is greater than openNode size: moveNodeToClosedList");
+
+	if (openNodes.empty ())
+		sys_shutdownWithError ("openNodes is empty");
+
+	// Error here ??
+
+//	closedNodes.push_back (openNodes[whichNodeIndex]);
+
+	tempNode.g_movementCost = openNodes[whichNodeIndex].g_movementCost;
+	tempNode.tileLocation   = openNodes[whichNodeIndex].tileLocation;
+	tempNode.f_score        = openNodes[whichNodeIndex].f_score;
+	tempNode.h_estMoveCost  = openNodes[whichNodeIndex].h_estMoveCost;
+	tempNode.parent         = openNodes[whichNodeIndex].parent;
+
+	//closedNodes.emplace_back (openNodes[whichNodeIndex]);
+	closedNodes.emplace_back (tempNode);
 	currentNodePtrClosedList = static_cast<int>(closedNodes.size () - 1);
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: currentNodePtrClosedList is now [ %i ] - number closedNodes [ %i ]\n", ID, currentNodePtrClosedList, static_cast<int>(closedNodes.size ()));
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: currentNodePtrClosedList is now [ %i ] - number closedNodes [ %i ]", __func__, ID, currentNodePtrClosedList, static_cast<int>(closedNodes.size ())));
 #endif
 
 	if (whichNodeIndex == 0)
@@ -340,7 +312,7 @@ void paraAStar::moveNodeToClosedList (int whichNodeIndex)
 //--------------------------------------------------------------------------------------------------------
 //
 // Check if node is in the OPEN list
-bool paraAStar::isNodeInOpenList (b2Vec2 whichNode)
+bool paraAStar::isNodeInOpenList(cpVect whichNode)
 //--------------------------------------------------------------------------------------------------------
 {
 	for (auto itr: openNodes)
@@ -354,7 +326,7 @@ bool paraAStar::isNodeInOpenList (b2Vec2 whichNode)
 //--------------------------------------------------------------------------------------------------------
 //
 // Check if node is in the CLOSED list
-bool paraAStar::isNodeInClosedList (b2Vec2 whichNode)
+bool paraAStar::isNodeInClosedList(cpVect whichNode)
 //--------------------------------------------------------------------------------------------------------
 {
 	for (auto itr: closedNodes)
@@ -371,16 +343,16 @@ bool paraAStar::isNodeInClosedList (b2Vec2 whichNode)
 //
 // Return FALSE if the tile is solid and no new node can be generated
 // Return FALSE if the node is already used on the CLOSED list
-bool paraAStar::generateNewNode (int whichDirection)
+bool paraAStar::generateNewNode(int whichDirection)
 //--------------------------------------------------------------------------------------------------------
 {
-	std::string directionStr;
-	_pathNode2  tempNode;
-	int         moveTileCost = 10;
+	std::string directionStr {};
+	_pathNode2  tempNode {};
+	int         moveTileCost {10};
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: ---\n", ID);
-	printf ("Thread [ %i ]: Generate a new node based on the node with the current lowest cost.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: ---\n", __func__, ID));
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Generate a new node based on the node with the current lowest cost.", __func__, ID));
 #endif
 
 	switch (whichDirection)
@@ -414,17 +386,17 @@ bool paraAStar::generateNewNode (int whichDirection)
 			break;
 	}
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Parent [ %i ] Direction [ %s ]\n", ID, currentNodePtrClosedList, directionStr.c_str ());
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Parent [ %i ] Direction [ %s ]", __func__, ID, currentNodePtrClosedList, directionStr.c_str ()));
 #endif
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: See if the node [ %s X: %f Y: %f ] is solid or not.\n", ID, directionStr.c_str (), tempNode.tileLocation.x, tempNode.tileLocation.y);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: See if the node [ %s X: %f Y: %f ] is solid or not.", __func__, ID, directionStr.c_str (), tempNode.tileLocation.x, tempNode.tileLocation.y));
 #endif
 
 	if (isTileSolid (static_cast<int>((tempNode.tileLocation.y * shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.x) + tempNode.tileLocation.x)))
 	{
 #ifdef ASTAR_DEBUG
-		printf ("Thread [ %i ]: Tile is Solid - don't use.\n", ID);
+		log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Tile is Solid - don't use.", __func__, ID));
 #endif
 		return false; // Solid - don't use
 	}
@@ -439,16 +411,19 @@ bool paraAStar::generateNewNode (int whichDirection)
 // See if we have found a path to the destination tile
 //
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: Look for destination [ %f %f ] to current [ %f %f ]\n", ID, destTile.x, destTile.y, tempNode.tileLocation.x, tempNode.tileLocation.y);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Look for destination [ %f %f ] to current [ %f %f ]", __func__, ID, destTile.x, destTile.y, tempNode.tileLocation.x, tempNode.tileLocation.y));
 #endif
 
 	if ((tempNode.tileLocation.x == destTile.x) && (tempNode.tileLocation.y == destTile.y))
 	{
 #ifdef ASTAR_DEBUG
-		printf ("Thread [ %i ]: Found the destination.\n\n", ID);
+		log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: Found the destination.", __func__, ID));
 #endif
 		addTileToOpenNode (tempNode.tileLocation, moveTileCost, currentNodePtrClosedList);
-		moveNodeToClosedList (openNodes.size () - 1);
+		if (openNodes.size () > 0)
+			moveNodeToClosedList (openNodes.size () - 1);
+		else
+			moveNodeToClosedList (0);
 		pathStatus = ASTAR_STATUS_READY;
 		return true;
 	}
@@ -470,8 +445,8 @@ bool paraAStar::generateNewNode (int whichDirection)
 //
 // The node is already on the open list - see if the runningCost to this node is better
 //
-	int    nodeIndex = 0;
-	size_t openNodeSize;
+	int    nodeIndex {0};
+	size_t openNodeSize {};
 
 	nodeIndex    = currentNodePtrClosedList;
 	openNodeSize = openNodes.size ();
@@ -485,15 +460,14 @@ bool paraAStar::generateNewNode (int whichDirection)
 
 		if (nodeIndex == 0)
 		{
-			printf ("ERROR: nodeIndex is 0\n\n");
+			log_addEvent (sys_getString ("[ %s ] ERROR: nodeIndex is 0.", __func__));
 			return false;
 		}
-
 
 		if (openNodes[openNodeSize - 1].g_movementCost < closedNodes[nodeIndex - 1].g_movementCost)
 		{
 #ifdef ASTAR_DEBUG
-			printf ("Thread [ %i ]: New node is better than the old one.\n", ID);
+			log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: New node is better than the old one.", __func__, ID));
 #endif
 			addTileToOpenNode (openNodes[openNodeSize - 1].tileLocation, moveTileCost, currentNodePtrClosedList);
 		}
@@ -504,33 +478,46 @@ bool paraAStar::generateNewNode (int whichDirection)
 //--------------------------------------------------------------------------------------------------------
 //
 // Extract the path from the list of closed nodes
-void paraAStar::extractPath ()
+void paraAStar::extractPath()
 //--------------------------------------------------------------------------------------------------------
 {
-	int        nodeParent = -1;
-	_pathNode5 tempNode;
+	int        nodeParent {-1};
+	_pathNode5 tempNode {};
+
+#ifdef ASTAR_DEBUG
+	log_addEvent (sys_getString ("[ %s ] [ %i ] Starting extractPath.", __func__, ID));
+#endif
 
 	//
 	// Store the destination tile
 	//
 	tempNode.tileLocation = destTile;
-	foundPath.push_back (tempNode);
+	foundPath.emplace_back (tempNode);
 	//
 	// Get the next tile along
 	//
 
 	if (currentNodePtrClosedList == 0)
 	{
-		printf ("node pointer is 0\n\n");
+		log_addEvent (sys_getString ("[ %s ] ERROR: node pointer is 0.", __func__));
 		return;
 	}
 
+#ifdef ASTAR_DEBUG
+	log_addEvent (sys_getString ("[ %s ] [ %i ] About to set first foundPath node", __func__, ID));
+#endif
+
 	tempNode.tileLocation = closedNodes[currentNodePtrClosedList - 1].tileLocation;
-	foundPath.push_back (tempNode);
+	foundPath.emplace_back (tempNode);
 	//
 	// What's the parent
 	//
 	nodeParent = closedNodes[currentNodePtrClosedList - 1].parent;
+
+#ifdef ASTAR_DEBUG
+	log_addEvent (sys_getString ("[ %s ] ClosedNodes size [ %zu ] OpenNodes size [ %zu ]\n", __func__, closedNodes.size (), openNodes.size ()));
+#endif
+
 	//
 	// While we haven't reached the starting tile ( no parent )
 	while (-1 != nodeParent)
@@ -541,13 +528,13 @@ void paraAStar::extractPath ()
 		tempNode.h_estMoveCost  = closedNodes[nodeParent].h_estMoveCost;
 		tempNode.parent         = closedNodes[nodeParent].parent;
 
-		foundPath.push_back (tempNode);
+		foundPath.emplace_back (tempNode);
 
 		nodeParent = closedNodes[nodeParent].parent;
 
 		if ((tempNode.tileLocation.x == startTile.x) && (tempNode.tileLocation.y == startTile.y))
 		{
-			foundPath.push_back (tempNode);
+			foundPath.emplace_back (tempNode);
 			return;
 		}
 	}
@@ -556,23 +543,23 @@ void paraAStar::extractPath ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Compress the waypoints
-void paraAStar::compressWaypoints ()
+void paraAStar::compressWaypoints()
 //--------------------------------------------------------------------------------------------------------
 {
-	int                 current{1};
-	std::vector<b2Vec2> newPoints{};
-	b2Vec2              tempPoint{};
+	int                 current {1};
+	std::vector<cpVect> newPoints {};
+	cpVect              tempPoint {};
 
 	newPoints.clear ();
 	tempPoint = wayPoints[0];
-	newPoints.push_back (tempPoint);
+	newPoints.emplace_back (tempPoint);
 
 	for (int i = 0; i != static_cast<int>(wayPoints.size ()) - 1; i++)
 	{
 		if ((newPoints[newPoints.size () - 1].x != wayPoints[current].x) && (newPoints[newPoints.size () - 1].y != wayPoints[current].y))
 		{
 			tempPoint = wayPoints[current - 1];
-			newPoints.push_back (tempPoint);
+			newPoints.emplace_back (tempPoint);
 			current++;
 		}
 		else
@@ -580,7 +567,7 @@ void paraAStar::compressWaypoints ()
 			current++;
 		}
 	}
-	newPoints.push_back (wayPoints[wayPoints.size () - 1]);
+	newPoints.emplace_back (wayPoints[wayPoints.size () - 1]);
 
 	//
 	// Copy back into structure
@@ -588,17 +575,17 @@ void paraAStar::compressWaypoints ()
 
 	for (auto itr: newPoints)
 	{
-		wayPoints.push_back (itr);
+		wayPoints.emplace_back (itr);
 	}
 }
 
 //--------------------------------------------------------------------------------------------------------
 //
 // Turn the AStar nodes into world position coords
-void paraAStar::convertToCoords ()
+void paraAStar::convertToCoords()
 //--------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 tempWaypoint;
+	cpVect tempWaypoint;
 
 	for (auto itr: foundPath)
 	{
@@ -609,24 +596,9 @@ void paraAStar::convertToCoords ()
 		tempWaypoint.x += tileSize / 2;
 		tempWaypoint.y += tileSize / 2;
 
-		wayPoints.push_back (tempWaypoint);
+		wayPoints.emplace_back (tempWaypoint);
 	}
 
-	/*
-	for (int i = 0; i != static_cast<int>(foundPath.size ()); i++)
-	{
-		tempWaypoint.x = foundPath[i].tileLocation.x * tileSize;
-		tempWaypoint.y = foundPath[i].tileLocation.y * tileSize;
-
-		tempWaypoint.x += tileSize / 2;
-		tempWaypoint.y += tileSize / 2;
-
-		wayPoints.push_back (tempWaypoint);
-
-		tempWaypoint.x /= tileSize;
-		tempWaypoint.y /= tileSize;
-	}
-*/
 	std::reverse (wayPoints.begin (), wayPoints.end ());
 
 #ifdef ASTAR_DO_PATH_COMPRESS
@@ -638,7 +610,7 @@ void paraAStar::convertToCoords ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Swap the direction flag
-void paraAStar::switchTravelDirection ()
+void paraAStar::switchTravelDirection()
 //--------------------------------------------------------------------------------------------------------
 {
 	if (aStarDirection == ASTAR_DIRECTION::UP)
@@ -650,7 +622,7 @@ void paraAStar::switchTravelDirection ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Get the aStar direction
-ASTAR_DIRECTION paraAStar::getAStarDirection ()
+ASTAR_DIRECTION paraAStar::getAStarDirection()
 //--------------------------------------------------------------------------------------------------------
 {
 	return aStarDirection;
@@ -659,14 +631,14 @@ ASTAR_DIRECTION paraAStar::getAStarDirection ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Get the waypoint pointed to by the wayPointsIndex
-b2Vec2 paraAStar::getWaypoint ()
+cpVect paraAStar::getWaypoint()
 //--------------------------------------------------------------------------------------------------------
 {
 	if (wayPoints.size () == 0)
 	{
-		printf ("STOP: Waypoint array is empty.\n\n");
-		aStarDirection = ASTAR_DIRECTION::ASTAR_ERROR;
-		return b2Vec2{};
+		log_addEvent (sys_getString ("[ %s ] STOP: Waypoint array is empty.", __func__));
+		aStarDirection = ASTAR_DIRECTION::ERROR;
+		return cpVect {};
 	}
 
 	switch (aStarDirection)
@@ -695,6 +667,9 @@ b2Vec2 paraAStar::getWaypoint ()
 				aStarDirection = ASTAR_DIRECTION::DESTINATION;
 			}
 			break;
+
+		case ASTAR_DIRECTION::ERROR:
+			break;
 	}
 	return wayPoints[wayPointsIndex];
 }
@@ -702,7 +677,7 @@ b2Vec2 paraAStar::getWaypoint ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Get the path status
-int paraAStar::getPathStatus ()
+int paraAStar::getPathStatus()
 //--------------------------------------------------------------------------------------------------------
 {
 	return pathStatus;
@@ -711,7 +686,7 @@ int paraAStar::getPathStatus ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Return the current wayPointIndex - debug
-int paraAStar::getWayPointsIndex ()
+int paraAStar::getWayPointsIndex()
 //--------------------------------------------------------------------------------------------------------
 {
 	return wayPointsIndex;
@@ -721,23 +696,16 @@ int paraAStar::getWayPointsIndex ()
 //
 // A thread to run the aStar searching function
 //void paraAStar::searchThread ()
-int paraAStar::searchThread ()
+int paraAStar::searchThread()
 //--------------------------------------------------------------------------------------------------------
 {
-
-	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
-
-	printf ("Index %i Starting searchThread...\n", ID);
-
-//	printf ("Address of isRunning is : %p\n", &isRunning);
-
 	if (isRunning)
 		return ASTAR_STATUS_NOT_READY;
 
 	pathStatus = ASTAR_STATUS_NOT_READY;
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: AStar searchThread started...\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: AStar searchThread started...", __func__, ID));
 #endif
 
 	while (pathStatus == ASTAR_STATUS_NOT_READY)
@@ -752,7 +720,7 @@ int paraAStar::searchThread ()
 			wayPointsReady = false;
 			isRunning      = false;
 #ifdef ASTAR_DEBUG
-			printf ("Thread [ %i ]: Error: couldn't find lowest cost node.\n", ID);
+			log_addEvent (sys_getString ("[ %s ] Thread [ %i ] Error: couldn't find lowest cost node.", __func__, ID));
 #endif
 			return ASTAR_STATUS_ERROR; // Something has gone wrong
 		}
@@ -775,10 +743,8 @@ int paraAStar::searchThread ()
 	isRunning      = false;
 
 #ifdef ASTAR_DEBUG
-	printf ("\nThread [ %i ]: AStar found a valid path.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]. AStar found a valid path.", __func__, ID));
 #endif
-
-	printf ("\nThread [ %i ]: AStar found a valid path.\n", ID);
 
 	return ASTAR_STATUS_READY;
 }
@@ -786,7 +752,7 @@ int paraAStar::searchThread ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Stop using the current aStar path and reset it
-void paraAStar::stopUsingPath ()
+void paraAStar::stopUsingPath()
 //--------------------------------------------------------------------------------------------------------
 {
 	closedNodes.clear ();
@@ -804,10 +770,10 @@ void paraAStar::stopUsingPath ()
 //--------------------------------------------------------------------------------------------------------
 //
 // Start a new path and create a detached thread to run the pathfinding
-int paraAStar::requestNewPath (b2Vec2 start, b2Vec2 destination)
+int paraAStar::requestNewPath(cpVect start, cpVect destination)
 //--------------------------------------------------------------------------------------------------------
 {
-	std::cout << sys_getString ("Index %i Function : %s", ID, __func__) << std::endl;
+	log_addEvent (sys_getString ("[ %s ] Index %i", __func__, ID));
 
 	float distanceTestResult = 0.0f;
 
@@ -820,10 +786,10 @@ int paraAStar::requestNewPath (b2Vec2 start, b2Vec2 destination)
 	modf (destination.x, &destTile.x);
 	modf (destination.y, &destTile.y);
 
-	distanceTestResult = b2Distance (start, destination);
+	distanceTestResult = cpvdist (start, destination);
 
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: AStar distance between start and destination [ %f ]\n", ID, distanceTestResult);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: AStar distance between start and destination [ %f ]", __func__, ID, distanceTestResult));
 #endif
 
 	if (distanceTestResult < ASTAR_PATH_TOO_SHORT_DISTANCE)
@@ -832,27 +798,25 @@ int paraAStar::requestNewPath (b2Vec2 start, b2Vec2 destination)
 	stopUsingPath ();
 
 	addTileToOpenNode (startTile, 0, -1);
-	//
-	// Create a thread and detach so it runs the pathfinding
+
 #ifdef ASTAR_DEBUG
-	printf ("Thread [ %i ]: About to start thread from class.\n", ID);
+	log_addEvent (sys_getString ("[ %s ] Thread [ %i ]: About to start thread from class.", __func__, ID));
 #endif
-
-//	std::thread aStarThread (&paraAStar::searchThread, this);
-//	aStarThread.detach();
-	//
-	// Run the AStar routine in an async thread
-//	std::future<int> asyncResult = std::async (std::launch::async, &paraAStar::searchThread, this);
-
-//	std::thread returnThread (&paraAStar::searchThread, this);
-
-//	return returnThread;
 
 	return ASTAR_THREAD_STARTED;
 }
 
-int paraAStar::startThread (void *Param)
+//--------------------------------------------------------------------------------------------------------
+//
+// Start the aStar pathfinding thread
+std::thread::id paraAStar::startThread()
+//--------------------------------------------------------------------------------------------------------
 {
-	auto *This = (paraAStar *) Param;
-	return This->searchThread ();
+	threadID = new std::thread (&paraAStar::searchThread, this);
+
+#ifdef ASTAR_DEBUG
+	log_addEvent (sys_getString ("[ %s ] ThreadID %i", __func__, threadID->get_id ()));
+#endif
+
+	return threadID->get_id ();
 }

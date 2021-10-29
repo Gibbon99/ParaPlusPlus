@@ -1,8 +1,7 @@
-#include <box2d/b2_math.h>
-#include "classes/paraParticle.h"
+#include "classes/paraEmitter.h"
 #include "game/particles.h"
 
-std::vector<paraParticle>   particleEmitters;
+std::vector<paraEmitter> particleEmitters;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -10,49 +9,21 @@ std::vector<paraParticle>   particleEmitters;
 void gam_clearEmitters()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &emitterItr : particleEmitters)
+	for (auto &emitterItr: particleEmitters)
 	{
-		emitterItr.setIsAttached(false);
-		emitterItr.isDead(true);
 //		delete emitterItr;
 	}
+
+	particleEmitters.clear ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new emitter to the array - newWorldPos is in meters
-void gam_addEmitter(b2Vec2 newWorldPos, int newType, Uint32 newBulletID)
+void gam_addEmitter(cpVect newWorldPos, int newType, Uint32 newBulletID)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	paraParticle    tempEmitter(newWorldPos, newType, newBulletID);
-
-	switch (newType)
-	{
-		case PARTICLE_TYPE_TRAIL:
-			tempEmitter.setIsAttached(true);
-			break;
-
-		default:
-			tempEmitter.setIsAttached(false);
-			break;
-	}
-
-	if (particleEmitters.empty())
-	{
-		particleEmitters.push_back (tempEmitter);
-		return;
-	}
-
-	for (auto &partItr : particleEmitters)
-	{
-		if (!partItr.inUse())
-		{
-			partItr = tempEmitter;
-			return;
-		}
-	}
-
-	particleEmitters.push_back(tempEmitter);
+	particleEmitters.emplace_back (newWorldPos, newType, newBulletID);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -61,12 +32,14 @@ void gam_addEmitter(b2Vec2 newWorldPos, int newType, Uint32 newBulletID)
 void gam_removeDeadEmitters()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &partItr : particleEmitters)
+	auto removeIndex = 0;
+
+	for (auto &partItr: particleEmitters)
 	{
-		if (partItr.isDead (false))
+		if (partItr.getCanBeRemoved ())
 		{
-			partItr.setInUse(false);
-			return;
+			particleEmitters.erase (particleEmitters.begin () + removeIndex);
+			removeIndex++;
 		}
 	}
 }
@@ -77,18 +50,14 @@ void gam_removeDeadEmitters()
 void gam_removeEmitter(Uint32 whichBulletID)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &partItr : particleEmitters)
+	for (auto &partItr: particleEmitters)
 	{
-		if ((partItr.inUse()) && (!partItr.isDead (false)))
+		if (partItr.getBulletID () == whichBulletID)
 		{
- 	 		if (partItr.getAttachedBullet () == whichBulletID)
-			{
-				partItr.setIsAttached (false);  // Emitter will die when all particles are gone
-				return;
-			}
+			partItr.setAttachedToBullet (false);
+			return;
 		}
 	}
-
 //	sys_shutdownWithError(sys_getString("Attempting to remove an unknown emitter [ %i ]", whichBulletID));
 }
 
@@ -96,15 +65,14 @@ void gam_removeEmitter(Uint32 whichBulletID)
 //
 // Render the particles
 void gam_renderParticles()
- //----------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 {
-	if (particleEmitters.size() == 0)
+	if (0 == particleEmitters.size ())
 		return;
 
-	for (auto emitterItr : particleEmitters)
+	for (auto &emitterItr: particleEmitters)
 	{
-		if (emitterItr.inUse())
-			emitterItr.render();
+		emitterItr.render ();
 	}
 }
 
@@ -114,9 +82,8 @@ void gam_renderParticles()
 void gam_animateParticles()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &emitterItr : particleEmitters)
+	for (auto &emitterItr: particleEmitters)
 	{
-		if (emitterItr.inUse())
-			emitterItr.animate();
+		emitterItr.process ();
 	}
 }

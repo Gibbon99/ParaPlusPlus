@@ -1,8 +1,6 @@
 #pragma once
 
-#include <box2d/b2_math.h>
-#include <box2d/b2_body.h>
-#include <system/physics.h>
+#include <system/cpPhysics.h>
 #include "main.h"
 
 enum doorBulletDirection
@@ -29,55 +27,18 @@ enum doorBulletDirection
 #define DOOR_UP_CLOSING_2         18
 #define DOOR_UP_CLOSED            11
 
-//-----------------------------------------------------------------------------
-//
-// structure used for doors
-//
-//-----------------------------------------------------------------------------
-
-struct _doorTrigger
-{
-	int            tileIndex;
-	float          height;
-	float          width;
-	int            currentFrame;            // which frame are we on
-	float          frameDelay;                // speed to animate them at
-	int            numberUsing;
-	int            direction;
-
-	bool inUse;
-	b2Vec2         topLeft;
-	b2Vec2         topRight;
-	b2Vec2         botLeft;
-	b2Vec2         botRight;
-
-	b2Vec2         worldPosition  = {0, 0};
-	b2Vec2         renderPosition = {0, 0};
-	b2BodyDef      bodyDef;                      // Used for physics and collisions
-	b2PolygonShape shape;
-	b2FixtureDef   fixtureDef;
-	b2Body         *body;
-	_userData      *userData;
-};
-
-extern float distanceForDoorSoundMax;
-extern double doorAnimSpeed;
+extern float                     distanceForDoorSoundMax;
+extern double                    doorAnimSpeed;
 extern std::vector<_doorTrigger> doorTriggers;
 
 // Find the doors for this level and prepare a sensor object
-void gam_doorTriggerSetup ();
+void gam_doorTriggerSetup();
 
 // Process all the doors that are currently inUse
-void gam_doorProcessActions ();
+void gam_doorProcessActions();
 
 // Check door trigger areas against sprite positions
-void gam_doorCheckTriggerAreas ();
+void gam_doorCheckTriggerAreas();
 
 // Render current door frames onto map
-void gam_renderDoorFrames ();
-
-// Free memory used for userData
-void gam_doorFreeSensorMemory();
-
-// Free memory used for door triggers
-void gam_doorFreeTriggerMemory();
+void gam_renderDoorFrames();

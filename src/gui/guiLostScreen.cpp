@@ -47,7 +47,7 @@ void gui_loadDroidGraphic ()
 	newKeyName  = "db_droid";
 
 	gam_loadTexture (newFileName, newKeyName);
-	databaseSprite.setCurrentFrame(0);
+	databaseSprite.setCurrentFrame (0);
 
 	textOneString = gui_getString ("lostTransmission");
 	textTwoString = gui_getString ("lostTerminated");
@@ -68,7 +68,7 @@ void gui_preRenderLostScreen ()
 
 	gam_setHudText ("lostGameOver");
 
-	audio.stopAllChannels();
+	audio.stopAllChannels ();
 
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, true, 1, 127, "endTransmission1");
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "endTransmission2");
@@ -84,7 +84,6 @@ void gui_preRenderLostScreen ()
 void gui_processLostScreen ()
 //----------------------------------------------------------------------------------------------------
 {
-	static float lostScreenDelayCounter = 1.0f;
 	static float staticAnimationCounter = 1.0f;
 	static int   currentStaticFrame     = 1;
 

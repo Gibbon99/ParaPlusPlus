@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../main.h"
+#include "main.h"
 
 // Render the console to the screen
 void con_renderConsole();
@@ -12,4 +12,4 @@ void con_addEvent(int newAction, std::string newLine);
 void con_initConsole();
 
 // Show the commands and help text
-void con_showHelp ();
+void con_showHelp();

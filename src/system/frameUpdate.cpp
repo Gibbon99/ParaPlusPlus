@@ -1,33 +1,31 @@
-#include <game/droids.h>
-#include <game/bullet.h>
-#include <game/particles.h>
-#include <game/lightMaps.h>
-#include <game/transfer.h>
-#include <game/pauseMode.h>
-#include <gui/guiLostScreen.h>
-#include <game/game.h>
-#include <gui/guiHighScore.h>
+#include "classes/paraBullet.h"
+#include "gui/guiLostScreen.h"
+#include "gui/guiScrollbox.h"
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
 #include "io/mouse.h"
-#include "gui/guiSideview.h"
-#include "gui/guiScrollbox.h"
 #include "game/shipDecks.h"
 #include "game/healing.h"
 #include "game/player.h"
-#include "system/util.h"
-#include "system/frameUpdate.h"
+#include "game/lightMaps.h"
+#include "game/transfer.h"
+#include "game/pauseMode.h"
+#include "game/droids.h"
 #include "game/doors.h"
 #include "game/score.h"
 #include "game/transferGame.h"
+#include "game/particles.h"
+#include "game/game.h"
+#include "system/util.h"
+#include "system/frameUpdate.h"
 
 SDL_Event evt;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Handle system events and populate the keyboard state array
-void sys_processInputEvents ()
+void sys_processInputEvents()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	while (SDL_PollEvent (&evt) != 0)
@@ -126,13 +124,7 @@ void sys_processInputEvents ()
 					if (evt.key.keysym.sym == SDLK_PAGEDOWN)
 						console.changeScrollBackOffset (1);
 				}
-
-				if (evt.key.keysym.sym == SDLK_F1)
-					sys_setNewMode (MODE_SHOW_SPLASH, true);
-
-				if (evt.key.keysym.sym == SDLK_F3)
-					gui_showHighscoreEntry ();
-
+// TODO Remove this
 				if (evt.key.keysym.sym == SDLK_F5)
 				{
 					sys_setNewMode (MODE_GUI_WON_SCREEN, true);
@@ -164,7 +156,7 @@ void sys_processInputEvents ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Run a frame once
-void sys_gameTickRun ()
+void sys_gameTickRun()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (renderer.currentFadeState != FADE_STATE_NONE)
@@ -201,7 +193,7 @@ void sys_gameTickRun ()
 
 			if (!gam_pauseModeOn ())
 			{
-				sys_processPhysics (TICKS_PER_SECOND);
+				sys_processPhysics ();
 				gam_animateHealing ();
 				playerDroid.sprite.animate ();
 				gam_animateDroids ();
@@ -216,7 +208,7 @@ void sys_gameTickRun ()
 
 				gam_processAI ();
 
-				gam_removeDroids (false);
+				gam_removeDroids ();
 				gam_processScore ();
 				gam_processHealingTile ();
 				gam_processInfluenceTime ();
@@ -228,8 +220,6 @@ void sys_gameTickRun ()
 				gam_createTrail ();
 
 				backgroundStarfield.animate ();
-
-//				debug_getNumberOfShapes();
 			}
 			else
 			{
@@ -243,12 +233,14 @@ void sys_gameTickRun ()
 
 		case MODE_GUI_DECKVIEW:
 			gam_animateHealing ();
+			if (renderer.getFadeState () == FADE_STATE_NONE)
+				deckviewStarfield.animate ();
 			break;
 
 		case MODE_GUI_SHIPVIEW:
 		case MODE_GUI_LIFTVIEW:
-			sideviewStarfield.animate ();
-//			gui_animateStarfield ();
+			if (renderer.getFadeState () == FADE_STATE_NONE)
+				sideviewStarfield.animate ();
 			break;
 
 		case MODE_GUI_INTROSCROLL:
@@ -273,7 +265,6 @@ void sys_gameTickRun ()
 
 		case MODE_TRANSFER_SCREEN_ONE:
 		case MODE_TRANSFER_SCREEN_TWO:
-//			trn_checkTransferScreenSounds();
 			break;
 
 		case MODE_PRE_TRANSFER_CHOOSE_SIDE:

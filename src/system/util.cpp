@@ -1,11 +1,6 @@
-#include <game/doors.h>
-#include <game/terminal.h>
-#include "game/player.h"
-#include "game/transfer.h"
+#include "game/terminal.h"
 #include "game/texture.h"
-#include "system/gameEvents.h"
 #include "system/util.h"
-#include "game/game.h"
 
 struct paraMemoryMap
 {
@@ -26,8 +21,8 @@ void createLookupTable()
 {
 	for (int i = 0; i != 360; i++)
 	{
-		cosTable[i] = cos(i);
-		sinTable[i] = sin(i);
+		cosTable[i] = cos (i);
+		sinTable[i] = sin (i);
 	}
 }
 
@@ -58,7 +53,7 @@ float sys_getSinValue(int angle)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Save a SDL_Texture to a file
-void sys_saveTexture (SDL_Renderer *ren, SDL_Texture *tex, const char *filename)
+void sys_saveTexture(SDL_Renderer *ren, SDL_Texture *tex, const char *filename)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Texture *ren_tex;
@@ -69,9 +64,9 @@ void sys_saveTexture (SDL_Renderer *ren, SDL_Texture *tex, const char *filename)
 	int         format;
 	void        *pixels;
 
-	pixels  = NULL;
-	surf    = NULL;
-	ren_tex = NULL;
+	pixels  = nullptr;
+	surf    = nullptr;
+	ren_tex = nullptr;
 	format  = SDL_PIXELFORMAT_RGBA32;
 
 	/* Get information about texture we want to save */
@@ -152,7 +147,7 @@ void sys_saveTexture (SDL_Renderer *ren, SDL_Texture *tex, const char *filename)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a new mode
-void sys_setNewMode (int newMode, bool doFade)
+void sys_setNewMode(int newMode, bool doFade)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (doFade)
@@ -205,9 +200,9 @@ void sys_setNewMode (int newMode, bool doFade)
 			renderer.setCurrentBackingTexture (HIRES_BACKING_TEXTURE);
 			SDL_RenderSetLogicalSize (renderer.renderer, hiresVirtualWidth, hiresVirtualHeight);
 
-			audio.stopAllChannels();
-			gui.setCurrentScreen(gui.getIndex(GUI_OBJECT_SCREEN, "mainMenu"));
-			gui.setActiveObject(gui.getCurrentScreen(), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+			audio.stopAllChannels ();
+			gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
+			gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
 			break;
 
 		case MODE_GUI_HIGHSCORE_DISPLAY:
@@ -377,7 +372,7 @@ void sys_setNewMode (int newMode, bool doFade)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the operating system we are running on
-void sys_getOS ()
+void sys_getOS()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("[ %s ]", SDL_GetPlatform ()));
@@ -387,7 +382,7 @@ void sys_getOS ()
 //
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
-std::string sys_getString (std::string format, ...)
+std::string sys_getString(const std::string &format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	const char *const zcFormat = format.c_str ();
@@ -415,7 +410,7 @@ std::string sys_getString (std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Allocate memory and return pointer - record the size as well
-char *sys_malloc (int memorySize, std::string keyName)
+char *sys_malloc(int memorySize, std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraMemoryMap newMemoryMapEntry;
@@ -430,7 +425,9 @@ char *sys_malloc (int memorySize, std::string keyName)
 
 	memoryMap.insert (std::pair<std::string, paraMemoryMap> (keyName, newMemoryMapEntry));
 
+#ifdef DEBUG_MEMORY
 	logFile.write (sys_getString ("Allocated [ %i ] for [ %s ]", memorySize, keyName.c_str ()));
+#endif
 
 	return newMemoryMapEntry.pointer;
 }
@@ -438,7 +435,7 @@ char *sys_malloc (int memorySize, std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Free a memory slot by name
-void sys_freeMemory (std::string keyName)
+void sys_freeMemory(std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (memoryMap.size () == 0)
@@ -448,8 +445,9 @@ void sys_freeMemory (std::string keyName)
 
 	if (nullptr != memoryItr->second.pointer)
 	{
+#ifdef DEBUG_MEMORY
 		logFile.write (sys_getString ("Free memory [ %i bytes ] - [ %s ]", memoryItr->second.size, memoryItr->first.c_str ()));
-
+#endif
 		free (memoryItr->second.pointer);
 		memoryMap.erase (memoryItr);
 		return;
@@ -459,32 +457,31 @@ void sys_freeMemory (std::string keyName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Go through memory map and free allocations
-void sys_freeMemory ()
+void sys_freeMemory()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (memoryMap.size () == 0)
 		return;
 
-	for (auto &memoryItr : memoryMap)
+	for (auto &memoryItr: memoryMap)
 	{
+#ifdef DEBUG_MEMORY
 		logFile.write (sys_getString ("Free memory [ %i bytes ] - [ %s ]", memoryItr.second.size, memoryItr.first.c_str ()));
-
+#endif
 		if (memoryItr.second.pointer != nullptr)
+		{
 			free (memoryItr.second.pointer);
+			memoryItr.second.pointer = nullptr;
+		}
 	}
-
-	gam_doorFreeSensorMemory();
-	gam_doorFreeTriggerMemory();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Is an object visible on the screen
-bool sys_visibleOnScreen (b2Vec2 worldCoord, int shapeSize)
+bool sys_visibleOnScreen(cpVect worldCoord, int shapeSize)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	static int previousShapeSize = -1;
-
 	if (worldCoord.x < viewportRect.x - static_cast<float>(shapeSize))
 	{
 		return false;
@@ -507,62 +504,24 @@ bool sys_visibleOnScreen (b2Vec2 worldCoord, int shapeSize)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Convert worldPosition coords to screen coords
-b2Vec2 sys_worldToScreen (b2Vec2 worldPos, int shapeSize)
+cpVect sys_worldToScreen(cpVect worldPos, int shapeSize)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 screenCoords{};
+	cpVect screenCoords {};
 
-	if (sys_visibleOnScreen (worldPos, shapeSize) != 0)
-	{
-		screenCoords.x = worldPos.x - viewportRect.x;
-		screenCoords.y = worldPos.y - viewportRect.y;
-	}
-	else
-	{
-		screenCoords.x = worldPos.x - viewportRect.x;
-		screenCoords.y = worldPos.y - viewportRect.y;
+	screenCoords.x = worldPos.x - viewportRect.x;
+	screenCoords.y = worldPos.y - viewportRect.y;
 
-//		screenCoords.x = -1;
-//		screenCoords.y = -1;
-	}
 	return screenCoords;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Convert coords to pixels from meters
-b2Vec2 sys_convertPixelsToMeters (b2Vec2 convertFrom)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	b2Vec2 returnValue;
-
-	returnValue.x = convertFrom.x / pixelsPerMeter;
-	returnValue.y = convertFrom.y / pixelsPerMeter;
-
-	return returnValue;
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Convert coords from meters to pixels
-b2Vec2 sys_convertMetersToPixels (b2Vec2 convertFrom)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	b2Vec2 returnValue;
-
-	returnValue.x = convertFrom.x * pixelsPerMeter;
-	returnValue.y = convertFrom.y * pixelsPerMeter;
-
-	return returnValue;
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
 // Convert from pixels to tileSize coordinates
-b2Vec2 sys_convertPixelsToTiles (b2Vec2 convertFrom)
+cpVect sys_convertPixelsToTiles(cpVect convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 returnValue;
+	cpVect returnValue;
 
 	returnValue.x = static_cast<int>(convertFrom.x / tileSize);
 	returnValue.y = static_cast<int>(convertFrom.y / tileSize);
@@ -573,20 +532,21 @@ b2Vec2 sys_convertPixelsToTiles (b2Vec2 convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Convert from tiles to pixels coordinates
-b2Vec2 sys_convertTilesToPixels(b2Vec2 convertFrom)
+cpVect sys_convertTilesToPixels(cpVect convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 returnValue;
+	cpVect returnValue;
 
 	returnValue.x = static_cast<int>(convertFrom.x) * tileSize;
 	returnValue.y = static_cast<int>(convertFrom.y) * tileSize;
 
 	return returnValue;
 }
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Convert a string to an integer value
-int sys_convertToInt (std::string convertFrom)
+int sys_convertToInt(std::string convertFrom)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return static_cast<int>(strtol (convertFrom.c_str (), nullptr, 10));

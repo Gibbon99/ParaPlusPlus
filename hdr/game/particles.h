@@ -6,7 +6,7 @@
 void gam_clearEmitters();
 
 // Add a new emitter to the array
-void gam_addEmitter(b2Vec2 newWorldPos, int newType, Uint32 newBulletID);
+void gam_addEmitter(cpVect newWorldPos, int newType, Uint32 newBulletID);
 
 // Remove an emitter from an attached bullet
 void gam_removeEmitter(Uint32 whichBulletID);

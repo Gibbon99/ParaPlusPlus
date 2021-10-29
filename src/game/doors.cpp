@@ -1,31 +1,27 @@
-#include <game/shipDecks.h>
-#include <system/util.h>
-#include <game/audio.h>
-#include <game/player.h>
+#include "system/util.h"
+#include "game/shipDecks.h"
+#include "game/audio.h"
+#include "game/player.h"
 #include "game/doors.h"
 
-double doorAnimSpeed           = 1.0f;
-float  distanceForDoorSoundMax = 10;   // In meters
+double doorAnimSpeed {1.0f};
+float  distanceForDoorSoundMax {120};   // In pixels
 
-std::vector<_doorTrigger> doorTriggers;
-std::vector<_doorTrigger> doorBulletSensor;
+std::vector<_doorTrigger> doorTriggers {};
 
 // ----------------------------------------------------------------------------
 //
 // Check door trigger areas against sprite positions
-void gam_doorCheckTriggerAreas ()
+void gam_doorCheckTriggerAreas()
 // ----------------------------------------------------------------------------
 {
-	int i = 0;
-	int j = 0;
-
 	if (0 == doorTriggers.size ())
 		return;        // no doors on this level to process
 
-	for (auto &doorItr : doorTriggers)
+	for (auto &doorItr: doorTriggers)
 	{
-		if ((playerDroid.previousWorldPosInPixels.x > doorItr.topLeft.x) && (playerDroid.previousWorldPosInPixels.y > doorItr.topLeft.y) && (playerDroid.previousWorldPosInPixels.x < doorItr.botRight.x) &&
-		    (playerDroid.previousWorldPosInPixels.y < doorItr.botRight.y))
+		if ((playerDroid.ai2.getPreviousWorldPosInPixels ().x > doorItr.topLeft.x) && (playerDroid.ai2.getPreviousWorldPosInPixels ().y > doorItr.topLeft.y) && (playerDroid.ai2.getPreviousWorldPosInPixels ().x < doorItr.botRight.x) &&
+		    (playerDroid.ai2.getPreviousWorldPosInPixels ().y < doorItr.botRight.y))
 		{    // player sprite is inside a trigger area
 			doorItr.inUse = true;
 		}
@@ -38,14 +34,14 @@ void gam_doorCheckTriggerAreas ()
 	//
 	// now check all the enemy sprites against the doors
 	//
-	for (auto &doorItr : doorTriggers)
+	for (auto &doorItr: doorTriggers)
 	{
-		for (auto droidItr : g_shipDeckItr->second.droid)
+		for (auto droidItr: g_shipDeckItr->second.droid)
 		{
-			if (droidItr.getCurrentMode() == DROID_MODE_NORMAL)
+			if (droidItr.getCurrentMode () == DROID_MODE_NORMAL)
 			{
-				if ((droidItr.getWorldPosInPixels().x + (SPRITE_SIZE / 2) > doorItr.topLeft.x) && (droidItr.getWorldPosInPixels().y + (SPRITE_SIZE / 2) > doorItr.topLeft.y) && (droidItr.getWorldPosInPixels().x + (SPRITE_SIZE / 2) < doorItr.botRight.x) &&
-				(droidItr.getWorldPosInPixels().y + (SPRITE_SIZE / 2) < doorItr.botRight.y))
+				if ((droidItr.getWorldPosInPixels ().x + (SPRITE_SIZE / 2) > doorItr.topLeft.x) && (droidItr.getWorldPosInPixels ().y + (SPRITE_SIZE / 2) > doorItr.topLeft.y) &&
+				    (droidItr.getWorldPosInPixels ().x + (SPRITE_SIZE / 2) < doorItr.botRight.x) && (droidItr.getWorldPosInPixels ().y + (SPRITE_SIZE / 2) < doorItr.botRight.y))
 				{
 					doorItr.inUse = true;
 				}
@@ -54,49 +50,19 @@ void gam_doorCheckTriggerAreas ()
 	}
 }
 
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Change the collision filters for a door
-// Used by bullet to see if it passes through an open door
-void gam_changeDoorFilters (int doorState, int whichDoor)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	b2Fixture *fixture = doorBulletSensor[whichDoor].body->GetFixtureList ();
-	//
-	// Get the existing filter
-	b2Filter  filter   = fixture->GetFilterData ();
-
-	switch (doorState)
-	{
-		case DOOR_ACROSS_OPENED:
-		case DOOR_UP_OPENED:
-			filter.categoryBits = PHYSIC_TYPE_DOOR_OPEN;
-			break;
-
-		default:
-			filter.categoryBits = PHYSIC_TYPE_DOOR_CLOSED;
-			break;
-	}
-	//
-	// Set the updated category
-	fixture->SetFilterData (filter);
-}
-
 // ----------------------------------------------------------------------------
 //
 // Play a door sound - taking into account distance and orientation to player
-void gam_playDoorSound (int whichTrigger, std::string keyName)
+void gam_playDoorSound(int whichTrigger, std::string keyName)
 // ----------------------------------------------------------------------------
 {
-	int   soundPan;
-	float distanceToDoor;
-	float distanceSoundLevel;
-	float distanceOrientation;
+	cpFloat distanceToDoor;
+	float   distanceSoundLevel;
+	float   distanceOrientation;
 
 	//
 	// How far is player from this door - attenuate for distance
-	distanceToDoor         = b2Distance (sys_convertPixelsToMeters (doorTriggers[whichTrigger].worldPosition), sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels()));
+	distanceToDoor = cpvdist (doorTriggers[whichTrigger].worldPosition, playerDroid.getWorldPosInPixels ());
 
 	if (distanceToDoor > distanceForDoorSoundMax)
 		distanceSoundLevel = 254;
@@ -107,7 +73,7 @@ void gam_playDoorSound (int whichTrigger, std::string keyName)
 	}
 	//
 	// Which side should the sound come from - attenuate for distance
-	if (doorTriggers[whichTrigger].worldPosition.x < playerDroid.getWorldPosInPixels().x)   // Door is to the left
+	if (doorTriggers[whichTrigger].worldPosition.x < playerDroid.getWorldPosInPixels ().x)   // Door is to the left
 	{
 		if (distanceToDoor > distanceForDoorSoundMax)
 			distanceOrientation = 254;  // All the way to the left
@@ -136,7 +102,7 @@ void gam_playDoorSound (int whichTrigger, std::string keyName)
 // ----------------------------------------------------------------------------
 //
 // Process all the doors that are currently inUse
-void gam_doorProcessActions ()
+void gam_doorProcessActions()
 // ----------------------------------------------------------------------------
 {
 	int i;
@@ -253,7 +219,7 @@ void gam_doorProcessActions ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render current door frames onto map
-void gam_renderDoorFrames ()
+void gam_renderDoorFrames()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Texture *tempTexture;
@@ -262,7 +228,7 @@ void gam_renderDoorFrames ()
 
 	SDL_SetRenderTarget (renderer.renderer, gam_getPlayfieldTexture ());
 
-	for (const auto &doorIndex : doorTriggers)
+	for (const auto &doorIndex: doorTriggers)
 	{
 		if (sys_visibleOnScreen (doorIndex.renderPosition, tileSize))
 		{
@@ -274,88 +240,21 @@ void gam_renderDoorFrames ()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Free memory used for userData
-void gam_doorFreeSensorMemory()
-//----------------------------------------------------------------------------------------------------------------------
-{
-	for (auto sensorItr : doorBulletSensor)
-	{
-		delete sensorItr.userData;
-	}
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Free memory used for door triggers
-void gam_doorFreeTriggerMemory()
-//----------------------------------------------------------------------------------------------------------------------
-{
-	for (auto triggerItr : doorTriggers)
-	{
-//		delete triggerItr.userData;     // Trips address sanitizer on exit
-	}
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Create a door bullet sensor
-void gam_createDoorBulletSensor (unsigned long whichDoor)
-//----------------------------------------------------------------------------------------------------------------------
-{
-	doorBulletSensor[whichDoor].bodyDef.type = b2_staticBody;
-	doorBulletSensor[whichDoor].bodyDef.position.Set (doorBulletSensor[whichDoor].worldPosition.x / pixelsPerMeter, doorBulletSensor[whichDoor].worldPosition.y / pixelsPerMeter);
-	doorBulletSensor[whichDoor].body = sys_getPhysicsWorld ()->CreateBody (&doorBulletSensor[whichDoor].bodyDef);
-
-	doorBulletSensor[whichDoor].userData            = new _userData;    // Free this on shutdown
-	doorBulletSensor[whichDoor].userData->userType  = PHYSIC_TYPE_DOOR_BULLET;
-	doorBulletSensor[whichDoor].userData->dataValue = (int) whichDoor;
-	doorBulletSensor[whichDoor].body->SetUserData (doorBulletSensor[whichDoor].userData);
-
-	doorBulletSensor[whichDoor].shape.SetAsBox (doorBulletSensor[whichDoor].height / pixelsPerMeter, doorBulletSensor[whichDoor].width / pixelsPerMeter);
-	doorBulletSensor[whichDoor].fixtureDef.shape    = &doorBulletSensor[whichDoor].shape;
-	doorBulletSensor[whichDoor].fixtureDef.isSensor = false;
-
-	doorBulletSensor[whichDoor].fixtureDef.filter.categoryBits = PHYSIC_TYPE_DOOR_CLOSED;       // Fix door physics not working on start
-	doorBulletSensor[whichDoor].fixtureDef.filter.maskBits     = PHYSIC_TYPE_ENEMY | PHYSIC_TYPE_PLAYER | PHYSIC_TYPE_BULLET_PLAYER | PHYSIC_TYPE_BULLET_ENEMY;
-
-	doorBulletSensor[whichDoor].body->CreateFixture (&doorBulletSensor[whichDoor].fixtureDef);
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
-// Clear out memory for door triggers
-void gam_clearAllDoors ()
-//----------------------------------------------------------------------------------------------------------------------
-{
-	doorTriggers.clear ();
-
-	for (auto &doorBulletItr : doorBulletSensor)
-	{
-		if (doorBulletItr.userData != nullptr)
-			delete (doorBulletItr.userData);
-		if (doorBulletItr.body != nullptr)
-			sys_getPhysicsWorld ()->DestroyBody (doorBulletItr.body);
-	}
-	doorBulletSensor.clear ();
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-//
 // Find the doors for this deck and prepare a sensor object
-void gam_doorTriggerSetup ()
+void gam_doorTriggerSetup()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int i           = 0;
-	int currentTile = 0;
-	int sourceX     = 0;
-	int sourceY     = 0;
+	int i {0};
+	int currentTile {0};
+	int sourceX {0};
+	int sourceY {0};
 
 	_doorTrigger tempDoorTrigger;
 	_doorTrigger tempDoorBulletSensor;
 
 	if (!doorTriggers.empty ())  // Empty out array
 	{
-		gam_clearAllDoors ();
+		sys_clearAllDoors ();
 	}
 
 	sourceX = 0.0f;
@@ -402,15 +301,13 @@ void gam_doorTriggerSetup ()
 				tempDoorTrigger.currentFrame     = DOOR_ACROSS_CLOSED;
 				doorTriggers.push_back (tempDoorTrigger);
 
-				tempDoorBulletSensor.height          = tileSize * 0.5f;
-				tempDoorBulletSensor.width           = tileSize / 4;
+				tempDoorBulletSensor.height          = tileSize / 2;
+				tempDoorBulletSensor.width           = tileSize;
 				tempDoorBulletSensor.worldPosition.x = ((sourceX * tileSize) + (tileSize / 2));
 				tempDoorBulletSensor.worldPosition.y = ((sourceY * tileSize) + (tileSize / 2));
 				tempDoorBulletSensor.currentFrame    = DOOR_ACROSS_CLOSED;
 				tempDoorBulletSensor.direction       = DIRECTION_ACROSS;
-				doorBulletSensor.push_back (tempDoorBulletSensor);
-
-				gam_createDoorBulletSensor (doorBulletSensor.size () - 1);
+				sys_createDoorBulletSensor (sys_addNewDoorSensor (tempDoorBulletSensor));
 				break;
 			}
 
@@ -446,15 +343,13 @@ void gam_doorTriggerSetup ()
 				tempDoorTrigger.currentFrame     = DOOR_UP_CLOSED;
 				doorTriggers.push_back (tempDoorTrigger);
 
-				tempDoorBulletSensor.height          = tileSize / 4;
-				tempDoorBulletSensor.width           = tileSize * 0.5f;
+				tempDoorBulletSensor.height          = tileSize;
+				tempDoorBulletSensor.width           = tileSize / 2;
 				tempDoorBulletSensor.worldPosition.x = ((sourceX * tileSize) + (tileSize / 2));
 				tempDoorBulletSensor.worldPosition.y = ((sourceY * tileSize) + (tileSize / 2));
 				tempDoorBulletSensor.currentFrame    = DOOR_UP_CLOSED;
 				tempDoorBulletSensor.direction       = DIRECTION_UP;
-				doorBulletSensor.push_back (tempDoorBulletSensor);
-
-				gam_createDoorBulletSensor (doorBulletSensor.size () - 1);
+				sys_createDoorBulletSensor (sys_addNewDoorSensor (tempDoorBulletSensor));
 				break;
 			}
 

@@ -3,14 +3,9 @@
 #
 cmake_minimum_required(VERSION 3.8)
 
-project("Para++")
+project("ParaPlusPlus")
 
-set(CMAKE_CXX_STANDARD "14")
-
-#set_property (TARGET ${PROJECT_NAME}
-#PROPERTY
-#CXX_STANDARD 14
-#)
+set(CMAKE_CXX_STANDARD "17")
 
 # Set default locations
 set(CL_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
@@ -20,8 +15,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 
 # Define the CXX sources
 set(CXX_SRCS
-		"src/main.cpp"
-		"hdr/main.h"
+		src/main.cpp
 		src/script/as_callfunc_arm_gcc.S
 		src/script/as_callfunc_arm_vita.S
 		src/script/as_callfunc_arm_xcode.S
@@ -93,61 +87,6 @@ set(CXX_SRCS
 		src/physfs/physfs_platform_winrt.cpp
 		src/physfs/physfs_unicode.cpp
 
-		src/box2d/collision/b2_broad_phase.cpp
-		src/box2d/collision/b2_chain_shape.cpp
-		src/box2d/collision/b2_circle_shape.cpp
-		src/box2d/collision/b2_collide_circle.cpp
-		src/box2d/collision/b2_collide_edge.cpp
-		src/box2d/collision/b2_collide_polygon.cpp
-		src/box2d/collision/b2_collision.cpp
-		src/box2d/collision/b2_distance.cpp
-		src/box2d/collision/b2_dynamic_tree.cpp
-		src/box2d/collision/b2_edge_shape.cpp
-		src/box2d/collision/b2_polygon_shape.cpp
-		src/box2d/collision/b2_time_of_impact.cpp
-		src/box2d/common/b2_block_allocator.cpp
-		src/box2d/common/b2_draw.cpp
-		src/box2d/common/b2_math.cpp
-		src/box2d/common/b2_settings.cpp
-		src/box2d/common/b2_stack_allocator.cpp
-		src/box2d/common/b2_timer.cpp
-		src/box2d/dynamics/b2_body.cpp
-		src/box2d/dynamics/b2_chain_circle_contact.cpp
-		hdr/box2d/dynamics/b2_chain_circle_contact.h
-		src/box2d/dynamics/b2_chain_polygon_contact.cpp
-		hdr/box2d/dynamics/b2_chain_polygon_contact.h
-		src/box2d/dynamics/b2_circle_contact.cpp
-		hdr/box2d/dynamics/b2_circle_contact.h
-		src/box2d/dynamics/b2_contact.cpp
-		src/box2d/dynamics/b2_contact_manager.cpp
-		src/box2d/dynamics/b2_contact_solver.cpp
-		hdr/box2d/dynamics/b2_contact_solver.h
-		src/box2d/dynamics/b2_distance_joint.cpp
-		src/box2d/dynamics/b2_edge_circle_contact.cpp
-		hdr/box2d/dynamics/b2_edge_circle_contact.h
-		src/box2d/dynamics/b2_edge_polygon_contact.cpp
-		hdr/box2d/dynamics/b2_edge_polygon_contact.h
-		src/box2d/dynamics/b2_fixture.cpp
-		src/box2d/dynamics/b2_friction_joint.cpp
-		src/box2d/dynamics/b2_gear_joint.cpp
-		src/box2d/dynamics/b2_island.cpp
-		hdr/box2d/dynamics/b2_island.h
-		src/box2d/dynamics/b2_joint.cpp
-		src/box2d/dynamics/b2_motor_joint.cpp
-		src/box2d/dynamics/b2_mouse_joint.cpp
-		src/box2d/dynamics/b2_polygon_circle_contact.cpp
-		hdr/box2d/dynamics/b2_polygon_circle_contact.h
-		src/box2d/dynamics/b2_polygon_contact.cpp
-		hdr/box2d/dynamics/b2_polygon_contact.h
-		src/box2d/dynamics/b2_prismatic_joint.cpp
-		src/box2d/dynamics/b2_pulley_joint.cpp
-		src/box2d/dynamics/b2_revolute_joint.cpp
-		src/box2d/dynamics/b2_rope_joint.cpp
-		src/box2d/dynamics/b2_weld_joint.cpp
-		src/box2d/dynamics/b2_wheel_joint.cpp
-		src/box2d/dynamics/b2_world.cpp
-		src/box2d/dynamics/b2_world_callbacks.cpp
-
 		src/classes/ConvertUTF.cpp
 
 		src/sdl2_gfx/SDL2_gfxPrimitives.cpp
@@ -158,118 +97,188 @@ set(CXX_SRCS
 		src/fileWatcher/FileWatcherLinux.cpp
 		src/fileWatcher/FileWatcherWin32.cpp
 
-		src/system/scriptEngine.cpp hdr/system/scriptEngine.h
-		src/classes/paraLogFile.cpp hdr/classes/paraLogFile.h
-		src/system/shutdown.cpp hdr/system/shutdown.h
-		src/system/util.cpp hdr/system/util.h
-		src/classes/paraScript.cpp hdr/classes/paraScript.h
-		src/classes/paraFileSystem.cpp hdr/io/fileSystem.h
-		src/system/scriptConfig.cpp hdr/system/scriptConfig.h
-		src/system/startup.cpp hdr/system/startup.h
-		src/io/fileSystem.cpp hdr/classes/paraFileSystem.h
-		src/classes/paraFont.cpp hdr/classes/paraFont.h hdr/wrapper.h
-		src/classes/paraConsole.cpp hdr/classes/paraConsole.h
-		src/system/frameUpdate.cpp hdr/system/frameUpdate.h src/system/frameRender.cpp
-		hdr/system/frameRender.h src/io/configFile.cpp
-		hdr/io/configFile.h src/io/console.cpp hdr/io/console.h
-		src/classes/paraEvent.cpp hdr/classes/paraEvent.h
-		src/system/eventsEngine.cpp hdr/system/eventsEngine.h
-		src/io/logFile.cpp hdr/io/logFile.h
-		src/classes/paraRenderer.cpp hdr/classes/paraRenderer.h src/io/consoleFunctions.cpp hdr/io/consoleFunctions.h src/system/gameEvents.cpp hdr/system/gameEvents.h src/system/physics.cpp hdr/system/physics.h src/game/physicsCollisions.cpp hdr/game/physicsCollisions.h src/io/resources.cpp hdr/io/resources.h src/classes/paraAudio.cpp hdr/classes/paraAudio.h src/game/audio.cpp hdr/game/audio.h src/classes/paraTexture.cpp hdr/classes/paraTexture.h src/game/texture.cpp hdr/game/texture.h src/classes/paraGui.cpp hdr/classes/paraGui.h src/gui/guiButton.cpp hdr/gui/guiButton.h src/gui/guiRender.cpp hdr/gui/guiRender.h src/io/fileWatch.cpp hdr/io/fileWatch.h src/gui/guiLanguage.cpp hdr/gui/guiLanguage.h src/io/keyboard.cpp hdr/io/keyboard.h src/gui/guiInput.cpp hdr/gui/guiInput.h src/io/joystick.cpp hdr/io/joystick.h src/io/mouse.cpp hdr/io/mouse.h src/gui/guiSideview.cpp hdr/gui/guiSideview.h hdr/classes/paraRandom.h src/gui/guiSlider.cpp hdr/gui/guiSlider.h src/gui/guiLabel.cpp hdr/gui/guiLabel.h src/gui/guiScrollbox.cpp hdr/gui/guiScrollbox.h src/gui/guiCheckbox.cpp hdr/gui/guiCheckbox.h src/game/hud.cpp hdr/game/hud.h src/game/database.cpp hdr/game/database.h src/classes/paraSprite.cpp hdr/classes/paraSprite.h src/game/tiles.cpp hdr/game/tiles.h src/game/shipDecks.cpp hdr/game/shipDecks.h src/game/healing.cpp hdr/game/healing.h src/game/lifts.cpp hdr/game/lifts.h hdr/classes/paraDroid.h src/game/player.cpp hdr/game/player.h src/game/doors.cpp hdr/game/doors.h src/game/terminal.cpp hdr/game/terminal.h hdr/classes/paraLift.h src/classes/paraLift.cpp hdr/classes/paraLift.h src/gui/guiDeckView.cpp hdr/gui/guiDeckView.h src/game/pathFind.cpp hdr/game/pathFind.h src/game/droids.cpp hdr/game/droids.h src/game/game.cpp hdr/game/game.h src/game/bullet.cpp hdr/game/bullet.h hdr/classes/paraLOS.h src/classes/paraParticle.cpp hdr/classes/paraParticle.h src/game/particles.cpp hdr/game/particles.h src/classes/paraLightmap.cpp hdr/classes/paraLightmap.h src/game/lightMaps.cpp hdr/game/lightMaps.h src/game/lineOfSight.cpp hdr/game/lineOfSight.h src/game/score.cpp hdr/game/score.h src/game/alertLevel.cpp hdr/game/alertLevel.h src/game/transfer.cpp hdr/game/transfer.h src/game/transferRender.cpp hdr/game/transferRender.h src/gui/guiTextbox.cpp hdr/gui/guiTextbox.h src/gui/guiImage.cpp hdr/gui/guiImage.h src/game/transferDroidAI.cpp hdr/game/transferDroidAI.h src/game/transferGame.cpp hdr/game/transferGame.h src/game/transferPlayer.cpp hdr/game/transferPlayer.h src/game/pauseMode.cpp hdr/game/pauseMode.h src/gui/guiLostScreen.cpp hdr/gui/guiLostScreen.h src/gui/guiWonScreen.cpp hdr/gui/guiWonScreen.h src/gui/guiHighScore.cpp hdr/gui/guiHighScore.h src/gui/guiDialogBox.cpp hdr/gui/guiDialogBox.h)
+		src/system/scriptEngine.cpp
+		src/classes/paraLogFile.cpp
+		src/system/shutdown.cpp
+		src/system/util.cpp
+		src/classes/paraScript.cpp
+		src/classes/paraFileSystem.cpp
+		src/system/scriptConfig.cpp
+		src/system/startup.cpp
+		src/io/fileSystem.cpp
+		src/classes/paraFont.cpp
+		src/classes/paraConsole.cpp
+		src/system/frameUpdate.cpp
+		src/system/frameRender.cpp
+		src/io/configFile.cpp
+		src/io/console.cpp
+		src/system/eventsEngine.cpp
+		src/io/logFile.cpp
+		src/classes/paraRenderer.cpp
+		src/io/consoleFunctions.cpp
+		src/system/gameEvents.cpp
+		src/game/physicsCollisions.cpp
+		src/classes/paraAudio.cpp
+		src/game/audio.cpp
+		src/classes/paraTexture.cpp
+		src/game/texture.cpp
+		src/classes/paraGui.cpp
+		src/gui/guiButton.cpp
+		src/gui/guiRender.cpp
+		src/io/fileWatch.cpp
+		src/gui/guiLanguage.cpp
+		src/io/keyboard.cpp
+		src/gui/guiInput.cpp
+		src/io/joystick.cpp
+		src/io/mouse.cpp
+		src/gui/guiSideview.cpp
+		src/gui/guiSlider.cpp
+		src/gui/guiLabel.cpp
+		src/gui/guiScrollbox.cpp
+		src/gui/guiCheckbox.cpp
+		src/game/hud.cpp
+		src/game/database.cpp
+		src/classes/paraSprite.cpp
+		src/game/tiles.cpp
+		src/game/shipDecks.cpp
+		src/game/healing.cpp
+		src/game/lifts.cpp
+		src/game/player.cpp
+		src/game/doors.cpp
+		src/game/terminal.cpp
+		src/classes/paraLift.cpp
+		src/gui/guiDeckView.cpp
+		src/game/droids.cpp
+		src/game/game.cpp
+		src/classes/paraBullet.cpp
+		src/classes/paraParticle.cpp
+		src/game/particles.cpp
+		src/classes/paraLightmap.cpp
+		src/game/lightMaps.cpp
+		src/game/lineOfSight.cpp
+		src/game/score.cpp
+		src/game/alertLevel.cpp
+		src/game/transfer.cpp
+		src/game/transferRender.cpp
+		src/gui/guiTextbox.cpp
+		src/gui/guiImage.cpp
+		src/game/transferDroidAI.cpp
+		src/game/transferGame.cpp
+		src/game/transferPlayer.cpp
+		src/game/pauseMode.cpp
+		src/gui/guiLostScreen.cpp
+		src/gui/guiWonScreen.cpp
+		src/gui/guiHighScore.cpp
+		src/gui/guiDialogBox.cpp
+		src/system/util.cpp
+		src/classes/paraScript.cpp
+		src/classes/paraAStar.cpp
+		src/classes/paraAI2.cpp
+		src/classes/paraDroid.cpp
+		src/classes/paraDroid.cpp
+		src/classes/paraStarfield.cpp
+		src/classes/paraHighScore.cpp
+		src/classes/paraEmitter.cpp
 
-# SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
+		src/chipmunk/chipmunk.c
+		src/chipmunk/cpArbiter.c
+		src/chipmunk/cpArray.c
+		src/chipmunk/cpBBTree.c
+		src/chipmunk/cpBody.c
+		src/chipmunk/cpCollision.c
+		src/chipmunk/cpConstraint.c
+		src/chipmunk/cpDampedRotarySpring.c
+		src/chipmunk/cpDampedSpring.c
+		src/chipmunk/cpGearJoint.c
+		src/chipmunk/cpGrooveJoint.c
+		src/chipmunk/cpHashSet.c
+		src/chipmunk/cpHastySpace.c
+		src/chipmunk/cpMarch.c
+		src/chipmunk/cpPinJoint.c
+		src/chipmunk/cpPivotJoint.c
+		src/chipmunk/cpPolyline.c
+		src/chipmunk/cpPolyShape.c
+		src/chipmunk/cpRatchetJoint.c
+		src/chipmunk/cpRobust.c
+		src/chipmunk/cpRotaryLimitJoint.c
+		src/chipmunk/cpShape.c
+		src/chipmunk/cpSimpleMotor.c
+		src/chipmunk/cpSlideJoint.c
+		src/chipmunk/cpSpace.c
+		src/chipmunk/cpSpaceComponent.c
+		src/chipmunk/cpSpaceDebug.c
+		src/chipmunk/cpSpaceHash.c
+		src/chipmunk/cpSpaceQuery.c
+		src/chipmunk/cpSpaceStep.c
+		src/chipmunk/cpSpatialIndex.c
+		src/chipmunk/cpSweep1D.c
+		src/chipmunk/prime.h
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa")
+		src/system/cpPhysics.cpp
+		src/system/cpPhysicsDebug.cpp)
 
-
-# Add source to this project's executable.
 if (WIN32)
 	# Library path
 	link_directories(./SDL2_WIN/lib/x86)
+
+	link_libraries(SDL2main SDL2 SDL2_image SDL2_mixer SDL2_ttf)
+
 	include_directories(
-			./SDL2_WIN/include
+			./hdr
 			./hdr/script
 			./hdr/physfs
-			./hdr
-			./hdr/box2d
 			./hdr/sdl2_gfx
 			./hdr/fileWatcher
+			./SDL2_WIN/include
+			./hdr/chipmunk
 	)
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
-
-		link_libraries(
-				SDL2main
-				SDL2
-				SDL2_image
-				SDL2_mixer
-				SDL2_ttf
-				#asan_dynamic-i386
-				#clang_rt.asan_dynamic_runtime_thunk-i386
-		)
-
 		message("-")
 		message("Doing DEBUG build")
 		message("-")
-		add_executable(Win32_ParaPlusPlus_debug ${CXX_SRCS} src/classes/paraAStar.cpp hdr/classes/paraAStar.h src/classes/paraAI2.cpp hdr/classes/paraAI2.h src/classes/paraDroid.cpp src/classes/paraDroid.cpp hdr/classes/paraDroid.h src/classes/paraPhysicsDestruction.cpp hdr/classes/paraPhysicsDestruction.h src/classes/paraStarfield.cpp hdr/classes/paraStarfield.h)
+		add_executable(Win32_Para_debug ${CXX_SRCS})
+		target_link_libraries(Win32_Para_debug Debug clang_rt.asan_dynamic_runtime_thunk-i386)
+	endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
-	elseif (CMAKE_BUILD_TYPE MATCHES Release)
-
-		link_libraries(
-				SDL2main
-				SDL2
-				SDL2_image
-				SDL2_mixer
-				SDL2_ttf
-		)
-
+	if (CMAKE_BUILD_TYPE MATCHES Release)
 		message("-")
 		message("Doing RELEASE build")
 		message("-")
-		add_executable(Win32_ParaPlusPlus_release ${CXX_SRCS} src/classes/paraAStar.cpp hdr/classes/paraAStar.h src/classes/paraAI2.cpp hdr/classes/paraAI2.h src/classes/paraDroid.cpp src/classes/paraDroid.cpp hdr/classes/paraDroid.h src/classes/paraPhysicsDestruction.cpp hdr/classes/paraPhysicsDestruction.h src/classes/paraStarfield.cpp hdr/classes/paraStarfield.h)
-	endif (CMAKE_BUILD_TYPE MATCHES Debug)
+		add_executable(Win32_Para_release ${CXX_SRCS})
+	endif (CMAKE_BUILD_TYPE MATCHES Release)
 endif (WIN32)
 
 if (UNIX)
 	# Library path
-	link_directories(/usr/local/lib)
+	link_directories(/usr/lib)
+
+	link_libraries(SDL2main SDL2 SDL2_image SDL2_mixer SDL2_ttf pthread)
+
 	include_directories(
-			/usr/local/include
-			/usr/local/include/SDL2
+			/usr/include
+			/usr/include/SDL2
+			./hdr
 			./hdr/script
 			./hdr/physfs
-			./hdr
-			./hdr/box2d
 			./hdr/sdl2_gfx
 			./hdr/fileWatcher
-	)
+			./hdr/chipmunk)
 
-	if (CMAKE_BUILD_TYPE MATCHES debug)
+	set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 5)
 
-		link_libraries(
-				#		        asan
-				SDL2main
-				SDL2
-				SDL2_image
-				SDL2_mixer
-				SDL2_ttf
-				pthread
-		)
-
+	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("Doing DEBUG build")
-		add_executable(Linux_Para++_debug ${CXX_SRCS} src/system/util.cpp hdr/system/util.h src/classes/paraScript.cpp hdr/classes/paraScript.h src/classes/paraAStar.cpp hdr/classes/paraAStar.h src/classes/paraAI2.cpp hdr/classes/paraAI2.h src/classes/paraDroid.cpp src/classes/paraDroid.cpp hdr/classes/paraDroid.h src/classes/paraPhysicsDestruction.cpp hdr/classes/paraPhysicsDestruction.h src/classes/paraStarfield.cpp hdr/classes/paraStarfield.h)
-	elseif (CMAKE_BUILD_TYPE MATCHES release)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g -O0 -Wint-in-bool-context -Wcast-function-type -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -Wall -Wextra -g -fsanitize=leak")
+		add_executable(Linux_Para_debug ${CXX_SRCS})
+		#target_link_libraries(Linux_Para_debug asan)
+		target_compile_definitions(Linux_Para_debug PUBLIC MY_DEBUG)
+	endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
-		link_libraries(
-				SDL2main
-				SDL2
-				SDL2_image
-				SDL2_mixer
-				SDL2_ttf
-				pthread
-		)
-
+	if (CMAKE_BUILD_TYPE MATCHES Release)
 		message("Doing RELEASE build")
-		add_executable(Linux_Para++_release ${CXX_SRCS} src/classes/paraAStar.cpp hdr/classes/paraAStar.h src/classes/paraAI2.cpp hdr/classes/paraAI2.h src/classes/paraDroid.cpp src/classes/paraDroid.cpp hdr/classes/paraDroid.h src/classes/paraPhysicsDestruction.cpp hdr/classes/paraPhysicsDestruction.h src/classes/paraStarfield.cpp hdr/classes/paraStarfield.h)
-	endif (CMAKE_BUILD_TYPE MATCHES debug)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -DNDEBUG")
+		add_executable(Linux_Para_release ${CXX_SRCS})
+	endif (CMAKE_BUILD_TYPE MATCHES Release)
+
 endif (UNIX)

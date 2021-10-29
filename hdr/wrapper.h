@@ -1,5 +1,4 @@
-#ifndef PARA_WRAPPER_H
-#define PARA_WRAPPER_H
+#pragma once
 
 #include <SDL.h>
 
@@ -19,5 +18,3 @@
 #define PARA_DestroyMutex   SDL_DestroyMutex
 #define PARA_Delay          SDL_Delay
 #define PARA_Scancode       SDL_Scancode
-
-#endif //PARA_WRAPPER_H

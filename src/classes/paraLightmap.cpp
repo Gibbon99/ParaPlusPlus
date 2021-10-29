@@ -1,6 +1,6 @@
-#include <main.h>
-#include <system/util.h>
-#include <game/bullet.h>
+#include "main.h"
+#include "system/util.h"
+#include "classes/paraBullet.h"
 #include "classes/paraLightmap.h"
 
 std::vector<PARA_Color> bulletColors;
@@ -8,7 +8,7 @@ std::vector<PARA_Color> bulletColors;
 //-----------------------------------------------------------------------------------------------------------
 //
 // Populate the table holding the bullet lightmap colors - should mirror to bullet frame colors
-void setupBulletLightmapColors ()
+void setupBulletLightmapColors()
 //-----------------------------------------------------------------------------------------------------------
 {
 	PARA_Color tempColor;
@@ -99,7 +99,7 @@ int paraLightmap::getType()
 //-----------------------------------------------------------------------------------------------------------
 //
 // Return inUse status for this emitter
-bool paraLightmap::inUse ()
+bool paraLightmap::inUse()
 //-----------------------------------------------------------------------------------------------------------
 {
 	return isInUse;
@@ -108,7 +108,7 @@ bool paraLightmap::inUse ()
 //-----------------------------------------------------------------------------------------------------------
 //
 // Set the state of the isInUse flag
-void paraLightmap::setInUseState (bool newState)
+void paraLightmap::setInUseState(bool newState)
 //-----------------------------------------------------------------------------------------------------------
 {
 	isInUse = newState;
@@ -117,7 +117,7 @@ void paraLightmap::setInUseState (bool newState)
 //-----------------------------------------------------------------------------------------------------------
 //
 // Return the bullet this emitter may be linked to - return -1 if not attached
-Uint32 paraLightmap::getAttachedBullet ()
+Uint32 paraLightmap::getAttachedBullet()
 //-----------------------------------------------------------------------------------------------------------
 {
 	if (!attachedToBullet)
@@ -130,10 +130,10 @@ Uint32 paraLightmap::getAttachedBullet ()
 //
 // Constructor for a new lightmap instance - Pass in newWorldPos in world coords ( meters )
 // newWhichBullet is used to pass in current alert level
-paraLightmap::paraLightmap (b2Vec2 newWorldPos, int newType, int newWhichBullet)
+paraLightmap::paraLightmap(cpVect newWorldPos, int newType, int newWhichBullet)
 //-----------------------------------------------------------------------------------------------------------
 {
-	worldPosInPixels = sys_convertMetersToPixels (newWorldPos);
+	worldPosInPixels = newWorldPos;
 	type             = newType;
 	textureWidth     = textures.at ("lightmap").getWidth ();
 	textureHeight    = textures.at ("lightmap").getHeight ();
@@ -190,8 +190,8 @@ paraLightmap::paraLightmap (b2Vec2 newWorldPos, int newType, int newWhichBullet)
 			}
 
 			color.a = 32;
-			worldPosInPixels.x +=  (tileSize / 2);
-			worldPosInPixels.y +=  (tileSize / 2);
+			worldPosInPixels.x += (tileSize / 2);
+			worldPosInPixels.y += (tileSize / 2);
 			break;
 	}
 
@@ -202,7 +202,7 @@ paraLightmap::paraLightmap (b2Vec2 newWorldPos, int newType, int newWhichBullet)
 //-----------------------------------------------------------------------------------------------------------
 //
 // Animate the lightmap
-void paraLightmap::animate ()
+void paraLightmap::animate()
 //-----------------------------------------------------------------------------------------------------------
 {
 	float tempAlpha;
@@ -223,7 +223,7 @@ void paraLightmap::animate ()
 			break;
 
 		case LIGHTMAP_TYPE_BULLET:
-			worldPosInPixels = sys_convertMetersToPixels (bullets[gam_getArrayIndex (bulletLink)].worldPosInMeters);
+			worldPosInPixels = bullets[gam_getArrayIndex (bulletLink)].worldPosInPixels;
 			colorIndexCounter += 1.0f * colorIndexChangeSpeed;
 			if (colorIndexCounter > 1.0f)
 			{
@@ -243,11 +243,11 @@ void paraLightmap::animate ()
 //-----------------------------------------------------------------------------------------------------------
 //
 // Render the lightmap
-void paraLightmap::render ()
+void paraLightmap::render()
 //-----------------------------------------------------------------------------------------------------------
 {
 	SDL_Rect destRectInPixels;
-	b2Vec2   renderPosition;
+	cpVect   renderPosition;
 
 	switch (type)
 	{

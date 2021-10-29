@@ -4,14 +4,14 @@
 #include "game/audio.h"
 #include "game/transferDroidAI.h"
 
-bool circuitFound        = false;
-int  numDroidTokens      = 0;
-int  nextCircuitToUse    = 0;
-int  enemyTokenDirection = 0;
-int  droidBlockPos       = 0;
+bool circuitFound {false};
+int  numDroidTokens {};
+int  nextCircuitToUse {};
+int  enemyTokenDirection {};
+int  droidBlockPos {};
 
-float chooseRowDelay     = 1.0f;
-float chooseRowDelayTime = 0.0f;
+float chooseRowDelay {1.0f};
+float chooseRowDelayTime {};
 
 //---------------------------------------------------------------------------------------------------------------------
 //
@@ -26,9 +26,6 @@ bool trn_isCircuitSuitable(__TRANSFER_ROW transferIndex)
 	{
 		if (transferIndex.currentColor == TRANSFER_COLOR_RIGHT)
 		{
-#ifdef MY_DEBUG
-			printf("Droid on right - color is already right color\n");
-#endif
 			return false;
 		}
 
@@ -37,13 +34,9 @@ bool trn_isCircuitSuitable(__TRANSFER_ROW transferIndex)
 	{
 		if (transferIndex.currentColor == TRANSFER_COLOR_LEFT)
 		{
-#ifdef MY_DEBUG
-			printf("Droid on left - color is already left color\n");
-#endif
 			return false;
 		}
 	}
-
 	return true;
 }
 
@@ -51,7 +44,7 @@ bool trn_isCircuitSuitable(__TRANSFER_ROW transferIndex)
 //
 // Find a suitable circuit to use
 //
-int trn_findSuitableCircuitToUse (__TRANSFER_ROW transferIndex)
+int trn_findSuitableCircuitToUse(__TRANSFER_ROW transferIndex)
 //---------------------------------------------------------------------------------------------------------------------
 {
 	int circuitType;
@@ -89,7 +82,7 @@ int trn_findSuitableCircuitToUse (__TRANSFER_ROW transferIndex)
 		case TRANSFER_ROW_FULL_LINE_3:
 		case TRANSFER_ROW_REPEAT_HALF:
 		case TRANSFER_ROW_REPEAT_QUARTER:
-			circuitFound = trn_isCircuitSuitable(transferIndex);
+			circuitFound = trn_isCircuitSuitable (transferIndex);
 			if (circuitFound)
 				return 0;
 			else
@@ -213,7 +206,7 @@ int trn_findSuitableCircuitToUse (__TRANSFER_ROW transferIndex)
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Move the enemy token based on passed on direction
-void trn_moveEnemyToken (int direction)
+void trn_moveEnemyToken(int direction)
 //---------------------------------------------------------------------------------------------------------------------
 {
 	if (TRANSFER_MOVE_UP == direction)
@@ -235,7 +228,7 @@ void trn_moveEnemyToken (int direction)
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Move to the circuit we have picked
-void trn_moveToCircuit ()
+void trn_moveToCircuit()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	//
@@ -249,11 +242,11 @@ void trn_moveToCircuit ()
 	if (droidBlockPos == nextCircuitToUse)
 	{
 		if (transferPlayerWhichSide == TRANSFER_COLOR_LEFT)
-			trn_placeToken (nextCircuitToUse, TRANSFER_COLOR_RIGHT, 0);
+			trn_placeToken (nextCircuitToUse, TRANSFER_COLOR_RIGHT);
 		else
-			trn_placeToken (nextCircuitToUse, TRANSFER_COLOR_LEFT, 0);
+			trn_placeToken (nextCircuitToUse, TRANSFER_COLOR_LEFT);
 
-		circuitFound = false;
+		circuitFound     = false;
 		nextCircuitToUse = -1;
 		numDroidTokens--;
 		if (numDroidTokens > 0)
@@ -275,7 +268,7 @@ void trn_moveToCircuit ()
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Play the transfer game
-void trn_processTransferDroidAI ()
+void trn_processTransferDroidAI()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	// Move droid tokens
@@ -297,7 +290,7 @@ void trn_processTransferDroidAI ()
 			//
 			// Look through each row for a suitable circuit to use
 			// rowCounter is the row that has been found suitable
-			for (auto &transferRowIndex : transferRows)
+			for (auto &transferRowIndex: transferRows)
 			{
 				nextCircuitToUse = trn_findSuitableCircuitToUse (transferRowIndex);
 				if (nextCircuitToUse != -1)

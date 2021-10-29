@@ -1,10 +1,10 @@
-#include <gui/guiLanguage.h>
-#include <game/hud.h>
-#include <game/transferGame.h>
-#include <game/transferPlayer.h>
-#include "game/transferRender.h"
+#include "gui/guiLanguage.h"
 #include "classes/paraRandom.h"
 #include "system/util.h"
+#include "game/hud.h"
+#include "game/transferGame.h"
+#include "game/transferPlayer.h"
+#include "game/transferRender.h"
 #include "game/alertLevel.h"
 #include "game/audio.h"
 #include "game/player.h"
@@ -14,18 +14,18 @@
 #include "game/transfer.h"
 
 paraRandom transferRandom;
-int        chooseSideTimeOut;  // From script
-float      chooseSideDelayTime; // From script
-float      activeRowCounter;
-int        sideTimeoutCountdown;
+int        chooseSideTimeOut {};  // From script
+float      chooseSideDelayTime {}; // From script
+float      activeRowCounter {};
+int        sideTimeoutCountdown {};
 
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Print out the types of cells
-void trn_debugTransferCells (int whichSide)
+void trn_debugTransferCells(int whichSide)
 //---------------------------------------------------------------------------------------------------------------------
 {
-	for (auto cellItr : transferRows)
+	for (auto cellItr: transferRows)
 	{
 		if (whichSide == TRANSFER_COLOR_LEFT)
 			std::cout << trn_getRowName (cellItr.leftSideType) << std::endl;
@@ -37,7 +37,7 @@ void trn_debugTransferCells (int whichSide)
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Return true if the passed in circuits makes contact with the middle
-bool trn_contactingCircuit (int circuitType, int checkSide, int checkRow)
+bool trn_contactingCircuit(int circuitType, int checkSide, int checkRow)
 //---------------------------------------------------------------------------------------------------------------------
 {
 	switch (circuitType)
@@ -51,8 +51,6 @@ bool trn_contactingCircuit (int circuitType, int checkSide, int checkRow)
 			return true;
 			break;
 
-//		case TRANSFER_ROW_ONE_INTO_TWO_BOTTOM:
-//		case TRANSFER_ROW_ONE_INTO_TWO_TOP:
 		case TRANSFER_ROW_TWO_INTO_ONE_MIDDLE:
 			if (checkSide == TRANSFER_COLOR_LEFT)
 			{
@@ -80,13 +78,13 @@ bool trn_contactingCircuit (int circuitType, int checkSide, int checkRow)
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Process active circuits time and set their color for the cell
-void trn_processCircuits ()
+void trn_processCircuits()
 //---------------------------------------------------------------------------------------------------------------------
 {
-	int leftSideCount  = 0;
-	int rightSideCount = 0;
+	int leftSideCount {};
+	int rightSideCount {};
 
-	for (auto &transferRowIndex : transferRows)
+	for (auto &transferRowIndex: transferRows)
 	{
 		if ((transferRowIndex.rightSideActive) || (transferRowIndex.rightSideActiveIsOn))
 		{
@@ -302,7 +300,7 @@ void trn_processCircuits ()
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Return true if a transfer mistake is made
-bool trn_makeTransferMistake (int whichDroidLevel)
+bool trn_makeTransferMistake(int whichDroidLevel)
 //---------------------------------------------------------------------------------------------------------------------
 {
 	int mistakeLevel = 0;
@@ -316,7 +314,7 @@ bool trn_makeTransferMistake (int whichDroidLevel)
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Helper function - return true if circuit is a split type
-bool trn_isCircuitSplit (int whichType)
+bool trn_isCircuitSplit(int whichType)
 //---------------------------------------------------------------------------------------------------------------------
 {
 	return (whichType == TRANSFER_ROW_TWO_INTO_ONE_MIDDLE) || (whichType == TRANSFER_ROW_ONE_INTO_TWO_MIDDLE) || (whichType == TRANSFER_ROW_TWO_INTO_ONE_BOTTOM) || (whichType == TRANSFER_ROW_TWO_INTO_ONE_TOP) ||
@@ -326,7 +324,7 @@ bool trn_isCircuitSplit (int whichType)
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Called to setup the transfer cell values
-void trn_setupTransferCellValues ()
+void trn_setupTransferCellValues()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	int i       = 0;
@@ -426,14 +424,14 @@ void trn_setupTransferCellValues ()
 //-------------------------------------------------------------------------------------------------------------------
 //
 // Get ready for the second transfer screen
-void trn_initTransferScreenTwo ()
+void trn_initTransferScreenTwo()
 //-------------------------------------------------------------------------------------------------------------------
 {
 	std::string newFileName;
 	std::string newKeyName;
 
 	newKeyName  = "db_droid";
-	newFileName = dataBaseEntry[g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].getDroidType()].dbImageFileName + ".bmp";
+	newFileName = dataBaseEntry[g_shipDeckItr->second.droid[playerDroid.transferTargetDroidIndex].getDroidType ()].dbImageFileName + ".bmp";
 	gam_loadTexture (newFileName, newKeyName);
 
 	databaseSprite.setCurrentFrame (0);
@@ -448,16 +446,15 @@ void trn_initTransferScreenTwo ()
 //-------------------------------------------------------------------------------------------------------------------
 //
 // Setup the default values for the transfer rows - gameEvent EVENT_ACTION_INIT_TRANSFER_MODE
-void trn_initTransferValues (int transferTargetIndex)
+void trn_initTransferValues(int transferTargetIndex)
 //-------------------------------------------------------------------------------------------------------------------
 {
-	__TRANSFER_ROW tempTransferRow{};
+	__TRANSFER_ROW tempTransferRow {};
 	std::string    newFileName;
 	std::string    newKeyName;
 
-	if ((g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode() == DROID_MODE_FOR_REMOVAL) ||
-	(g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode() == DROID_MODE_EXPLODING) ||
-	(g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode() == DROID_MODE_DEAD))
+	if ((g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode () == DROID_MODE_FOR_REMOVAL) || (g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode () == DROID_MODE_EXPLODING) ||
+	    (g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode () == DROID_MODE_DEAD))
 		return;
 
 	if (transferRows.empty ())
@@ -506,21 +503,20 @@ void trn_initTransferValues (int transferTargetIndex)
 	playerBlockPos = -1;
 
 	playerDroid.transferTargetDroidIndex = transferTargetIndex;
-	playerDroid.transferTargetDroidType  = g_shipDeckItr->second.droid[transferTargetIndex].getDroidType();
+	playerDroid.transferTargetDroidType  = g_shipDeckItr->second.droid[transferTargetIndex].getDroidType ();
 
-	numDroidTokens  = dataBaseEntry[g_shipDeckItr->second.droid[transferTargetIndex].getDroidType()].tokenCount;
-	numPlayerTokens = dataBaseEntry[playerDroid.getDroidType()].tokenCount;
+	numDroidTokens  = dataBaseEntry[g_shipDeckItr->second.droid[transferTargetIndex].getDroidType ()].tokenCount;
+	numPlayerTokens = dataBaseEntry[playerDroid.getDroidType ()].tokenCount;
 
 	trn_setupTransferCellValues ();
 
 	newKeyName  = "db_droid";
-	newFileName = dataBaseEntry[playerDroid.getDroidType()].dbImageFileName + ".bmp";
+	newFileName = dataBaseEntry[playerDroid.getDroidType ()].dbImageFileName + ".bmp";
 	gam_loadTexture (newFileName, newKeyName);
 	databaseSprite.setCurrentFrame (0);
 	databaseSprite.setTintColor (64, 64, 64);
 
 	gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
-//	audio.stopAllChannels();
 
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 127, "lowEnergy");
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 127, "transferMove");
@@ -529,7 +525,7 @@ void trn_initTransferValues (int transferTargetIndex)
 	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "guiTransferOne.nextButton");
 	gui.setState (KEY_ACTION, false, 0);
 
-	gam_setHudText("hudCaptured");
+	gam_setHudText ("hudCaptured");
 
 	sys_setNewMode (MODE_TRANSFER_SCREEN_ONE, true);
 }
@@ -539,7 +535,7 @@ void trn_initTransferValues (int transferTargetIndex)
 // Check the playing sounds for transfer information screens, move on if still playing
 //
 // TODO - Doesn't work as intended
-void trn_checkTransferScreenSounds ()
+void trn_checkTransferScreenSounds()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	switch (currentMode)
@@ -568,7 +564,7 @@ void trn_checkTransferScreenSounds ()
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Handle the keyboard for choosing a side for transfer game
-void trn_handleTransferChooseSide ()
+void trn_handleTransferChooseSide()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	if (gui.keyDown (KEY_LEFT))
@@ -597,7 +593,7 @@ void trn_handleTransferChooseSide ()
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Process the countdown timer for transfer - mode MODE_TRANSFER_CHOOSE_SIDE
-void trn_processTransferCountDown ()
+void trn_processTransferCountDown()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	static float sideTimeoutCounter = 0.0f;
@@ -620,7 +616,7 @@ void trn_processTransferCountDown ()
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Prepare to start the transfer game - mode MODE_PRE_TRANSFER_GAME
-void trn_prepareTransferGame ()
+void trn_prepareTransferGame()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	transferTimeoutCountdown = transferTimeOut;
@@ -631,7 +627,7 @@ void trn_prepareTransferGame ()
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Return the time to display on the HUD
-std::string trn_getCountdown ()
+std::string trn_getCountdown()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	return sys_getString ("%s %i", gui_getString ("selectSide").c_str (), sideTimeoutCountdown);
@@ -640,12 +636,12 @@ std::string trn_getCountdown ()
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Prepare the transfer countdown sequence - mode MODE_PRE_TRANSFER_CHOOSE_SIDE
-void trn_prepareTransferCountDown ()
+void trn_prepareTransferCountDown()
 //---------------------------------------------------------------------------------------------------------------------
 {
 	int i = 0;
 
-	for (auto &transferItr : transferRows)
+	for (auto &transferItr: transferRows)
 	{
 		transferItr.leftSideActiveCounter     = 0.0f;
 		transferItr.rightSideActiveCounter    = 0.0f;
@@ -656,9 +652,7 @@ void trn_prepareTransferCountDown ()
 		transferItr.rightSideActiveIsOn       = false;
 		transferItr.leftSideActiveIsOn        = false;
 		transferItr.rightSideActiveAlphaColor = 255.0f;
-//		transferItr.rightSideActiveAlphaCount = 0.0f;
 		transferItr.leftSideActiveAlphaColor  = 255.0f;
-//		transferItr.leftSideActiveAlphaCount  = 0.0f;
 
 		if (i % 2 == 0)
 			transferItr.currentColor = TRANSFER_COLOR_LEFT;

@@ -1,7 +1,6 @@
-#ifndef PARA_PARAASTAR_H
-#define PARA_PARAASTAR_H
+#pragma once
 
-#include <b2_math.h>
+#include <thread>
 #include "main.h"
 #include "paraAI2.h"
 
@@ -24,123 +23,131 @@ enum class ASTAR_DIRECTION
 	ASTAR_ERROR
 };
 
-struct _pathNode2
-{
-	b2Vec2 tileLocation   = {0, 0};
-	int    parent         = -1;
-	int    g_movementCost = 0;
-	int    h_estMoveCost  = 0;
-	int    f_score        = 0;
-};
-
-struct _pathNode3
-{
-	b2Vec2 tileLocation   = {0, 0};
-	int    parent         = -1;
-	int    g_movementCost = 0;
-	int    h_estMoveCost  = 0;
-	int    f_score        = 0;
-};
-
-struct _pathNode5
-{
-	b2Vec2 tileLocation   = {0, 0};
-	int    parent         = -1;
-	int    g_movementCost = 0;
-	int    h_estMoveCost  = 0;
-	int    f_score        = 0;
-};
-
 class paraAStar
 {
 
 public:
 
-	paraAStar ();
+	struct _pathNode2
+	{
+		cpVect tileLocation   = {0, 0};
+		int    parent         = -1;
+		int    g_movementCost = 0;
+		int    h_estMoveCost  = 0;
+		int    f_score        = 0;
+	};
 
-	~paraAStar ();
+	struct _pathNode3
+	{
+		cpVect tileLocation   = {0, 0};
+		int    parent         = -1;
+		int    g_movementCost = 0;
+		int    h_estMoveCost  = 0;
+		int    f_score        = 0;
+	};
 
-	static int startThread (void *Param);
+	struct _pathNode4
+	{
+		cpVect tileLocation   = {0, 0};
+		int    parent         = -1;
+		int    g_movementCost = 0;
+		int    h_estMoveCost  = 0;
+		int    f_score        = 0;
+	};
 
-	void switchTravelDirection ();
+	struct _pathNode5
+	{
+		cpVect tileLocation   = {0, 0};
+		int    parent         = -1;
+		int    g_movementCost = 0;
+		int    h_estMoveCost  = 0;
+		int    f_score        = 0;
+	};
 
-	void stopUsingPath ();
+	paraAStar();
 
-	int requestNewPath (b2Vec2 start, b2Vec2 destination);
+	~paraAStar();
 
-	inline void addTileToOpenNode (b2Vec2 whichTile, int moveCost, int parent);
+	std::thread::id startThread();
 
-	int findLowestCostNode ();
+	void switchTravelDirection();
 
-	void moveNodeToClosedList (int whichNodeIndex);
+	void stopUsingPath();
+
+	int requestNewPath(cpVect start, cpVect destination);
+
+	inline void addTileToOpenNode(cpVect whichTile, int moveCost, int parent);
+
+	int findLowestCostNode();
+
+	void moveNodeToClosedList(int whichNodeIndex);
 
 //	void searchThread ();
-	int searchThread ();
+	int searchThread();
 
-	bool isNodeInClosedList (b2Vec2 whichNode);
+	bool isNodeInClosedList(cpVect whichNode);
 
-	bool isNodeInOpenList (b2Vec2 whichNode);
+	bool isNodeInOpenList(cpVect whichNode);
 
-	bool generateNewNode (int whichDirection);
+	bool generateNewNode(int whichDirection);
 
-	bool stillRunning ();
+	bool stillRunning();
 
-	bool areWaypointsReady ();
+	bool areWaypointsReady();
 
-	b2Vec2 getWaypoint ();
+	cpVect getWaypoint();
 
-	ASTAR_DIRECTION getAStarDirection ();
+	ASTAR_DIRECTION getAStarDirection();
 
-	int getPathStatus ();
+	int getPathStatus();
 
 //
 // Helper routines
 //
-	int findDistance (b2Vec2 fromTile, b2Vec2 toTile);
+	int findDistance(cpVect fromTile, cpVect toTile);
 
-	bool isTileSolid (int tileIndex);
+	bool isTileSolid(int tileIndex);
 
 //
 // Prepare found path for use
 //
-	void extractPath ();
+	void extractPath();
 
-	void convertToCoords ();
+	void convertToCoords();
 
-	void compressWaypoints ();
+	void compressWaypoints();
 
 //
 // Debug routines
 //
-	void debugDraw (b2Vec2 lineStart, b2Vec2 lineFinish);
+	void debugDraw(cpVect lineStart, cpVect lineFinish);
 
-	void debugWayPoints ();
+	void debugWayPoints();
 
-	void debugNodes ();
+	void debugNodes();
 
-	int getID ();
+	int getID();
 
-	void setID (int newID);
+	void setID(int newID);
 
-	int getWayPointsIndex ();
+	int getWayPointsIndex();
 
 private:
 
 	int             ID                       = -1;
 	int             currentNodePtrClosedList = -1;
 	int             pathStatus               = -1;
-	int             wayPointsIndex           = 0;
-	int             currentNodeIndex         = 0;
+	int             wayPointsIndex           = {};
+	int             currentNodeIndex         = {};
 	bool            wayPointsReady           = false;
 	bool            isRunning                = false;
-	b2Vec2          startTile                = {0, 0};
-	b2Vec2          destTile                 = {0, 0};
+	cpVect          startTile                = {0, 0};
+	cpVect          destTile                 = {0, 0};
 	ASTAR_DIRECTION aStarDirection           = ASTAR_DIRECTION::DOWN;
 
-	std::vector<_pathNode3> openNodes{};
-	std::vector<_pathNode3> closedNodes{};
-	std::vector<_pathNode5> foundPath{};
-	std::vector<b2Vec2>     wayPoints{};        // In world ( pixel ) coordinates
+	std::vector<_pathNode3> openNodes {};
+	std::vector<_pathNode4> closedNodes {};
+	std::vector<_pathNode5> foundPath {};
+	std::vector<cpVect>     wayPoints {};        // In world ( pixel ) coordinates
+	std::thread             *threadID;
 };
-
-#endif //PARA_PARAASTAR_H

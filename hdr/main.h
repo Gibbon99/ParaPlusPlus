@@ -9,14 +9,30 @@
 #include <classes/paraGui.h>
 #include <classes/paraSprite.h>
 #include <classes/paraStarfield.h>
+#include <classes/paraHighScore.h>
 
 #ifdef __WIN32__
 #include "SDL.h"
 #else
+
 #include "SDL2/SDL.h"
+
 #endif
 
 #define APP_NAME    "Para++"
+
+
+#define DEBUG_AI2 1     // Toggle logging for paraAI2
+/*
+* #define DEBUG_MEMORY 1              // Toggle logging for paraMemory
+#define ASTAR_DEBUG 1   // Toggle logging for aStar functions
+#define ASTAR_DO_PATH_COMPRESS 1    // Remove redundant waypoints from final aStar
+#define AUDIO_DEBUG 1               // Toggle logging for Audio functions
+#define DEBUG_BULLET 1              // Toggle logging for bullet functions
+#define MY_GUI_DEBUG 1              // Toggle logging for GUI functions
+#define MY_DEBUG_SCRIPT 1           // Toggle logging for script functions
+// #define SHOW_ALL_DROIDS 1        // Toggle visibility of all droids
+*/
 
 #include "classes/paraScript.h"
 #include "classes/paraLogFile.h"
@@ -28,6 +44,7 @@
 #include "system/shutdown.h"
 #include "physfs/physfs.h"
 #include "classes/paraRenderer.h"
+#include "chipmunk.h"
 
 #define ERROR_COUNT_LIMIT   10
 
@@ -56,7 +73,7 @@
 
 using namespace std;
 
-typedef int (*functionPtr) (...);
+typedef int (*functionPtr)(...);
 
 extern paraScript     paraScriptInstance;
 extern paraLogFile    logFile;
@@ -68,8 +85,9 @@ extern paraAudio      audio;
 extern paraGui        gui;
 extern paraStarfield  backgroundStarfield;
 extern paraStarfield  sideviewStarfield;
-
-extern paraSprite databaseSprite;
+extern paraStarfield  deckviewStarfield;
+extern paraSprite     databaseSprite;
+extern paraHighScore  highScores;
 
 extern std::map<std::string, paraTexture> textures;
 
@@ -80,6 +98,7 @@ extern double percentIntoNextFrame;
 extern int    currentMode;
 extern double pixelsPerMeter;          // From script
 extern bool   d_showPerfStats;
+extern Uint8  difficultyValue;
 //
 // Game levers
 //
@@ -87,4 +106,41 @@ extern double baseGameSpeed;
 
 extern unsigned long g_debugDroidCount;
 
-extern Uint32 sys_getCurrentTime ();
+extern Uint32 sys_getCurrentTime();
+
+struct _userData
+{
+	cpCollisionType userType;
+	Uint32          bulletID;
+	int             dataValue;
+	bool            ignoreCollisionDroid;
+	bool            ignoreCollisionPlayer;
+};
+
+//-----------------------------------------------------------------------------
+//
+// structure used for doors
+//
+//-----------------------------------------------------------------------------
+
+struct _doorTrigger
+{
+	int    direction {};
+	int    tileIndex {};
+	int    currentFrame {};            // which frame are we on
+	float  height {};
+	float  width {};
+	float  frameDelay {};                // speed to animate them at
+	bool   inUse {};
+	cpVect topLeft {};
+	cpVect topRight {};
+	cpVect botLeft {};
+	cpVect botRight {};
+
+	cpVect worldPosition  = {0, 0};
+	cpVect renderPosition = {0, 0};
+
+	cpBody                     *body {nullptr};
+	cpShape                    *shape {nullptr};
+	std::shared_ptr<_userData> userData {};
+};

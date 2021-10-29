@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../main.h"
+#include "main.h"
 
 // Variables to start everything
 extern int         gameWinWidth;
@@ -33,7 +33,7 @@ extern bool        doScreenEffect;
 extern std::string activeBackingTexture;
 
 // Start systems - Logfile, Script, Filesystem ( Physfs ), Event queues
-void sys_startSystems ();
+void sys_startSystems();
 
 // Start to load and prepare everything else
-static int sys_startInit (void *ptr);
+int sys_startInit(void *ptr);

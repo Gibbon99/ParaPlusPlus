@@ -1,14 +1,14 @@
-#include <game/transferGame.h>
-#include <game/audio.h>
-#include <game/transferRender.h>
+#include "game/transferGame.h"
+#include "game/audio.h"
+#include "game/transferRender.h"
 #include "game/transferPlayer.h"
 
-int   numPlayerTokens = 0;
+int numPlayerTokens = 0;
 
 // ----------------------------------------------------------------------------
 //
 // Move the player token based on passed on direction
-void trn_movePlayerToken (int direction)
+void trn_movePlayerToken(int direction)
 // ----------------------------------------------------------------------------
 {
 	if (TRANSFER_MOVE_UP == direction)
@@ -27,8 +27,6 @@ void trn_movePlayerToken (int direction)
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "misc-redundant-expression"
 //---------------------------------------------------------------------------------------------------------------------
 //
 // Do transfer movements for player
@@ -38,23 +36,23 @@ void trn_processPlayerActions()
 	if (numPlayerTokens == -1)       // 0 or -1
 		return;
 
-	if (gui.keyDown(KEY_UP))
+	if (gui.keyDown (KEY_UP))
 	{
 		trn_movePlayerToken (TRANSFER_MOVE_UP);
-		gui.setState(KEY_UP, false, 0);
+		gui.setState (KEY_UP, false, 0);
 		return;
 	}
 
-	if (gui.keyDown(KEY_DOWN))
+	if (gui.keyDown (KEY_DOWN))
 	{
 		trn_movePlayerToken (TRANSFER_MOVE_DOWN);
-		gui.setState(KEY_DOWN, false, 0);
+		gui.setState (KEY_DOWN, false, 0);
 		return;
 	}
 
-	if (gui.keyDown(KEY_ACTION))
+	if (gui.keyDown (KEY_ACTION))
 	{
-		gui.setState(KEY_ACTION, false, 0);
+		gui.setState (KEY_ACTION, false, 0);
 
 		if (transferPlayerWhichSide == TRANSFER_COLOR_LEFT)
 		{
@@ -68,7 +66,7 @@ void trn_processPlayerActions()
 			}
 			else
 			{
-				trn_placeToken (playerBlockPos, TRANSFER_COLOR_LEFT, 0);
+				trn_placeToken (playerBlockPos, TRANSFER_COLOR_LEFT);
 				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferAction");
 			}
 		}
@@ -84,7 +82,7 @@ void trn_processPlayerActions()
 			}
 			else
 			{
-				trn_placeToken (playerBlockPos, TRANSFER_COLOR_RIGHT, 0);
+				trn_placeToken (playerBlockPos, TRANSFER_COLOR_RIGHT);
 				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferAction");
 			}
 		}
@@ -98,4 +96,3 @@ void trn_processPlayerActions()
 		return;
 	}
 }
-#pragma clang diagnostic pop

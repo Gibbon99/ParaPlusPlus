@@ -1,5 +1,5 @@
 #pragma once
 
-#include "../main.h"
+#include "main.h"
 
-void gui_renderButton (int whichButton, bool hasFocus);
+void gui_renderButton(int whichButton, bool hasFocus);

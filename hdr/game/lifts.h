@@ -2,38 +2,34 @@
 
 #include "main.h"
 #include "shipDecks.h"
-#include <box2d/b2_math.h>
-#include <box2d/b2_body.h>
-#include <system/physics.h>
+#include "system/cpPhysics.h"
 
 struct __tileSensor
 {
-	float          width;
-	float          height;
-	b2Vec2         worldPosition = {0, 0};
-	b2BodyDef      bodyDef;                      // Used for physics and collisions
-	b2PolygonShape shape;
-	b2FixtureDef   fixtureDef;
-	b2Body         *body;
-	_userData      *userData;
+	float                      width {};
+	float                      height {};
+	cpVect                     worldPosition = {0, 0};
+	cpBody                     *body {};
+	cpShape                    *shape {};
+	std::shared_ptr<_userData> userData {};
 };
 
 extern int currentTunnel;
 
 // Position the player on the requested lift on the new level
-b2Vec2 gam_getLiftWorldPosition (int whichLift);
+cpVect gam_getLiftWorldPosition(int whichLift);
 
 // Setup lifts
-void gam_setupLifts ();
+void gam_setupLifts();
 
 // Get the positions of lifts
-void gam_findLiftPositions (const std::string &levelName);
+void gam_findLiftPositions(const std::string &levelName);
 
 // Move the lift position
-void gam_moveLift (int direction);
+void gam_moveLift(int direction);
 
 // Activate the lift
-void gam_performLiftAction ();
+void gam_performLiftAction();
 
 // Set the deck index
 void gam_setCurrentTunnelDeckIndex();

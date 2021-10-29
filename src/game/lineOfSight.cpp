@@ -1,58 +1,41 @@
+#include <game/shipDecks.h>
+#include <system/util.h>
+#include <SDL2_gfxPrimitives.h>
 #include "game/player.h"
-#include "classes/paraLOS.h"
-#include "system/util.h"
 #include "game/lineOfSight.h"
 
-#define SHOW_ALL_DROIDS 1
-
-int                visibleFadeValue;
+int visibleFadeValue;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Check each droid to see if the player can see them or not - set visibleToPlayer flag to reflect
-void gam_checkLOS (paraDroid &droidItr)
+void gam_checkLOS(paraDroid &droidItr)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	RayCastAnyCallback LOSCallback;
-
-	sys_getPhysicsWorld ()->RayCast (&LOSCallback, sys_convertPixelsToMeters (droidItr.getWorldPosInPixels ()), sys_convertPixelsToMeters (playerDroid.getWorldPosInPixels ()));
-
-	if (LOSCallback.m_hit)
-	{
-
 #ifdef SHOW_ALL_DROIDS
-		droidItr.visibleState = VISIBLE_STATE_GO_VISIBLE;
-#else
-		droidItr.visibleState = VISIBLE_STATE_GO_NOT_VISIBLE;
+	droidItr.visibleState = VISIBLE_STATE_GO_VISIBLE;
+	return;
 #endif
+	cpShapeFilter      shapeFilter {};
+	cpSegmentQueryInfo segmentQueryResult {};
 
+	shapeFilter.group      = CP_NO_GROUP;
+	shapeFilter.mask       = PHYSIC_TYPE_WALL | PHYSIC_TYPE_DOOR_CLOSED;      // Check for walls
+	shapeFilter.categories = PHYSIC_TYPE_PLAYER;
+
+	//
+	// Only run if the droid is on the visible screen
+	if (sys_visibleOnScreen (droidItr.getWorldPosInPixels (), SPRITE_SIZE / 2))
+	{
+		auto raycastResult = cpSpaceSegmentQueryFirst (sys_returnPhysicsWorld (), playerDroid.getWorldPosInPixels (), droidItr.getWorldPosInPixels (), 2.0f, shapeFilter, &segmentQueryResult);
+
+		if (nullptr != raycastResult)       // No objects in the way
+		{
+			droidItr.visibleState = VISIBLE_STATE_GO_NOT_VISIBLE;
+		}
 	}
 	else
 	{
-		droidItr.visibleState = VISIBLE_STATE_GO_VISIBLE;
-	}
-
-	if (droidItr.visibleState == VISIBLE_STATE_GO_VISIBLE)
-	{
-		if (droidItr.visibleValue < 255)
-		{
-			droidItr.visibleValue += visibleFadeValue;
-			if (droidItr.visibleValue > 30)
-			{
-				droidItr.visibleValue    = 255;
-				droidItr.visibleState    = VISIBLE_STATE_IS_VISIBLE;
-				droidItr.visibleToPlayer = true;
-			}
-		}
-	}
-
-	if (droidItr.visibleState == VISIBLE_STATE_GO_NOT_VISIBLE)
-	{
-		droidItr.visibleValue -= visibleFadeValue;
-		if (droidItr.visibleValue < 0)
-		{
-			droidItr.visibleValue    = 0;
-			droidItr.visibleToPlayer = false;
-		}
+		droidItr.visibleState = VISIBLE_STATE_GO_NOT_VISIBLE;
 	}
 }

@@ -1,10 +1,11 @@
 #include <string>
-#include <gui/guiSideview.h>
-#include <game/audio.h>
-#include <game/player.h>
-#include <game/alertLevel.h>
-#include "game/shipDecks.h"
+#include "io/logFile.h"
+#include "gui/guiSideview.h"
 #include "system/util.h"
+#include "game/audio.h"
+#include "game/player.h"
+#include "game/alertLevel.h"
+#include "game/shipDecks.h"
 #include "game/lifts.h"
 
 std::vector<__tileSensor> lifts;
@@ -22,7 +23,7 @@ static int currentTunnelDeckIndex;
 //----------------------------------------------------------------------------------------------------------------------------
 //
 // Return the current tunnel in use
-int gam_getCurrentTunnel ()
+int gam_getCurrentTunnel()
 //----------------------------------------------------------------------------------------------------------------------------
 {
 	return currentTunnel;
@@ -31,15 +32,15 @@ int gam_getCurrentTunnel ()
 //----------------------------------------------------------------------------------------------------------------------------
 //
 // Set the deck index
-void gam_setCurrentTunnelDeckIndex ()
+void gam_setCurrentTunnelDeckIndex()
 //----------------------------------------------------------------------------------------------------------------------------
 {
 	int tempTunnel = 0;
 	currentTunnelDeckIndex = 0;
 
-	for (auto tunnelItr : shipdecks.at (gam_getCurrentDeckName ()).liftClass.tunnels)
+	for (auto tunnelItr: shipdecks.at (gam_getCurrentDeckName ()).liftClass.tunnels)
 	{
-		if (tunnelItr.second == playerDroid.getLiftIndex())
+		if (tunnelItr.second == playerDroid.getLiftIndex ())
 		{
 			tempTunnel = tunnelItr.first;
 			break;
@@ -59,7 +60,7 @@ void gam_setCurrentTunnelDeckIndex ()
 //----------------------------------------------------------------------------------------------------------------------------
 //
 // Create lookup from a tunnel to decks it connects to
-void gam_setupTunnelLinks ()
+void gam_setupTunnelLinks()
 //----------------------------------------------------------------------------------------------------------------------------
 {
 	tunnelLinks[0].linkedDecks.push_back (19);
@@ -99,26 +100,12 @@ void gam_setupTunnelLinks ()
 
 	tunnelLinks[7].linkedDecks.push_back (18);
 	tunnelLinks[7].linkedDecks.push_back (14);
-
-#ifdef MY_DEBUG
-	for (auto i = 0; i != 8; i++)
-	{
-		std::cout << "Tunnel " << i << " decks : ";
-
-		for (auto tunnelItr : tunnelLinks[i].linkedDecks)
-		{
-			std::cout << tunnelItr << " ";
-		}
-
-		std::cout << std::endl;
-	}
-#endif
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Move the lift position
-void gam_moveLift (int direction)
+void gam_moveLift(int direction)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (direction)
@@ -162,6 +149,8 @@ void gam_moveLift (int direction)
 
 			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "keyPressGood");
 
+			playerDroid.setVelocity (cpvzero);
+
 			sys_setNewMode (MODE_GAME, true);
 
 			break;
@@ -175,70 +164,50 @@ void gam_moveLift (int direction)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Clear out memory and free bodies
-void gam_clearLifts ()
+void gam_clearLifts()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 tempPosition = playerDroid.body->GetPosition ();        // GetPosition is in meters
-
-	//
-	// Player is still making contact with the lift detector causing Box2d to crash when removing the body
-//	sys_setPlayerPhysicsPosition (b2Vec2 (0, 0));
-//	sys_stepPhysicsWorld (1.0f / TICKS_PER_SECOND);
-
-// TODO - Check all of this
-
-stopContactPhysicsBugFlag = true;
-
-	for (auto &liftItr : lifts)
+	for (auto &liftItr: lifts)
 	{
-		if (liftItr.userData != nullptr)
+		if (liftItr.shape != nullptr)
 		{
-			delete (liftItr.userData);
-			liftItr.userData = nullptr;
+			cpSpaceRemoveShape (sys_returnPhysicsWorld (), liftItr.shape);
+			cpShapeFree (liftItr.shape);
+			liftItr.shape = nullptr;
 		}
-
 		if (liftItr.body != nullptr)
 		{
-			liftItr.body->DestroyFixture (liftItr.body->GetFixtureList());
-			liftItr.body->SetEnabled (false);
-			liftItr.body->SetUserData (nullptr);
-			liftItr.body->GetWorld()->DestroyBody (liftItr.body);
 			liftItr.body = nullptr;
 		}
 	}
 	lifts.clear ();
-
-	stopContactPhysicsBugFlag = false;
-
-//	playerDroid.body->SetTransform (tempPosition, playerDroid.body->GetAngle ());
-//	sys_stepPhysicsWorld (1.0f / TICKS_PER_SECOND);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a lift sensor
-void gam_createLiftSensor (unsigned long whichLift, int index)
+void gam_createLiftSensor(int whichLift)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	lifts[whichLift].bodyDef.type = b2_staticBody;
-	lifts[whichLift].bodyDef.position.Set (lifts[whichLift].worldPosition.x / pixelsPerMeter, lifts[whichLift].worldPosition.y / pixelsPerMeter);
-	lifts[whichLift].body = sys_getPhysicsWorld ()->CreateBody (&lifts[whichLift].bodyDef);
+	lifts[whichLift].body = cpBodyNewStatic (); // Need to add body to world??
 
-	lifts[whichLift].userData            = new _userData;
-	lifts[whichLift].userData->userType  = PHYSIC_TYPE_LIFT;
-	lifts[whichLift].userData->dataValue = (int) index;
-	lifts[whichLift].body->SetUserData (lifts[whichLift].userData);
+	cpBodySetPosition (lifts[whichLift].body, lifts[whichLift].worldPosition);
 
-	lifts[whichLift].shape.SetAsBox ((lifts[whichLift].height) / pixelsPerMeter, (lifts[whichLift].width) / pixelsPerMeter);
-	lifts[whichLift].fixtureDef.shape    = &lifts[whichLift].shape;
-	lifts[whichLift].fixtureDef.isSensor = true;
-	lifts[whichLift].body->CreateFixture (&lifts[whichLift].fixtureDef);
+	lifts[whichLift].shape = cpBoxShapeNew (lifts[whichLift].body, lifts[whichLift].width, lifts[whichLift].height, 1.0f);  // Check radis
+	cpSpaceAddShape (sys_returnPhysicsWorld (), lifts[whichLift].shape);
+	cpShapeSetCollisionType (lifts[whichLift].shape, PHYSIC_TYPE_LIFT);
+	cpShapeSetSensor (lifts[whichLift].shape, cpTrue);
+
+	lifts[whichLift].userData            = std::make_shared<_userData> ();
+	lifts[whichLift].userData->userType  = cpShapeGetCollisionType (lifts[whichLift].shape);
+	lifts[whichLift].userData->dataValue = whichLift;
+	cpShapeSetUserData (lifts[whichLift].shape, lifts[whichLift].userData.get ());
 }
 
 //---------------------------------------------------------
 //
 // Get the positions of lifts
-void gam_findLiftPositions (const std::string &levelName)
+void gam_findLiftPositions(const std::string &levelName)
 //---------------------------------------------------------
 {
 	__tileSensor tempLift;
@@ -269,7 +238,7 @@ void gam_findLiftPositions (const std::string &levelName)
 
 			lifts.push_back (tempLift);
 
-			gam_createLiftSensor (lifts.size () - 1, countLift);
+			gam_createLiftSensor (lifts.size () - 1);
 
 			countLift++;
 		}
@@ -287,14 +256,14 @@ void gam_findLiftPositions (const std::string &levelName)
 // ----------------------------------------------------------------------------
 //
 // Position the player on the requested lift on the new level
-b2Vec2 gam_getLiftWorldPosition (int whichLift)
+cpVect gam_getLiftWorldPosition(int whichLift)
 // ----------------------------------------------------------------------------
 {
 	int    whichTile, countY, countX, liftCounter;
 	int    tilePosX, tilePosY;
 	double pixelX, pixelY;
 
-	b2Vec2 returnPosition;
+	cpVect returnPosition;
 
 	liftCounter = 0;
 	for (countY = 0; countY != g_shipDeckItr->second.levelDimensions.y; countY++)
@@ -333,7 +302,7 @@ b2Vec2 gam_getLiftWorldPosition (int whichLift)
 //---------------------------------------------------------
 //
 // Setup lifts
-void gam_setupLifts ()
+void gam_setupLifts()
 //---------------------------------------------------------
 {
 	shipdecks.at (gam_returnLevelNameFromDeck (0)).liftClass.createTunnel (1, 0);
@@ -373,10 +342,10 @@ void gam_setupLifts ()
 //----------------------------------------------------------------------------
 //
 // Activate the lift - called from action down event on keyboard
-void gam_performLiftAction ()
+void gam_performLiftAction()
 //----------------------------------------------------------------------------
 {
-	currentTunnel = shipdecks.at (gam_getCurrentDeckName ()).liftClass.getTunnelIndex (playerDroid.getLiftIndex());
+	currentTunnel = shipdecks.at (gam_getCurrentDeckName ()).liftClass.getTunnelIndex (playerDroid.getLiftIndex ());
 	gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, true, 0, 127, "lowEnergy");
 

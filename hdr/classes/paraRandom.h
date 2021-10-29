@@ -1,5 +1,4 @@
-#ifndef PARA_PARARANDOM_H
-#define PARA_PARARANDOM_H
+#pragma once
 
 #include <cstddef>
 #include <random>
@@ -11,19 +10,16 @@ public:
 
 	paraRandom()
 	{
-//		rng.seed(std::random_device()());
-		rng.seed(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+		rng.seed (std::chrono::high_resolution_clock::now ().time_since_epoch ().count ());
 	}
 
 	std::mt19937 rng;
 
 	int get(int min, int max)
 	{
-		std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
-		return dist(rng);
+		std::uniform_int_distribution<std::mt19937::result_type> dist (min, max);
+		return dist (rng);
 	}
 
 private:
 };
-
-#endif //PARA_PARARANDOM_H

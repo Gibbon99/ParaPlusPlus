@@ -1,5 +1,4 @@
-#ifndef PARA_PARACONSOLE_H
-#define PARA_PARACONSOLE_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -9,7 +8,7 @@
 #define CONSOLE_MEM_SIZE    1000    // Max number of lines in vector
 
 typedef void (*funcPtr)();      // Pointer to function with no args and returns void
-typedef void (*funcPtr_int) (int);
+typedef void (*funcPtr_int)(int);
 
 //
 // This runs a script command
@@ -55,31 +54,31 @@ public:
 // Constructor
 	paraConsole(float defaultPosX, int red, int green, int blue, int alpha);
 
-	~paraConsole ();
+	~paraConsole();
 //
 // Add things
 
-	void addTempLine (const _consoleLine &newTempLine);
+	void addTempLine(const _consoleLine &newTempLine);
 
-	void add (const std::string &newLine);
+	void add(const std::string &newLine);
 
-	void add (float linePosX, const std::string &newLine);
+	void add(float linePosX, const std::string &newLine);
 
-	void add (float linePosX, int red, int green, int blue, int alpha, const std::string &newLine);
+	void add(float linePosX, int red, int green, int blue, int alpha, const std::string &newLine);
 
-	void addChar (const std::string &newChar);
+	void addChar(const std::string &newChar);
 
-	void addCommand (const std::string &commandName, const std::string &functionHelp, const std::string &functionName);
+	void addCommand(const std::string &commandName, const std::string &functionHelp, const std::string &functionName);
 
-	void addCommand (const std::string &commandName, const std::string &commandHelp, funcPtr commandPtr);
+	void addCommand(const std::string &commandName, const std::string &commandHelp, funcPtr commandPtr);
 
-	void addVariable (const std::string &variableName, int variableType, void *variablePtr);
+	void addVariable(const std::string &variableName, int variableType, void *variablePtr);
 
-	void addCharLine ();
+	void addCharLine();
 
 //
 // Set things
-	void setScreenSize (int consoleWinWidth, int consoleWinHeight);
+	void setScreenSize(int consoleWinWidth, int consoleWinHeight);
 
 	void setNumVarColumns(int newNumVarColumns);
 
@@ -87,7 +86,7 @@ public:
 
 	void setVarFunc(const std::string &varName, float variablePtr);
 
-	void setVarFunc(const std::string &varName, const std::string& variablePtr);
+	void setVarFunc(const std::string &varName, const std::string &variablePtr);
 
 	void setVarBool(const std::string &varName, bool variablePtr);
 
@@ -155,9 +154,7 @@ private:
 	int         defaultBlue;
 	int         defaultAlpha;
 	float       defaultPosX;
-	int         screenWidth{};
-	int         screenHeight{};
-	int         numVarColumns{};
+	int         screenWidth {};
+	int         screenHeight {};
+	int         numVarColumns {};
 };
-
-#endif //PARA_PARACONSOLE_H

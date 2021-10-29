@@ -35,13 +35,13 @@ void trn_processTransferGame ();
 std::string trn_getTransferCountdown ();
 
 // Place a token onto a circuit
-void trn_placeToken (int rowIndex, int whichSide, int whichDroid);
+void trn_placeToken (int rowIndex, int whichSide);
 
 // Transfer into the droid
-void trn_transferIntoDroid();
+void trn_transferIntoDroid ();
 
 // Lost the transfer - back to 001
-void trn_transferLostGame();
+void trn_transferLostGame ();
 
 // Deadlock the transfer - wait for sound to finish
-void trn_processDeadlock();
+void trn_processDeadlock ();

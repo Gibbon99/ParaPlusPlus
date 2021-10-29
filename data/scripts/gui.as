@@ -209,19 +209,34 @@ void as_handleControlsMenu()
 void as_handleGameMenu()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
-    if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "gameMenu.backButton")) {
+string guiCurrentLanguage;
+
+    if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "gameMenu.backButton"))
+    {
         tileStyle = as_paraGui.getSliderValue("gameMenu.tileStyle");
         tileColor = as_paraGui.getSliderValue("gameMenu.tileColor");
+        guiCurrentLanguage = as_paraGui.getSliderValue("gameMenu.language");
 
-        gam_setTileType();
+    if ("English" == guiCurrentLanguage)
+        currentLanguage = LANG_ENGLISH;
 
-        io_updateConfigValue("tileStyle", tileStyle);
-        io_updateConfigValue("tileColor", tileColor);
+    if ("Italian" == guiCurrentLanguage)
+        currentLanguage = LANG_ITALIAN;
 
-        gam_setHudText("hudOptions");
-        as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "optionsMenu.gameButton");
-        return;
+    if ("German" == guiCurrentLanguage)
+        currentLanguage = LANG_GERMAN;
+
+    as_setLanguageStrings();
+
+    gam_setTileType();
+
+    io_updateConfigValue("tileStyle", tileStyle);
+    io_updateConfigValue("tileColor", tileColor);
+    io_updateConfigValueInt("currentLanguage", currentLanguage);
+
+    gam_setHudText("hudOptions");
+    as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
+    as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "optionsMenu.gameButton");
     }
 }
 
@@ -607,7 +622,36 @@ void createControlsMenu()
 void createGameMenu()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
+    string tempNum;
+
     as_paraGui.create(GUI_OBJECT_SCREEN, "gameMenu");
+
+    as_paraGui.create(GUI_OBJECT_SLIDER, "gameMenu.language");
+    as_paraGui.addToScreen(GUI_OBJECT_SLIDER, "gameMenu.language", "gameMenu");
+    as_paraGui.setPosition(GUI_OBJECT_SLIDER, "gameMenu.language", 8, GUI_COORD_PERCENT, 5, 30, 40, 2);
+    as_paraGui.setLabel(GUI_OBJECT_SLIDER, "gameMenu.language", 12, GUI_LABEL_CENTER, gui_getString("gameMenu.language"));
+
+    tempNum = formatInt(LANG_ENGLISH, "l");
+    as_paraGui.addNewElement("gameMenu.language", tempNum, "English", SLIDER_TYPE_INT);
+
+    tempNum = formatInt(LANG_ITALIAN, "l");
+    as_paraGui.addNewElement("gameMenu.language", tempNum, "Italian", SLIDER_TYPE_INT);
+
+    tempNum = formatInt(LANG_GERMAN, "l");
+    as_paraGui.addNewElement("gameMenu.language", tempNum, "German", SLIDER_TYPE_INT);
+
+    if (LANG_ENGLISH == currentLanguage)
+       as_paraGui.setSliderValue("gameMenu.language", "English");
+
+    if (LANG_ITALIAN == currentLanguage)
+       as_paraGui.setSliderValue("gameMenu.language", "Italian");
+
+    if (LANG_GERMAN == currentLanguage)
+       as_paraGui.setSliderValue("gameMenu.language", "German");
+
+    as_paraGui.setFontName(GUI_OBJECT_SLIDER, "gameMenu.language", "guiFont28");
+    as_paraGui.setReady(GUI_OBJECT_SLIDER, "gameMenu.language", true);
+
 
     as_paraGui.create(GUI_OBJECT_SLIDER, "gameMenu.tileStyle");
     as_paraGui.addToScreen(GUI_OBJECT_SLIDER, "gameMenu.tileStyle", "gameMenu");
@@ -819,17 +863,15 @@ void as_createGUI()
     baseGameSpeed = 1.0;        // lower is faster - can not be zero
     sideviewDrawScale = 1.2;
     healingAnimSpeed = 0.3;
-    pixelsPerMeter = 12.0;        // 12 pixels is 1 meter
     playerFriction = 0.7;
-    gravity = 100.0;
-    doorAnimSpeed = 1.0f;
-    numAStarPaths = 16;
+    gravity = 25.0;
+    doorAnimSpeed = 1.0;
     collisionLimit = 3;
     collisionCount = 6.0;
-    bulletDensity = 0.1f;
-    bulletFriction = 0.01f;
-    bulletAnimationSpeed = 0.5f;
-    bulletMoveSpeed = 0.4f;
+    bulletDensity = 0.1;
+    bulletFriction = 0.01;
+    bulletAnimationSpeed = 0.5;
+    bulletMoveSpeed = 100.0;
     hudTextPosX = 15;
     hudTextPosY = 27;
     hudScorePosX = 620;
@@ -837,20 +879,20 @@ void as_createGUI()
     visibleFadeValue = 30;
     redAlertLevel = 500;
     yellowAlertLevel = 300;
-    updateScoreDelay = 0.5f;
-    distanceForDoorSoundMax = 50.0f;   // In meters
+    updateScoreDelay = 0.5;
+    distanceForDoorSoundMax = 50.0;   // In meters
     powerdownLevelScore = 1000;
-    healingDelayCounter = 0.8f;
-    healingAmountPerTick = 2;
-    explosionAnimationSpeed = 1.5f;
+    healingDelayCounter = 0.8;
+    healingAmountPerTick = 1;
+    explosionAnimationSpeed = 1.5;
     explosionDamage = 5;
     alertLevelVolume = 190;  // Higher is softer - 1 is full loud
-    staticAnimationDelay = 0.8f;
+    staticAnimationDelay = 0.8;
     lostScreenShowTime = 120;  // 10 seconds
     disrupterFadeAmount = 20;
     influenceTimelimit = 1000;
     influenceTimeLeftWarning = 250;
-    influenceTimelimtDelay = 0.2f;
+    influenceTimelimtDelay = 0.2;
     maxNumBumps = 10;
     bounceCounterDelay = 0.3;
 

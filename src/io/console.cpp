@@ -1,10 +1,11 @@
 #include <queue>
 #include <game/pathFind.h>
 #include <system/frameRender.h>
-#include "system/physics.h"
+#include <game/physicsCollisions.h>
+#include "system/cpPhysics.h"
 #include "system/util.h"
 #include "classes/paraEvent.h"
-#include "game/bullet.h"
+#include "classes/paraBullet.h"
 #include "io/logFile.h"
 #include "io/consoleFunctions.h"
 
@@ -15,7 +16,7 @@ int testVar = 100;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Process the contents of the console queue - run by detached thread
-void con_processConsoleEventQueue (void *data)
+void con_processConsoleEventQueue()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	paraEventConsole  *tempEvent;
@@ -45,9 +46,7 @@ void con_processConsoleEventQueue (void *data)
 				{
 					case EVENT_ACTION_CONSOLE_ADD_LINE:
 						console.add (tempEvent->newConsoleLine);
-
-						std::cout << "Console text : " << tempEvent->newConsoleLine << std::endl;
-
+						log_addEvent (sys_getString ("Console [ %s ].", tempEvent->newConsoleLine.c_str ()));
 						break;
 
 					case EVENT_ACTION_CONSOLE_ADD_CHAR:
@@ -71,7 +70,7 @@ void con_processConsoleEventQueue (void *data)
 			}
 		}
 	}
-	cout << "CONSOLE thread stopped." << endl;
+	log_addEvent (sys_getString ("[ %s ] CONSOLE thread stopped.", __func__));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -81,7 +80,7 @@ void con_processConsoleEventQueue (void *data)
 // -1 is passed in from classes to add a line to avoid including the additional header
 //
 // Cache the value for the Mutex on first run
-void con_addEvent (int newAction, string newLine)
+void con_addEvent(int newAction, string newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static PARA_Mutex *tempMutex = nullptr;
@@ -109,19 +108,18 @@ void con_addEvent (int newAction, string newLine)
 	}
 	else if (mutexStatus == SDL_MUTEX_TIMEDOUT)
 	{
-		printf ("Timed out waiting for console mutex to unlock [ %s ] [ %s ]\n", CONSOLE_MUTEX_NAME, SDL_GetError ());
+		log_addEvent (sys_getString ("[ %s ] Timed out waiting for console mutex to unlock [ %s ] [ %s ]", __func__, CONSOLE_MUTEX_NAME, SDL_GetError ()));
 	}
 	else
 	{
-		printf ("Unable to lock mutex [ %s ] [ %s ]\n", CONSOLE_MUTEX_NAME, SDL_GetError ());
-		logFile.write (sys_getString ("Unable to lock mutex [ %s ] [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
+		log_addEvent (sys_getString ("[ %s ] Unable to lock mutex [ %s ] [ %s ].", __func__, CONSOLE_MUTEX_NAME, SDL_GetError ()));
 	}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render the console to the screen
-void con_renderConsole ()
+void con_renderConsole()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Surface      *tempSurface  = nullptr;
@@ -156,8 +154,6 @@ void con_renderConsole ()
 		if (nullptr == tempSurface)
 		{
 			log_addEvent (sys_getString ("%s", "1. Unable to create temp surface when rendering console."));
-
-			printf ("Temp surface error count [ %i ]\n", errorCount);
 			errorCount++;
 			return;
 		}
@@ -206,7 +202,7 @@ void con_renderConsole ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start the console processing queue and thread
-void con_initConsole ()
+void con_initConsole()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	console.setScreenSize (hiresVirtualWidth, hiresVirtualHeight);
@@ -221,7 +217,7 @@ void con_initConsole ()
 	while (!evt_isThreadReady (CONSOLE_THREAD_NAME))
 	{
 #ifdef MY_DEBUG
-		cout << "Waiting for console thread to start..." << endl;
+		log_addEvent (sys_getString ("[ %s ] Waiting for console thread to start...", __func__));
 #endif
 	}// Wait for thread to be ready to use
 
@@ -249,7 +245,6 @@ void con_initConsole ()
 	console.addCommand ("d_getOS", "Show which OS is in use.", sys_getOS);
 
 	console.addCommand ("testScript", "test", "as_testFunction");
-	console.addCommand ("testPlay", "Play sound", testPlay);
 	//
 	// Variables accessible from the console
 	//
@@ -257,8 +252,6 @@ void con_initConsole ()
 	console.addVariable ("d_showPhysics", VAR_TYPE_BOOL, &d_showPhysics);
 	console.addVariable ("d_doWallCollisions", VAR_TYPE_BOOL, &doWallCollisions);
 	console.addVariable ("d_showInfluenceMap", VAR_TYPE_BOOL, &d_showInfluenceMap);
-	console.addVariable ("d_showNodeArrays", VAR_TYPE_BOOL, &d_showNodeArrays);
-	console.addVariable ("d_showAStarPath", VAR_TYPE_BOOL, &d_showAStarPath);
 	console.addVariable ("d_showPerfStats", VAR_TYPE_BOOL, &d_showPerfStats);
 	console.addVariable ("d_showPathIndex", VAR_TYPE_INT, &d_showPathIndex);
 	console.addVariable ("d_showWaypoints", VAR_TYPE_BOOL, &d_showWaypoints);
@@ -269,7 +262,7 @@ void con_initConsole ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Display the list of commands to the console
-void con_showHelp ()
+void con_showHelp()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string allCommands;

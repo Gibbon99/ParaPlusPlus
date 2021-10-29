@@ -1,16 +1,15 @@
-#include "classes/paraDroid.h"
-
 #include <utility>
+#include "classes/paraDroid.h"
 
 int   collisionLimit;
 float collisionCount;
 
-void paraDroid::AddRef ()
+void paraDroid::AddRef()
 {
 
 }
 
-void paraDroid::ReleaseRef ()
+void paraDroid::ReleaseRef()
 {
 
 }
@@ -18,7 +17,7 @@ void paraDroid::ReleaseRef ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return the name of a sprite based on its type
-int paraDroid::getCurrentMode ()
+int paraDroid::getCurrentMode()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return currentMode;
@@ -27,7 +26,7 @@ int paraDroid::getCurrentMode ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return the name of a sprite based on its type
-void paraDroid::setCurrentMode (int newCurrentMode)
+void paraDroid::setCurrentMode(int newCurrentMode)
 //-------------------------------------------------------------------------------------------------------------
 {
 	currentMode = newCurrentMode;
@@ -36,7 +35,7 @@ void paraDroid::setCurrentMode (int newCurrentMode)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return the name of a sprite based on its type
-int paraDroid::getDroidType ()
+int paraDroid::getDroidType()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return droidType;
@@ -45,7 +44,7 @@ int paraDroid::getDroidType ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return the name of a sprite based on its type
-void paraDroid::setDroidType (int newDroidType)
+void paraDroid::setDroidType(int newDroidType)
 //-------------------------------------------------------------------------------------------------------------
 {
 	droidType = newDroidType;
@@ -54,7 +53,7 @@ void paraDroid::setDroidType (int newDroidType)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return if the droid can fire
-int paraDroid::getWeaponCanFire ()
+int paraDroid::getWeaponCanFire()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return weaponCanFire;
@@ -63,7 +62,7 @@ int paraDroid::getWeaponCanFire ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the weapon can fire state
-void paraDroid::setWeaponCanFire (int newWeaponCanFire)
+void paraDroid::setWeaponCanFire(int newWeaponCanFire)
 //-------------------------------------------------------------------------------------------------------------
 {
 	weaponCanFire = newWeaponCanFire;
@@ -72,7 +71,7 @@ void paraDroid::setWeaponCanFire (int newWeaponCanFire)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return the droid current health value
-int paraDroid::getCurrentHealth ()
+int paraDroid::getCurrentHealth()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return currentHealth;
@@ -81,7 +80,7 @@ int paraDroid::getCurrentHealth ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the new health value
-void paraDroid::setCurrentHealth (int newCurrentHealth)
+void paraDroid::setCurrentHealth(int newCurrentHealth)
 //-------------------------------------------------------------------------------------------------------------
 {
 	currentHealth = newCurrentHealth;
@@ -90,7 +89,7 @@ void paraDroid::setCurrentHealth (int newCurrentHealth)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return if the droid is over a healing tile flag
-int paraDroid::getOverHealingTile ()
+int paraDroid::getOverHealingTile()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return overHealingTile;
@@ -99,7 +98,7 @@ int paraDroid::getOverHealingTile ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the over a healing tile flag
-void paraDroid::setOverHealingTile (int newOverHealingTile)
+void paraDroid::setOverHealingTile(bool newOverHealingTile)
 //-------------------------------------------------------------------------------------------------------------
 {
 	overHealingTile = newOverHealingTile;
@@ -108,7 +107,7 @@ void paraDroid::setOverHealingTile (int newOverHealingTile)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return if the droid is over a terminal tile flag
-int paraDroid::getOverTerminalTile ()
+int paraDroid::getOverTerminalTile()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return overTerminalTile;
@@ -117,7 +116,7 @@ int paraDroid::getOverTerminalTile ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the over a terminal tile flag
-void paraDroid::setOverTerminalTile (int newOverTerminalTile)
+void paraDroid::setOverTerminalTile(int newOverTerminalTile)
 //-------------------------------------------------------------------------------------------------------------
 {
 	overTerminalTile = newOverTerminalTile;
@@ -126,7 +125,7 @@ void paraDroid::setOverTerminalTile (int newOverTerminalTile)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return droid index ( ID )
-int paraDroid::getIndex ()
+int paraDroid::getIndex()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return index;
@@ -135,7 +134,7 @@ int paraDroid::getIndex ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the droid index value
-void paraDroid::setIndex (int newIndex)
+void paraDroid::setIndex(int newIndex)
 //-------------------------------------------------------------------------------------------------------------
 {
 	index = newIndex;
@@ -144,7 +143,7 @@ void paraDroid::setIndex (int newIndex)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return droid Liftindex ( ID )
-int paraDroid::getLiftIndex ()
+int paraDroid::getLiftIndex()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return liftIndex;
@@ -153,7 +152,7 @@ int paraDroid::getLiftIndex ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the droid Liftindex value
-void paraDroid::setLiftIndex (int newLiftIndex)
+void paraDroid::setLiftIndex(int newLiftIndex)
 //-------------------------------------------------------------------------------------------------------------
 {
 	liftIndex = newLiftIndex;
@@ -162,7 +161,7 @@ void paraDroid::setLiftIndex (int newLiftIndex)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return droid weapon delay value
-float paraDroid::getWeaponDelay ()
+float paraDroid::getWeaponDelay()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return weaponDelay;
@@ -171,7 +170,7 @@ float paraDroid::getWeaponDelay ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the droid Liftindex value
-void paraDroid::setWeaponDelay (float newWeaponDelay)
+void paraDroid::setWeaponDelay(float newWeaponDelay)
 //-------------------------------------------------------------------------------------------------------------
 {
 	weaponDelay = newWeaponDelay;
@@ -180,7 +179,7 @@ void paraDroid::setWeaponDelay (float newWeaponDelay)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return droid weapon delay value
-float paraDroid::getInfluenceTimeLeft ()
+float paraDroid::getInfluenceTimeLeft()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return influenceTimeLeft;
@@ -189,7 +188,7 @@ float paraDroid::getInfluenceTimeLeft ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the droid Liftindex value
-void paraDroid::setInfluenceTimeLeft (float newInfluenceTimeLeft)
+void paraDroid::setInfluenceTimeLeft(float newInfluenceTimeLeft)
 //-------------------------------------------------------------------------------------------------------------
 {
 	influenceTimeLeft = newInfluenceTimeLeft;
@@ -198,7 +197,7 @@ void paraDroid::setInfluenceTimeLeft (float newInfluenceTimeLeft)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return droid influence fade value
-float paraDroid::getInfluenceFade ()
+float paraDroid::getInfluenceFade()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return influenceFade;
@@ -207,7 +206,7 @@ float paraDroid::getInfluenceFade ()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the droid influence fade
-void paraDroid::setInfluenceFade (float newInfluenceFade)
+void paraDroid::setInfluenceFade(float newInfluenceFade)
 //-------------------------------------------------------------------------------------------------------------
 {
 	influenceFade = newInfluenceFade;
@@ -216,7 +215,7 @@ void paraDroid::setInfluenceFade (float newInfluenceFade)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set influence time left flag
-void paraDroid::setLowInfluenceTimeLeft (float newLowInfluenceTimeLeft)
+void paraDroid::setLowInfluenceTimeLeft(float newLowInfluenceTimeLeft)
 //-------------------------------------------------------------------------------------------------------------
 {
 	lowInfluenceTimeleft = newLowInfluenceTimeLeft;
@@ -234,7 +233,7 @@ bool paraDroid::getLowInfluenceTimeLeft()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the flag to indicate player is in transfer mode
-void paraDroid::setInTransferMode (float newInTransferMode)
+void paraDroid::setInTransferMode(float newInTransferMode)
 //-------------------------------------------------------------------------------------------------------------
 {
 	inTransferMode = newInTransferMode;
@@ -263,25 +262,25 @@ std::string paraDroid::getDroidName()
 void paraDroid::setDroidName(std::string newDroidName)
 //-------------------------------------------------------------------------------------------------------------
 {
-	droidName = std::move(newDroidName);
+	droidName = std::move (newDroidName);
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return current velocity value
-b2Vec2 paraDroid::getVelocity()
+cpVect paraDroid::getVelocity()
 //-------------------------------------------------------------------------------------------------------------
 {
-	return velocity;
+	return this->ai2.getVelocity ();
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the current velocity value
-void paraDroid::setVelocity(b2Vec2 newVelocity)
+void paraDroid::setVelocity(cpVect newVelocity)
 //-------------------------------------------------------------------------------------------------------------
 {
-	velocity = newVelocity;
+	this->ai2.setVelocity (newVelocity);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -304,129 +303,19 @@ void paraDroid::setOverLiftTile(int newOverLiftTile)
 
 //-------------------------------------------------------------------------------------------------------------
 //
-// Return the location of the body definition
-b2BodyDef *paraDroid::getBodyDef()
+// Work with world position at the droid class level
+void paraDroid::setWorldPosInPixels(cpVect newWorldPosInPixels)
 //-------------------------------------------------------------------------------------------------------------
 {
-	return &bodyDef;
+	this->ai2.setWorldPosInPixels (newWorldPosInPixels);
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //
-// Set the type of body
-void paraDroid::setBodyDefType(b2BodyType newBodyType)
+// Work with world position at the droid class level
+cpVect paraDroid::getWorldPosInPixels()
 //-------------------------------------------------------------------------------------------------------------
 {
-	bodyDef.type = newBodyType;
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-// Set the position of the body
-void paraDroid::setBodyPosition(b2Vec2 newBodyPosition)
-//-------------------------------------------------------------------------------------------------------------
-{
-	bodyDef.position.Set(newBodyPosition.x, newBodyPosition.y);
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-// Set the angle of the body
-void paraDroid::setBodyAngle(float newBodyAngle)
-//-------------------------------------------------------------------------------------------------------------
-{
-	bodyDef.angle = newBodyAngle;
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-// Set the shape radius
-void paraDroid::setShapeRadius(float newShapeRadius)
-//-------------------------------------------------------------------------------------------------------------
-{
-	shape.m_radius = newShapeRadius;
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-// Set the shapes position
-void paraDroid::setShapePosition(b2Vec2 newShapePosition)
-//-------------------------------------------------------------------------------------------------------------
-{
-	shape.m_p.Set(newShapePosition.x, newShapePosition.y);
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-// Return location of shape
-b2Shape *paraDroid::getShape()
-//-------------------------------------------------------------------------------------------------------------
-{
-	return &shape;
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-void paraDroid::setFixtureDefShape(b2Shape *newShape)
-//-------------------------------------------------------------------------------------------------------------
-{
-	fixtureDef.shape = newShape;
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-void paraDroid::setFixtureDefDensity(float newDensity)
-//-------------------------------------------------------------------------------------------------------------
-{
-	fixtureDef.density = newDensity;
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-void paraDroid::setFixtureRestitution(float newRestitution)
-//-------------------------------------------------------------------------------------------------------------
-{
-	fixtureDef.restitution = newRestitution;
-}
-//-------------------------------------------------------------------------------------------------------------
-//
-void paraDroid::setFixtureDefFriction(float newFriction)
-//-------------------------------------------------------------------------------------------------------------
-{
-	fixtureDef.friction = newFriction;
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-void paraDroid::setFixtureDefFilterCategoryBits(uint16 newFilterBits)
-//-------------------------------------------------------------------------------------------------------------
-{
-	fixtureDef.filter.categoryBits = newFilterBits;
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-void paraDroid::setFixtureDefMaskBits(uint16 newMaskBits)
-//-------------------------------------------------------------------------------------------------------------
-{
-	fixtureDef.filter.maskBits = newMaskBits;
-}
-
-//-------------------------------------------------------------------------------------------------------------
-//
-b2FixtureDef *paraDroid::getFixtureDef()
-//-------------------------------------------------------------------------------------------------------------
-{
-	return &fixtureDef;
-}
-
-void paraDroid::setWorldPosInPixels(b2Vec2 newWorldPosInPixels)
-{
-	worldPosInPixels = newWorldPosInPixels;
-}
-
-b2Vec2 paraDroid::getWorldPosInPixels()
-{
-	return worldPosInPixels;
+	return this->ai2.getWorldPosInPixels ();
 }
 

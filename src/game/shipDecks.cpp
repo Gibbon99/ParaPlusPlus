@@ -1,29 +1,27 @@
-#include <system/startup.h>
-#include <io/console.h>
-#include <game/healing.h>
-#include <game/lifts.h>
-#include <game/player.h>
-#include <system/util.h>
-#include <sdl2_gfx/SDL2_gfxPrimitives.h>
-#include <game/bullet.h>
-#include <system/gameEvents.h>
-#include <game/lightMaps.h>
-#include <game/tiles.h>
-#include <game/texture.h>
-#include <game/audio.h>
-#include <game/score.h>
-#include <game/pathFind.h>
+#include "sdl2_gfx/SDL2_gfxPrimitives.h"
+#include "classes/paraBullet.h"
+#include "io/console.h"
+#include "system/util.h"
+#include "system/gameEvents.h"
+#include "system/startup.h"
+#include "game/healing.h"
+#include "game/lifts.h"
+#include "game/player.h"
+#include "game/lightMaps.h"
+#include "game/tiles.h"
+#include "game/texture.h"
+#include "game/audio.h"
+#include "game/score.h"
 #include "game/shipDecks.h"
 #include "game/doors.h"
 #include "game/terminal.h"
-#include "game/game.h"
 #include "game/alertLevel.h"
 
 int                                                    tileSize;
 int                                                    numTileAcrossInTexture = 8;
 int                                                    numTilesDownInTexture  = 8;
 int                                                    powerdownLevelScore;
-b2Vec2                                                 drawOffset;
+cpVect                                                 drawOffset;
 std::string                                            currentDeckName;
 SDL_Rect                                               viewportRect;
 int                                                    currentDeckNumber;
@@ -37,7 +35,7 @@ std::unordered_map<std::string, _deckStruct>::iterator g_shipDeckItr;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the value from the influence map
-int gam_getInfluenceMapValue (int tileIndex)
+int gam_getInfluenceMapValue(int tileIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (tileIndex > static_cast<int>(influenceMap.size ()))
@@ -49,10 +47,10 @@ int gam_getInfluenceMapValue (int tileIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set influence map values
-void gam_setInfluenceValues (b2Vec2 startPos, int value, int size)
+void gam_setInfluenceValues(cpVect startPos, int value, int size)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 topRight;
+	cpVect topRight;
 	int    finalSize;
 
 	finalSize = size * 2;
@@ -90,10 +88,10 @@ void gam_setInfluenceValues (b2Vec2 startPos, int value, int size)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Change player pixel coords into tile coords
-void gam_populateInfluenceMap (b2Vec2 playerPositionInPixels)
+void gam_populateInfluenceMap(cpVect playerPositionInPixels)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	b2Vec2 newPosition;
+	cpVect newPosition;
 
 	std::fill (influenceMap.begin (), influenceMap.end (), 0);
 
@@ -107,7 +105,7 @@ void gam_populateInfluenceMap (b2Vec2 playerPositionInPixels)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create the influence map to be same size as deck dimensions - call on deck change
-void gam_createInfluenceMap ()
+void gam_createInfluenceMap()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	//
@@ -119,11 +117,11 @@ void gam_createInfluenceMap ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Debug influence map
-void gam_debugInfluenceMap ()
+void gam_debugInfluenceMap()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int    influenceValue;
-	b2Vec2 drawPosition;
+	cpVect drawPosition;
 
 	for (auto countY = 0; countY != static_cast<int>(shipdecks.at (gam_getCurrentDeckName ()).levelDimensions.y); countY++)
 	{
@@ -148,7 +146,7 @@ void gam_debugInfluenceMap ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Get the playfield texture
-PARA_Texture *gam_getPlayfieldTexture ()
+PARA_Texture *gam_getPlayfieldTexture()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return playfieldTexture;
@@ -157,7 +155,7 @@ PARA_Texture *gam_getPlayfieldTexture ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the deck index number based on current deck name
-int gam_getCurrentDeckIndex ()
+int gam_getCurrentDeckIndex()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	for (auto deckItr: shipdecks)
@@ -173,7 +171,7 @@ int gam_getCurrentDeckIndex ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the current deck name
-std::string gam_getCurrentDeckName ()
+std::string gam_getCurrentDeckName()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return currentDeckName;
@@ -183,11 +181,11 @@ std::string gam_getCurrentDeckName ()
 //
 // Convert current tile information into padded array
 // Suitable for display on current screen size
-void gam_addPaddingToLevel (const std::string fileName)
+void gam_addPaddingToLevel(const std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::vector<int> tempLevel;
-	b2Vec2           tempDimensions{};
+	cpVect           tempDimensions {};
 	int              countY, countX, whichTile;
 	int              destX, destY;
 	std::string      levelName;
@@ -239,14 +237,14 @@ void gam_addPaddingToLevel (const std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Populate the shipdeck structure from a file in memory
-void gam_loadShipDeck (const std::string &fileName)
+void gam_loadShipDeck(const std::string &fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_RWops    *fp;
 	int          checkVersion;
 	_deckStruct  tempLevel;
-	_lineSegment tempSegment{};
-	b2Vec2       tempWaypoint{};
+	_lineSegment tempSegment {};
+	cpVect       tempWaypoint {};
 	int          tempDroidType;
 	int          tempTile;
 	int          fileSize;
@@ -257,7 +255,7 @@ void gam_loadShipDeck (const std::string &fileName)
 	{
 		tileSize = textures.at ("tiles").getWidth () / numTileAcrossInTexture;
 	}
-	catch (std::out_of_range outOfRange)
+	catch (std::out_of_range &outOfRange)
 	{
 		//
 		// Tiles texture is not loaded yet, resubmit the load request with a time delay
@@ -337,7 +335,7 @@ void gam_loadShipDeck (const std::string &fileName)
 		tempWaypoint.x += drawOffset.x;
 		tempWaypoint.y += drawOffset.y;
 
-		b2Vec2 tempVec2{};
+		cpVect tempVec2 {};
 
 		tempVec2.x = tempWaypoint.x - (tileSize / 2);
 		tempVec2.y = tempWaypoint.y - (tileSize / 2);
@@ -402,7 +400,7 @@ void gam_loadShipDeck (const std::string &fileName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Draw a single tile from the sheet to the playfield texture
-void gam_renderSingleTile (int destX, int destY, int tileIndex)
+void gam_renderSingleTile(int destX, int destY, int tileIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static int      previousTileIndex = -1;
@@ -417,9 +415,6 @@ void gam_renderSingleTile (int destX, int destY, int tileIndex)
 		sourceRect.y = (tileIndex / numTilesDownInTexture) * tileSize;
 		sourceRect.w = tileSize;
 		sourceRect.h = tileSize; // - 1;
-
-//		sourceRect.y += 1;
-//		sourceRect.h -= 1;
 	}
 
 	destRect.x = destX;
@@ -433,7 +428,7 @@ void gam_renderSingleTile (int destX, int destY, int tileIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create the texture to represent the current deck level
-void gam_createDeckTexture (std::string deckName)
+void gam_createDeckTexture(const std::string &deckName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int tileIndex;
@@ -465,7 +460,7 @@ void gam_createDeckTexture (std::string deckName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the levelName from the passed in deckNumber
-std::string gam_returnLevelNameFromDeck (int deckNumber)
+std::string gam_returnLevelNameFromDeck(int deckNumber)
 //----------------------------------------------------------------------------------------------------------------------
 {
 //
@@ -487,7 +482,7 @@ std::string gam_returnLevelNameFromDeck (int deckNumber)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Change to a new deck
-void gam_changeToDeck (string deckName, int whichLift)
+void gam_changeToDeck(string deckName, int whichLift)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string tempFilename;
@@ -519,7 +514,7 @@ void gam_changeToDeck (string deckName, int whichLift)
 	gam_renderAlertTiles ();
 
 	// Physics
-	sys_setupEnemyPhysics (deckName);
+	sys_setupDroidPhysics (deckName);
 	sys_setupSolidWalls (deckName);
 	gam_doorTriggerSetup ();
 	gam_findTerminalPositions (deckName);
@@ -529,7 +524,7 @@ void gam_changeToDeck (string deckName, int whichLift)
 	// Bullets
 	gam_initBulletArray ();
 
-	playerDroid.previousWorldPosInPixels = {-1, -1};
+	playerDroid.ai2.setPreviousPosInPixels ({-1, -1});
 	playerDroid.setWorldPosInPixels (gam_getLiftWorldPosition (whichLift));
 	sys_setPlayerPhysicsPosition (playerDroid.getWorldPosInPixels ());
 
@@ -541,22 +536,17 @@ void gam_changeToDeck (string deckName, int whichLift)
 
 	// Player
 	gam_clearPlayerTrail ();
-
-	// TEST
-//	gam_resetAllPaths ();
-
-//	gam_checkPlayerHealth();    // See if low energy sound needs to restart
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render the current visible area to the backing texture
-void gam_renderVisibleScreen (double interpolation)
+void gam_renderVisibleScreen(double interpolation)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Rect        sourceRect;
-	b2Vec2          renderPosition{};
-	static SDL_Rect renderPositionBackground{};
+	cpVect          renderPosition {};
+	static SDL_Rect renderPositionBackground {};
 
 	//
 	// Only get texture sizes the first time
@@ -573,12 +563,12 @@ void gam_renderVisibleScreen (double interpolation)
 	viewportRect.w = gameWinWidth;
 	viewportRect.h = gameWinHeight;
 
-	renderPosition.x = playerDroid.getWorldPosInPixels ().x - playerDroid.previousWorldPosInPixels.x;
-	renderPosition.y = playerDroid.getWorldPosInPixels ().y - playerDroid.previousWorldPosInPixels.y;
+	renderPosition.x = playerDroid.getWorldPosInPixels ().x - playerDroid.ai2.getPreviousWorldPosInPixels ().x;
+	renderPosition.y = playerDroid.getWorldPosInPixels ().y - playerDroid.ai2.getPreviousWorldPosInPixels ().y;
 
-	renderPosition *= static_cast<float>(interpolation);
-	renderPosition.x += playerDroid.previousWorldPosInPixels.x;
-	renderPosition.y += playerDroid.previousWorldPosInPixels.y;
+	renderPosition = cpvmult (renderPosition, interpolation);
+	renderPosition.x += playerDroid.ai2.getPreviousWorldPosInPixels ().x;
+	renderPosition.y += playerDroid.ai2.getPreviousWorldPosInPixels ().y;
 
 	sourceRect.x = static_cast<int>(renderPosition.x) - (gameWinWidth / 2);
 	sourceRect.y = static_cast<int>(renderPosition.y) - (gameWinHeight / 2);
@@ -602,14 +592,14 @@ void gam_renderVisibleScreen (double interpolation)
 //-------------------------------------------------------------------------------------------------------------------------
 //
 // Render the waypoint segments
-void gam_showWayPoints (const std::string levelName)
+void gam_showWayPoints(const std::string levelName)
 //-------------------------------------------------------------------------------------------------------------------------
 {
-	int          indexCount;
-	b2Vec2       lineStart;
-	b2Vec2       lineFinish;
-	_lineSegment tempLine;
-	b2Vec2       wallStartDraw, wallFinishDraw;
+	int          indexCount {};
+	cpVect       lineStart {};
+	cpVect       lineFinish {};
+	_lineSegment tempLine {};
+	cpVect       wallStartDraw, wallFinishDraw {};
 
 	indexCount = 0;
 
@@ -658,7 +648,7 @@ void gam_showWayPoints (const std::string levelName)
 //-------------------------------------------------------------------------------------------------------------------------
 //
 // All droids on this deck are dead - set deck to dead
-void gam_setDeckIsDead ()
+void gam_setDeckIsDead()
 //-------------------------------------------------------------------------------------------------------------------------
 {
 	std::string tempFilename;
@@ -684,10 +674,10 @@ void gam_setDeckIsDead ()
 //-------------------------------------------------------------------------------------------------------------------------
 //
 // Check if all the levels are dead - Game Won
-void gam_checkAllLevels ()
+void gam_checkAllLevels()
 //-------------------------------------------------------------------------------------------------------------------------
 {
-	for (auto deckItr: shipdecks)
+	for (const auto &deckItr: shipdecks)
 	{
 		if (!deckItr.second.deckIsDead)
 			return;     // One still got droids on it

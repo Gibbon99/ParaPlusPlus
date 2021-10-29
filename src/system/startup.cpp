@@ -1,4 +1,4 @@
-#include <system/physics.h>
+#include <system/cpPhysics.h>
 #include <game/audio.h>
 #include <io/fileWatch.h>
 #include <gui/guiLanguage.h>
@@ -8,7 +8,6 @@
 #include <system/util.h>
 #include <game/player.h>
 #include <classes/paraLightmap.h>
-#include <gui/guiHighScore.h>
 #include <system/scriptEngine.h>
 #include <system/scriptConfig.h>
 #include <io/fileSystem.h>
@@ -47,7 +46,7 @@ bool        doScreenEffect;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create the flags to be used to create a window with
-Uint32 sys_createWindowFlags ()
+Uint32 sys_createWindowFlags()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	Uint32 newFlags = 0;
@@ -76,7 +75,7 @@ Uint32 sys_createWindowFlags ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start systems - Logfile, Script, Filesystem ( Physfs ), Event queues
-void sys_startSystems ()
+void sys_startSystems()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (!SDL_WasInit (SDL_INIT_EVERYTHING))
@@ -85,7 +84,8 @@ void sys_startSystems ()
 			sys_shutdownWithError (sys_getString ("SDL could not initialize. [ %s ]", SDL_GetError ()));
 	}
 
-//	io_initLogFile ();
+	io_initLogFile ();
+
 #ifdef MY_DEBUG
 	log_addEvent ("Running DEBUG version.");
 #endif
@@ -129,8 +129,6 @@ void sys_startSystems ()
 
 	sys_setNewMode (MODE_CONSOLE_INIT, false);
 
-	gui_readHighScore ();
-
 	SDL_Thread *initThread;
 
 	initThread = SDL_CreateThread (sys_startInit, "InitThread", (void *) nullptr);
@@ -145,7 +143,7 @@ void sys_startSystems ()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Start to load and prepare everything else
-static int sys_startInit (void *ptr)
+int sys_startInit([[maybe_unused]]void *ptr)
 //----------------------------------------------------------------------------------------------------------------------
 {
 //
@@ -165,10 +163,12 @@ static int sys_startInit (void *ptr)
 	paraScriptInstance.cacheFunctions ();
 
 #if MY_DEBUG
-	log_addEvent ("Run setupPhysicsEngine\n");
+	logFile.write (sys_getString ("[ %s ] Run setupPhysicsEngine.", __func__));
 #endif
 
-	sys_setupPhysicsEngine ();
+//	sys_setupPhysicsEngine ();
+
+	sys_createWorldPhysics ();
 
 	gam_initAudio ();
 
@@ -200,9 +200,6 @@ static int sys_startInit (void *ptr)
 
 	databaseSprite.create ("db_droid", 32, 0.6);
 
-// TODO do as an event with delay
-// SDL_SetTextureBlendMode (textures.at ("screen").getTexture (), SDL_BLENDMODE_MOD);
-
 	gam_setupPlayerDroid ();
 
 	createLookupTable ();
@@ -212,13 +209,15 @@ static int sys_startInit (void *ptr)
 	try
 	{
 		sideviewStarfield.init (renderer, 40, 7, textures.at ("hudNew").getHeight (), windowHeight, windowWidth);
+		deckviewStarfield.init (renderer, 40, 7, textures.at ("hudNew").getHeight (), windowHeight, windowWidth);
 	}
 	catch (std::out_of_range &outOfRange)
 	{
 		sideviewStarfield.init (renderer, 40, 7, 55, windowHeight, windowWidth);
+		deckviewStarfield.init (renderer, 40, 7, 55, windowHeight, windowWidth);
 	}
 
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 100, to_string (MODE_GUI_MAINMENU) + "|" + to_string (true));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 250, to_string (MODE_GUI_MAINMENU) + "|" + to_string (true));
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string (MODE_SHOW_SPLASH) + "|" + to_string (true));
 
 	return 0;
