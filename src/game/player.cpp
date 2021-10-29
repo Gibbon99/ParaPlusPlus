@@ -357,8 +357,11 @@ void gam_damageToPlayer(int damageSource, int sourceDroid)
 #ifdef MY_DEBUG
 			log_addEvent (sys_getString ("[ %s ] Player hit by BULLET.", __func__));
 #endif
-			gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "damage");
-			playerDroid.setCurrentHealth (playerDroid.getCurrentHealth () - dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].getDroidType ()].bulletDamage);
+			if (sourceDroid != TARGET_PLAYER)       // Stop player shooting self
+			{
+				gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 1, 127, "damage");
+				playerDroid.setCurrentHealth (playerDroid.getCurrentHealth () - dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].getDroidType ()].bulletDamage);
+			}
 
 			break;
 

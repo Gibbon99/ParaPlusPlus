@@ -509,19 +509,9 @@ cpVect sys_worldToScreen(cpVect worldPos, int shapeSize)
 {
 	cpVect screenCoords {};
 
-	if (sys_visibleOnScreen (worldPos, shapeSize) != 0)
-	{
-		screenCoords.x = worldPos.x - viewportRect.x;
-		screenCoords.y = worldPos.y - viewportRect.y;
-	}
-	else
-	{
-		screenCoords.x = worldPos.x - viewportRect.x;
-		screenCoords.y = worldPos.y - viewportRect.y;
+	screenCoords.x = worldPos.x - viewportRect.x;
+	screenCoords.y = worldPos.y - viewportRect.y;
 
-//		screenCoords.x = -1;
-//		screenCoords.y = -1;
-	}
 	return screenCoords;
 }
 

@@ -165,7 +165,16 @@ void paraTexture::render()
 	if (!loaded)
 		return;
 
-	SDL_SetTextureBlendMode (static_cast<PARA_Texture *>(texture), SDL_BLENDMODE_MOD); //SDL_BLENDMODE_BLEND);
+	try
+	{
+		if (keyName == "screen")
+			SDL_SetTextureBlendMode (static_cast<PARA_Texture *>(texture), SDL_BLENDMODE_MOD); //SDL_BLENDMODE_BLEND);
+		else
+			SDL_SetTextureBlendMode (static_cast<PARA_Texture *>(texture), SDL_BLENDMODE_BLEND);
+	}
+	catch (std::out_of_range &outOfRange)
+	{
+	}
 
 	if (SDL_RenderCopy (renderer.renderer, texture, nullptr, nullptr) < 0)
 	{

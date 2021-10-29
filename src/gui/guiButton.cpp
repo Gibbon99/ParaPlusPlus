@@ -7,23 +7,19 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Draw a button element
-void gui_renderButton (int whichButton, bool hasFocus)
+void gui_renderButton(int whichButton, bool hasFocus)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	std::string    fontName;
+	std::string    fontName {};
 	__BOUNDING_BOX bb {};
 	__PARA_COLOR   color {};
-	int            cornerRadius;
-	int            labelPos;
-	int            gapSize;
-	double         textPosX;
-	double         textPosY;
-
-//	PARA_Surface      *tempSurface  = nullptr;
-//	PARA_Texture      *tempTexture  = nullptr;
-
-	float ratioX;
-	float ratioY;
+	int            cornerRadius {};
+	int            labelPos {};
+	int            gapSize {};
+	double         textPosX {};
+	double         textPosY {};
+	float          ratioX {};
+	float          ratioY {};
 
 	ratioX = static_cast<float>(gameWinWidth) / static_cast<float>(windowWidth);
 	ratioY = static_cast<float>(gameWinHeight) / static_cast<float>(windowHeight);

@@ -1,6 +1,7 @@
 BUGS
 --------
 BUG - Transfer screen one - shows player droid at wrong position on start
+BUG - Getting bullet remove on index -1
 
 TO DO
 -------
@@ -173,6 +174,11 @@ FIXED - Zero out player velocity on exit from lift
 FIXED - Highscore file not loading correctly
 FIXED - Show final score when player is destroyed
 DONE - Put lastUsedName into highscore entry screen
+>Commit
+DONE - Fix up line of sight to be more robust
+FIXED - Massive memory leak from not freeing textures when printing text
+DONE - Fixed blendmode when using CRT effect
+DONE - Added in language selector in GUI
 
 GUI
 ------

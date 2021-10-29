@@ -257,7 +257,23 @@ int gam_getArrayIndex(Uint32 bulletID)
 
 		indexCounter++;
 	}
+
+	printf ("%s - Unable to find bulletID [ %i ].\n", __func__, bulletID);
+
 	return -1;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+//
+// Get a unique bullet ID
+int gam_getBulletID()
+//---------------------------------------------------------------------------------------------------------------
+{
+	static int newBulletID {100};
+
+	newBulletID++;
+
+	return newBulletID;
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -274,7 +290,7 @@ void gam_addBullet(int bulletSourceIndex)
 	else
 		g_shipDeckItr->second.droid[bulletSourceIndex].setWeaponCanFire (false);
 
-	bulletID = SDL_GetTicks ();
+	bulletID = gam_getBulletID ();
 
 	for (auto &bulletItr: bullets)
 	{

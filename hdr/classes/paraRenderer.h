@@ -13,9 +13,9 @@ enum FADE_STATE
 
 struct __backingTexture
 {
-	PARA_Texture *backingTexture;
-	int          logicalWidth;
-	int          logicalHeight;
+	PARA_Texture *backingTexture {};
+	int          logicalWidth {};
+	int          logicalHeight {};
 };
 
 struct __rendererInfo
@@ -41,7 +41,7 @@ public:
 	// Create things
 	void create(int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, bool useVSync, const std::string &windowTitle);
 
-	void createRenderTargetTexture(std::string textureName, int logicalWidth, int logicalHeight, int setRenderScaleQuality);
+	void createRenderTargetTexture(const std::string &textureName, int logicalWidth, int logicalHeight, int setRenderScaleQuality);
 
 	Uint32 createRendererFlags(int rendererIndex);
 
@@ -50,7 +50,7 @@ public:
 
 	std::string getCurrentBackingTexture();
 
-	PARA_Texture *getRenderTarget(std::string textureName);
+	PARA_Texture *getRenderTarget(const std::string &textureName);
 
 	int renderWidth();
 
@@ -68,7 +68,7 @@ public:
 
 	void setConOutFunction(functionPtrOut outputFunction);
 
-	void setCurrentBackingTexture(std::string newActiveTexture);
+	void setCurrentBackingTexture(const std::string &newActiveTexture);
 
 	void useNewRenderer(int newRendererIndex);
 
@@ -102,7 +102,7 @@ public:
 
 	void clearTextures() const;
 
-	int getFadeState() const;
+	[[nodiscard]] int getFadeState() const;
 
 	PARA_Texture *getFadeOffTexture();
 
@@ -117,19 +117,19 @@ public:
 
 private:
 
-	int                                     windowWidth;
-	int                                     windowHeight;
-	int                                     cacheWinFlags;
-	int                                     whichRenderer;
-	double                                  currentFadeAlpha;
+	int                                     windowWidth {};
+	int                                     windowHeight {};
+	int                                     cacheWinFlags {};
+	int                                     whichRenderer {};
+	double                                  currentFadeAlpha {};
 	bool                                    int_useVSync           = true;
 	bool                                    targetTextureAvailable = false;
-	double                                  fadeAmount;
-	functionPtrStr                          shutdownFunc;
-	functionPtrOut                          consoleOutFunc;
-	PARA_Texture  *fadeTextureCopy;   // Destination to copy the current backing texture to
-	std::vector<__rendererInfo>             rendererInfo;
-	std::map<std::string, __backingTexture> backingTextures;
-	std::string                             activeBackingTexture;
-	std::string                             cacheTitle;
+	double                                  fadeAmount {};
+	functionPtrStr                          shutdownFunc {};
+	functionPtrOut                          consoleOutFunc {};
+	PARA_Texture  *fadeTextureCopy {};   // Destination to copy the current backing texture to
+	std::vector<__rendererInfo>             rendererInfo {};
+	std::map<std::string, __backingTexture> backingTextures {};
+	std::string                             activeBackingTexture {};
+	std::string                             cacheTitle {};
 };

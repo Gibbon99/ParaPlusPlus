@@ -1,6 +1,5 @@
 #include "classes/paraBullet.h"
 #include "gui/guiLostScreen.h"
-#include "gui/guiHighScore.h"
 #include "gui/guiScrollbox.h"
 #include "io/fileWatch.h"
 #include "io/keyboard.h"
@@ -125,13 +124,7 @@ void sys_processInputEvents()
 					if (evt.key.keysym.sym == SDLK_PAGEDOWN)
 						console.changeScrollBackOffset (1);
 				}
-
-				if (evt.key.keysym.sym == SDLK_F1)
-					sys_setNewMode (MODE_SHOW_SPLASH, true);
-
-				if (evt.key.keysym.sym == SDLK_F3)
-					gui_showHighscoreEntry ();
-
+// TODO Remove this
 				if (evt.key.keysym.sym == SDLK_F5)
 				{
 					sys_setNewMode (MODE_GUI_WON_SCREEN, true);
@@ -227,8 +220,6 @@ void sys_gameTickRun()
 				gam_createTrail ();
 
 				backgroundStarfield.animate ();
-
-//				debug_getNumberOfShapes();
 			}
 			else
 			{
@@ -274,7 +265,6 @@ void sys_gameTickRun()
 
 		case MODE_TRANSFER_SCREEN_ONE:
 		case MODE_TRANSFER_SCREEN_TWO:
-//			trn_checkTransferScreenSounds();
 			break;
 
 		case MODE_PRE_TRANSFER_CHOOSE_SIDE:

@@ -112,7 +112,7 @@ Uint32 paraRenderer::createRendererFlags(int rendererIndex)
 void paraRenderer::create(int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, bool useVSync, const std::string &windowTitle)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_Surface *iconSurface;
+	SDL_Surface *iconSurface {};
 
 	int rendererFlags = 0;
 
@@ -157,10 +157,10 @@ void paraRenderer::create(int newWinWidth, int newWinHeight, int winFlags, int r
 void paraRenderer::useNewRenderer(int newRendererIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	__backingTexture                        tempBackingTexture;
-	std::string                             tempBackingTextureName;
-	std::string                             tempCurrentBackingTexture;
-	std::map<std::string, __backingTexture> tempBackingTextures;
+	__backingTexture                        tempBackingTexture {};
+	std::string                             tempBackingTextureName {};
+	std::string                             tempCurrentBackingTexture {};
+	std::map<std::string, __backingTexture> tempBackingTextures {};
 
 	if ((newRendererIndex < 0) || (newRendererIndex > static_cast<int>(rendererInfo.size () - 1)))
 	{
@@ -202,10 +202,10 @@ void paraRenderer::useNewRenderer(int newRendererIndex)
 void paraRenderer::getRendererInfo()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int            numRenderDrivers;
-	__rendererInfo tempRendererInfo;
+	int            numRenderDrivers {};
+	__rendererInfo tempRendererInfo {};
 
-	SDL_RendererInfo renderDriverInfo;
+	SDL_RendererInfo renderDriverInfo {};
 
 	if (!rendererInfo.empty ())
 	{
@@ -326,8 +326,6 @@ void paraRenderer::d_getAllRenderers()
 {
 	int currentCount = 0;
 
-	std::cout << "Inside getAllRenders" << std::endl;
-
 	if (rendererInfo.empty ())
 	{
 		consoleOutFunc (-1, "Renderer information has not been populated.");
@@ -366,7 +364,7 @@ PARA_Texture *paraRenderer::getFadeOffTexture()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Make a new backing texture active
-void paraRenderer::setCurrentBackingTexture(std::string newActiveTexture)
+void paraRenderer::setCurrentBackingTexture(const std::string &newActiveTexture)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	for (const auto &textureItr: backingTextures)
@@ -385,11 +383,9 @@ void paraRenderer::setCurrentBackingTexture(std::string newActiveTexture)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the render target texture handle
-PARA_Texture *paraRenderer::getRenderTarget(std::string textureName)
+PARA_Texture *paraRenderer::getRenderTarget(const std::string &textureName)
 //----------------------------------------------------------------------------------------------------------------------
 {
-//	SDL_assert_release(renderTargetTexture != nullptr);
-
 	if (backingTextures.empty ())
 		shutdownFunc (int_getString ("No backing textures exist."));
 
@@ -408,7 +404,7 @@ PARA_Texture *paraRenderer::getRenderTarget(std::string textureName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Create a render target texture
-void paraRenderer::createRenderTargetTexture(std::string textureName, int logicalWidth, int logicalHeight, int setRenderScaleQuality)
+void paraRenderer::createRenderTargetTexture(const std::string &textureName, int logicalWidth, int logicalHeight, int setRenderScaleQuality)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string      hintValue;
@@ -454,11 +450,11 @@ void paraRenderer::createRenderTargetTexture(std::string textureName, int logica
 void paraRenderer::copyCurrentRenderTarget()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	Uint32 format;
-	int    access;
-	int    width;
-	int    height;
-	PARA_Texture *tempRenderTarget;
+	Uint32 format {};
+	int    access {};
+	int    width {};
+	int    height {};
+	PARA_Texture *tempRenderTarget {};
 
 	tempRenderTarget = getRenderTarget (getCurrentBackingTexture ());
 

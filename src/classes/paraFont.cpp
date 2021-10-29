@@ -248,5 +248,5 @@ void paraFont::render(SDL_Renderer *whichRendererIn, double posX, double posY, i
 	}
 
 	SDL_RenderCopyF (whichRendererIn, tempTexture, nullptr, &pos);
-//	SDL_DestroyTexture (tempTexture);       // TODO Causing corrupt memory when running lots of threads?? Drawing status of AI on droids ?
+	SDL_DestroyTexture (tempTexture);       // TODO Causing corrupt memory when running lots of threads?? Drawing status of AI on droids ?
 }

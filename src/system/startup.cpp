@@ -200,9 +200,6 @@ int sys_startInit([[maybe_unused]]void *ptr)
 
 	databaseSprite.create ("db_droid", 32, 0.6);
 
-// TODO do as an event with delay
-// SDL_SetTextureBlendMode (textures.at ("screen").getTexture (), SDL_BLENDMODE_MOD);
-
 	gam_setupPlayerDroid ();
 
 	createLookupTable ();
@@ -220,7 +217,7 @@ int sys_startInit([[maybe_unused]]void *ptr)
 		deckviewStarfield.init (renderer, 40, 7, 55, windowHeight, windowWidth);
 	}
 
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 100, to_string (MODE_GUI_MAINMENU) + "|" + to_string (true));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 250, to_string (MODE_GUI_MAINMENU) + "|" + to_string (true));
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string (MODE_SHOW_SPLASH) + "|" + to_string (true));
 
 	return 0;

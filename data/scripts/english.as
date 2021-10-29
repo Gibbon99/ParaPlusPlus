@@ -119,6 +119,7 @@ void as_setEnglishText ()
 
 	gui_addKeyAndText ("gameMenu.tileStyle", "Tile style");
 	gui_addKeyAndText ("gameMenu.tileColor", "Tile color");
+	gui_addKeyAndText ("gameMenu.language", "Language");
 
 	gui_addKeyAndText ("databaseScreen.previousButton", "Previous");
 	gui_addKeyAndText ("databaseScreen.nextButton", "Next");

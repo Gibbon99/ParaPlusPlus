@@ -214,7 +214,8 @@ set(CXX_SRCS
 		src/chipmunk/cpSweep1D.c
 		src/chipmunk/prime.h
 
-		src/system/cpPhysics.cpp src/system/cpPhysicsDebug.cpp hdr/system/cpPhysicsDebug.h)
+		src/system/cpPhysics.cpp
+		src/system/cpPhysicsDebug.cpp)
 
 if (WIN32)
 	# Library path

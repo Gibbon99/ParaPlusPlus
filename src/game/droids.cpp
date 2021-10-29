@@ -103,12 +103,12 @@ std::string gam_getDroidName(int droidType)
 void gam_initDroids(const std::string &levelName)
 //-------------------------------------------------------------------------------------------------------------
 {
-	int        wayPointStartIndex = 0;
-	int        wayPointSpacing    = 0;
-	int        droidIndex         = 0;
-	int        whichDirection;
-	paraDroid  tempDroid;
-	paraRandom randomDirection;
+	int        wayPointStartIndex {};
+	int        wayPointSpacing {};
+	int        droidIndex {};
+	int        whichDirection {};
+	paraDroid  tempDroid {};
+	paraRandom randomDirection {};
 
 	if (!shipdecks.at (levelName).droid.empty ())
 	{
@@ -233,7 +233,7 @@ void gam_renderDroids()
 void gam_animateDroids()
 //-------------------------------------------------------------------------------------------------------------
 {
-	bool animationEnd = false;
+	bool animationEnd {false};
 
 	for (auto &droidItr: g_shipDeckItr->second.droid)
 	{
@@ -245,7 +245,31 @@ void gam_animateDroids()
 			droidItr.setCurrentMode (DROID_MODE_FOR_REMOVAL);
 		}
 
+		droidItr.visibleState = VISIBLE_STATE_GO_VISIBLE;
 		gam_checkLOS (droidItr);
+
+
+		//
+		// Set fade values
+		if (droidItr.visibleState == VISIBLE_STATE_GO_VISIBLE)
+		{
+			droidItr.visibleValue += visibleFadeValue;
+			if (droidItr.visibleValue > 255)
+			{
+				droidItr.visibleValue    = 255;
+				droidItr.visibleToPlayer = true;
+			}
+		}
+
+		if (droidItr.visibleState == VISIBLE_STATE_GO_NOT_VISIBLE)
+		{
+			droidItr.visibleValue -= visibleFadeValue;
+			if (droidItr.visibleValue < 0)
+			{
+				droidItr.visibleValue    = 0;
+				droidItr.visibleToPlayer = false;
+			}
+		}
 	}
 }
 
@@ -405,8 +429,7 @@ void gam_setHealthAnimation(int targetDroid)
 void gam_checkDroidHealth(int targetDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
-	float newHealthPercent;
-
+	float newHealthPercent {};
 //
 // Set AI heal value
 //
@@ -528,11 +551,13 @@ void gam_damageToDroid(int targetDroid, int damageSource, int sourceDroid)
 				// Do the bullet damage to target droid
 				g_shipDeckItr->second.droid[targetDroid].setCurrentHealth (g_shipDeckItr->second.droid[targetDroid].getCurrentHealth () - dataBaseEntry[g_shipDeckItr->second.droid[sourceDroid].getDroidType ()].bulletDamage);
 				gam_checkDroidHealth (targetDroid);
+				return;
 			}
 
 			if ((targetDroid == TARGET_PLAYER) && (sourceDroid != TARGET_PLAYER))      // Droid hit player with bullet
 			{
 				gam_damageToPlayer (PHYSIC_DAMAGE_BULLET, sourceDroid);
+				return;
 			}
 
 			if ((sourceDroid == TARGET_PLAYER) && (targetDroid != TARGET_PLAYER))      // Player shot this bullet at a droid
@@ -616,16 +641,15 @@ void gam_removeDroids()
 void gam_debugShowTarget(paraDroid whichDroid)
 //-------------------------------------------------------------------------------------------------------------
 {
-	cpVect startPos {};
 	cpVect endPos {};
 
 	if (dataBaseEntry[whichDroid.getDroidType ()].canShoot)
 	{
 		if (whichDroid.ai2.getTargetDroid () != NO_ATTACK_TARGET)
 		{
-			startPos = whichDroid.getWorldPosInPixels ();
+			auto startPos = whichDroid.getWorldPosInPixels ();
 
-			if (whichDroid.ai2.getTargetDroid () == -1)
+			if (whichDroid.ai2.getTargetDroid () == TARGET_PLAYER)
 				endPos = playerDroid.getWorldPosInPixels ();
 			else
 				endPos = g_shipDeckItr->second.droid[whichDroid.ai2.getTargetDroid ()].getWorldPosInPixels ();

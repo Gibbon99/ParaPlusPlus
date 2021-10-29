@@ -494,9 +494,6 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 			break;
 
 		case AI2_MODE_ATTACK:
-
-//			log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s Check targetDroid == -1", arrayIndex, __func__));
-
 			if (targetDroid == TARGET_PLAYER)      // Get distance and direction to the player
 			{
 				currentAttackDistance = cpvdist (playerDroid.getWorldPosInPixels (), worldPosInPixels);
@@ -504,14 +501,9 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 			}
 			else if (targetDroid != NO_ATTACK_TARGET)                        // Get distance and direction to the other droid
 			{
-
-//			log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s Check targetDroid != NO_ATTACK_TARGET", arrayIndex, __func__));
-
 				currentAttackDistance = cpvdist (g_shipDeckItr->second.droid[targetDroid].getWorldPosInPixels (), worldPosInPixels);
 				directionAttackVector = cpvsub (g_shipDeckItr->second.droid[targetDroid].getWorldPosInPixels (), worldPosInPixels);
 			}
-
-//			log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s currentAttackDistance > desiredAttackDistance2", arrayIndex, __func__));
 
 			if (currentAttackDistance > desiredAttackDistance2)    // Droid is too far away - move closer
 			{
@@ -523,8 +515,6 @@ void paraAI2::doMovement(cpVect newWorldPosInPixels)
 
 			if (currentAttackDistance < desiredAttackDistance2)     // Too close - move away - but check that path is clear ?
 			{
-//				log_addEvent (sys_getString ("[ %i ] - AI2_MODE_ATTACK - Function : %s currentAttackDistance < desiredAttackDistance2", arrayIndex, __func__));
-
 				directionAttackVector = -directionAttackVector;
 				directionAttackVector = cpvnormalize (directionAttackVector);
 				directionAttackVector = cpvmult (directionAttackVector, currentSpeed);
@@ -862,14 +852,12 @@ void paraAI2::checkAIScores()
 {
 	DBGVAR(std::cout, arrayIndex);
 
-	//std::cout << sys_getString ("Index %i Function : %s", arrayIndex, __func__) << std::endl;
-
 	int highestScore = 0;
 	int newAIAction  = 0;
 
 	//
 	// Prioritise healing above others
-	if (ai[AI2_MODE_HEAL] >= 90)
+	if (ai[AI2_MODE_HEAL] >= 80)
 	{
 		modifyAIScore (AI2_MODE_PATROL, -70);
 		modifyAIScore (AI2_MODE_FLEE, -70);

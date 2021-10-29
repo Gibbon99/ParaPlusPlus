@@ -10,7 +10,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Draw an element
-void gui_drawObject (int objectType, int whichObject, bool hasFocus)
+void gui_drawObject(int objectType, int whichObject, bool hasFocus)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	switch (objectType)
@@ -44,57 +44,31 @@ void gui_drawObject (int objectType, int whichObject, bool hasFocus)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Entry function for drawing the current dialogbox
-void gui_renderActiveDialogbox ()
+void gui_renderActiveDialogbox()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int indexCount = 0;
-//	Uint8         r, g, b, a;
-//	SDL_BlendMode tempMode;
-
-	//
-	// SDL2_gfx changes the blend mode and draw color
-	// as part of its rendering - remember so we can change it back
-//	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
-//	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
-
 	gui_renderDialogbox (gui.getCurrentDialogbox ());
 
-	for (indexCount = 0; indexCount != gui.numElementsDialogbox (); indexCount++)
+	for (int indexCount = 0; indexCount != gui.numElementsDialogbox (); indexCount++)
 	{
 		if (gui.selectedObjectDialogbox () == indexCount)
 			gui_drawObject (gui.typeByIndexDialogbox (indexCount), gui.indexByIndexDialogbox (indexCount), true);
 		else
 			gui_drawObject (gui.typeByIndexDialogbox (indexCount), gui.indexByIndexDialogbox (indexCount), false);
 	}
-
-//	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
-//	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Entry function for drawing the GUI elements
-void gui_renderGUI ()
+void gui_renderGUI()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int indexCount = 0;
-//	Uint8         r, g, b, a;
-//	SDL_BlendMode tempMode;
-
-	//
-	// SDL2_gfx changes the blend mode and draw color
-	// as part of its rendering - remember so we can change it back
-//	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
-//	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
-
-	for (indexCount = 0; indexCount != gui.numElements (); indexCount++)
+	for (int indexCount = 0; indexCount != gui.numElements (); indexCount++)
 	{
 		if (gui.selectedObject () == indexCount)
 			gui_drawObject (gui.typeByIndex (indexCount), gui.indexByIndex (indexCount), true);
 		else
 			gui_drawObject (gui.typeByIndex (indexCount), gui.indexByIndex (indexCount), false);
 	}
-
-//	SDL_SetRenderDrawColor (renderer.renderer, r, g, b, a);
-//	SDL_SetRenderDrawBlendMode (renderer.renderer, tempMode);
 }
