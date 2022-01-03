@@ -26,6 +26,7 @@
 #include "system/cpPhysics.h"
 #include "system/util.h"
 #include "classes/paraBullet.h"
+#include "system/frameRender.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -150,6 +151,7 @@ void sys_scriptInitVariables()
 
 	paraScriptInstance.addHostVariable ("int maxNumBumps", &maxNumBumps);
 	paraScriptInstance.addHostVariable ("float bounceCounterDelay", &bounceCounterDelay);
+	paraScriptInstance.addHostVariable ("int databaseDroidRenderYOffset", &databaseDroidRenderYOffset);
 }
 
 void sys_scriptPrintInt(std::string inStr, int inInt)

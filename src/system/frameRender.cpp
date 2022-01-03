@@ -1,9 +1,7 @@
 #include <gui/guiLostScreen.h>
-#include <gui/guiHighScore.h>
 #include <system/util.h>
 #include <classes/paraStarfield.h>
 #include <system/cpPhysicsDebug.h>
-#include <game/lineOfSight.h>
 #include "gui/guiScrollbox.h"
 #include "system/startup.h"
 #include "game/shipDecks.h"
@@ -22,10 +20,11 @@
 #include "game/hud.h"
 #include "game/doors.h"
 
-unsigned long g_debugDroidCount = 0;
-bool          d_showPerfStats   = false;
-int           d_showPathIndex   = 0;
-bool          d_showWaypoints   = false;
+unsigned long g_debugDroidCount          = 0;
+bool          d_showPerfStats            = false;
+int           d_showPathIndex            = 0;
+bool          d_showWaypoints            = false;
+int           databaseDroidRenderYOffset = 30;          // From script
 
 Uint8         r, g, b, a;
 SDL_BlendMode tempMode;
@@ -37,14 +36,13 @@ void sys_prepareFrame()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	//
-// SDL2_gfx changes the blend mode and draw color
-// as part of its rendering - remember so we can change it back
-//
+	// SDL2_gfx changes the blend mode and draw color
+	// as part of its rendering - remember so we can change it back
+	//
 	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
 	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
 
 	renderer.prepareFrame ();
-
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -73,10 +71,10 @@ void sys_renderFrame(double interpolation)
 		return;
 	}
 
-	int halfScreen = hiresVirtualWidth / 2;
-	int frameWidth = databaseSprite.getFrameWidth ();
-	int halfPoint  = (halfScreen - frameWidth) / 2;
-	int finalPoint = halfPoint + halfScreen;
+	int  halfScreen = hiresVirtualWidth / 2;
+	int  frameWidth = databaseSprite.getFrameWidth ();
+	int  halfPoint  = (halfScreen - frameWidth) / 2;
+	int  finalPoint = halfPoint + halfScreen;
 
 	switch (currentMode)
 	{
@@ -105,7 +103,7 @@ void sys_renderFrame(double interpolation)
 		case MODE_GUI_DATABASE:
 			gui_renderScrollbox ("databaseScreen.scrollbox", interpolation);
 			databaseSprite.setTintColor (255, 255, 255);
-			databaseSprite.render (finalPoint, ((((hiresVirtualHeight - (hiresVirtualHeight / 2) - databaseSprite.getFrameHeight ())) / 2) + (textures.at ("hudNew").getHeight ())), 2.0, static_cast<Uint8>(255));
+			databaseSprite.render (finalPoint, ((((hiresVirtualHeight - (hiresVirtualHeight / 2) - databaseSprite.getFrameHeight ())) / 2) + (textures.at ("hudNew").getHeight () + databaseDroidRenderYOffset)), 2.0, static_cast<Uint8>(255));
 			gui_renderGUI ();
 			break;
 
