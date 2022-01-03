@@ -6,7 +6,6 @@ BUG - Fade on low health disappears completly
 BUG - Not all particles fire on explosion - random
 BUG - Two consoles not accessible on level - collision lines wrong spot
 BUG - Healing sound kept playing when not on healing tile
-BUG - Remove delay at end of transfer game
 
 TO DO
 -------
@@ -186,6 +185,9 @@ DONE - Fixed blendmode when using CRT effect
 DONE - Added in language selector in GUI
 
 DONE - BUG - lower position of droid model in terminal - add in scripted global to adjust position
+DONE - BUG - Remove delay at end of transfer game - reduced value in terminal script
+
+
 GUI
 ------
 

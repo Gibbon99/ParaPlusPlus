@@ -126,7 +126,7 @@ void as_initTransferValues ()
 	transferBackgroundWidth  = transferBitmapWidth - (backgroundPadding * 2);
 	transferBackgroundHeight = transferBitmapHeight - (backgroundPadding) - transferBackgroundStartY;
 
-	transferResultDelay		= 90;
+	transferResultDelay		= 30;
 
 	as_setupTransferOne ();
 	as_setupTransferTwo ();
