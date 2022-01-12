@@ -16,6 +16,7 @@
 #include "game/doors.h"
 #include "game/terminal.h"
 #include "game/alertLevel.h"
+#include "tinyxml2.h"
 
 int                                                    tileSize;
 int                                                    numTileAcrossInTexture = 8;
@@ -231,25 +232,60 @@ void gam_addPaddingToLevel(const std::string fileName)
 	{
 		shipdecks.at (fileName).tiles[i] = tempLevel[i];
 	}
+	//
+	// Adjust waypoints to reflect new deck size
+	for (auto &waypointItr : shipdecks.at(fileName).wayPoints)
+	{
+		waypointItr.x += (drawOffset.x * tileSize) / 2;
+		waypointItr.y += (drawOffset.y * tileSize) / 2;
+
+		waypointItr.x -= (tileSize / 2);
+	}
+	//
+	// Adjust physics line segments to reflect new deck size
+	for (auto &segmentItr : shipdecks.at(fileName).lineSegments)
+	{
+		segmentItr.start.x += (drawOffset.x * tileSize) / 2;
+		segmentItr.start.y += (drawOffset.y * tileSize) / 2;
+		segmentItr.finish.x += (drawOffset.x * tileSize) / 2;
+		segmentItr.finish.y += (drawOffset.y * tileSize) / 2;
+
+		segmentItr.start.y += (tileSize / 2);
+		segmentItr.finish.y += (tileSize / 2);
+	}
 	tempLevel.clear ();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Populate the shipdeck structure from a file in memory
-void gam_loadShipDeck(const std::string &fileName)
+// Check the result of loading an XML Shipdeck file
+bool gam_checkXMLReturnCode(tinyxml2::XMLError resultCode)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_RWops    *fp;
-	int          checkVersion;
-	_deckStruct  tempLevel;
-	_lineSegment tempSegment {};
-	cpVect       tempWaypoint {};
-	int          tempDroidType;
-	int          tempTile;
-	int          fileSize;
+	if (resultCode != tinyxml2::XML_SUCCESS)
+	{
+		sys_shutdownWithError (sys_getString ("XML file error [ %i ]. Exiting.", resultCode));
+		return resultCode;
+	}
+
+	return resultCode;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Load a shipdeck from the new XML format
+bool gam_loadXMLShipDesk(const std::string &fileName)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	tinyxml2::XMLDocument *xmlFileLoad;
+	tinyxml2::XMLNode     *rootNode;
+	SDL_RWops             *fp;
+	int                   fileSize;
 	char         *memoryBuffer;
-	float        tempFloat;
+
+	_deckStruct tempLevel {};
+
+	tinyxml2::XMLElement *elementPtr;
 
 	try
 	{
@@ -260,113 +296,223 @@ void gam_loadShipDeck(const std::string &fileName)
 		//
 		// Tiles texture is not loaded yet, resubmit the load request with a time delay
 		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_DECK, 1, fileName);
-		return;
+		return false;
 	}
 
 	drawOffset.x = static_cast<float>(gameWinWidth) / 2;     // Padding to make tilePosX always positive
 	drawOffset.y = static_cast<float>(gameWinHeight) / 2;    // Padding to make tilePosY always positive
 
-	fileSize = fileSystem.getFileSize (fileName);
-	if (fileSize < 0)
-		sys_shutdownWithError (sys_getString ("Fatal error getting level file size [ %s ].", fileName.c_str ()));
+	xmlFileLoad = new tinyxml2::XMLDocument;
 
-	memoryBuffer = sys_malloc (static_cast<int>(sizeof (char) * fileSize), fileName);
-	if (nullptr == memoryBuffer)
-		sys_shutdownWithError (sys_getString ("Fatal memory allocation error when loading level file."));
+	auto tempFileName = "data/" + fileName;
 
-	fileSystem.getFileIntoMemory (fileName, memoryBuffer);
-	//
-	// Open the block of memory and read like a file
-	fp = SDL_RWFromConstMem (memoryBuffer, fileSize);
-	if (nullptr == fp)
-		sys_shutdownWithError (sys_getString ("Mapping memory to file failed for file [ %s ]", fileName.c_str ()));
-	//
-	// Check this version is ok to use
-	SDL_RWread (fp, &checkVersion, sizeof (checkVersion), 1);
-	if (checkVersion != MAP_VERSION)
-		sys_shutdownWithError (sys_getString ("MAP_VERSION wrong for file. Wanted [ %i ] got from file [ %i ]", MAP_VERSION, checkVersion));
-	//
-	// Read number variables
-	SDL_RWread (fp, (void *) &tempLevel.numLineSegments, sizeof (tempLevel.numLineSegments), 1);
-	SDL_RWread (fp, (void *) &tempLevel.numWaypoints, sizeof (tempLevel.numWaypoints), 1);
-	SDL_RWread (fp, (void *) &tempLevel.numDroids, sizeof (tempLevel.numDroids), 1);
-	SDL_RWread (fp, (void *) &tempLevel.numLifts, sizeof (tempLevel.numLifts), 1);
-
-	SDL_RWread (fp, &tempFloat, sizeof (tempFloat), 1);
-	tempLevel.levelDimensions.x = tempFloat;
-
-	SDL_RWread (fp, &tempFloat, sizeof (tempFloat), 1);
-	tempLevel.levelDimensions.y = tempFloat;
-
-	//
-	// Line segments for physics collisions
-	for (int i = 0; i != tempLevel.numLineSegments; i++)
+	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile (tempFileName.c_str ());
+	gam_checkXMLReturnCode (eResult);
+	rootNode = xmlFileLoad->FirstChild ();
+	if (nullptr == rootNode)
 	{
-		SDL_RWread (fp, &tempFloat, sizeof (tempFloat), 1);
-		tempSegment.start.x = tempFloat;
-
-		SDL_RWread (fp, &tempFloat, sizeof (tempFloat), 1);
-		tempSegment.start.y = tempFloat;
-
-		SDL_RWread (fp, &tempFloat, sizeof (tempFloat), 1);
-		tempSegment.finish.x = tempFloat;
-
-		SDL_RWread (fp, &tempFloat, sizeof (tempFloat), 1);
-		tempSegment.finish.y = tempFloat;
-
-		tempSegment.start.x += drawOffset.x;
-		tempSegment.start.y += drawOffset.y;
-
-		tempSegment.finish.x += drawOffset.x;
-		tempSegment.finish.y += drawOffset.y;
-
-		tempLevel.lineSegments.push_back (tempSegment);
+		logFile.write (sys_getString ("Unable to load XML file [ %s ]", fileName.c_str ()));
+		return false;
 	}
 	//
-	// Waypoints for Droid patrol
-	for (int i = 0; i != tempLevel.numWaypoints; i++)
+	// Get the mapVersion to check the file is ok
+	elementPtr = rootNode->FirstChildElement ("mapVersion");
+	if (nullptr == elementPtr)
 	{
-		SDL_RWread (fp, &tempFloat, sizeof (tempFloat), 1);
-		tempWaypoint.x = tempFloat;
+		logFile.write (sys_getString ("Unable to find node 'mapVersion' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryIntText (&tempLevel.mapVersion);
+	gam_checkXMLReturnCode (eResult);
+	if (MAP_VERSION != tempLevel.mapVersion)
+	{
+		logFile.write (sys_getString ("Version mismatch loading file. Got [ %i ] expected [ %i ]", tempLevel.mapVersion, MAP_VERSION));
+		return false;
+	}
+	//
+	// Map version is correct - load the rest of the file
+	elementPtr = rootNode->FirstChildElement ("numLineSegments");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'numLineSegments' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryIntText (&tempLevel.numLineSegments);
+	gam_checkXMLReturnCode (eResult);
+	//
+	// Number of waypoints
+	elementPtr = rootNode->FirstChildElement ("numWaypoints");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'numWaypoints' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryIntText (&tempLevel.numWaypoints);
+	gam_checkXMLReturnCode (eResult);
+	//
+	// Number of droids
+	elementPtr = rootNode->FirstChildElement ("numDroids");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'numDroids' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryIntText (&tempLevel.numDroids);
+	gam_checkXMLReturnCode (eResult);
+	//
+	// Number of lifts
+	elementPtr = rootNode->FirstChildElement ("numLifts");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'numLifts' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryIntText (&tempLevel.numLifts);
+	gam_checkXMLReturnCode (eResult);
+	//
+	// Get the level dimensions
+	elementPtr = rootNode->FirstChildElement ("levelDimensionX");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'levelDimensionX' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	float levelX{};
+	eResult = elementPtr->QueryFloatText (&levelX);
+	gam_checkXMLReturnCode (eResult);
 
-		SDL_RWread (fp, &tempFloat, sizeof (tempFloat), 1);
-		tempWaypoint.y = tempFloat;
+	elementPtr = rootNode->FirstChildElement ("levelDimensionY");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'levelDimensionY' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	float levelY{};
+	eResult = elementPtr->QueryFloatText (&levelY);
+	gam_checkXMLReturnCode (eResult);
+	tempLevel.levelDimensions.x = levelX;
+	tempLevel.levelDimensions.y = levelY;
+	//
+	// Get all the linesegments
+	elementPtr = rootNode->FirstChildElement ("lineSegments");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'lineSegments' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	_lineSegment tempLineSegment {};
 
-		tempWaypoint.x += drawOffset.x;
-		tempWaypoint.y += drawOffset.y;
+	float tempFloat;
 
-		cpVect tempVec2 {};
+	tinyxml2::XMLElement *listElementPtr = elementPtr->FirstChildElement ("segment");
+	while (listElementPtr != nullptr)
+	{
+		eResult = listElementPtr->QueryFloatText (&tempFloat);
+		tempLineSegment.start.x = tempFloat;
+		gam_checkXMLReturnCode (eResult);
 
-		tempVec2.x = tempWaypoint.x - (tileSize / 2);
-		tempVec2.y = tempWaypoint.y - (tileSize / 2);
+		listElementPtr = listElementPtr->NextSiblingElement ("segment");
+		eResult        = listElementPtr->QueryFloatText (&tempFloat);
+		tempLineSegment.start.y = tempFloat;
+		gam_checkXMLReturnCode (eResult);
 
-		tempLevel.wayPoints.push_back (tempVec2);
+		listElementPtr = listElementPtr->NextSiblingElement ("segment");
+		eResult        = listElementPtr->QueryFloatText (&tempFloat);
+		tempLineSegment.finish.x = tempFloat;
+		gam_checkXMLReturnCode (eResult);
+
+		listElementPtr = listElementPtr->NextSiblingElement ("segment");
+		eResult        = listElementPtr->QueryFloatText (&tempFloat);
+		tempLineSegment.finish.y = tempFloat;
+		gam_checkXMLReturnCode (eResult);
+
+		listElementPtr = listElementPtr->NextSiblingElement ("segment");
+
+		tempLevel.lineSegments.push_back (tempLineSegment);
+	}
+	//
+	// Get all the waypoints
+	elementPtr = rootNode->FirstChildElement ("wayPoints");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'wayPoints' in file [ %s ]", fileName.c_str ()));
+		return false;
 	}
 
-	//
-	// Load each droid type on the current level
-	for (int i = 0; i != tempLevel.numDroids; i++)
+	cpVect tempWayPoint {};
+
+	listElementPtr = elementPtr->FirstChildElement ("wayPoint");
+	while (listElementPtr != nullptr)
 	{
-		SDL_RWread (fp, &tempDroidType, sizeof (tempDroidType), 1);
+		eResult = listElementPtr->QueryFloatText (&tempFloat);
+		tempWayPoint.x = tempFloat;
+		gam_checkXMLReturnCode (eResult);
+
+		listElementPtr = listElementPtr->NextSiblingElement ("wayPoint");
+		eResult        = listElementPtr->QueryFloatText (&tempFloat);
+		tempWayPoint.y = tempFloat;
+		gam_checkXMLReturnCode (eResult);
+
+		listElementPtr = listElementPtr->NextSiblingElement ("wayPoint");
+
+		tempLevel.wayPoints.push_back (tempWayPoint);
+	}
+	//
+	// Get all the tiles to render the level
+	elementPtr = rootNode->FirstChildElement ("tiles");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'tiles' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	int tempTile;
+
+	listElementPtr = elementPtr->FirstChildElement ("tile");
+	while (listElementPtr != nullptr)
+	{
+		eResult = listElementPtr->QueryIntText (&tempTile);
+		gam_checkXMLReturnCode (eResult);
+		listElementPtr = listElementPtr->NextSiblingElement ("tile");
+
+		tempLevel.tiles.push_back (tempTile);
+	}
+	//
+	// Get all the droid types for the level
+	elementPtr = rootNode->FirstChildElement ("droidTypes");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'droidTypes' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	int tempDroidType;
+
+	listElementPtr = elementPtr->FirstChildElement ("droidType");
+	while (listElementPtr != nullptr)
+	{
+		eResult = listElementPtr->QueryIntText (&tempDroidType);
+		gam_checkXMLReturnCode (eResult);
+		listElementPtr = listElementPtr->NextSiblingElement ("droidType");
+
 		tempLevel.droidTypes.push_back (tempDroidType);
 	}
 	//
-	// Array holding tile types
-	for (int i = 0; i != tempLevel.levelDimensions.x * tempLevel.levelDimensions.y; i++)
+	// Get the level name
+	const char *tempLevelName;
+	elementPtr = rootNode->FirstChildElement ("levelName");
+	if (nullptr == elementPtr)
 	{
-		SDL_RWread (fp, &tempTile, sizeof (tempTile), 1);
-		tempLevel.tiles.push_back (tempTile);
+		logFile.write (sys_getString ("Unable to find node 'levelName' in file [ %s ]", fileName.c_str ()));
+		return false;
 	}
-	SDL_RWread (fp, &tempLevel.levelName, sizeof (tempLevel.levelName), 1);
+	tempLevelName = elementPtr->GetText ();
+	strcpy (tempLevel.levelName, tempLevelName);
 
-	//
-	// Finished - close the file
-	SDL_RWclose (fp);
-	sys_freeMemory (fileName);
+	delete xmlFileLoad;
+
 	//
 	// Extract the deck number from the filename
 	std::string output     = fileName;
-	std::string removePart = "116-newDeck";
+	std::string removePart = "Deck";
 
 	output.erase (0, removePart.size ());
 	std::string::size_type idx = output.rfind ('.');
@@ -384,7 +530,10 @@ void gam_loadShipDeck(const std::string &fileName)
 	tempLevel.droidPhysicsCreated = false;
 
 	shipdecks.insert (std::pair<std::string, _deckStruct> (tempLevel.levelName, tempLevel));
-
+	//
+	// Increase the size of the level to allow scrolling based on screen resolution
+	//
+	// Reference by level name
 	gam_addPaddingToLevel (tempLevel.levelName);
 
 	gam_findHealingTiles (tempLevel.levelName);
@@ -395,6 +544,8 @@ void gam_loadShipDeck(const std::string &fileName)
 		gam_setupLifts ();
 
 	con_addEvent (-1, sys_getString ("Loaded ship level [ %s ] - index [ %i ]", tempLevel.levelName, tempLevel.deckNumber));
+
+	return true;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

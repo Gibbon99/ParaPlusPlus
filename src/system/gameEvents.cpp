@@ -132,7 +132,8 @@ void gam_processGameEventQueue()
 					break;
 
 				case EVENT_ACTION_GAME_LOAD_DECK:
-					gam_loadShipDeck (tempEvent->gameText1);
+					gam_loadXMLShipDesk(tempEvent->gameText1);
+					//gam_loadShipDeck (tempEvent->gameText1);
 					break;
 
 				case EVENT_ACTION_GAME_LOAD_FONT:
