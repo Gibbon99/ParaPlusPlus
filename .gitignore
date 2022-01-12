@@ -31,3 +31,6 @@
 /.vscode
 /cmake-build-debug-coverage
 /CodeAnalysis
+/cmake-build-debug-visual-studio/
+/cmake-build-release-visual-studio/
+/.vs/

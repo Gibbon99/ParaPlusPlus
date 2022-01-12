@@ -64,6 +64,7 @@ if (WIN32)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 		add_executable(Win32_Para_debug ${SOURCES})
 		target_link_libraries(Win32_Para_debug clang_rt.asan_dynamic_runtime_thunk-i386)
+#		target_link_libraries(Win32_Para_debug)
 	endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
 	if (CMAKE_BUILD_TYPE MATCHES Release)

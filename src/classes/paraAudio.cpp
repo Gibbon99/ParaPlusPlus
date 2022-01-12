@@ -30,11 +30,11 @@ paraAudio::~paraAudio()
 
 	while (audioItr != audio.end ())
 	{
-		free (audioItr->second.audio);
+		if (audioItr->second.audio != nullptr)
+			free (audioItr->second.audio);		//TODO Causing exception on exit
 
 		audioItr++;
 	}
-
 }
 
 void paraAudio::AddRef()

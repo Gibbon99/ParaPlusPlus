@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
+    "\\data",
+    "\\data\\scripts",
     "\\hdr",
-    "\\hdr\\classes",
     "\\hdr\\gui",
     "\\src",
     "\\src\\classes",
@@ -11,6 +12,6 @@
     "\\src\\io",
     "\\src\\system"
   ],
-  "SelectedNode": "\\src\\game\\pathFind.cpp",
+  "SelectedNode": "\\src\\classes\\paraAudio.cpp",
   "PreviewInSolutionExplorer": false
 }

@@ -106,6 +106,9 @@ unsigned char handleCollisionDroidToDroid([[maybe_unused]]cpArbiter *arb, [[mayb
 			gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", userDataB->dataValue, PHYSIC_DAMAGE_EXPLOSION, userDataA->dataValue));
 			return cpFalse;
 		}
+
+		gam_addEvent(EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString("%i|%i|%i", userDataB->dataValue, PHYSIC_DAMAGE_BUMP, userDataA->dataValue));
+		return cpFalse;
 	}
 
 	//

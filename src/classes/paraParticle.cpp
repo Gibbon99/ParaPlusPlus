@@ -207,16 +207,18 @@ void paraParticle::render()
 			case PARTICLE_TYPE_EXPLOSION:
 			case PARTICLE_TYPE_SPARK:
 				if (body != nullptr)
-					renderPosition = cpBodyGetPosition (body);
+				{
+					renderPosition = cpBodyGetPosition(body);
+					renderPosition = sys_worldToScreen(renderPosition, static_cast<int>(particleSize));
+					filledCircleRGBA(renderer.renderer, renderPosition.x, renderPosition.y, particleSize / 2, color.r, color.g, color.b, color.a);
+				}					
 				break;
 
 			case PARTICLE_TYPE_TRAIL:
 				renderPosition = m_worldPos;
+				renderPosition = sys_worldToScreen(renderPosition, static_cast<int>(particleSize));
+				filledCircleRGBA(renderer.renderer, renderPosition.x, renderPosition.y, particleSize / 2, color.r, color.g, color.b, color.a);
 				break;
 		}
-
-		renderPosition = sys_worldToScreen (renderPosition, static_cast<int>(particleSize));
-
-		filledCircleRGBA (renderer.renderer, renderPosition.x, renderPosition.y, particleSize / 2, color.r, color.g, color.b, color.a);
 	}
 }
