@@ -21,20 +21,9 @@
 
 #endif
 
-#define APP_NAME    "Para++"
-
+#define APP_NAME    "ParadroidPlusPlus"
 
 #define DEBUG_AI2 1     // Toggle logging for paraAI2
-/*
-* #define DEBUG_MEMORY 1              // Toggle logging for paraMemory
-#define ASTAR_DEBUG 1   // Toggle logging for aStar functions
-#define ASTAR_DO_PATH_COMPRESS 1    // Remove redundant waypoints from final aStar
-#define AUDIO_DEBUG 1               // Toggle logging for Audio functions
-#define DEBUG_BULLET 1              // Toggle logging for bullet functions
-#define MY_GUI_DEBUG 1              // Toggle logging for GUI functions
-#define MY_DEBUG_SCRIPT 1           // Toggle logging for script functions
-// #define SHOW_ALL_DROIDS 1        // Toggle visibility of all droids
-*/
 
 #include "classes/paraScript.h"
 #include "classes/paraLogFile.h"
@@ -123,7 +112,7 @@ struct _userData
 //
 //-----------------------------------------------------------------------------
 
-struct _doorTrigger
+struct doorTrigger_
 {
 	int    direction {};
 	int    tileIndex {};

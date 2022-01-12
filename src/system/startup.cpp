@@ -184,7 +184,7 @@ int sys_startInit([[maybe_unused]]void *ptr)
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName + "|guiFont28|" + std::to_string (28));
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, introFontFileName + "|introFont|" + std::to_string (introFontSize));
 
-	SDL_Delay (100);
+//	SDL_Delay (100);
 
 	gui.init (con_addEvent, reinterpret_cast<funcStrIn>(gui_getString), windowWidth, windowHeight, gameWinWidth, gameWinHeight, "keybinding.para");
 	gui_loadSideViewData ("sideview.dat");
