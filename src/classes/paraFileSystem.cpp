@@ -25,7 +25,7 @@ void paraFileSystem::setMallocFunction(functionPtrMalloc mallocFunctionPtr)
 //
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
-std::string paraFileSystem::int_getString(const std::string &format, ...)
+std::string paraFileSystem::int_getString(std::string format, ...)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	const char *const zcFormat = format.c_str ();

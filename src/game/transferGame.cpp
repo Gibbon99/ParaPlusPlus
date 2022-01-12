@@ -94,7 +94,7 @@ void trn_processEndOfTransferGame()
 		gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferBurntout");
 		sys_setNewMode (MODE_TRANSFER_RESULT, false);
 		gam_setHudText ("burntout");
-		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, transferResultDelay, to_string (MODE_GAME) + "|" + to_string (true));
+		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, transferResultDelay, std::to_string (MODE_GAME) + "|" + std::to_string (true));
 		return;
 	}
 	//
@@ -108,8 +108,8 @@ void trn_processEndOfTransferGame()
 		trn_transferIntoDroid ();    // Drop back to 001 stats and sprite
 		sys_setNewMode (MODE_TRANSFER_RESULT, false);
 		gam_setHudText ("transferFailed");
-		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, transferResultDelay, to_string (MODE_GAME) + "|" + to_string (true));
-		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_START_BACKGROUND_SOUND, transferResultDelay, to_string (MODE_GAME) + "|" + to_string (true));
+		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, transferResultDelay, std::to_string (MODE_GAME) + "|" + std::to_string (true));
+		sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_START_BACKGROUND_SOUND, transferResultDelay, std::to_string (MODE_GAME) + "|" + std::to_string (true));
 		return;
 	}
 	//
@@ -131,8 +131,8 @@ void trn_processEndOfTransferGame()
 	trn_transferIntoDroid ();
 	sys_setNewMode (MODE_TRANSFER_RESULT, false);
 	gam_setHudText ("transferred");
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, transferResultDelay, to_string (MODE_GAME) + "|" + to_string (true));
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_START_BACKGROUND_SOUND, transferResultDelay, to_string (MODE_GAME) + "|" + to_string (true));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, transferResultDelay, std::to_string (MODE_GAME) + "|" + std::to_string (true));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_START_BACKGROUND_SOUND, transferResultDelay, std::to_string (MODE_GAME) + "|" + std::to_string (true));
 }
 
 //---------------------------------------------------------------------------------------------------------------------

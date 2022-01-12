@@ -60,7 +60,7 @@ public:
 
 //	bool pause (std::string keyName);
 
-	std::string int_getString(const std::string &format, ...);
+	std::string int_getString(std::string format, ...);
 
 	int play(std::string keyName, bool loop, int distance, int pan);
 

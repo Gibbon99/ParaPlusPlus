@@ -637,7 +637,7 @@ cpVect paraAStar::getWaypoint()
 	if (wayPoints.size () == 0)
 	{
 		log_addEvent (sys_getString ("[ %s ] STOP: Waypoint array is empty.", __func__));
-		aStarDirection = ASTAR_DIRECTION::ERROR;
+		aStarDirection = ASTAR_DIRECTION::ASTAR_ERROR;
 		return cpVect {};
 	}
 
@@ -668,7 +668,7 @@ cpVect paraAStar::getWaypoint()
 			}
 			break;
 
-		case ASTAR_DIRECTION::ERROR:
+		case ASTAR_DIRECTION::ASTAR_ERROR:
 			break;
 	}
 	return wayPoints[wayPointsIndex];

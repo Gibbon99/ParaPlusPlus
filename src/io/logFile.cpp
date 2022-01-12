@@ -80,7 +80,7 @@ void io_processLoggingEventQueue()
 							break;
 
 						default:
-							cout << "ERROR: Unknown logfile action [ " << logFileEvent->action << " ]" << logFileEvent->newLogfileLine << endl;
+							std::cout << "ERROR: Unknown logfile action [ " << logFileEvent->action << " ]" << logFileEvent->newLogfileLine << std::endl;
 							break;
 					}
 

@@ -156,7 +156,7 @@ void sys_scriptInitVariables()
 
 void sys_scriptPrintInt(std::string inStr, int inInt)
 {
-	std::cout << "String : " << inStr << "Int : " << inInt << endl;
+	std::cout << "String : " << inStr << "Int : " << inInt << std::endl;
 }
 /*
 // Function implementation with generic script interface

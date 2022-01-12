@@ -206,7 +206,7 @@ void evt_destroyMutexes()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new event to its queue
-void sys_addEvent(int eventType, int eventAction, int eventDelay, const string &eventText)
+void sys_addEvent(int eventType, int eventAction, int eventDelay, const std::string &eventText)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Mutex *tempMutex;

@@ -744,7 +744,7 @@ std::vector<std::string>::reverse_iterator paraGui::getRBegin(int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Reset a scrollbox to start
-void paraGui::restartScrollBox(const string &objectID)
+void paraGui::restartScrollBox(const std::string &objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int objectIndex;
@@ -3616,10 +3616,10 @@ void paraGui::setKeyDescription()
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Return the text name of the key
-string paraGui::getKeyName(int keyIndex)
+std::string paraGui::getKeyName(int keyIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	string keyName;
+	std::string keyName;
 
 	if ((keyIndex < 0) || (keyIndex > KEY_NUMBER_ACTIONS))
 		return "Invalid keyIndex";

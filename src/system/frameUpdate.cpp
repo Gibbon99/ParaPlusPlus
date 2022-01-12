@@ -88,7 +88,7 @@ void sys_processInputEvents()
 			case SDL_KEYDOWN:
 				if (currentMode == MODE_SHOW_SPLASH)
 				{
-					sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string (MODE_GUI_MAINMENU) + "|" + to_string (true));
+					sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, std::to_string (MODE_GUI_MAINMENU) + "|" + std::to_string (true));
 					return;
 				}
 

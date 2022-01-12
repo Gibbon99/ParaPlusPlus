@@ -24,7 +24,7 @@ public:
 
 	std::string getString(std::string fileName);
 
-	std::string int_getString(const std::string &format, ...);
+	std::string int_getString(std::string format, ...);
 
 	void setOutputFunction(filesystemFuncPtrIntStr outputFunction);
 

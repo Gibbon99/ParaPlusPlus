@@ -50,7 +50,7 @@ typedef struct
 } pthread_cond_t;
 typedef CRITICAL_SECTION pthread_mutex_t;
 
-typedef struct {} pthread_condattr_t; // Dummy;
+typedef struct {int dumbComplier;} pthread_condattr_t; // Dummy;
 
 int pthread_cond_destroy(pthread_cond_t* cv)
 {
@@ -145,7 +145,7 @@ int pthread_cond_wait(pthread_cond_t* cv, pthread_mutex_t* external_mutex)
 	return result == WAIT_TIMEOUT ? ETIMEDOUT : 0;
 }
 
-typedef struct {} pthread_mutexattr_t; //< Dummy
+typedef struct {int dumbComplier;} pthread_mutexattr_t; //< Dummy
 
 int pthread_mutex_init(pthread_mutex_t* mutex, const pthread_mutexattr_t* attr)
 {
@@ -171,7 +171,7 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex)
 	return 0;
 }
 
-typedef struct {} pthread_attr_t;
+typedef struct {int dumbComplier;} pthread_attr_t;
 
 typedef struct
 {

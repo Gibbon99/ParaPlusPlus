@@ -633,7 +633,7 @@ std::string gam_returnLevelNameFromDeck(int deckNumber)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Change to a new deck
-void gam_changeToDeck(string deckName, int whichLift)
+void gam_changeToDeck(std::string deckName, int whichLift)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	std::string tempFilename;

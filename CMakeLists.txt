@@ -57,19 +57,19 @@ if (WIN32)
 			./hdr/tinyxml2
 	)
 
+	set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 5)
+
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
-		message("-")
 		message("Doing DEBUG build")
-		message("-")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 		add_executable(Win32_Para_debug ${SOURCES})
-		target_link_libraries(Win32_Para_debug Debug clang_rt.asan_dynamic_runtime_thunk-i386)
+		target_link_libraries(Win32_Para_debug clang_rt.asan_dynamic_runtime_thunk-i386)
 	endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
 	if (CMAKE_BUILD_TYPE MATCHES Release)
-		message("-")
 		message("Doing RELEASE build")
-		message("-")
-		add_executable(Win32_Para_release ${CXX_SRCS})
+		add_executable(Win32_Para_release ${SOURCES})
+		target_link_libraries(Win32_Para_release)
 	endif (CMAKE_BUILD_TYPE MATCHES Release)
 endif (WIN32)
 
@@ -96,7 +96,6 @@ if (UNIX)
 		message("Doing DEBUG build")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g -O0 -Wimplicit-fallthrough -Wtype-limits -Wint-in-bool-context -Wcast-function-type -fno-omit-frame-pointer -Wsign-compare -fpermissive -Wall -Wextra -g -fsanitize=leak")
 		add_executable(Linux_Para_debug ${SOURCES})
-		#target_link_libraries(Linux_Para_debug asan)
 		target_compile_definitions(Linux_Para_debug PUBLIC MY_DEBUG)
 	endif (CMAKE_BUILD_TYPE MATCHES Debug)
 

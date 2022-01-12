@@ -42,11 +42,11 @@ void gui_processKeyboard()
 		{
 			case MODE_GUI_INTROSCROLL:
 				gam_addAudioEvent(EVENT_ACTION_AUDIO_STOP, false, 0, 0, "scrollBeeps");
-				sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
+				sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, std::to_string(MODE_GUI_MAINMENU)+"|"+std::to_string(true));
 				break;
 
 			case MODE_GUI_WON_SCREEN:
-				sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string(MODE_GUI_MAINMENU)+"|"+to_string(true));
+				sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, std::to_string(MODE_GUI_MAINMENU)+"|"+std::to_string(true));
 				break;
 		}
 	}

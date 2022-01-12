@@ -20,7 +20,7 @@ std::queue<paraEventGame *> gameEvents;
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new event to the game queue - only added when mutex is free. ie: Thread is not accessing the queue
-void gam_addEvent(int newAction, int newCounter, const string &newLine)
+void gam_addEvent(int newAction, int newCounter, const std::string &newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PARA_Mutex    *tempMutex;

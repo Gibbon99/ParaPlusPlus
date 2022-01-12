@@ -96,7 +96,7 @@ public:
 
 	cpBody                *body {nullptr};
 	cpShape               *shape {nullptr};
-	shared_ptr<_userData> userData {};
+	std::shared_ptr<_userData> userData {};
 
 	paraSprite sprite;
 	paraAI2    ai2;

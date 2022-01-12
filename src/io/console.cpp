@@ -80,7 +80,7 @@ void con_processConsoleEventQueue()
 // -1 is passed in from classes to add a line to avoid including the additional header
 //
 // Cache the value for the Mutex on first run
-void con_addEvent(int newAction, string newLine)
+void con_addEvent(int newAction, std::string newLine)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	static PARA_Mutex *tempMutex = nullptr;

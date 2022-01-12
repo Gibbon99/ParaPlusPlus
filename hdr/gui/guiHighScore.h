@@ -3,7 +3,7 @@
 #include "main.h"
 
 // Insert a new score into the highscore table
-void gui_insertNewScore(const string &newName);
+void gui_insertNewScore(const std::string &newName);
 
 // Change to high score entry screen
 void gui_showHighscoreEntry();

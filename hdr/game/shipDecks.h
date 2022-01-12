@@ -87,7 +87,7 @@ bool gam_loadXMLShipDesk(const std::string &fileName);
 std::string gam_getCurrentDeckName();
 
 // Change to a new deck
-void gam_changeToDeck(string deckName, int whichLift);
+void gam_changeToDeck(std::string deckName, int whichLift);
 
 void gam_renderVisibleScreen(double interpolation);
 

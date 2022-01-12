@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#define _CRT_NO_VA_START_VALIDATION
+
 #include "wrapper.h"
 #include <iostream>
 #include <string>
@@ -70,8 +72,6 @@
 
 #define TICKS_PER_SECOND 30.0f
 #define MAX_FRAMESKIP 5
-
-using namespace std;
 
 typedef int (*functionPtr)(...);
 

@@ -180,9 +180,9 @@ int sys_startInit([[maybe_unused]]void *ptr)
 	paraScriptInstance.run ("as_loadAllDecks", "");
 //
 // Load fonts via Game Event thread
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName + "|guiFont|" + to_string (guiFontSize));
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName + "|guiFont28|" + to_string (28));
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, introFontFileName + "|introFont|" + to_string (introFontSize));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName + "|guiFont|" + std::to_string (guiFontSize));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName + "|guiFont28|" + std::to_string (28));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, introFontFileName + "|introFont|" + std::to_string (introFontSize));
 
 	SDL_Delay (100);
 
@@ -217,8 +217,8 @@ int sys_startInit([[maybe_unused]]void *ptr)
 		deckviewStarfield.init (renderer, 40, 7, 55, windowHeight, windowWidth);
 	}
 
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 250, to_string (MODE_GUI_MAINMENU) + "|" + to_string (true));
-	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, to_string (MODE_SHOW_SPLASH) + "|" + to_string (true));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 250, std::to_string (MODE_GUI_MAINMENU) + "|" + std::to_string (true));
+	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, std::to_string (MODE_SHOW_SPLASH) + "|" + std::to_string (true));
 
 	return 0;
 }

@@ -33,7 +33,7 @@ void sys_shutdownWithError (std::string errorMessage)
 {
 	if (SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_ERROR, "Fatal Error", errorMessage.c_str (), renderer.window) < 0)
 	{
-		cout << "Fatal error : " << errorMessage << endl;
+		std::cout << "Fatal error : " << errorMessage << std::endl;
 	}
 
 	sys_closeSystems ();
