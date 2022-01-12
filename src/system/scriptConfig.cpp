@@ -26,6 +26,7 @@
 #include "system/cpPhysics.h"
 #include "system/util.h"
 #include "classes/paraBullet.h"
+#include "system/frameRender.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -150,6 +151,7 @@ void sys_scriptInitVariables()
 
 	paraScriptInstance.addHostVariable ("int maxNumBumps", &maxNumBumps);
 	paraScriptInstance.addHostVariable ("float bounceCounterDelay", &bounceCounterDelay);
+	paraScriptInstance.addHostVariable ("int databaseDroidRenderYOffset", &databaseDroidRenderYOffset);
 }
 
 void sys_scriptPrintInt(std::string inStr, int inInt)
@@ -328,7 +330,7 @@ void sys_scriptInitFunctions()
 	paraScriptInstance.addHostFunction ("void gam_setHudText(string &in)", asFUNCTION(gam_setHudText));
 	paraScriptInstance.addHostFunction ("void gam_loadTexture(string &in, string &in)", asFUNCTION(gam_loadTexture));
 	paraScriptInstance.addHostFunction ("void gam_setTileType()", asFUNCTION(gam_setTileType));
-	paraScriptInstance.addHostFunction ("void gam_loadShipDeck (string &in)", asFUNCTION(gam_loadShipDeck));
+	paraScriptInstance.addHostFunction ("void gam_loadShipDeck (string &in)", asFUNCTION(gam_loadXMLShipDesk));
 	paraScriptInstance.addHostFunction ("void gam_changeToDeck (string &in, int whichLift)", asFUNCTION(gam_changeToDeck));
 	paraScriptInstance.addHostFunction ("void trn_setTransferColor (int whichSide, float red, float green, float blue, float alpha)", asFUNCTION(trn_setTransferColor));
 	paraScriptInstance.addHostFunction ("void io_initNewKeycodeValue (int whichKey)", asFUNCTION(io_initNewKeycodeValue));

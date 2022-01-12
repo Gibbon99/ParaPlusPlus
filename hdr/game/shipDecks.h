@@ -5,7 +5,7 @@
 #include "main.h"
 #include "droids.h"
 
-#define MAP_VERSION                116
+#define MAP_VERSION                117
 
 //-----------------------------------------------------------------------------
 //
@@ -80,8 +80,8 @@ extern int                                                    powerdownLevelScor
 extern bool                                                   d_showInfluenceMap;
 extern std::unordered_map<std::string, _deckStruct>::iterator g_shipDeckItr;
 
-// Populate the shipdeck structure from a file in memory
-void gam_loadShipDeck(const std::string &fileName);
+// Load a shipdeck from the new XML format
+bool gam_loadXMLShipDesk(const std::string &fileName);
 
 // Return the current deck name
 std::string gam_getCurrentDeckName();

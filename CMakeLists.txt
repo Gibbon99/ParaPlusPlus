@@ -13,209 +13,32 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 
-# Define the CXX sources
-set(CXX_SRCS
+file (GLOB classes_source_files "./src/classes/*.cpp")
+file (GLOB script_source_files "./src/script/*.cpp")
+file (GLOB chipmunk_source_files "./src/chipmunk/*.c")
+file (GLOB fileWatch_source_files "./src/fileWatcher/*.cpp")
+file (GLOB game_source_files "./src/game/*.cpp")
+file (GLOB gui_source_files "./src/gui/*.cpp")
+file (GLOB io_source_files "./src/io/*.cpp")
+file (GLOB physfs_source_files "./src/physfs/*.cpp")
+file (GLOB sdl2_gfx_source_files "./src/sdl2_gfx/*.cpp")
+file (GLOB system_source_files "./src/system/*.cpp")
+file (GLOB tinyxml2_source_files "./src/tinyxml2/*.cpp")
+
+set (SOURCES
 		src/main.cpp
-		src/script/as_callfunc_arm_gcc.S
-		src/script/as_callfunc_arm_vita.S
-		src/script/as_callfunc_arm_xcode.S
-		src/script/as_atomic.cpp
-		src/script/as_builder.cpp
-		src/script/as_bytecode.cpp
-		src/script/as_callfunc_arm.cpp
-		src/script/as_callfunc_mips.cpp
-		src/script/as_callfunc_ppc_64.cpp
-		src/script/as_callfunc_ppc.cpp
-		src/script/as_callfunc_sh4.cpp
-		src/script/as_callfunc_x64_gcc.cpp
-		src/script/as_callfunc_x64_mingw.cpp
-		src/script/as_callfunc_x64_msvc.cpp
-		src/script/as_callfunc_x86.cpp
-		src/script/as_callfunc_xenon.cpp
-		src/script/as_callfunc.cpp
-		src/script/as_compiler.cpp
-		src/script/as_configgroup.cpp
-		src/script/as_context.cpp
-		src/script/as_datatype.cpp
-		src/script/as_gc.cpp
-		src/script/as_generic.cpp
-		src/script/as_globalproperty.cpp
-		src/script/as_memory.cpp
-		src/script/as_module.cpp
-		src/script/as_objecttype.cpp
-		src/script/as_outputbuffer.cpp
-		src/script/as_parser.cpp
-		src/script/as_restore.cpp
-		src/script/as_scriptcode.cpp
-		src/script/as_scriptengine.cpp
-		src/script/as_scriptfunction.cpp
-		src/script/as_scriptnode.cpp
-		src/script/as_scriptobject.cpp
-		src/script/as_string_util.cpp
-		src/script/as_string.cpp
-		src/script/as_thread.cpp
-		src/script/as_tokenizer.cpp
-		src/script/as_typeinfo.cpp
-		src/script/as_variablescope.cpp
-		src/script/as_callfunc_arm_msvc.asm
-		src/script/as_callfunc_x64_msvc_asm.asm
-		src/script/scriptarray.cpp
-		src/script/scriptbuilder.cpp
-		src/script/scriptstdstring.cpp
-		src/script/scriptstdstring_utils.cpp
-
-		src/physfs/physfs.cpp
-		src/physfs/physfs_archiver_7z.cpp
-		src/physfs/physfs_archiver_dir.cpp
-		src/physfs/physfs_archiver_grp.cpp
-		src/physfs/physfs_archiver_hog.cpp
-		src/physfs/physfs_archiver_iso9660.cpp
-		src/physfs/physfs_archiver_mvl.cpp
-		src/physfs/physfs_archiver_qpak.cpp
-		src/physfs/physfs_archiver_slb.cpp
-		src/physfs/physfs_archiver_unpacked.cpp
-		src/physfs/physfs_archiver_vdf.cpp
-		src/physfs/physfs_archiver_wad.cpp
-		src/physfs/physfs_archiver_zip.cpp
-		src/physfs/physfs_byteorder.cpp
-		src/physfs/physfs_platform_haiku.cpp
-		src/physfs/physfs_platform_os2.cpp
-		src/physfs/physfs_platform_posix.cpp
-		src/physfs/physfs_platform_qnx.cpp
-		src/physfs/physfs_platform_unix.cpp
-		src/physfs/physfs_platform_windows.cpp
-		src/physfs/physfs_platform_winrt.cpp
-		src/physfs/physfs_unicode.cpp
-
-		src/classes/ConvertUTF.cpp
-
-		src/sdl2_gfx/SDL2_gfxPrimitives.cpp
-		src/sdl2_gfx/SDL2_imageFilter.cpp
-		src/sdl2_gfx/SDL2_rotozoom.cpp
-
-		src/fileWatcher/FileWatcher.cpp
-		src/fileWatcher/FileWatcherLinux.cpp
-		src/fileWatcher/FileWatcherWin32.cpp
-
-		src/system/scriptEngine.cpp
-		src/classes/paraLogFile.cpp
-		src/system/shutdown.cpp
-		src/system/util.cpp
-		src/classes/paraScript.cpp
-		src/classes/paraFileSystem.cpp
-		src/system/scriptConfig.cpp
-		src/system/startup.cpp
-		src/io/fileSystem.cpp
-		src/classes/paraFont.cpp
-		src/classes/paraConsole.cpp
-		src/system/frameUpdate.cpp
-		src/system/frameRender.cpp
-		src/io/configFile.cpp
-		src/io/console.cpp
-		src/system/eventsEngine.cpp
-		src/io/logFile.cpp
-		src/classes/paraRenderer.cpp
-		src/io/consoleFunctions.cpp
-		src/system/gameEvents.cpp
-		src/game/physicsCollisions.cpp
-		src/classes/paraAudio.cpp
-		src/game/audio.cpp
-		src/classes/paraTexture.cpp
-		src/game/texture.cpp
-		src/classes/paraGui.cpp
-		src/gui/guiButton.cpp
-		src/gui/guiRender.cpp
-		src/io/fileWatch.cpp
-		src/gui/guiLanguage.cpp
-		src/io/keyboard.cpp
-		src/gui/guiInput.cpp
-		src/io/joystick.cpp
-		src/io/mouse.cpp
-		src/gui/guiSideview.cpp
-		src/gui/guiSlider.cpp
-		src/gui/guiLabel.cpp
-		src/gui/guiScrollbox.cpp
-		src/gui/guiCheckbox.cpp
-		src/game/hud.cpp
-		src/game/database.cpp
-		src/classes/paraSprite.cpp
-		src/game/tiles.cpp
-		src/game/shipDecks.cpp
-		src/game/healing.cpp
-		src/game/lifts.cpp
-		src/game/player.cpp
-		src/game/doors.cpp
-		src/game/terminal.cpp
-		src/classes/paraLift.cpp
-		src/gui/guiDeckView.cpp
-		src/game/droids.cpp
-		src/game/game.cpp
-		src/classes/paraBullet.cpp
-		src/classes/paraParticle.cpp
-		src/game/particles.cpp
-		src/classes/paraLightmap.cpp
-		src/game/lightMaps.cpp
-		src/game/lineOfSight.cpp
-		src/game/score.cpp
-		src/game/alertLevel.cpp
-		src/game/transfer.cpp
-		src/game/transferRender.cpp
-		src/gui/guiTextbox.cpp
-		src/gui/guiImage.cpp
-		src/game/transferDroidAI.cpp
-		src/game/transferGame.cpp
-		src/game/transferPlayer.cpp
-		src/game/pauseMode.cpp
-		src/gui/guiLostScreen.cpp
-		src/gui/guiWonScreen.cpp
-		src/gui/guiHighScore.cpp
-		src/gui/guiDialogBox.cpp
-		src/system/util.cpp
-		src/classes/paraScript.cpp
-		src/classes/paraAStar.cpp
-		src/classes/paraAI2.cpp
-		src/classes/paraDroid.cpp
-		src/classes/paraDroid.cpp
-		src/classes/paraStarfield.cpp
-		src/classes/paraHighScore.cpp
-		src/classes/paraEmitter.cpp
-
-		src/chipmunk/chipmunk.c
-		src/chipmunk/cpArbiter.c
-		src/chipmunk/cpArray.c
-		src/chipmunk/cpBBTree.c
-		src/chipmunk/cpBody.c
-		src/chipmunk/cpCollision.c
-		src/chipmunk/cpConstraint.c
-		src/chipmunk/cpDampedRotarySpring.c
-		src/chipmunk/cpDampedSpring.c
-		src/chipmunk/cpGearJoint.c
-		src/chipmunk/cpGrooveJoint.c
-		src/chipmunk/cpHashSet.c
-		src/chipmunk/cpHastySpace.c
-		src/chipmunk/cpMarch.c
-		src/chipmunk/cpPinJoint.c
-		src/chipmunk/cpPivotJoint.c
-		src/chipmunk/cpPolyline.c
-		src/chipmunk/cpPolyShape.c
-		src/chipmunk/cpRatchetJoint.c
-		src/chipmunk/cpRobust.c
-		src/chipmunk/cpRotaryLimitJoint.c
-		src/chipmunk/cpShape.c
-		src/chipmunk/cpSimpleMotor.c
-		src/chipmunk/cpSlideJoint.c
-		src/chipmunk/cpSpace.c
-		src/chipmunk/cpSpaceComponent.c
-		src/chipmunk/cpSpaceDebug.c
-		src/chipmunk/cpSpaceHash.c
-		src/chipmunk/cpSpaceQuery.c
-		src/chipmunk/cpSpaceStep.c
-		src/chipmunk/cpSpatialIndex.c
-		src/chipmunk/cpSweep1D.c
-		src/chipmunk/prime.h
-
-		src/system/cpPhysics.cpp
-		src/system/cpPhysicsDebug.cpp)
+		${classes_source_files}
+		${script_source_files}
+		${chipmunk_source_files}
+		${fileWatch_source_files}
+		${game_source_files}
+		${gui_source_files}
+		${io_source_files}
+		${physfs_source_files}
+		${sdl2_gfx_source_files}
+		${system_source_files}
+		${tinyxml2_source_files}
+		)
 
 if (WIN32)
 	# Library path
@@ -231,13 +54,14 @@ if (WIN32)
 			./hdr/fileWatcher
 			./SDL2_WIN/include
 			./hdr/chipmunk
+			./hdr/tinyxml2
 	)
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("-")
 		message("Doing DEBUG build")
 		message("-")
-		add_executable(Win32_Para_debug ${CXX_SRCS})
+		add_executable(Win32_Para_debug ${SOURCES})
 		target_link_libraries(Win32_Para_debug Debug clang_rt.asan_dynamic_runtime_thunk-i386)
 	endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
@@ -263,14 +87,15 @@ if (UNIX)
 			./hdr/physfs
 			./hdr/sdl2_gfx
 			./hdr/fileWatcher
-			./hdr/chipmunk)
+			./hdr/chipmunk
+			./hdr/tinyxml2)
 
 	set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 5)
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("Doing DEBUG build")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g -O0 -Wint-in-bool-context -Wcast-function-type -fno-omit-frame-pointer -Wint-in-bool-context -Wsign-compare -fpermissive -Wall -Wextra -g -fsanitize=leak")
-		add_executable(Linux_Para_debug ${CXX_SRCS})
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g -O0 -Wimplicit-fallthrough -Wtype-limits -Wint-in-bool-context -Wcast-function-type -fno-omit-frame-pointer -Wsign-compare -fpermissive -Wall -Wextra -g -fsanitize=leak")
+		add_executable(Linux_Para_debug ${SOURCES})
 		#target_link_libraries(Linux_Para_debug asan)
 		target_compile_definitions(Linux_Para_debug PUBLIC MY_DEBUG)
 	endif (CMAKE_BUILD_TYPE MATCHES Debug)

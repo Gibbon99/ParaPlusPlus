@@ -2,6 +2,10 @@ BUGS
 --------
 BUG - Transfer screen one - shows player droid at wrong position on start
 BUG - Getting bullet remove on index -1
+BUG - Fade on low health disappears completely
+BUG - Not all particles fire on explosion - random
+BUG - Two consoles not accessible on level - collision lines wrong spot
+BUG - Healing sound kept playing when not on healing tile
 
 TO DO
 -------
@@ -179,6 +183,10 @@ DONE - Fix up line of sight to be more robust
 FIXED - Massive memory leak from not freeing textures when printing text
 DONE - Fixed blendmode when using CRT effect
 DONE - Added in language selector in GUI
+
+DONE - BUG - lower position of droid model in terminal - add in scripted global to adjust position
+DONE - BUG - Remove delay at end of transfer game - reduced value in terminal script
+
 
 GUI
 ------

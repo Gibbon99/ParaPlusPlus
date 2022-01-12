@@ -895,6 +895,7 @@ void as_createGUI()
     influenceTimelimtDelay = 0.2;
     maxNumBumps = 10;
     bounceCounterDelay = 0.3;
+    databaseDroidRenderYOffset = 40;
 
     as_setSideviewColors();
 

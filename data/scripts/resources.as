@@ -97,16 +97,12 @@ void as_loadTextureResources()
 void as_loadAllDecks()
 //----------------------------------------------------------------------------------------------------------------------
 {
-    string
-    fileName;
+    string fileName;
 
-    for (int i = 0;
-    i != 21;
-    i++
-)
+    for (int i = 0; i != 21; i++)
     {
         if (i != 7) {
-            fileName = "116-newDeck" + formatInt(i, "l") + ".dat| ";
+            fileName = "Deck" + formatInt(i, "l") + ".dat| ";
             sys_addEvent(EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_DECK, 0, fileName);
         }
     }
