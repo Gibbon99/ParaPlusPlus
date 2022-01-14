@@ -263,7 +263,7 @@ cpVect gam_getLiftWorldPosition(int whichLift)
 	int    tilePosX, tilePosY;
 	double pixelX, pixelY;
 
-	cpVect returnPosition;
+	cpVect returnPosition{};
 
 	liftCounter = 0;
 	for (countY = 0; countY != g_shipDeckItr->second.levelDimensions.y; countY++)

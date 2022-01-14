@@ -1,6 +1,6 @@
-#include <system/cpPhysics.h>
-#include <wrapper.h>
-#include <classes/paraRandom.h>
+#include "system/cpPhysics.h"
+#include "wrapper.h"
+#include "classes/paraRandom.h"
 #include "paraParticle.h"
 
 class paraEmitter

@@ -7,7 +7,7 @@
 double doorAnimSpeed {1.0f};
 float  distanceForDoorSoundMax {120};   // In pixels
 
-std::vector<_doorTrigger> doorTriggers {};
+std::vector<doorTrigger_> doorTriggers {};
 
 // ----------------------------------------------------------------------------
 //
@@ -249,8 +249,8 @@ void gam_doorTriggerSetup()
 	int sourceX {0};
 	int sourceY {0};
 
-	_doorTrigger tempDoorTrigger;
-	_doorTrigger tempDoorBulletSensor;
+	doorTrigger_ tempDoorTrigger;
+	doorTrigger_ tempDoorBulletSensor;
 
 	if (!doorTriggers.empty ())  // Empty out array
 	{

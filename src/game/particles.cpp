@@ -32,13 +32,20 @@ void gam_addEmitter(cpVect newWorldPos, int newType, Uint32 newBulletID)
 void gam_removeDeadEmitters()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	std::vector<int> test;
+
+//	test.remove_if(0);
+
 	auto removeIndex = 0;
+
+//	particleEmitters.remove(particleEmitters.begin(), particleEmitters.end(), particleEmitters.getCanBeRemoved());
+
 
 	for (auto &partItr: particleEmitters)
 	{
 		if (partItr.getCanBeRemoved ())
 		{
-			particleEmitters.erase (particleEmitters.begin () + removeIndex);
+//			particleEmitters.erase(partItr); // particleEmitters.begin() + removeIndex);	// out of bounds error
 			removeIndex++;
 		}
 	}

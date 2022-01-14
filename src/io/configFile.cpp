@@ -13,9 +13,16 @@ std::string configFileName = "";
 void io_saveConfigValues()
 //--------------------------------------------------------------------------------------------------------------------
 {
+	static int loopCount = 0;
+
 	auto returnCode = iniFile.SaveFile (configFileName.c_str (), false);
 	if (returnCode < 0)
-		sys_shutdownWithError (sys_getString ("Unable to save config file [ %s ]", configFileName.c_str ()));
+	{
+		loopCount++;
+		sys_shutdownWithError(sys_getString("Unable to save config file [ %s ]", configFileName.c_str()));
+		if (loopCount > 3)
+			exit(-1);
+	}
 }
 
 //--------------------------------------------------------------------------------------------------------------------

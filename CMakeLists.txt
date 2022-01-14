@@ -5,7 +5,19 @@ cmake_minimum_required(VERSION 3.8)
 
 project("ParaPlusPlus")
 
-set(CMAKE_CXX_STANDARD "17")
+# set(CMAKE_CXX_STANDARD "17")
+
+
+IF (CMAKE_VERSION VERSION_LESS "3.8")
+    SET(CMAKE_CXX_STANDARD 14)
+ELSEIF (CMAKE_VERSION VERSION_LESS "3.11")
+    SET(CMAKE_CXX_STANDARD 17)
+ELSE()
+    SET(CMAKE_CXX_STANDARD 20)
+ENDIF()
+
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Set default locations
 set(CL_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
@@ -61,9 +73,9 @@ if (WIN32)
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("Doing DEBUG build")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")		
 		add_executable(Win32_Para_debug ${SOURCES})
-		target_link_libraries(Win32_Para_debug clang_rt.asan_dynamic_runtime_thunk-i386)
+		target_link_libraries(Win32_Para_debug)
 #		target_link_libraries(Win32_Para_debug)
 	endif (CMAKE_BUILD_TYPE MATCHES Debug)
 

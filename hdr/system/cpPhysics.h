@@ -82,7 +82,7 @@ void gam_changeDoorFilters(int doorState, int whichDoor);
 void sys_clearAllDoors();
 
 // Add a new door sensor to the array - return the new array size
-unsigned long sys_addNewDoorSensor(const _doorTrigger &newDoorTrigger);
+unsigned long sys_addNewDoorSensor(const doorTrigger_ &newDoorTrigger);
 
 // Return the physics worldSpace
 cpSpace *sys_returnPhysicsWorld();

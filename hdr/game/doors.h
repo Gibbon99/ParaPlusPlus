@@ -29,7 +29,7 @@ enum doorBulletDirection
 
 extern float                     distanceForDoorSoundMax;
 extern double                    doorAnimSpeed;
-extern std::vector<_doorTrigger> doorTriggers;
+extern std::vector<doorTrigger_> doorTriggers;
 
 // Find the doors for this level and prepare a sensor object
 void gam_doorTriggerSetup();

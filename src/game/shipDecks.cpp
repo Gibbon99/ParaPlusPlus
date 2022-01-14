@@ -228,13 +228,13 @@ void gam_addPaddingToLevel(const std::string fileName)
 
 	shipdecks.at (fileName).tiles.assign (static_cast<unsigned int>(tempDimensions.x * tempDimensions.y), 0);
 
-	for (int i = 0; i != tempDimensions.x * tempDimensions.y; i++)
+	for (int  i = 0; i != tempDimensions.x * tempDimensions.y; i++)
 	{
 		shipdecks.at (fileName).tiles[i] = tempLevel[i];
 	}
 	//
 	// Adjust waypoints to reflect new deck size
-	for (auto &waypointItr : shipdecks.at(fileName).wayPoints)
+	for (auto &waypointItr: shipdecks.at (fileName).wayPoints)
 	{
 		waypointItr.x += (drawOffset.x * tileSize) / 2;
 		waypointItr.y += (drawOffset.y * tileSize) / 2;
@@ -243,7 +243,7 @@ void gam_addPaddingToLevel(const std::string fileName)
 	}
 	//
 	// Adjust physics line segments to reflect new deck size
-	for (auto &segmentItr : shipdecks.at(fileName).lineSegments)
+	for (auto &segmentItr: shipdecks.at (fileName).lineSegments)
 	{
 		segmentItr.start.x += (drawOffset.x * tileSize) / 2;
 		segmentItr.start.y += (drawOffset.y * tileSize) / 2;
@@ -279,11 +279,7 @@ bool gam_loadXMLShipDesk(const std::string &fileName)
 {
 	tinyxml2::XMLDocument *xmlFileLoad;
 	tinyxml2::XMLNode     *rootNode;
-	SDL_RWops             *fp;
-	int                   fileSize;
-	char         *memoryBuffer;
-
-	_deckStruct tempLevel {};
+	_deckStruct           tempLevel {};
 
 	tinyxml2::XMLElement *elementPtr;
 
@@ -377,7 +373,7 @@ bool gam_loadXMLShipDesk(const std::string &fileName)
 		logFile.write (sys_getString ("Unable to find node 'levelDimensionX' in file [ %s ]", fileName.c_str ()));
 		return false;
 	}
-	float levelX{};
+	float levelX {};
 	eResult = elementPtr->QueryFloatText (&levelX);
 	gam_checkXMLReturnCode (eResult);
 
@@ -387,7 +383,7 @@ bool gam_loadXMLShipDesk(const std::string &fileName)
 		logFile.write (sys_getString ("Unable to find node 'levelDimensionY' in file [ %s ]", fileName.c_str ()));
 		return false;
 	}
-	float levelY{};
+	float levelY {};
 	eResult = elementPtr->QueryFloatText (&levelY);
 	gam_checkXMLReturnCode (eResult);
 	tempLevel.levelDimensions.x = levelX;

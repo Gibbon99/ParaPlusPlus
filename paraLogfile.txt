@@ -6,7 +6,7 @@
 0 - [ addVariable ] Var [ d_showPathIndex ] has been added.
 0 - [ addVariable ] Var [ d_showWaypoints ] has been added.
 0 - [ addVariable ] Var [ height ] has been added.
-0 - Console [ Console started [ Para++ ] ].
+0 - Console [ Console started [ ParadroidPlusPlus ] ].
 0 - Console [ Compiled against PhysFS version 3.0.2. ].
 0 - Console [ Linked against PhysFS version 3.0.2. ].
 0 - Console [ Compiled with SDL_ttf version: 2.0.15 ].
@@ -14,20 +14,20 @@
 0 - Console [ Loaded font file [ console.ttf ] ].
 0 - Console [ Script: Script Engine started. ].
 0 - Console [ Script: Script Engine version - [ 2.35.0 DEBUG ] ].
-0 - Console [ Script: Options - [  AS_WIN AS_X86  ] ].
 0 - Script [ consoleFunctions.as ]
 0 - Script [ dialogBox.as ]
+0 - Console [ Script: Options - [  AS_WIN AS_X86  ] ].
 0 - Script [ english.as ]
-0 - Console [ Scripting started. ].
 0 - Script [ enum.h ]
 0 - Script [ german.as ]
-0 - Console [ Script: Registered function - [ void sys_printConInt (string &in, int param) ] ].
+0 - Console [ Scripting started. ].
 0 - Script [ gui.as ]
+0 - Console [ Script: Registered function - [ void sys_printConInt (string &in, int param) ] ].
 0 - Script [ highScore.as ]
 0 - Script [ italian.as ]
-0 - Console [ Script: Registered function - [ void sys_setNewMode (int newMode, bool doFade) ] ].
 0 - Script [ language.as ]
 0 - Script [ resources.as ]
+0 - Console [ Script: Registered function - [ void sys_setNewMode (int newMode, bool doFade) ] ].
 0 - Script [ terminal.as ]
 0 - Script [ transfer.as ]
 0 - Console [ Script: Registered function - [ void sys_addEvent (int eventType, int eventAction, int eventDelay, string &in) ] ].
@@ -77,894 +77,807 @@
 0 - Console [ Script: Registered variable - [ double playerFriction ] ].
 0 - Console [ Script: Registered variable - [ double gravity ] ].
 0 - Console [ Script: Registered variable - [ double doorAnimSpeed ] ].
-0 - Console [ Script: Registered variable - [ float collisionCount ] ].
-919 - Console [ Script: Registered variable - [ int collisionLimit ] ].
-919 - Console [ Script: Registered variable - [ float bulletDensity ] ].
-919 - Console [ Script: Registered variable - [ float bulletFriction ] ].
-919 - Console [ Script: Registered variable - [ float bulletAnimationSpeed ] ].
-919 - Console [ Script: Registered variable - [ float numDisrupterFrames ] ].
-919 - Console [ Script: Registered variable - [ float disrupterFadeAmount ] ].
-919 - Console [ Script: Registered variable - [ float bulletMoveSpeed ] ].
-919 - Console [ Script: Registered variable - [ int visibleFadeValue ] ].
-919 - Console [ Script: Registered variable - [ int redAlertLevel ] ].
-919 - Console [ Script: Registered variable - [ int yellowAlertLevel ] ].
-919 - Console [ Script: Registered variable - [ float updateScoreDelay ] ].
-919 - Console [ Script: Registered variable - [ float distanceForDoorSoundMax ] ].
-919 - Console [ Script: Registered variable - [ int numberTransferRows ] ].
-919 - Console [ Script: Registered variable - [ int transferBitmapHeight ] ].
-919 - Console [ Script: Registered variable - [ int transferBitmapWidth ] ].
-919 - Console [ Script: Registered variable - [ float transferRowHeight ] ].
-919 - Console [ Script: Registered variable - [ float transferRowStartY ] ].
-919 - Console [ Script: Registered variable - [ float transferRowCellWidth ] ].
-919 - Console [ Script: Registered variable - [ float transferBackgroundStartX ] ].
-919 - Console [ Script: Registered variable - [ float transferBackgroundStartY ] ].
-919 - Console [ Script: Registered variable - [ float transferBackgroundWidth ] ].
-919 - Console [ Script: Registered variable - [ float transferBackgroundHeight ] ].
-919 - Console [ Script: Registered variable - [ int transferBorderThickness ] ].
-919 - Console [ Script: Registered variable - [ float transferStatusTabWidth ] ].
-919 - Console [ Script: Registered variable - [ float transferStatusTabHeight ] ].
-919 - Console [ Script: Registered variable - [ float transferSidebarGap ] ].
-919 - Console [ Script: Registered variable - [ float transferSidebarWidth ] ].
-919 - Console [ Script: Registered variable - [ float transferLineThickness ] ].
-919 - Console [ Script: Registered variable - [ int chooseSideTimeOut ] ].
-919 - Console [ Script: Registered variable - [ float chooseSideDelayTime ] ].
-919 - Console [ Script: Registered variable - [ float chooseRowDelayTime ] ].
-919 - Console [ Script: Registered variable - [ float activeRowCounter ] ].
-919 - Console [ Script: Registered variable - [ int transferTimeOut ] ].
-919 - Console [ Script: Registered variable - [ float transferDelayTime ] ].
-919 - Console [ Script: Registered variable - [ int powerdownLevelScore ] ].
-919 - Console [ Script: Registered variable - [ float healingDelayCounter ] ].
-919 - Console [ Script: Registered variable - [ int healingAmountPerTick ] ].
-919 - Console [ Script: Registered variable - [ float explosionAnimationSpeed ] ].
-919 - Console [ Script: Registered variable - [ int explosionDamage ] ].
-919 - Console [ Script: Registered variable - [ int alertLevelVolume ] ].
-919 - Console [ Script: Registered variable - [ float staticAnimationDelay ] ].
-919 - Console [ Script: Registered variable - [ int lostScreenShowTime ] ].
-919 - Console [ Script: Registered variable - [ float influenceTimelimit ] ].
-919 - Console [ Script: Registered variable - [ float influenceTimelimtDelay ] ].
-919 - Console [ Script: Registered variable - [ float influenceTimeLeftWarning ] ].
-919 - Console [ Script: Registered variable - [ int transferResultDelay ] ].
-919 - Console [ Script: Registered variable - [ int maxNumBumps ] ].
-919 - Console [ Script: Registered variable - [ float bounceCounterDelay ] ].
-919 - Console [ Script: Registered variable - [ int databaseDroidRenderYOffset ] ].
-919 - Console [ Section has been added [ consoleFunctions.as ] ].
-919 - Console [ Section has been added [ dialogBox.as ] ].
-919 - Console [ Section has been added [ english.as ] ].
-919 - Console [ Section has been added [ enum.h ] ].
-919 - Console [ Section has been added [ german.as ] ].
-919 - Console [ Section has been added [ gui.as ] ].
-919 - Console [ Section has been added [ highScore.as ] ].
-919 - Console [ Section has been added [ italian.as ] ].
-919 - Console [ Section has been added [ language.as ] ].
-919 - Console [ Section has been added [ resources.as ] ].
-919 - Console [ Section has been added [ terminal.as ] ].
-919 - Console [ Section has been added [ transfer.as ] ].
-919 - Console [ Section has been added [ tutorial.as ] ].
-1039 - Console [ About to run BuildModule. ].
-1245 - Looking for function [ as_loadTextureResources ] to [ as_useNewRenderer ] to execute
-1245 - Looking for function [ as_loadTextureResources ] to [ as_getAudioSpecs ] to execute
-1245 - Looking for function [ as_loadTextureResources ] to [ as_loadAudioResources ] to execute
-1245 - Looking for function [ as_loadTextureResources ] to [ as_loadTextureResources ] to execute
-1245 - Looking for function [ as_loadAllDecks ] to [ as_useNewRenderer ] to execute
-1245 - Looking for function [ as_loadAllDecks ] to [ as_getAudioSpecs ] to execute
-1245 - Looking for function [ as_loadAllDecks ] to [ as_loadAudioResources ] to execute
-1245 - Looking for function [ as_loadAllDecks ] to [ as_loadTextureResources ] to execute
-1245 - Looking for function [ as_loadAllDecks ] to [ as_loadAllDecks ] to execute
-1245 - Console [ Finished buildModule. ].
-1245 - Console [ Func ID for [ void as_useNewRenderer(int &in newRenderer) ] - [ 164618656 ] ].
-1245 - Console [ Func ID for [ void as_getAudioSpecs() ] - [ 163472720 ] ].
-1245 - Console [ Func ID for [ void as_loadAudioResources() ] - [ 164622240 ] ].
-1245 - Console [ Func ID for [ void as_loadTextureResources() ] - [ 164623520 ] ].
-1245 - Console [ Func ID for [ void as_loadAllDecks() ] - [ 164629920 ] ].
-1245 - Console [ Func ID for [ int as_getVolume() ] - [ 164624032 ] ].
-1245 - Console [ Func ID for [ void as_setVolume(int newVolume) ] - [ 163472976 ] ].
-1245 - Console [ Func ID for [ void as_createGUI() ] - [ 164619936 ] ].
-1245 - Console [ Func ID for [ void as_handleMainMenu() ] - [ 164617632 ] ].
-1245 - Console [ Func ID for [ void as_handleOptionsMenu() ] - [ 164616864 ] ].
-1245 - Console [ Func ID for [ void as_handleVideoOptions() ] - [ 164623008 ] ].
-1245 - Console [ Func ID for [ void as_handleAudioMenu() ] - [ 164619424 ] ].
-1245 - Console [ Func ID for [ void as_handleControlsMenu() ] - [ 164616352 ] ].
-1245 - Console [ Func ID for [ void as_handleGameMenu() ] - [ 164617120 ] ].
-1245 - Console [ Func ID for [ void as_handleDeckviewScreen() ] - [ 164627872 ] ].
-1245 - Console [ Func ID for [ void as_handleShipviewScreen() ] - [ 164631456 ] ].
-1245 - Console [ Func ID for [ void as_handleTerminalMenu() ] - [ 164626336 ] ].
-1245 - Console [ Func ID for [ void as_handleDatabaseMenu() ] - [ 164630944 ] ].
-1245 - Console [ Func ID for [ void as_handleTransferScreens() ] - [ 164625568 ] ].
-1245 - Console [ Func ID for [ void as_handleTutorialElements () ] - [ 164630432 ] ].
-1245 - Console [ Func ID for [ void as_handleDialogBoxes () ] - [ 164617888 ] ].
-1245 - Console [ Func ID for [ void as_handleHighscoreDisplay() ] - [ 164621984 ] ].
-1245 - 0: wasapi
-1245 - 1: directsound
-1245 - 2: winmm
-1245 - 3: disk
-1245 - 4: dummy
-1245 - Using audio driver: wasapi
+819 - Console [ Script: Registered variable - [ float collisionCount ] ].
+819 - Console [ Script: Registered variable - [ int collisionLimit ] ].
+819 - Console [ Script: Registered variable - [ float bulletDensity ] ].
+819 - Console [ Script: Registered variable - [ float bulletFriction ] ].
+819 - Console [ Script: Registered variable - [ float bulletAnimationSpeed ] ].
+819 - Console [ Script: Registered variable - [ float numDisrupterFrames ] ].
+819 - Console [ Script: Registered variable - [ float disrupterFadeAmount ] ].
+819 - Console [ Script: Registered variable - [ float bulletMoveSpeed ] ].
+819 - Console [ Script: Registered variable - [ int visibleFadeValue ] ].
+819 - Console [ Script: Registered variable - [ int redAlertLevel ] ].
+819 - Console [ Script: Registered variable - [ int yellowAlertLevel ] ].
+819 - Console [ Script: Registered variable - [ float updateScoreDelay ] ].
+819 - Console [ Script: Registered variable - [ float distanceForDoorSoundMax ] ].
+819 - Console [ Script: Registered variable - [ int numberTransferRows ] ].
+819 - Console [ Script: Registered variable - [ int transferBitmapHeight ] ].
+819 - Console [ Script: Registered variable - [ int transferBitmapWidth ] ].
+819 - Console [ Script: Registered variable - [ float transferRowHeight ] ].
+819 - Console [ Script: Registered variable - [ float transferRowStartY ] ].
+819 - Console [ Script: Registered variable - [ float transferRowCellWidth ] ].
+819 - Console [ Script: Registered variable - [ float transferBackgroundStartX ] ].
+819 - Console [ Script: Registered variable - [ float transferBackgroundStartY ] ].
+819 - Console [ Script: Registered variable - [ float transferBackgroundWidth ] ].
+819 - Console [ Script: Registered variable - [ float transferBackgroundHeight ] ].
+819 - Console [ Script: Registered variable - [ int transferBorderThickness ] ].
+819 - Console [ Script: Registered variable - [ float transferStatusTabWidth ] ].
+819 - Console [ Script: Registered variable - [ float transferStatusTabHeight ] ].
+819 - Console [ Script: Registered variable - [ float transferSidebarGap ] ].
+819 - Console [ Script: Registered variable - [ float transferSidebarWidth ] ].
+819 - Console [ Script: Registered variable - [ float transferLineThickness ] ].
+819 - Console [ Script: Registered variable - [ int chooseSideTimeOut ] ].
+819 - Console [ Script: Registered variable - [ float chooseSideDelayTime ] ].
+819 - Console [ Script: Registered variable - [ float chooseRowDelayTime ] ].
+819 - Console [ Script: Registered variable - [ float activeRowCounter ] ].
+819 - Console [ Script: Registered variable - [ int transferTimeOut ] ].
+819 - Console [ Script: Registered variable - [ float transferDelayTime ] ].
+819 - Console [ Script: Registered variable - [ int powerdownLevelScore ] ].
+819 - Console [ Script: Registered variable - [ float healingDelayCounter ] ].
+819 - Console [ Script: Registered variable - [ int healingAmountPerTick ] ].
+819 - Console [ Script: Registered variable - [ float explosionAnimationSpeed ] ].
+819 - Console [ Script: Registered variable - [ int explosionDamage ] ].
+819 - Console [ Script: Registered variable - [ int alertLevelVolume ] ].
+819 - Console [ Script: Registered variable - [ float staticAnimationDelay ] ].
+819 - Console [ Script: Registered variable - [ int lostScreenShowTime ] ].
+819 - Console [ Script: Registered variable - [ float influenceTimelimit ] ].
+819 - Console [ Script: Registered variable - [ float influenceTimelimtDelay ] ].
+819 - Console [ Script: Registered variable - [ float influenceTimeLeftWarning ] ].
+819 - Console [ Script: Registered variable - [ int transferResultDelay ] ].
+819 - Console [ Script: Registered variable - [ int maxNumBumps ] ].
+819 - Console [ Script: Registered variable - [ float bounceCounterDelay ] ].
+819 - Console [ Script: Registered variable - [ int databaseDroidRenderYOffset ] ].
+819 - Console [ Section has been added [ consoleFunctions.as ] ].
+819 - Console [ Section has been added [ dialogBox.as ] ].
+819 - Console [ Section has been added [ english.as ] ].
+819 - Console [ Section has been added [ enum.h ] ].
+819 - Console [ Section has been added [ german.as ] ].
+819 - Console [ Section has been added [ gui.as ] ].
+819 - Console [ Section has been added [ highScore.as ] ].
+819 - Console [ Section has been added [ italian.as ] ].
+819 - Console [ Section has been added [ language.as ] ].
+819 - Console [ Section has been added [ resources.as ] ].
+819 - Console [ Section has been added [ terminal.as ] ].
+819 - Console [ Section has been added [ transfer.as ] ].
+819 - Console [ Section has been added [ tutorial.as ] ].
+819 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
+1177 - Looking for function [ as_loadTextureResources ] to [ as_useNewRenderer ] to execute
+11771177 -  - Console [ Finished buildModule. ].Looking for function [ as_loadTextureResources ] to [ as_getAudioSpecs ] to execute
 
-1245 - Console [ Func ID for [ void as_refreshHighscoreLabels() ] - [ 164623776 ] ].
-1245 - Console [ Func ID for [ void as_refreshControlLabels() ] - [ 164620960 ] ].
-1353 - Console [ Loaded [ future_blue.bmp ] with key [ tiles ] ].
-1353 - Console [ Loaded [ splash.bmp ] with key [ splash ] ].
-1353 - Console [ Loaded [ planetAlpha.bmp ] with key [ planetAlpha ] ].
-1353 - Console [ Loaded [ hudNew.bmp ] with key [ hudNew ] ].
-1353 - Console [ Loaded [ screen.bmp ] with key [ screen ] ].
-1353 - Console [ Loaded [ lightmap.bmp ] with key [ lightmap ] ].
-1353 - Console [ Loaded [ explosion.bmp ] with key [ explosion ] ].
-1353 - Looking for function [ as_createGUI ] to [ as_useNewRenderer ] to execute
-1353 - Looking for function [ as_createGUI ] to [ as_getAudioSpecs ] to execute
-1353 - Looking for function [ as_createGUI ] to [ as_loadAudioResources ] to execute
-1353 - Looking for function [ as_createGUI ] to [ as_loadTextureResources ] to execute
-1353 - Looking for function [ as_createGUI ] to [ as_loadAllDecks ] to execute
-1353 - Looking for function [ as_createGUI ] to [ as_getVolume ] to execute
-1353 - Looking for function [ as_createGUI ] to [ as_setVolume ] to execute
-1353 - Looking for function [ as_createGUI ] to [ as_createGUI ] to execute
-1353 - Console [ Created new object [ introScreen.scrollbox ] ].
-1353 - Console [ Added Object [ introScreen.scrollbox ] to Screen [ introScreen ] ].
-1353 - Console [ Created new object [ wonScreen ] ].
-1353 - Console [ Created new object [ wonScreen.scrollbox ] ].
-1353 - Console [ Added Object [ wonScreen.scrollbox ] to Screen [ wonScreen ] ].
-1353 - Console [ Created new object [ quitGameDialogbox.text ] ].
-1353 - Console [ Added Object [ quitGameDialogbox.text ] to Dialogbox [ quitGameDialogbox ] ].
-1353 - Console [ Added Object [ quitGameDialogbox.confirmButton ] to Dialogbox [ quitGameDialogbox ] ].
-1353 - Console [ Created new object [ quitGameDialogbox.denyButton ] ].
-1353 - Console [ Added Object [ quitGameDialogbox.denyButton ] to Dialogbox [ quitGameDialogbox ] ].
-1353 - Console [ Created new object [ guiTransferOne ] ].
-1353 - Console [ Added Object [ guiTransferOne.heading ] to Screen [ guiTransferOne ] ].
-1353 - Console [ Created new object [ guiTransferOne.textbox ] ].
-1353 - Console [ Added Object [ guiTransferOne.textbox ] to Screen [ guiTransferOne ] ].
-1353 - Console [ Created new object [ guiTransferOne.nextButton ] ].
-1353 - Console [ Added Object [ guiTransferOne.nextButton ] to Screen [ guiTransferOne ] ].
-1353 - Console [ Created new object [ guiTransferTwo ] ].
-1353 - Console [ Created new object [ guiTransferTwo.heading ] ].
-1353 - Console [ Added Object [ guiTransferTwo.heading ] to Screen [ guiTransferTwo ] ].
-1353 - Console [ Created new object [ guiTransferTwo.textbox ] ].
-1353 - Console [ Added Object [ guiTransferTwo.textbox ] to Screen [ guiTransferTwo ] ].
-1353 - Console [ Created new object [ guiTransferTwo.nextButton ] ].
-1353 - Console [ Added Object [ guiTransferTwo.nextButton ] to Screen [ guiTransferTwo ] ].
-1353 - Console [ Created new object [ mainMenu ] ].
-1353 - Console [ Created new object [ mainMenu.backGround ] ].
-1353 - Console [ Added Object [ mainMenu.backGround ] to Screen [ mainMenu ] ].
-1353 - Console [ Created new object [ mainMenu.startGameButton ] ].
-1353 - Console [ Added Object [ mainMenu.startGameButton ] to Screen [ mainMenu ] ].
-1353 - Console [ Created new object [ mainMenu.optionsButton ] ].
-1353 - Console [ Added Object [ mainMenu.optionsButton ] to Screen [ mainMenu ] ].
-1353 - Console [ Created new object [ mainMenu.tutorialButton ] ].
-1353 - Console [ Added Object [ mainMenu.tutorialButton ] to Screen [ mainMenu ] ].
-1353 - Console [ Created new object [ mainMenu.briefingButton ] ].
-1353 - Console [ Added Object [ mainMenu.briefingButton ] to Screen [ mainMenu ] ].
-1353 - Console [ Created new object [ mainMenu.quitButton ] ].
-1353 - Console [ Added Object [ mainMenu.quitButton ] to Screen [ mainMenu ] ].
-1353 - Console [ Created new object [ optionsMenu ] ].
-1353 - Console [ Created new object [ optionsMenu.backGround ] ].
-1353 - Console [ Added Object [ optionsMenu.backGround ] to Screen [ optionsMenu ] ].
-1353 - Console [ Created new object [ optionsMenu.videoButton ] ].
-1353 - Console [ Added Object [ optionsMenu.videoButton ] to Screen [ optionsMenu ] ].
-1353 - Console [ Created new object [ optionsMenu.audioButton ] ].
-1353 - Console [ Added Object [ optionsMenu.audioButton ] to Screen [ optionsMenu ] ].
-1353 - Console [ Created new object [ optionsMenu.controlsButton ] ].
-1353 - Console [ Added Object [ optionsMenu.controlsButton ] to Screen [ optionsMenu ] ].
-1353 - Console [ Created new object [ optionsMenu.gameButton ] ].
-1353 - Console [ Added Object [ optionsMenu.gameButton ] to Screen [ optionsMenu ] ].
-1353 - Console [ Created new object [ optionsMenu.backButton ] ].
-1353 - Console [ Added Object [ optionsMenu.backButton ] to Screen [ optionsMenu ] ].
-1353 - Console [ Created new object [ videoOptions ] ].
-1353 - Console [ Added Object [ videoOptions.renderers ] to Screen [ videoOptions ] ].
-1353 - Console [ Created new object [ videoOptions.display ] ].
-1353 - Console [ Added Object [ videoOptions.display ] to Screen [ videoOptions ] ].
-1353 - Console [ Created new object [ videoOptions.scalequality ] ].
-1353 - Console [ Added Object [ videoOptions.scalequality ] to Screen [ videoOptions ] ].
-1353 - Console [ Created new object [ videoOptions.usevsync ] ].
-1353 - Console [ Added Object [ videoOptions.usevsync ] to Screen [ videoOptions ] ].
-1353 - Console [ Created new object [ videoOptions.borderlesswindow ] ].
-1353 - Console [ Added Object [ videoOptions.borderlesswindow ] to Screen [ videoOptions ] ].
-1353 - Console [ Created new object [ videoOptions.highdpi ] ].
-1353 - Console [ Added Object [ videoOptions.highdpi ] to Screen [ videoOptions ] ].
-1353 - Console [ Created new object [ videoOptions.screeneffect ] ].
-1353 - Console [ Added Object [ videoOptions.screeneffect ] to Screen [ videoOptions ] ].
-1353 - Console [ Created new object [ videoOptions.applyButton ] ].
-1353 - Console [ Added Object [ videoOptions.applyButton ] to Screen [ videoOptions ] ].
-1353 - Console [ Created new object [ videoOptions.backButton ] ].
-1353 - Console [ Added Object [ videoOptions.backButton ] to Screen [ videoOptions ] ].
-1353 - Console [ Created new object [ audioOptions ] ].
-1353 - Console [ Created new object [ audioOptions.enableSound ] ].
-1353 - Console [ Added Object [ audioOptions.enableSound ] to Screen [ audioOptions ] ].
-1353 - Console [ Created new object [ audioOptions.volume ] ].
-1353 - Console [ Added Object [ audioOptions.volume ] to Screen [ audioOptions ] ].
-1353 - Console [ Created new object [ audioOptions.speakers ] ].
-1353 - Console [ Added Object [ audioOptions.speakers ] to Screen [ audioOptions ] ].
-1353 - Console [ Created new object [ audioOptions.backButton ] ].
-1353 - Console [ Added Object [ audioOptions.backButton ] to Screen [ audioOptions ] ].
-1353 - Console [ Created new object [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsOptions.heading ] ].
-1353 - Console [ Added Object [ controlsOptions.heading ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsOptions.left ] ].
-1353 - Console [ Added Object [ controlsOptions.left ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsOptions.right ] ].
-1353 - Console [ Added Object [ controlsOptions.right ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsOptions.up ] ].
-1353 - Console [ Added Object [ controlsOptions.up ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsOptions.down ] ].
-1353 - Console [ Added Object [ controlsOptions.down ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsOptions.action ] ].
-1353 - Console [ Added Object [ controlsOptions.action ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsOptions.leftKeyname ] ].
-1353 - Console [ Added Object [ controlsOptions.leftKeyname ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsOptions.rightKeyname ] ].
-1353 - Console [ Added Object [ controlsOptions.rightKeyname ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsOptions.upKeyname ] ].
-1353 - Console [ Added Object [ controlsOptions.upKeyname ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsOptions.downKeyname ] ].
-1353 - Console [ Added Object [ controlsOptions.downKeyname ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsOptions.actionKeyname ] ].
-1353 - Console [ Added Object [ controlsOptions.actionKeyname ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsMenu.backButton ] ].
-1353 - Console [ Added Object [ controlsMenu.backButton ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ controlsMenu.applyButton ] ].
-1353 - Console [ Added Object [ controlsMenu.applyButton ] to Screen [ controlsMenu ] ].
-1353 - Console [ Created new object [ gameMenu ] ].
-1544 - Console [ Created new object [ gameMenu.language ] ].
-1544 - Console [ Added Object [ gameMenu.language ] to Screen [ gameMenu ] ].
-1544 - Console [ Created new object [ gameMenu.tileStyle ] ].
-1544 - Console [ Added Object [ gameMenu.tileStyle ] to Screen [ gameMenu ] ].
-1544 - Console [ Created new object [ gameMenu.tileColor ] ].
-1552 - Console [ Added Object [ gameMenu.tileColor ] to Screen [ gameMenu ] ].
-1552 - Console [ Created new object [ gameMenu.backButton ] ].
-1552 - Console [ Added Object [ gameMenu.backButton ] to Screen [ gameMenu ] ].
-1552 - Console [ Created new object [ databaseScreen ] ].
-1552 - Console [ Created new object [ databaseScreen.scrollbox ] ].
-1552 - Console [ Added Object [ databaseScreen.scrollbox ] to Screen [ databaseScreen ] ].
-1552 - Console [ Created new object [ databaseScreen.previousButton ] ].
-1552 - Console [ Added Object [ databaseScreen.previousButton ] to Screen [ databaseScreen ] ].
-1552 - Console [ Created new object [ databaseScreen.backButton ] ].
-1552 - Console [ Added Object [ databaseScreen.backButton ] to Screen [ databaseScreen ] ].
-1552 - Console [ Created new object [ databaseScreen.nextButton ] ].
-1569 - Console [ Added Object [ databaseScreen.nextButton ] to Screen [ databaseScreen ] ].
-1569 - Console [ Created new object [ terminalMenu ] ].
-1569 - Console [ Created new object [ terminalMenu.backGround ] ].
-1569 - Console [ Added Object [ terminalMenu.backGround ] to Screen [ terminalMenu ] ].
-1569 - Console [ Created new object [ terminalMenu.databaseButton ] ].
-1569 - Console [ Added Object [ terminalMenu.databaseButton ] to Screen [ terminalMenu ] ].
-1569 - Console [ Created new object [ terminalMenu.deckviewButton ] ].
-1569 - Console [ Added Object [ terminalMenu.deckviewButton ] to Screen [ terminalMenu ] ].
-1569 - Console [ Created new object [ terminalMenu.shipviewButton ] ].
-1569 - Console [ Added Object [ terminalMenu.shipviewButton ] to Screen [ terminalMenu ] ].
-1569 - Console [ Created new object [ terminalMenu.logoffButton ] ].
-1569 - Console [ Added Object [ terminalMenu.logoffButton ] to Screen [ terminalMenu ] ].
-1586 - Console [ Created new object [ deckviewScreen ] ].
-1586 - Console [ Created new object [ deckviewScreen.backButton ] ].
-1586 - Console [ Added Object [ deckviewScreen.backButton ] to Screen [ deckviewScreen ] ].
-1586 - Console [ Created new object [ shipviewScreen ] ].
-1586 - Console [ Created new object [ shipviewScreen.backButton ] ].
-1586 - Console [ Added Object [ shipviewScreen.backButton ] to Screen [ shipviewScreen ] ].
-1586 - Console [ Created new object [ scrTutorial ] ].
-1586 - Console [ Created new object [ scrTutorial.textLabelTutMove ] ].
-1586 - Console [ Added Object [ scrTutorial.textLabelTutMove ] to Screen [ scrTutorial ] ].
-1586 - Console [ Created new object [ scrTutorial.tutTextBox ] ].
-1586 - Console [ Added Object [ scrTutorial.tutTextBox ] to Screen [ scrTutorial ] ].
-1603 - Console [ Created new object [ scrTutorial.buttonTutMoveNext ] ].
-1603 - Console [ Added Object [ scrTutorial.buttonTutMoveNext ] to Screen [ scrTutorial ] ].
-1603 - Console [ Created new object [ scrTutorial.buttonTutorialCancel ] ].
-1603 - Console [ Added Object [ scrTutorial.buttonTutorialCancel ] to Screen [ scrTutorial ] ].
-1603 - Console [ Created new object [ scrTutTransfer ] ].
-1603 - Console [ Created new object [ scrTutTransfer.textLabelTutTransMove ] ].
-1603 - Console [ Added Object [ scrTutTransfer.textLabelTutTransMove ] to Screen [ scrTutTransfer ] ].
-1603 - Console [ Created new object [ scrTutTransfer.tutTransTextBox ] ].
-1603 - Console [ Added Object [ scrTutTransfer.tutTransTextBox ] to Screen [ scrTutTransfer ] ].
-1603 - Console [ Created new object [ scrTutTransfer.buttonTutTransNext ] ].
-1603 - Console [ Added Object [ scrTutTransfer.buttonTutTransNext ] to Screen [ scrTutTransfer ] ].
-1619 - Console [ Created new object [ scrTutTransfer.buttonTutTransCancel ] ].
-1619 - Console [ Added Object [ scrTutTransfer.buttonTutTransCancel ] to Screen [ scrTutTransfer ] ].
-1619 - Console [ Created new object [ scrTutTransGame ] ].
-1619 - Console [ Created new object [ scrTutTransGame.textLabelTutTransGame ] ].
-1619 - Console [ Added Object [ scrTutTransGame.textLabelTutTransGame ] to Screen [ scrTutTransGame ] ].
-1619 - Console [ Created new object [ scrTutTransGame.tutTransGameTextBox ] ].
-1619 - Console [ Added Object [ scrTutTransGame.tutTransGameTextBox ] to Screen [ scrTutTransGame ] ].
-1619 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameNext ] ].
-1619 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameNext ] to Screen [ scrTutTransGame ] ].
-1619 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameCancel ] ].
-1619 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameCancel ] to Screen [ scrTutTransGame ] ].
-1619 - Console [ Created new object [ scrTutLifts ] ].
-1637 - Console [ Created new object [ scrTutLifts.textLabelTutLifts ] ].
-1637 - Console [ Added Object [ scrTutLifts.textLabelTutLifts ] to Screen [ scrTutLifts ] ].
-1637 - Console [ Created new object [ scrTutLifts.tutLiftTextBox ] ].
-1637 - Console [ Added Object [ scrTutLifts.tutLiftTextBox ] to Screen [ scrTutLifts ] ].
-1637 - Console [ Created new object [ scrTutLifts.tutImageLift ] ].
-1637 - Console [ Added Object [ scrTutLifts.tutImageLift ] to Screen [ scrTutLifts ] ].
-1637 - Console [ Created new object [ scrTutLifts.buttonTutLiftNext ] ].
-1637 - Console [ Added Object [ scrTutLifts.buttonTutLiftNext ] to Screen [ scrTutLifts ] ].
-1637 - Console [ Created new object [ scrTutLifts.buttonTutLiftCancel ] ].
-1637 - Console [ Added Object [ scrTutLifts.buttonTutLiftCancel ] to Screen [ scrTutLifts ] ].
-1637 - Console [ Created new object [ scrTutTerminals ] ].
-1654 - Console [ Created new object [ scrTutTerminals.textLabelTutTerminals ] ].
-1654 - Console [ Added Object [ scrTutTerminals.textLabelTutTerminals ] to Screen [ scrTutTerminals ] ].
-1654 - Console [ Created new object [ scrTutTerminals.tutTerminalTextBox ] ].
-1654 - Console [ Added Object [ scrTutTerminals.tutTerminalTextBox ] to Screen [ scrTutTerminals ] ].
-1654 - Console [ Created new object [ scrTutTerminals.tutImageTerminal ] ].
-1654 - Console [ Added Object [ scrTutTerminals.tutImageTerminal ] to Screen [ scrTutTerminals ] ].
-1654 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalNext ] ].
-1654 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalNext ] to Screen [ scrTutTerminals ] ].
-1654 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalCancel ] ].
-1654 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalCancel ] to Screen [ scrTutTerminals ] ].
-1654 - Console [ Created new object [ scrTutHealing ] ].
-1654 - Console [ Created new object [ scrTutHealing.textLabelTutHealing ] ].
-1670 - Console [ Added Object [ scrTutHealing.textLabelTutHealing ] to Screen [ scrTutHealing ] ].
-1670 - Console [ Created new object [ scrTutHealing.tutHealingTextBox ] ].
-1670 - Console [ Added Object [ scrTutHealing.tutHealingTextBox ] to Screen [ scrTutHealing ] ].
-1670 - Console [ Created new object [ scrTutHealing.tutImageHealing ] ].
-1670 - Console [ Added Object [ scrTutHealing.tutImageHealing ] to Screen [ scrTutHealing ] ].
-1670 - Console [ Created new object [ scrTutHealing.buttonTutHealinglNext ] ].
-1670 - Console [ Added Object [ scrTutHealing.buttonTutHealinglNext ] to Screen [ scrTutHealing ] ].
-1670 - Console [ Created new object [ scrTutHealing.buttonTutHealingCancel ] ].
-1670 - Console [ Added Object [ scrTutHealing.buttonTutHealingCancel ] to Screen [ scrTutHealing ] ].
-1670 - Console [ Created new object [ scrTutTips ] ].
-1670 - Console [ Created new object [ scrTutTips.textLabelTutTips ] ].
-1687 - Console [ Added Object [ scrTutTips.textLabelTutTips ] to Screen [ scrTutTips ] ].
-1687 - Console [ Created new object [ scrTutTips.tutTipsTextBox ] ].
-1687 - Console [ Added Object [ scrTutTips.tutTipsTextBox ] to Screen [ scrTutTips ] ].
-1687 - Console [ Created new object [ scrTutTips.buttonTutTipsCancel ] ].
-1687 - Console [ Added Object [ scrTutTips.buttonTutTipsCancel ] to Screen [ scrTutTips ] ].
-1687 - Console [ Created new object [ highScoreDisplay ] ].
-1687 - Console [ Created new object [ highScoreDisplay.backGround ] ].
-1687 - Console [ Added Object [ highScoreDisplay.backGround ] to Screen [ highScoreDisplay ] ].
-1687 - Console [ Created new object [ highScoreDisplay.heading ] ].
-1687 - Console [ Added Object [ highScoreDisplay.heading ] to Screen [ highScoreDisplay ] ].
-1687 - Console [ Created new object [ highScoreDisplay.row1 ] ].
-1687 - Console [ Added Object [ highScoreDisplay.row1 ] to Screen [ highScoreDisplay ] ].
-1704 - Console [ Created new object [ highScoreDisplay.score1 ] ].
-1704 - Console [ Added Object [ highScoreDisplay.score1 ] to Screen [ highScoreDisplay ] ].
-1704 - Console [ Created new object [ highScoreDisplay.name1 ] ].
-1704 - Console [ Added Object [ highScoreDisplay.name1 ] to Screen [ highScoreDisplay ] ].
-1704 - Console [ Created new object [ highScoreDisplay.row2 ] ].
-1704 - Console [ Added Object [ highScoreDisplay.row2 ] to Screen [ highScoreDisplay ] ].
-1704 - Console [ Created new object [ highScoreDisplay.score2 ] ].
-1704 - Console [ Added Object [ highScoreDisplay.score2 ] to Screen [ highScoreDisplay ] ].
-1704 - Console [ Created new object [ highScoreDisplay.name2 ] ].
-1704 - Console [ Added Object [ highScoreDisplay.name2 ] to Screen [ highScoreDisplay ] ].
-1704 - Console [ Object name or object label cannot be empty. ].
-1720 - Console [ Created new object [ highScoreDisplay.row3 ] ].
-1720 - Console [ Added Object [ highScoreDisplay.row3 ] to Screen [ highScoreDisplay ] ].
-1720 - Console [ Created new object [ highScoreDisplay.score3 ] ].
-1720 - Console [ Added Object [ highScoreDisplay.score3 ] to Screen [ highScoreDisplay ] ].
-1720 - Console [ Created new object [ highScoreDisplay.name3 ] ].
-1720 - Console [ Added Object [ highScoreDisplay.name3 ] to Screen [ highScoreDisplay ] ].
-1720 - Console [ Object name or object label cannot be empty. ].
-1720 - Console [ Created new object [ highScoreDisplay.row4 ] ].
-1720 - Console [ Added Object [ highScoreDisplay.row4 ] to Screen [ highScoreDisplay ] ].
-1720 - Console [ Created new object [ highScoreDisplay.score4 ] ].
-1720 - Console [ Added Object [ highScoreDisplay.score4 ] to Screen [ highScoreDisplay ] ].
-1737 - Console [ Created new object [ highScoreDisplay.name4 ] ].
-1737 - Console [ Added Object [ highScoreDisplay.name4 ] to Screen [ highScoreDisplay ] ].
-1737 - Console [ Created new object [ highScoreDisplay.row5 ] ].
-1737 - Console [ Added Object [ highScoreDisplay.row5 ] to Screen [ highScoreDisplay ] ].
-1737 - Console [ Created new object [ highScoreDisplay.score5 ] ].
-1737 - Console [ Added Object [ highScoreDisplay.score5 ] to Screen [ highScoreDisplay ] ].
-1737 - Console [ Created new object [ highScoreDisplay.name5 ] ].
-1737 - Console [ Added Object [ highScoreDisplay.name5 ] to Screen [ highScoreDisplay ] ].
-1737 - Console [ Created new object [ highScoreDisplay.backButton ] ].
-1737 - Console [ Added Object [ highScoreDisplay.backButton ] to Screen [ highScoreDisplay ] ].
-1754 - Console [ Created new object [ highScoreEntry ] ].
-1754 - Console [ Created new object [ highScoreEntry.backGround ] ].
-1754 - Console [ Added Object [ highScoreEntry.backGround ] to Screen [ highScoreEntry ] ].
-1754 - Console [ Created new object [ highScoreEntry.achieved ] ].
-1754 - Console [ Added Object [ highScoreEntry.achieved ] to Screen [ highScoreEntry ] ].
-1754 - Console [ Created new object [ highScoreEntry.initials ] ].
-1754 - Console [ Added Object [ highScoreEntry.initials ] to Screen [ highScoreEntry ] ].
-1754 - Console [ Created new object [ highScoreEntry.initial0 ] ].
-1754 - Console [ Added Object [ highScoreEntry.initial0 ] to Screen [ highScoreEntry ] ].
-1754 - Console [ Object name or function string cannot be empty. ].
-1754 - Console [ Created new object [ highScoreEntry.initial1 ] ].
-1754 - Console [ Added Object [ highScoreEntry.initial1 ] to Screen [ highScoreEntry ] ].
-1771 - Console [ Object name or function string cannot be empty. ].
-1771 - Console [ Created new object [ highScoreEntry.initial2 ] ].
-1771 - Console [ Added Object [ highScoreEntry.initial2 ] to Screen [ highScoreEntry ] ].
-1771 - Console [ Object name or function string cannot be empty. ].
-1771 - Console [ Created new object [ highScoreEntry.backButton ] ].
-1771 - Console [ Added Object [ highScoreEntry.backButton ] to Screen [ highScoreEntry ] ].
-1771 - Console [ Loaded [ universe.bmp ] with key [ universe ] ].
-1771 - Console [ Loaded [ db_999.bmp ] with key [ db_droid ] ].
-1771 - Console [ Loaded [ 001.bmp ] with key [ 001 ] ].
-1771 - Console [ Loaded [ 123.bmp ] with key [ 123 ] ].
-1771 - Console [ Loaded [ 139.bmp ] with key [ 139 ] ].
-1787 - Console [ Loaded [ 247.bmp ] with key [ 247 ] ].
-1787 - Console [ Loaded [ 249.bmp ] with key [ 249 ] ].
-1787 - Console [ Loaded [ 296.bmp ] with key [ 296 ] ].
-1787 - Console [ Loaded [ 302.bmp ] with key [ 302 ] ].
-1787 - Console [ Loaded [ 329.bmp ] with key [ 329 ] ].
-1787 - Console [ Loaded [ 420.bmp ] with key [ 420 ] ].
-1787 - Console [ Loaded [ 476.bmp ] with key [ 476 ] ].
-1787 - Console [ Loaded [ 493.bmp ] with key [ 493 ] ].
-1787 - Console [ Loaded [ 516.bmp ] with key [ 516 ] ].
-1787 - Console [ Loaded [ 571.bmp ] with key [ 571 ] ].
-1787 - Console [ Loaded [ 598.bmp ] with key [ 598 ] ].
-1804 - Console [ Loaded [ 614.bmp ] with key [ 614 ] ].
-1804 - Console [ Loaded [ 615.bmp ] with key [ 615 ] ].
-1804 - Console [ Loaded [ 629.bmp ] with key [ 629 ] ].
-1804 - Console [ Loaded [ 711.bmp ] with key [ 711 ] ].
-1804 - Console [ Loaded [ 742.bmp ] with key [ 742 ] ].
-1804 - Console [ Loaded [ 751.bmp ] with key [ 751 ] ].
-1804 - Console [ Loaded [ 821.bmp ] with key [ 821 ] ].
-1804 - Console [ Loaded [ 834.bmp ] with key [ 834 ] ].
-1804 - Console [ Loaded [ 883.bmp ] with key [ 883 ] ].
-1804 - Console [ Loaded [ 999.bmp ] with key [ 999 ] ].
-1804 - Console [ Loaded [ tut_healing.bmp ] with key [ tut_healing ] ].
-1820 - Console [ Loaded [ tut_lift.bmp ] with key [ tut_lift ] ].
-1820 - Looking for function [ as_loadAudioResources ] to [ as_useNewRenderer ] to execute
-1820 - Looking for function [ as_loadAudioResources ] to [ as_getAudioSpecs ] to execute
-1820 - Looking for function [ as_loadAudioResources ] to [ as_loadAudioResources ] to execute
-1820 - Console [ Loaded [ tut_terminal.bmp ] with key [ tut_terminal ] ].
-1820 - Console [ Loaded [ bullet_001.bmp ] with key [ bullet_001 ] ].
-1820 - Console [ Loaded [ bullet_476.bmp ] with key [ bullet_476 ] ].
-1820 - Console [ Loaded [ bullet_821.bmp ] with key [ bullet_821 ] ].
-1820 - Console [ Loaded ship level [ Vehicle Hold ] - index [ 0 ] ].
-1820 - Console [ Loaded ship level [ Shuttle bay ] - index [ 1 ] ].
-1820 - Console [ Loaded ship level [ Turrent 2 ] - index [ 2 ] ].
-1820 - Console [ Loaded ship level [ Maintenance ] - index [ 3 ] ].
-1820 - Console [ Loaded ship level [ Engineering ] - index [ 4 ] ].
-1820 - Console [ Loaded ship level [ Mid cargo ] - index [ 5 ] ].
-1820 - Console [ Loaded ship level [ Upper cargo ] - index [ 6 ] ].
-1837 - Console [ Loaded ship level [ Kitchen ] - index [ 8 ] ].
-1837 - Console [ Loaded ship level [ Robo stores ] - index [ 9 ] ].
-1837 - Console [ Loaded ship level [ Quarters ] - index [ 10 ] ].
-1837 - Console [ Loaded ship level [ Repairs ] - index [ 11 ] ].
-1837 - Console [ Loaded ship level [ Staterooms ] - index [ 12 ] ].
-1837 - Console [ Loaded ship level [ Stores ] - index [ 13 ] ].
-1837 - Console [ Loaded ship level [ Research ] - index [ 14 ] ].
-1837 - Console [ Loaded ship level [ Reactor ] - index [ 15 ] ].
-1837 - Console [ Loaded ship level [ Airlock ] - index [ 16 ] ].
-1837 - Console [ Loaded ship level [ Bridge ] - index [ 17 ] ].
-1837 - Console [ Loaded ship level [ Turrent 1 ] - index [ 18 ] ].
-1854 - Console [ Loaded ship level [ Turrent 3 ] - index [ 19 ] ].
-1854 - Console [ Loaded ship level [ Observation ] - index [ 20 ] ].
-1854 - Console [ Loaded font file [ gui.ttf ] ].
-1854 - Console [ Loaded font file [ gui.ttf ] ].
-1854 - Console [ Loaded font file [ intro.ttf ] ].
-13948 - Looking for function [ as_handleMainMenu ] to [ as_useNewRenderer ] to execute
-13948 - Looking for function [ as_handleMainMenu ] to [ as_getAudioSpecs ] to execute
-13948 - Looking for function [ as_handleMainMenu ] to [ as_loadAudioResources ] to execute
-13948 - Looking for function [ as_handleMainMenu ] to [ as_loadTextureResources ] to execute
-13948 - Looking for function [ as_handleMainMenu ] to [ as_loadAllDecks ] to execute
-13948 - Looking for function [ as_handleMainMenu ] to [ as_getVolume ] to execute
-13948 - Looking for function [ as_handleMainMenu ] to [ as_setVolume ] to execute
-13948 - Looking for function [ as_handleMainMenu ] to [ as_createGUI ] to execute
-13948 - Looking for function [ as_handleMainMenu ] to [ as_handleMainMenu ] to execute
-13948 - Console [ Loaded [ future_blue.bmp ] with key [ tiles ] ].
-15982 - [ postStepRemove ] Removing a shape and body from postStep callback.
-17502 - [ postStepRemove ] Removing a shape and body from postStep callback.
-17535 - [ gam_damageToDroid ] - target 5 damageSource 1 sourceDroid -1
-17535 - [ gam_damageToDroid ] - Damage to droid [ 5 ] from BULLET
-17535 - [ 5 ] Found a new AI mode to change to [ ATTACK ]
-17535 - [ 5 ] - Running function : changeAIModeTo
-17535 - [ 5 ] - Changing to new AI mode - [ ATTACK ]
-17535 - [ 5 ] - In ATTACK mode case statement.
-17535 - [ 5 ] - Droid can not shoot. Increase FLEE amount.
-17535 - [ 5 ] AI Scores [ 0 0 85 8 50 0 ]
-17535 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
-17535 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-17535 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-17535 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-17552 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-17552 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-17552 - Console [ 5   --  50 --    0 --   45 --   8  --  50  --  0 -- ATTACK -  ].
-17552 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-17552 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-17568 - [ 5 ] Found a new AI mode to change to [ FLEE ]
-17568 - [ 5 ] - Running function : changeAIModeTo
-17568 - [ 5 ] - Changing to new AI mode - [ FLEE ]
-17568 - [ 5 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
-17568 - [ 5 ] - Found the destination flee tile [ 43.000 17.000 ]
-17568 - [ requestNewPath ] Index 5
-17568 - [ 5 ] AI Scores [ 45 0 85 8 50 0 ]
-19335 - [ postStepRemove ] Removing a shape and body from postStep callback.
-21504 - [ postStepRemove ] Removing a shape and body from postStep callback.
-21537 - [ gam_damageToDroid ] - target 2 damageSource 1 sourceDroid -1
-21537 - [ gam_damageToDroid ] - Damage to droid [ 2 ] from BULLET
-21537 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
-22605 - [ postStepRemove ] Removing a shape and body from postStep callback.
-23406 - [ postStepRemove ] Removing a shape and body from postStep callback.
-23672 - [ 2 ] Found a new AI mode to change to [ ATTACK ]
-23672 - [ 2 ] - Running function : changeAIModeTo
-23672 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
-23672 - [ 2 ] - In ATTACK mode case statement.
-23672 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
-23672 - [ 2 ] AI Scores [ 50 0 0 7 50 45 ]
-23672 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-23672 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-23672 - Console [ 2   --  50 --    0 --    0 --   7  --  50  -- 45 -- ATTACK -  ].
-23689 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-23689 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-23689 - Console [ 5   --  45 --    0 --   85 --   8  --  50  --  0 -- FLEE -  ].
-23689 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-23689 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-23839 - [ 2 ] Found a new AI mode to change to [ HUNT ]
-23839 - [ 2 ] - Running function : changeAIModeTo
-23839 - [ 2 ] - Changing to new AI mode - [ HUNT ]
-23839 - [ 2 ] - Changing to HUNT mode.
-23839 - [ 2 ] - Found the player trail tile [ 23.000 14.000 ]
-23839 - [ requestNewPath ] Index 2
-23839 - [ 2 ] AI Scores [ 80 90 0 7 50 45 ]
-24039 - [ 2 ] Found a new AI mode to change to [ ATTACK ]
-24039 - [ 2 ] - Running function : changeAIModeTo
-24039 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
-24039 - [ 2 ] - In ATTACK mode case statement.
-24039 - [ 2 ] AI Scores [ 80 80 0 7 50 45 ]
-24039 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
-24039 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-24039 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-24039 - Console [ 2   --  80 --   80 --    0 --   7  --  50  -- 45 -- ATTACK -  ].
-24039 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-24056 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-24056 - Console [ 5   --  45 --    0 --   85 --   8  --  50  --  0 -- FLEE -  ].
-24056 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-24056 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-24073 - [ 2 ] Found a new AI mode to change to [ HUNT ]
-24073 - [ 2 ] - Running function : changeAIModeTo
-24073 - [ 2 ] - Changing to new AI mode - [ HUNT ]
-24073 - [ 2 ] - Changing to HUNT mode.
-24073 - [ 2 ] - Found the player trail tile [ 23.000 14.000 ]
-24073 - [ requestNewPath ] Index 2
-24073 - [ 2 ] AI Scores [ 25 80 0 7 50 45 ]
-24873 - [ 2 ] Found a new AI mode to change to [ PATROL ]
-24873 - [ 2 ] - Running function : changeAIModeTo
-24873 - [ 2 ] - Changing to new AI mode - [ PATROL ]
-24873 - [ 2 ] - Changing to PATROL mode. Looking for nearest waypoint to move to.
-24873 - [ 2 ] - [ findLocationWithLOS ] Search for a visible waypoint.
-24873 - [ 0 ] - Found a closer waypoint [ 376 ]
-24873 - [ 8 ] - Found a closer waypoint [ 203 ]
-24873 - [ 9 ] - Found a closer waypoint [ 118 ]
-24873 - [ 28 ] - Found a closer waypoint [ 115 ]
-24873 - [ 31 ] - Found a closer waypoint [ 70 ]
-24891 - [ 32 ] - Found a closer waypoint [ 69 ]
-24891 - [ 2 ] AI Scores [ 35 40 0 7 50 45 ]
-25475 - [ postStepRemove ] Removing a shape and body from postStep callback.
-26042 - [ postStepRemove ] Removing a shape and body from postStep callback.
-26075 - [ gam_damageToDroid ] - target 2 damageSource 1 sourceDroid -1
-26075 - [ gam_damageToDroid ] - Damage to droid [ 2 ] from BULLET
-26075 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
-26075 - [ 2 ] - Running function : changeAIModeTo
-26075 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
-26075 - [ 2 ] - In ATTACK mode case statement.
-26075 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
-26075 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-26075 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-26075 - Console [ 2   --  100 --   40 --    0 --  14  --  50  --  0 -- ATTACK -  ].
-26075 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-26075 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-26092 - Console [ 5   --  45 --    0 --   85 --   8  --  50  --  0 -- FLEE -  ].
-26092 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-26092 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-26976 - [ postStepRemove ] Removing a shape and body from postStep callback.
-27010 - [ gam_damageToDroid ] - target 2 damageSource 1 sourceDroid -1
-27010 - [ gam_damageToDroid ] - Damage to droid [ 2 ] from BULLET
-27010 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
-28110 - [ postStepRemove ] Removing a shape and body from postStep callback.
-28144 - [ gam_damageToDroid ] - target 1 damageSource 1 sourceDroid -1
-28144 - [ gam_damageToDroid ] - Damage to droid [ 1 ] from BULLET
-28144 - [ 1 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
-28144 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
-28144 - [ 3 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
-28144 - [ 1 ] Found a new AI mode to change to [ ATTACK ]
-28144 - [ 1 ] - Running function : changeAIModeTo
-28144 - [ 1 ] - Changing to new AI mode - [ ATTACK ]
-28144 - [ 1 ] - In ATTACK mode case statement.
-28144 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
-28144 - [ 1 ] AI Scores [ 50 0 0 7 50 45 ]
-28144 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-28144 - Console [ 1   --  50 --    0 --    0 --   7  --  50  -- 45 -- ATTACK -  ].
-28144 - Console [ 2   --  100 --    0 --    0 --  22  --  50  -- 90 -- ATTACK -  ].
-28161 - Console [ 3   --   0 --    0 --    0 --   0  --  50  -- 45 -- PATROL -  ].
-28161 - Console [ 4   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
-28161 - Console [ 5   --  45 --    0 --   85 --   8  --  50  --  0 -- FLEE -  ].
-28161 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-28161 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
-28410 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid 1
-28410 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
-28410 - [ gam_damageToDroid ] - target 4 damageSource 1 sourceDroid 1
-28410 - [ gam_damageToDroid ] - Damage to droid [ 4 ] from BULLET
-28410 - [ 4 ] Found a new AI mode to change to [ FLEE ]
-28410 - [ 4 ] - Running function : changeAIModeTo
-28410 - [ 4 ] - Changing to new AI mode - [ FLEE ]
-28410 - [ 4 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
-28410 - [ 4 ] - Found the destination flee tile [ 43.000 17.000 ]
-28410 - [ requestNewPath ] Index 4
-28410 - [ 4 ] AI Scores [ 0 0 75 25 50 0 ]
-29878 - [ postStepRemove ] Removing a shape and body from postStep callback.
-29911 - [ gam_damageToDroid ] - target 1 damageSource 1 sourceDroid -1
-29911 - [ gam_damageToDroid ] - Damage to droid [ 1 ] from BULLET
-29911 - [ 1 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
-29911 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
-30980 - Console [ Loaded [ static_1.bmp ] with key [ static_1 ] ].
-30980 - Console [ Loaded [ static_2.bmp ] with key [ static_2 ] ].
-30980 - Console [ Loaded [ static_3.bmp ] with key [ static_3 ] ].
-30980 - Console [ Loaded [ static_4.bmp ] with key [ static_4 ] ].
-30980 - Console [ Loaded [ static_5.bmp ] with key [ static_5 ] ].
-30980 - Console [ Loaded [ static_6.bmp ] with key [ static_6 ] ].
-30980 - Console [ Loaded [ static_7.bmp ] with key [ static_7 ] ].
-30980 - Console [ Loaded [ static_8.bmp ] with key [ static_8 ] ].
-30980 - Console [ Loaded [ static_9.bmp ] with key [ static_9 ] ].
-30980 - Console [ Loaded [ db_999.bmp ] with key [ db_droid ] ].
-35834 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-35834 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-35851 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-35851 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [ Joystick hasn't been opened yet ]
-35868 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-35868 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-35885 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-35885 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-35900 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-35900 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-35918 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-35918 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-35933 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-35933 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-35950 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-35950 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-35966 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-35966 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-35983 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-35983 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36000 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36000 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36016 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36016 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36033 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36033 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36050 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36050 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36066 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36066 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36083 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36083 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36099 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36099 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36116 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36116 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36133 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36133 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36150 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36150 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36166 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36166 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36183 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36183 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36200 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36200 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36216 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36216 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36233 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36233 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36250 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36250 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36266 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36266 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36283 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36283 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36300 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36300 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36316 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36316 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36333 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36333 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36350 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36350 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36366 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36366 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36383 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36383 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36400 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36400 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36417 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36417 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36433 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36433 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36450 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36450 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36467 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36467 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36483 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36483 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36500 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36500 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36517 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36517 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36533 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36533 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36551 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36551 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36568 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36568 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36584 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36584 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36601 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36601 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36618 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36618 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36636 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36636 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36651 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36651 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36668 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36668 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36685 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36685 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36701 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [ Joystick hasn't been opened yet ]
-36701 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36718 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36718 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36737 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36737 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36751 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36751 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36768 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36768 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36785 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36785 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36801 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36801 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36818 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36818 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36835 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36835 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36852 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36852 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36868 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36868 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36884 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36884 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36901 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36901 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36918 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36918 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36934 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36934 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36951 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36951 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36967 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36967 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-36985 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-36985 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37001 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37001 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37018 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37018 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37035 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37035 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37052 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37052 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37068 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37068 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37085 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37085 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37101 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37101 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37118 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37118 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37135 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37135 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37151 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37151 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37168 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37168 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37185 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37185 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37202 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37202 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37218 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37218 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37235 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37235 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37251 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37251 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37268 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37268 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37285 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37285 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37302 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37302 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37318 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37318 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37335 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37335 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37352 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37352 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37369 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37369 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37385 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37385 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37402 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37402 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37419 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37419 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37435 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37435 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37452 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37452 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37468 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37468 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37485 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37485 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37503 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37503 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37519 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37519 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37536 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37536 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37552 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37552 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37568 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37568 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37586 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37586 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37602 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37602 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37619 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37619 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37635 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37635 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37652 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37652 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37669 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37669 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37685 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37685 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37702 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37702 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37719 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37719 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37735 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37735 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37752 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37752 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37769 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37769 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37785 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37785 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37802 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37802 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37819 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37819 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37835 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37835 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37852 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37852 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37869 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37869 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37885 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37885 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37902 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37902 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37919 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37919 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37935 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37935 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37951 - Console [ Label index [ 21 ] - [ Unknown ] has no label set. ].
-37951 - Console [ Label index [ 24 ] - [ Unknown ] has no label set. ].
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_useNewRenderer ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_getAudioSpecs ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_loadAudioResources ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_loadTextureResources ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_loadAllDecks ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_getVolume ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_setVolume ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_createGUI ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleMainMenu ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleOptionsMenu ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleVideoOptions ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleAudioMenu ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleControlsMenu ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleGameMenu ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleDeckviewScreen ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleShipviewScreen ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleTerminalMenu ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleDatabaseMenu ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleTransferScreens ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleTutorialElements ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleDialogBoxes ] to execute
-37968 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleHighscoreDisplay ] to execute
-40005 - Looking for function [ as_handleMainMenu ] to [ as_useNewRenderer ] to execute
-40005 - Looking for function [ as_handleMainMenu ] to [ as_getAudioSpecs ] to execute
-40005 - Looking for function [ as_handleMainMenu ] to [ as_loadAudioResources ] to execute
-40005 - Looking for function [ as_handleMainMenu ] to [ as_loadTextureResources ] to execute
-40005 - Looking for function [ as_handleMainMenu ] to [ as_loadAllDecks ] to execute
-40005 - Looking for function [ as_handleMainMenu ] to [ as_getVolume ] to execute
-40005 - Looking for function [ as_handleMainMenu ] to [ as_setVolume ] to execute
-40005 - Looking for function [ as_handleMainMenu ] to [ as_createGUI ] to execute
-40005 - Looking for function [ as_handleMainMenu ] to [ as_handleMainMenu ] to execute
+1177 - Looking for function [ as_loadTextureResources ] to [ as_loadAudioResources ] to execute
+1177 - Looking for function [ as_loadTextureResources ] to [ as_loadTextureResources ] to execute
+1177 - Looking for function [ as_loadAllDecks ] to [ as_useNewRenderer ] to execute
+1177 - Looking for function [ as_loadAllDecks ] to [ as_getAudioSpecs ] to execute
+1177 - Looking for function [ as_loadAllDecks ] to [ as_loadAudioResources ] to execute
+1177 - Looking for function [ as_loadAllDecks ] to [ as_loadTextureResources ] to execute
+1177 - Looking for function [ as_loadAllDecks ] to [ as_loadAllDecks ] to execute
+1177 - Looking for function [ as_createGUI ] to [ as_useNewRenderer ] to execute
+1177 - Looking for function [ as_createGUI ] to [ as_getAudioSpecs ] to execute
+1177 - Looking for function [ as_createGUI ] to [ as_loadAudioResources ] to execute
+1177 - Looking for function [ as_createGUI ] to [ as_loadTextureResources ] to execute
+1177 - Looking for function [ as_createGUI ] to [ as_loadAllDecks ] to execute
+1177 - Looking for function [ as_createGUI ] to [ as_getVolume ] to execute
+1177 - Looking for function [ as_createGUI ] to [ as_setVolume ] to execute
+1177 - Looking for function [ as_createGUI ] to [ as_createGUI ] to execute
+1177 - Console [ Func ID for [ void as_useNewRenderer(int &in newRenderer) ] - [ 172204944 ] ].
+1177 - Console [ Func ID for [ void as_getAudioSpecs() ] - [ 172203408 ] ].
+1177 - Console [ Func ID for [ void as_loadAudioResources() ] - [ 173121528 ] ].
+1177 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
+1177 - Console [ Func ID for [ void as_loadTextureResources() ] - [ 173121784 ] ].
+1177 - Console [ Func ID for [ void as_loadAllDecks() ] - [ 173122040 ] ].
+1177 - Console [ Func ID for [ int as_getVolume() ] - [ 172203664 ] ].
+1177 - Console [ Func ID for [ void as_setVolume(int newVolume) ] - [ 172197776 ] ].
+1177 - Console [ Func ID for [ void as_createGUI() ] - [ 173119736 ] ].
+1177 - Console [ Func ID for [ void as_handleMainMenu() ] - [ 173118968 ] ].
+1177 - Console [ Func ID for [ void as_handleOptionsMenu() ] - [ 173117432 ] ].
+1177 - Console [ Func ID for [ void as_handleVideoOptions() ] - [ 173117688 ] ].
+1177 - Console [ Func ID for [ void as_handleAudioMenu() ] - [ 173118200 ] ].
+1177 - Console [ Func ID for [ void as_handleControlsMenu() ] - [ 173123320 ] ].
+1177 - 0: wasapi
+1177 - 1: directsound
+1177 - 2: winmm
+1177 - 3: disk
+1177 - 4: dummy
+1177 - Using audio driver: wasapi
+
+1177 - Console [ Func ID for [ void as_handleGameMenu() ] - [ 173122296 ] ].
+1177 - Console [ Func ID for [ void as_handleDeckviewScreen() ] - [ 173122552 ] ].
+1177 - Console [ Func ID for [ void as_handleShipviewScreen() ] - [ 173123832 ] ].
+1177 - Console [ Func ID for [ void as_handleTerminalMenu() ] - [ 173123064 ] ].
+1177 - Console [ Func ID for [ void as_handleDatabaseMenu() ] - [ 173124344 ] ].
+1177 - Console [ Func ID for [ void as_handleTransferScreens() ] - [ 173109752 ] ].
+1177 - Console [ Func ID for [ void as_handleTutorialElements () ] - [ 173110264 ] ].
+1177 - Console [ Func ID for [ void as_handleDialogBoxes () ] - [ 172199056 ] ].
+1177 - Console [ Func ID for [ void as_handleHighscoreDisplay() ] - [ 173119480 ] ].
+1177 - Console [ Func ID for [ void as_refreshHighscoreLabels() ] - [ 173118712 ] ].
+1177 - Console [ Func ID for [ void as_refreshControlLabels() ] - [ 173120760 ] ].
+1177 - Console [ Created new object [ introScreen.scrollbox ] ].
+1177 - Console [ Added Object [ introScreen.scrollbox ] to Screen [ introScreen ] ].
+1177 - Console [ Created new object [ wonScreen ] ].
+1177 - Console [ Created new object [ wonScreen.scrollbox ] ].
+1177 - Console [ Added Object [ wonScreen.scrollbox ] to Screen [ wonScreen ] ].
+1177 - Console [ Created new object [ quitGameDialogbox.text ] ].
+1177 - Console [ Added Object [ quitGameDialogbox.text ] to Dialogbox [ quitGameDialogbox ] ].
+1177 - Console [ Added Object [ quitGameDialogbox.confirmButton ] to Dialogbox [ quitGameDialogbox ] ].
+1177 - Console [ Created new object [ quitGameDialogbox.denyButton ] ].
+1177 - Console [ Added Object [ quitGameDialogbox.denyButton ] to Dialogbox [ quitGameDialogbox ] ].
+1177 - Console [ Created new object [ guiTransferOne ] ].
+1177 - Console [ Added Object [ guiTransferOne.heading ] to Screen [ guiTransferOne ] ].
+1177 - Console [ Created new object [ guiTransferOne.textbox ] ].
+1177 - Console [ Added Object [ guiTransferOne.textbox ] to Screen [ guiTransferOne ] ].
+1177 - Console [ Created new object [ guiTransferOne.nextButton ] ].
+1177 - Console [ Added Object [ guiTransferOne.nextButton ] to Screen [ guiTransferOne ] ].
+1177 - Console [ Created new object [ guiTransferTwo ] ].
+1177 - Console [ Created new object [ guiTransferTwo.heading ] ].
+1177 - Console [ Added Object [ guiTransferTwo.heading ] to Screen [ guiTransferTwo ] ].
+1290 - Console [ Created new object [ guiTransferTwo.textbox ] ].
+1290 - Console [ Added Object [ guiTransferTwo.textbox ] to Screen [ guiTransferTwo ] ].
+1290 - Console [ Created new object [ guiTransferTwo.nextButton ] ].
+1290 - Console [ Added Object [ guiTransferTwo.nextButton ] to Screen [ guiTransferTwo ] ].
+1290 - Console [ Created new object [ mainMenu ] ].
+1290 - Console [ Created new object [ mainMenu.backGround ] ].
+1290 - Console [ Added Object [ mainMenu.backGround ] to Screen [ mainMenu ] ].
+1290 - Console [ Created new object [ mainMenu.startGameButton ] ].
+1290 - Console [ Added Object [ mainMenu.startGameButton ] to Screen [ mainMenu ] ].
+1290 - Console [ Created new object [ mainMenu.optionsButton ] ].
+1290 - Console [ Created new object [ mainMenu.tutorialButton ] ].
+1290 - Console [ Added Object [ mainMenu.tutorialButton ] to Screen [ mainMenu ] ].
+1290 - Console [ Created new object [ mainMenu.briefingButton ] ].
+1290 - Console [ Added Object [ mainMenu.briefingButton ] to Screen [ mainMenu ] ].
+1290 - Console [ Created new object [ mainMenu.quitButton ] ].
+1290 - Console [ Added Object [ mainMenu.quitButton ] to Screen [ mainMenu ] ].
+1290 - Console [ Created new object [ optionsMenu ] ].
+1290 - Console [ Created new object [ optionsMenu.backGround ] ].
+1290 - Console [ Added Object [ optionsMenu.backGround ] to Screen [ optionsMenu ] ].
+1290 - Console [ Created new object [ optionsMenu.videoButton ] ].
+1290 - Console [ Added Object [ optionsMenu.videoButton ] to Screen [ optionsMenu ] ].
+1290 - Console [ Created new object [ optionsMenu.audioButton ] ].
+1290 - Console [ Added Object [ optionsMenu.audioButton ] to Screen [ optionsMenu ] ].
+1290 - Console [ Created new object [ optionsMenu.controlsButton ] ].
+1290 - Console [ Added Object [ optionsMenu.controlsButton ] to Screen [ optionsMenu ] ].
+1290 - Console [ Created new object [ optionsMenu.gameButton ] ].
+1290 - Console [ Added Object [ optionsMenu.gameButton ] to Screen [ optionsMenu ] ].
+1290 - Console [ Created new object [ optionsMenu.backButton ] ].
+1290 - Console [ Added Object [ optionsMenu.backButton ] to Screen [ optionsMenu ] ].
+1290 - Console [ Created new object [ videoOptions ] ].
+1290 - Console [ Added Object [ videoOptions.renderers ] to Screen [ videoOptions ] ].
+1290 - Console [ Created new object [ videoOptions.display ] ].
+1290 - Console [ Added Object [ videoOptions.display ] to Screen [ videoOptions ] ].
+1290 - Console [ Created new object [ videoOptions.scalequality ] ].
+1290 - Console [ Added Object [ videoOptions.scalequality ] to Screen [ videoOptions ] ].
+1290 - Console [ Created new object [ videoOptions.usevsync ] ].
+1290 - Console [ Added Object [ videoOptions.usevsync ] to Screen [ videoOptions ] ].
+1290 - Console [ Created new object [ videoOptions.borderlesswindow ] ].
+1290 - Console [ Added Object [ videoOptions.borderlesswindow ] to Screen [ videoOptions ] ].
+1290 - Console [ Created new object [ videoOptions.highdpi ] ].
+1290 - Console [ Added Object [ videoOptions.highdpi ] to Screen [ videoOptions ] ].
+1290 - Console [ Created new object [ videoOptions.screeneffect ] ].
+1290 - Console [ Added Object [ videoOptions.screeneffect ] to Screen [ videoOptions ] ].
+1290 - Console [ Created new object [ videoOptions.applyButton ] ].
+1290 - Console [ Added Object [ videoOptions.applyButton ] to Screen [ videoOptions ] ].
+1290 - Console [ Created new object [ videoOptions.backButton ] ].
+1290 - Console [ Added Object [ videoOptions.backButton ] to Screen [ videoOptions ] ].
+1290 - Console [ Created new object [ audioOptions ] ].
+1290 - Console [ Created new object [ audioOptions.enableSound ] ].
+1290 - Console [ Added Object [ audioOptions.enableSound ] to Screen [ audioOptions ] ].
+1290 - Console [ Created new object [ audioOptions.volume ] ].
+1290 - Console [ Added Object [ audioOptions.volume ] to Screen [ audioOptions ] ].
+1290 - Console [ Created new object [ audioOptions.speakers ] ].
+1290 - Console [ Added Object [ audioOptions.speakers ] to Screen [ audioOptions ] ].
+1290 - Console [ Created new object [ audioOptions.backButton ] ].
+1290 - Console [ Added Object [ audioOptions.backButton ] to Screen [ audioOptions ] ].
+1290 - Console [ Created new object [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsOptions.heading ] ].
+1290 - Console [ Added Object [ controlsOptions.heading ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsOptions.left ] ].
+1290 - Console [ Added Object [ controlsOptions.left ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsOptions.right ] ].
+1290 - Console [ Added Object [ controlsOptions.right ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsOptions.up ] ].
+1290 - Console [ Added Object [ controlsOptions.up ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsOptions.down ] ].
+1290 - Console [ Added Object [ controlsOptions.down ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsOptions.action ] ].
+1290 - Console [ Added Object [ controlsOptions.action ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsOptions.leftKeyname ] ].
+1290 - Console [ Added Object [ controlsOptions.leftKeyname ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsOptions.rightKeyname ] ].
+1290 - Console [ Added Object [ controlsOptions.rightKeyname ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsOptions.upKeyname ] ].
+1290 - Console [ Added Object [ controlsOptions.upKeyname ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsOptions.downKeyname ] ].
+1290 - Console [ Added Object [ controlsOptions.downKeyname ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsOptions.actionKeyname ] ].
+1290 - Console [ Added Object [ controlsOptions.actionKeyname ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsMenu.backButton ] ].
+1290 - Console [ Added Object [ controlsMenu.backButton ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ controlsMenu.applyButton ] ].
+1290 - Console [ Added Object [ controlsMenu.applyButton ] to Screen [ controlsMenu ] ].
+1290 - Console [ Created new object [ gameMenu ] ].
+1290 - Console [ Created new object [ gameMenu.language ] ].
+1290 - Console [ Added Object [ gameMenu.language ] to Screen [ gameMenu ] ].
+1290 - Console [ Created new object [ gameMenu.tileStyle ] ].
+1290 - Console [ Added Object [ gameMenu.tileStyle ] to Screen [ gameMenu ] ].
+1290 - Console [ Created new object [ gameMenu.tileColor ] ].
+1290 - Console [ Added Object [ gameMenu.tileColor ] to Screen [ gameMenu ] ].
+1290 - Console [ Created new object [ gameMenu.backButton ] ].
+1290 - Console [ Added Object [ gameMenu.backButton ] to Screen [ gameMenu ] ].
+1290 - Console [ Created new object [ databaseScreen ] ].
+1290 - Console [ Created new object [ databaseScreen.scrollbox ] ].
+1290 - Console [ Added Object [ databaseScreen.scrollbox ] to Screen [ databaseScreen ] ].
+1290 - Console [ Created new object [ databaseScreen.previousButton ] ].
+1290 - Console [ Added Object [ databaseScreen.previousButton ] to Screen [ databaseScreen ] ].
+1290 - Console [ Created new object [ databaseScreen.backButton ] ].
+1290 - Console [ Added Object [ databaseScreen.backButton ] to Screen [ databaseScreen ] ].
+1290 - Console [ Created new object [ databaseScreen.nextButton ] ].
+1290 - Console [ Added Object [ databaseScreen.nextButton ] to Screen [ databaseScreen ] ].
+1290 - Console [ Created new object [ terminalMenu ] ].
+1290 - Console [ Created new object [ terminalMenu.backGround ] ].
+1290 - Console [ Added Object [ terminalMenu.backGround ] to Screen [ terminalMenu ] ].
+1290 - Console [ Created new object [ terminalMenu.databaseButton ] ].
+1290 - Console [ Added Object [ terminalMenu.databaseButton ] to Screen [ terminalMenu ] ].
+1290 - Console [ Created new object [ terminalMenu.deckviewButton ] ].
+1290 - Console [ Added Object [ terminalMenu.deckviewButton ] to Screen [ terminalMenu ] ].
+1290 - Console [ Created new object [ terminalMenu.shipviewButton ] ].
+1290 - Console [ Added Object [ terminalMenu.shipviewButton ] to Screen [ terminalMenu ] ].
+1290 - Console [ Created new object [ terminalMenu.logoffButton ] ].
+1290 - Console [ Added Object [ terminalMenu.logoffButton ] to Screen [ terminalMenu ] ].
+1290 - Console [ Created new object [ deckviewScreen ] ].
+1290 - Console [ Created new object [ deckviewScreen.backButton ] ].
+1290 - Console [ Added Object [ deckviewScreen.backButton ] to Screen [ deckviewScreen ] ].
+1290 - Console [ Created new object [ shipviewScreen ] ].
+1290 - Console [ Created new object [ shipviewScreen.backButton ] ].
+1290 - Console [ Added Object [ shipviewScreen.backButton ] to Screen [ shipviewScreen ] ].
+1290 - Console [ Created new object [ scrTutorial ] ].
+1290 - Console [ Created new object [ scrTutorial.textLabelTutMove ] ].
+1290 - Console [ Added Object [ scrTutorial.textLabelTutMove ] to Screen [ scrTutorial ] ].
+1290 - Console [ Created new object [ scrTutorial.tutTextBox ] ].
+1290 - Console [ Added Object [ scrTutorial.tutTextBox ] to Screen [ scrTutorial ] ].
+1290 - Console [ Created new object [ scrTutorial.buttonTutMoveNext ] ].
+1290 - Console [ Added Object [ scrTutorial.buttonTutMoveNext ] to Screen [ scrTutorial ] ].
+1290 - Console [ Created new object [ scrTutorial.buttonTutorialCancel ] ].
+1290 - Console [ Added Object [ scrTutorial.buttonTutorialCancel ] to Screen [ scrTutorial ] ].
+1290 - Console [ Created new object [ scrTutTransfer ] ].
+1290 - Console [ Created new object [ scrTutTransfer.textLabelTutTransMove ] ].
+1290 - Console [ Added Object [ scrTutTransfer.textLabelTutTransMove ] to Screen [ scrTutTransfer ] ].
+1290 - Console [ Created new object [ scrTutTransfer.tutTransTextBox ] ].
+1290 - Console [ Added Object [ scrTutTransfer.tutTransTextBox ] to Screen [ scrTutTransfer ] ].
+1290 - Console [ Created new object [ scrTutTransfer.buttonTutTransNext ] ].
+1290 - Console [ Added Object [ scrTutTransfer.buttonTutTransNext ] to Screen [ scrTutTransfer ] ].
+1290 - Console [ Created new object [ scrTutTransfer.buttonTutTransCancel ] ].
+1290 - Console [ Added Object [ scrTutTransfer.buttonTutTransCancel ] to Screen [ scrTutTransfer ] ].
+1290 - Console [ Created new object [ scrTutTransGame ] ].
+1290 - Console [ Created new object [ scrTutTransGame.textLabelTutTransGame ] ].
+1290 - Console [ Added Object [ scrTutTransGame.textLabelTutTransGame ] to Screen [ scrTutTransGame ] ].
+1290 - Console [ Created new object [ scrTutTransGame.tutTransGameTextBox ] ].
+1502 - Console [ Added Object [ scrTutTransGame.tutTransGameTextBox ] to Screen [ scrTutTransGame ] ].
+1502 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameNext ] ].
+1502 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameNext ] to Screen [ scrTutTransGame ] ].
+1502 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameCancel ] ].
+1502 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameCancel ] to Screen [ scrTutTransGame ] ].
+1502 - Console [ Created new object [ scrTutLifts ] ].
+1502 - Console [ Created new object [ scrTutLifts.textLabelTutLifts ] ].
+1502 - Console [ Added Object [ scrTutLifts.textLabelTutLifts ] to Screen [ scrTutLifts ] ].
+1502 - Console [ Created new object [ scrTutLifts.tutLiftTextBox ] ].
+1502 - Console [ Added Object [ scrTutLifts.tutLiftTextBox ] to Screen [ scrTutLifts ] ].
+1502 - Console [ Created new object [ scrTutLifts.tutImageLift ] ].
+1517 - Console [ Added Object [ scrTutLifts.tutImageLift ] to Screen [ scrTutLifts ] ].
+1517 - Console [ Created new object [ scrTutLifts.buttonTutLiftNext ] ].
+1517 - Console [ Added Object [ scrTutLifts.buttonTutLiftNext ] to Screen [ scrTutLifts ] ].
+1517 - Console [ Created new object [ scrTutLifts.buttonTutLiftCancel ] ].
+1517 - Console [ Added Object [ scrTutLifts.buttonTutLiftCancel ] to Screen [ scrTutLifts ] ].
+1517 - Console [ Created new object [ scrTutTerminals ] ].
+1517 - Console [ Created new object [ scrTutTerminals.textLabelTutTerminals ] ].
+1517 - Console [ Added Object [ scrTutTerminals.textLabelTutTerminals ] to Screen [ scrTutTerminals ] ].
+1517 - Console [ Created new object [ scrTutTerminals.tutTerminalTextBox ] ].
+1517 - Console [ Added Object [ scrTutTerminals.tutTerminalTextBox ] to Screen [ scrTutTerminals ] ].
+1517 - Console [ Created new object [ scrTutTerminals.tutImageTerminal ] ].
+1534 - Console [ Added Object [ scrTutTerminals.tutImageTerminal ] to Screen [ scrTutTerminals ] ].
+1534 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalNext ] ].
+1534 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalNext ] to Screen [ scrTutTerminals ] ].
+1534 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalCancel ] ].
+1534 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalCancel ] to Screen [ scrTutTerminals ] ].
+1534 - Console [ Created new object [ scrTutHealing ] ].
+1534 - Console [ Created new object [ scrTutHealing.textLabelTutHealing ] ].
+1534 - Console [ Added Object [ scrTutHealing.textLabelTutHealing ] to Screen [ scrTutHealing ] ].
+1534 - Console [ Created new object [ scrTutHealing.tutHealingTextBox ] ].
+1534 - Console [ Added Object [ scrTutHealing.tutHealingTextBox ] to Screen [ scrTutHealing ] ].
+1534 - Console [ Created new object [ scrTutHealing.tutImageHealing ] ].
+1551 - Console [ Added Object [ scrTutHealing.tutImageHealing ] to Screen [ scrTutHealing ] ].
+1551 - Console [ Created new object [ scrTutHealing.buttonTutHealinglNext ] ].
+1551 - Console [ Added Object [ scrTutHealing.buttonTutHealinglNext ] to Screen [ scrTutHealing ] ].
+1551 - Console [ Created new object [ scrTutHealing.buttonTutHealingCancel ] ].
+1551 - Console [ Added Object [ scrTutHealing.buttonTutHealingCancel ] to Screen [ scrTutHealing ] ].
+1551 - Console [ Created new object [ scrTutTips ] ].
+1551 - Console [ Created new object [ scrTutTips.textLabelTutTips ] ].
+1551 - Console [ Added Object [ scrTutTips.textLabelTutTips ] to Screen [ scrTutTips ] ].
+1551 - Console [ Created new object [ scrTutTips.tutTipsTextBox ] ].
+1551 - Console [ Added Object [ scrTutTips.tutTipsTextBox ] to Screen [ scrTutTips ] ].
+1551 - Console [ Created new object [ scrTutTips.buttonTutTipsCancel ] ].
+1551 - Console [ Added Object [ scrTutTips.buttonTutTipsCancel ] to Screen [ scrTutTips ] ].
+1568 - Console [ Created new object [ highScoreDisplay ] ].
+1568 - Console [ Created new object [ highScoreDisplay.backGround ] ].
+1568 - Console [ Added Object [ highScoreDisplay.backGround ] to Screen [ highScoreDisplay ] ].
+1568 - Console [ Created new object [ highScoreDisplay.heading ] ].
+1568 - Console [ Added Object [ highScoreDisplay.heading ] to Screen [ highScoreDisplay ] ].
+1568 - Console [ Created new object [ highScoreDisplay.row1 ] ].
+1568 - Console [ Added Object [ highScoreDisplay.row1 ] to Screen [ highScoreDisplay ] ].
+1568 - Console [ Created new object [ highScoreDisplay.score1 ] ].
+1568 - Console [ Added Object [ highScoreDisplay.score1 ] to Screen [ highScoreDisplay ] ].
+1568 - Console [ Created new object [ highScoreDisplay.name1 ] ].
+1568 - Console [ Added Object [ highScoreDisplay.name1 ] to Screen [ highScoreDisplay ] ].
+1568 - Console [ Created new object [ highScoreDisplay.row2 ] ].
+1568 - Console [ Added Object [ highScoreDisplay.row2 ] to Screen [ highScoreDisplay ] ].
+1586 - Console [ Created new object [ highScoreDisplay.score2 ] ].
+1586 - Console [ Added Object [ highScoreDisplay.score2 ] to Screen [ highScoreDisplay ] ].
+1586 - Console [ Created new object [ highScoreDisplay.name2 ] ].
+1586 - Console [ Added Object [ highScoreDisplay.name2 ] to Screen [ highScoreDisplay ] ].
+1586 - Console [ Created new object [ highScoreDisplay.row3 ] ].
+1586 - Console [ Added Object [ highScoreDisplay.row3 ] to Screen [ highScoreDisplay ] ].
+1586 - Console [ Created new object [ highScoreDisplay.score3 ] ].
+1586 - Console [ Added Object [ highScoreDisplay.score3 ] to Screen [ highScoreDisplay ] ].
+1586 - Console [ Created new object [ highScoreDisplay.name3 ] ].
+1586 - Console [ Added Object [ highScoreDisplay.name3 ] to Screen [ highScoreDisplay ] ].
+1586 - Console [ Created new object [ highScoreDisplay.row4 ] ].
+1603 - Console [ Added Object [ highScoreDisplay.row4 ] to Screen [ highScoreDisplay ] ].
+1603 - Console [ Created new object [ highScoreDisplay.score4 ] ].
+1603 - Console [ Added Object [ highScoreDisplay.score4 ] to Screen [ highScoreDisplay ] ].
+1603 - Console [ Created new object [ highScoreDisplay.name4 ] ].
+1603 - Console [ Added Object [ highScoreDisplay.name4 ] to Screen [ highScoreDisplay ] ].
+1603 - Console [ Created new object [ highScoreDisplay.row5 ] ].
+1603 - Console [ Added Object [ highScoreDisplay.row5 ] to Screen [ highScoreDisplay ] ].
+1603 - Console [ Created new object [ highScoreDisplay.score5 ] ].
+1603 - Console [ Added Object [ highScoreDisplay.score5 ] to Screen [ highScoreDisplay ] ].
+1603 - Console [ Created new object [ highScoreDisplay.name5 ] ].
+1603 - Console [ Added Object [ highScoreDisplay.name5 ] to Screen [ highScoreDisplay ] ].
+1619 - Console [ Created new object [ highScoreDisplay.backButton ] ].
+1619 - Console [ Added Object [ highScoreDisplay.backButton ] to Screen [ highScoreDisplay ] ].
+1619 - Console [ Created new object [ highScoreEntry ] ].
+1619 - Console [ Created new object [ highScoreEntry.backGround ] ].
+1619 - Console [ Added Object [ highScoreEntry.backGround ] to Screen [ highScoreEntry ] ].
+1619 - Console [ Created new object [ highScoreEntry.achieved ] ].
+1619 - Console [ Added Object [ highScoreEntry.achieved ] to Screen [ highScoreEntry ] ].
+1619 - Console [ Created new object [ highScoreEntry.initials ] ].
+1619 - Console [ Added Object [ highScoreEntry.initials ] to Screen [ highScoreEntry ] ].
+1619 - Console [ Created new object [ highScoreEntry.initial0 ] ].
+1619 - Console [ Added Object [ highScoreEntry.initial0 ] to Screen [ highScoreEntry ] ].
+1619 - Console [ Object name or function string cannot be empty. ].
+1636 - Console [ Created new object [ highScoreEntry.initial1 ] ].
+1636 - Console [ Added Object [ highScoreEntry.initial1 ] to Screen [ highScoreEntry ] ].
+1636 - Console [ Object name or function string cannot be empty. ].
+1636 - Console [ Created new object [ highScoreEntry.initial2 ] ].
+1636 - Console [ Added Object [ highScoreEntry.initial2 ] to Screen [ highScoreEntry ] ].
+1636 - Console [ Object name or function string cannot be empty. ].
+1636 - Console [ Created new object [ highScoreEntry.backButton ] ].
+1636 - Console [ Added Object [ highScoreEntry.backButton ] to Screen [ highScoreEntry ] ].
+1636 - Console [ Loaded [ future_blue.bmp ] with key [ tiles ] ].
+1636 - Console [ Loaded [ splash.bmp ] with key [ splash ] ].
+1636 - Console [ Loaded [ planetAlpha.bmp ] with key [ planetAlpha ] ].
+1652 - Console [ Loaded [ hudNew.bmp ] with key [ hudNew ] ].
+1652 - Console [ Loaded [ screen.bmp ] with key [ screen ] ].
+1652 - Console [ Loaded [ lightmap.bmp ] with key [ lightmap ] ].
+1652 - Console [ Loaded [ explosion.bmp ] with key [ explosion ] ].
+1652 - Console [ Loaded [ universe.bmp ] with key [ universe ] ].
+1652 - Console [ Loaded [ db_999.bmp ] with key [ db_droid ] ].
+1652 - Console [ Loaded [ 001.bmp ] with key [ 001 ] ].
+1652 - Console [ Loaded [ 123.bmp ] with key [ 123 ] ].
+1652 - Console [ Loaded [ 139.bmp ] with key [ 139 ] ].
+1652 - Console [ Loaded [ 247.bmp ] with key [ 247 ] ].
+1652 - Console [ Loaded [ 249.bmp ] with key [ 249 ] ].
+1669 - Console [ Loaded [ 296.bmp ] with key [ 296 ] ].
+1669 - Console [ Loaded [ 302.bmp ] with key [ 302 ] ].
+1669 - Console [ Loaded [ 329.bmp ] with key [ 329 ] ].
+1669 - Console [ Loaded [ 420.bmp ] with key [ 420 ] ].
+1669 - Console [ Loaded [ 476.bmp ] with key [ 476 ] ].
+1669 - Console [ Loaded [ 493.bmp ] with key [ 493 ] ].
+1669 - Console [ Loaded [ 516.bmp ] with key [ 516 ] ].
+1669 - Console [ Loaded [ 571.bmp ] with key [ 571 ] ].
+1669 - Console [ Loaded [ 598.bmp ] with key [ 598 ] ].
+1669 - Console [ Loaded [ 614.bmp ] with key [ 614 ] ].
+1669 - Console [ Loaded [ 615.bmp ] with key [ 615 ] ].
+1686 - Console [ Loaded [ 629.bmp ] with key [ 629 ] ].
+1686 - Console [ Loaded [ 711.bmp ] with key [ 711 ] ].
+1686 - Console [ Loaded [ 742.bmp ] with key [ 742 ] ].
+1686 - Console [ Loaded [ 751.bmp ] with key [ 751 ] ].
+1686 - Console [ Loaded [ 821.bmp ] with key [ 821 ] ].
+1686 - Console [ Loaded [ 834.bmp ] with key [ 834 ] ].
+1686 - Console [ Loaded [ 883.bmp ] with key [ 883 ] ].
+1686 - Console [ Loaded [ 999.bmp ] with key [ 999 ] ].
+1686 - Console [ Loaded [ tut_healing.bmp ] with key [ tut_healing ] ].
+1686 - Console [ Loaded [ tut_lift.bmp ] with key [ tut_lift ] ].
+1686 - Console [ Loaded [ tut_terminal.bmp ] with key [ tut_terminal ] ].
+1686 - Console [ Loaded [ bullet_001.bmp ] with key [ bullet_001 ] ].
+1703 - Console [ Loaded [ bullet_476.bmp ] with key [ bullet_476 ] ].
+1703 - Console [ Loaded [ bullet_821.bmp ] with key [ bullet_821 ] ].
+1703 - Console [ Loaded ship level [ Vehicle Hold ] - index [ 0 ] ].
+1703 - Console [ Loaded ship level [ Shuttle bay ] - index [ 1 ] ].
+1703 - Console [ Loaded ship level [ Turrent 2 ] - index [ 2 ] ].
+1703 - Console [ Loaded ship level [ Maintenance ] - index [ 3 ] ].
+1703 - Console [ Loaded ship level [ Engineering ] - index [ 4 ] ].
+1703 - Console [ Loaded ship level [ Mid cargo ] - index [ 5 ] ].
+1703 - Console [ Loaded ship level [ Upper cargo ] - index [ 6 ] ].
+1703 - Console [ Loaded ship level [ Kitchen ] - index [ 8 ] ].
+1703 - Console [ Loaded ship level [ Robo stores ] - index [ 9 ] ].
+1719 - Console [ Loaded ship level [ Quarters ] - index [ 10 ] ].
+1719 - Console [ Loaded ship level [ Repairs ] - index [ 11 ] ].
+1719 - Console [ Loaded ship level [ Staterooms ] - index [ 12 ] ].
+1719 - Console [ Loaded ship level [ Stores ] - index [ 13 ] ].
+1719 - Console [ Loaded ship level [ Research ] - index [ 14 ] ].
+1719 - Console [ Loaded ship level [ Reactor ] - index [ 15 ] ].
+1719 - Console [ Loaded ship level [ Airlock ] - index [ 16 ] ].
+1719 - Console [ Loaded ship level [ Bridge ] - index [ 17 ] ].
+1719 - Console [ Loaded ship level [ Turrent 1 ] - index [ 18 ] ].
+1719 - Console [ Loaded ship level [ Turrent 3 ] - index [ 19 ] ].
+1719 - Console [ Loaded ship level [ Observation ] - index [ 20 ] ].
+1736 - Console [ Loaded font file [ gui.ttf ] ].
+1736 - Looking for function [ as_loadAudioResources ] to [ as_useNewRenderer ] to execute
+1736 - Looking for function [ as_loadAudioResources ] to [ as_getAudioSpecs ] to execute
+1736 - Looking for function [ as_loadAudioResources ] to [ as_loadAudioResources ] to execute
+1736 - Console [ Loaded font file [ gui.ttf ] ].
+1736 - Console [ Loaded font file [ intro.ttf ] ].
+13913 - Looking for function [ as_handleMainMenu ] to [ as_useNewRenderer ] to execute
+13913 - Looking for function [ as_handleMainMenu ] to [ as_getAudioSpecs ] to execute
+13913 - Looking for function [ as_handleMainMenu ] to [ as_loadAudioResources ] to execute
+13913 - Looking for function [ as_handleMainMenu ] to [ as_loadTextureResources ] to execute
+13913 - Looking for function [ as_handleMainMenu ] to [ as_loadAllDecks ] to execute
+13913 - Looking for function [ as_handleMainMenu ] to [ as_getVolume ] to execute
+13913 - Looking for function [ as_handleMainMenu ] to [ as_setVolume ] to execute
+13913 - Looking for function [ as_handleMainMenu ] to [ as_createGUI ] to execute
+13913 - Looking for function [ as_handleMainMenu ] to [ as_handleMainMenu ] to execute
+13913 - Console [ Loaded [ future_blue.bmp ] with key [ tiles ] ].
+17550 - [ postStepRemove ] Removing a shape and body from postStep callback.
+17967 - [ postStepRemove ] Removing a shape and body from postStep callback.
+18850 - [ postStepRemove ] Removing a shape and body from postStep callback.
+19468 - [ postStepRemove ] Removing a shape and body from postStep callback.
+20400 - [ postStepRemove ] Removing a shape and body from postStep callback.
+20434 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+20434 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+20434 - [ 6 ] Found a new AI mode to change to [ ATTACK ]
+20434 - [ 6 ] - Running function : changeAIModeTo
+20434 - [ 6 ] - Changing to new AI mode - [ ATTACK ]
+20434 - [ 6 ] - In ATTACK mode case statement.
+20434 - [ 6 ] - Droid can not shoot. Increase FLEE amount.
+20434 - [ 6 ] AI Scores [ 0 0 85 12 50 0 ]
+20434 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+20434 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+20434 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+20434 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+20434 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+20450 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+20450 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+20450 - Console [ 6   --  50 --    0 --   45 --  12  --  50  --  0 -- ATTACK -  ].
+20467 - [ 6 ] Found a new AI mode to change to [ FLEE ]
+20467 - [ 6 ] - Running function : changeAIModeTo
+20467 - [ 6 ] - Changing to new AI mode - [ FLEE ]
+20467 - [ 6 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+20467 - [ 6 ] - Found the destination flee tile [ 41.000 15.000 ]
+20467 - [ requestNewPath ] Index 6
+20467 - [ 6 ] AI Scores [ 45 0 85 12 50 0 ]
+21302 - [ postStepRemove ] Removing a shape and body from postStep callback.
+21335 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+21335 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+21902 - [ gam_damageToDroid ] - target -1 damageSource 0 sourceDroid 6
+21902 - [ gam_damageToDroid ] - Damage to droid [ -1 ] from BUMP
+22603 - [ postStepRemove ] Removing a shape and body from postStep callback.
+22636 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+22636 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+22636 - [ 6 ] Found a new AI mode to change to [ ATTACK ]
+22636 - [ 6 ] - Running function : changeAIModeTo
+22636 - [ 6 ] - Changing to new AI mode - [ ATTACK ]
+22636 - [ 6 ] - In ATTACK mode case statement.
+22636 - [ 6 ] - Droid can not shoot. Increase FLEE amount.
+22636 - [ 6 ] AI Scores [ 0 0 100 37 50 0 ]
+22636 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+22636 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+22636 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+22636 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+22653 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+22653 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+22653 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+22653 - Console [ 6   --  100 --    0 --   100 --  37  --  50  --  0 -- ATTACK -  ].
+22669 - [ 6 ] Found a new AI mode to change to [ FLEE ]
+22669 - [ 6 ] - Running function : changeAIModeTo
+22669 - [ 6 ] - Changing to new AI mode - [ FLEE ]
+22669 - [ 6 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+22669 - [ 6 ] - Found the destination flee tile [ 41.000 15.000 ]
+22669 - [ requestNewPath ] Index 6
+22669 - [ 6 ] AI Scores [ 45 0 100 37 50 0 ]
+23404 - [ postStepRemove ] Removing a shape and body from postStep callback.
+23437 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+23437 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+24172 - [ postStepRemove ] Removing a shape and body from postStep callback.
+24205 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+24205 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+24205 - [ 6 ] Found a new AI mode to change to [ ATTACK ]
+24205 - [ 6 ] - Running function : changeAIModeTo
+24205 - [ 6 ] - Changing to new AI mode - [ ATTACK ]
+24205 - [ 6 ] - In ATTACK mode case statement.
+24205 - [ 6 ] - Droid can not shoot. Increase FLEE amount.
+24205 - [ 6 ] AI Scores [ 0 0 100 62 50 0 ]
+24205 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+24205 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24205 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24205 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24205 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24223 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24223 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24223 - Console [ 6   --  100 --    0 --   100 --  62  --  50  --  0 -- ATTACK -  ].
+24238 - [ 6 ] Found a new AI mode to change to [ FLEE ]
+24238 - [ 6 ] - Running function : changeAIModeTo
+24238 - [ 6 ] - Changing to new AI mode - [ FLEE ]
+24238 - [ 6 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+24238 - [ 6 ] - Found the destination flee tile [ 41.000 15.000 ]
+24238 - [ requestNewPath ] Index 6
+24238 - [ 6 ] AI Scores [ 45 0 100 62 50 0 ]
+24639 - [ 6 ] Found a new AI mode to change to [ ATTACK ]
+24639 - [ 6 ] - Running function : changeAIModeTo
+24639 - [ 6 ] - Changing to new AI mode - [ ATTACK ]
+24639 - [ 6 ] - In ATTACK mode case statement.
+24639 - [ 6 ] - Droid can not shoot. Increase FLEE amount.
+24639 - [ 6 ] AI Scores [ 0 0 100 62 50 0 ]
+24639 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+24639 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24639 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24639 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24639 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24655 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24655 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+24655 - Console [ 6   --  100 --    0 --   100 --  62  --  50  --  0 -- ATTACK -  ].
+24673 - [ 6 ] Found a new AI mode to change to [ FLEE ]
+24673 - [ 6 ] - Running function : changeAIModeTo
+24673 - [ 6 ] - Changing to new AI mode - [ FLEE ]
+24673 - [ 6 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+24673 - [ 6 ] - Found the destination flee tile [ 41.000 15.000 ]
+24673 - [ requestNewPath ] Index 6
+24673 - [ 6 ] AI Scores [ 0 0 100 62 50 0 ]
+24905 - [ postStepRemove ] Removing a shape and body from postStep callback.
+24938 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+24938 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+25706 - [ postStepRemove ] Removing a shape and body from postStep callback.
+25740 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+25740 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+25740 - [ 6 ] - Running function : changeAIModeTo
+25740 - [ 6 ] - Changing to new AI mode - [ HEAL ]
+25740 - [ 6 ] - Changing to HEAL mode. Looking for nearest waypoint to move to.
+25740 - [ 6 ] - Found the destination healing tile [ 28.000 11.000 ]
+25740 - [ requestNewPath ] Index 6
+26640 - [ postStepRemove ] Removing a shape and body from postStep callback.
+26940 - [ 6 ] Found a new AI mode to change to [ PATROL ]
+26940 - [ 6 ] - Running function : changeAIModeTo
+26940 - [ 6 ] - Changing to new AI mode - [ PATROL ]
+26940 - [ 6 ] - Changing to PATROL mode. Looking for nearest waypoint to move to.
+26940 - [ 6 ] - [ findLocationWithLOS ] Search for a visible waypoint.
+26940 - [ 0 ] - Found a closer waypoint [ 208 ]
+26940 - [ 2 ] - Found a closer waypoint [ 199 ]
+26940 - [ 13 ] - Found a closer waypoint [ 154 ]
+26940 - [ 31 ] - Found a closer waypoint [ 95 ]
+26940 - [ 6 ] AI Scores [ 0 0 0 0 50 0 ]
+27174 - [ gam_damageToDroid ] - target -1 damageSource 0 sourceDroid 6
+27174 - [ gam_damageToDroid ] - Damage to droid [ -1 ] from BUMP
+27307 - [ postStepRemove ] Removing a shape and body from postStep callback.
+27341 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+27341 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+28909 - [ postStepRemove ] Removing a shape and body from postStep callback.
+28943 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+28943 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+28943 - [ 6 ] Found a new AI mode to change to [ ATTACK ]
+28943 - [ 6 ] - Running function : changeAIModeTo
+28943 - [ 6 ] - Changing to new AI mode - [ ATTACK ]
+28943 - [ 6 ] - In ATTACK mode case statement.
+28943 - [ 6 ] - Droid can not shoot. Increase FLEE amount.
+28943 - [ 6 ] AI Scores [ 0 0 100 25 50 0 ]
+28943 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+28943 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+28943 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+28943 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+28959 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+28959 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+28959 - Console [ 5   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+28959 - Console [ 6   --  90 --    0 --   90 --  25  --  50  --  0 -- ATTACK -  ].
+28975 - [ 6 ] Found a new AI mode to change to [ FLEE ]
+28975 - [ 6 ] - Running function : changeAIModeTo
+28975 - [ 6 ] - Changing to new AI mode - [ FLEE ]
+28975 - [ 6 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+28975 - [ 6 ] - Found the destination flee tile [ 13.000 18.000 ]
+28975 - [ requestNewPath ] Index 6
+28975 - [ 6 ] AI Scores [ 45 0 100 25 50 0 ]
+29609 - [ postStepRemove ] Removing a shape and body from postStep callback.
+29642 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+29642 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+29642 - [ 6 ] Found a new AI mode to change to [ ATTACK ]
+29642 - [ 6 ] - Running function : changeAIModeTo
+29642 - [ 6 ] - Changing to new AI mode - [ ATTACK ]
+29642 - [ 6 ] - In ATTACK mode case statement.
+29642 - [ 6 ] - Droid can not shoot. Increase FLEE amount.
+29642 - [ 6 ] AI Scores [ 0 0 100 37 50 0 ]
+29642 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+29642 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+29642 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+29642 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+29642 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+29642 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+29659 - Console [ 5   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+29659 - Console [ 6   --  100 --    0 --   100 --  37  --  50  --  0 -- ATTACK -  ].
+29675 - [ 6 ] Found a new AI mode to change to [ FLEE ]
+29675 - [ 6 ] - Running function : changeAIModeTo
+29675 - [ 6 ] - Changing to new AI mode - [ FLEE ]
+29675 - [ 6 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+29675 - [ 6 ] - Found the destination flee tile [ 13.000 18.000 ]
+29675 - [ requestNewPath ] Index 6
+29675 - [ 6 ] AI Scores [ 45 0 100 37 50 0 ]
+30578 - [ 6 ] Found a new AI mode to change to [ ATTACK ]
+30578 - [ 6 ] - Running function : changeAIModeTo
+30578 - [ 6 ] - Changing to new AI mode - [ ATTACK ]
+30578 - [ 6 ] - In ATTACK mode case statement.
+30578 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+30578 - [ 6 ] - Droid can not shoot. Increase FLEE amount.
+30578 - [ 6 ] AI Scores [ 0 0 100 37 50 0 ]
+30578 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+30578 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+30578 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+30594 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+30594 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+30594 - Console [ 5   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+30594 - Console [ 6   --  100 --    0 --   100 --  37  --  50  --  0 -- ATTACK -  ].
+30611 - [ 6 ] Found a new AI mode to change to [ FLEE ]
+30611 - [ 6 ] - Running function : changeAIModeTo
+30611 - [ 6 ] - Changing to new AI mode - [ FLEE ]
+30611 - [ 6 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+30611 - [ 6 ] - Found the destination flee tile [ 13.000 18.000 ]
+30611 - [ requestNewPath ] Index 6
+30611 - [ 6 ] AI Scores [ 0 0 100 37 50 0 ]
+30810 - [ postStepRemove ] Removing a shape and body from postStep callback.
+30843 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+30843 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+32244 - [ 6 ] Found a new AI mode to change to [ ATTACK ]
+32244 - [ 6 ] - Running function : changeAIModeTo
+32244 - [ 6 ] - Changing to new AI mode - [ ATTACK ]
+32244 - [ 6 ] - In ATTACK mode case statement.
+32244 - [ 6 ] - Droid can not shoot. Increase FLEE amount.
+32244 - [ 6 ] AI Scores [ 0 0 100 50 50 0 ]
+32244 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+32244 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+32244 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+32244 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+32261 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+32261 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+32261 - Console [ 5   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+32261 - Console [ 6   --  100 --    0 --   100 --  50  --  50  --  0 -- ATTACK -  ].
+32278 - [ 6 ] Found a new AI mode to change to [ FLEE ]
+32278 - [ 6 ] - Running function : changeAIModeTo
+32278 - [ 6 ] - Changing to new AI mode - [ FLEE ]
+32278 - [ 6 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+32278 - [ 6 ] - Found the destination flee tile [ 13.000 18.000 ]
+32278 - [ requestNewPath ] Index 6
+32278 - [ 6 ] AI Scores [ 45 0 100 50 50 0 ]
+34480 - [ postStepRemove ] Removing a shape and body from postStep callback.
+34514 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+34514 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+34514 - [ 0 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+35281 - [ postStepRemove ] Removing a shape and body from postStep callback.
+35314 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+35314 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+35314 - [ 0 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+35314 - [ 0 ] - Running function : changeAIModeTo
+35314 - [ 0 ] - Changing to new AI mode - [ ATTACK ]
+35314 - [ 0 ] - In ATTACK mode case statement.
+35314 - [ 6 ] Found a new AI mode to change to [ ATTACK ]
+35314 - [ 6 ] - Running function : changeAIModeTo
+35314 - [ 6 ] - Changing to new AI mode - [ ATTACK ]
+35314 - [ 6 ] - In ATTACK mode case statement.
+35314 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+35314 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [ Joystick hasn't been opened yet ]
+35314 - [ 6 ] - Droid can not shoot. Increase FLEE amount.
+35314 - [ 6 ] AI Scores [ 0 0 100 75 50 0 ]
+35331 - Console [ 0   --  100 --    0 --    0 --   0  --  50  --  0 -- ATTACK -  ].
+35331 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+35331 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+35331 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+35331 - Console [ 4   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+35331 - Console [ 5   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+35331 - Console [ 6   --  100 --    0 --   100 --  75  --  50  --  0 -- FLEE -  ].
+35331 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+35331 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+35331 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+35331 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+35348 - Console [ 4   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+35348 - Console [ 5   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+35348 - Console [ 6   --  100 --    0 --   100 --  75  --  50  --  0 -- ATTACK -  ].
+35348 - [ 6 ] Found a new AI mode to change to [ FLEE ]
+35348 - [ 6 ] - Running function : changeAIModeTo
+35348 - [ 6 ] - Changing to new AI mode - [ FLEE ]
+35348 - [ 6 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+35348 - [ 6 ] - Found the destination flee tile [ 41.000 15.000 ]
+35348 - [ requestNewPath ] Index 6
+35348 - [ 6 ] AI Scores [ 45 0 100 75 50 0 ]
+36115 - [ postStepRemove ] Removing a shape and body from postStep callback.
+36148 - [ gam_damageToDroid ] - target -1 damageSource 1 sourceDroid 0
+36148 - [ gam_damageToDroid ] - Damage to droid [ -1 ] from BULLET
+36415 - [ gam_damageToDroid ] - target -1 damageSource 0 sourceDroid 6
+36415 - [ gam_damageToDroid ] - Damage to droid [ -1 ] from BUMP
+36615 - [ 6 ] Found a new AI mode to change to [ ATTACK ]
+36615 - [ 6 ] - Running function : changeAIModeTo
+36615 - [ 6 ] - Changing to new AI mode - [ ATTACK ]
+36615 - [ 6 ] - In ATTACK mode case statement.
+36615 - [ 6 ] - Droid can not shoot. Increase FLEE amount.
+36615 - [ 6 ] AI Scores [ 0 0 100 75 50 0 ]
+36615 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+36615 - Console [ 0   --  100 --    0 --    0 --   0  --  50  --  0 -- ATTACK -  ].
+36615 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+36615 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+36632 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+36632 - Console [ 4   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+36632 - Console [ 5   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+36632 - Console [ 6   --  100 --    0 --   100 --  75  --  50  --  0 -- ATTACK -  ].
+36649 - [ 6 ] Found a new AI mode to change to [ FLEE ]
+36649 - [ 6 ] - Running function : changeAIModeTo
+36649 - [ 6 ] - Changing to new AI mode - [ FLEE ]
+36649 - [ 6 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+36649 - [ 6 ] - Found the destination flee tile [ 41.000 15.000 ]
+36649 - [ requestNewPath ] Index 6
+36649 - [ 6 ] AI Scores [ 0 0 100 75 50 0 ]
+37649 - [ postStepRemove ] Removing a shape and body from postStep callback.
+37682 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid 0
+37682 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+39268 - [ postStepRemove ] Removing a shape and body from postStep callback.
+39301 - [ gam_damageToDroid ] - target 0 damageSource 1 sourceDroid -1
+39301 - [ gam_damageToDroid ] - Damage to droid [ 0 ] from BULLET
+39301 - [ 0 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+39301 - [ 4 ] Found a new AI mode to change to [ FLEE ]
+39301 - [ 4 ] - Running function : changeAIModeTo
+39301 - [ 4 ] - Changing to new AI mode - [ FLEE ]
+39301 - [ 4 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+39301 - [ 4 ] - Found the destination flee tile [ 41.000 15.000 ]
+39301 - [ requestNewPath ] Index 4
+39301 - [ 4 ] AI Scores [ 0 0 90 0 50 0 ]
+39301 - [ 5 ] Found a new AI mode to change to [ FLEE ]
+39301 - [ 5 ] - Running function : changeAIModeTo
+39301 - [ 5 ] - Changing to new AI mode - [ FLEE ]
+39301 - [ 5 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+39301 - [ 5 ] - Found the destination flee tile [ 41.000 15.000 ]
+39319 - [ requestNewPath ] Index 5
+39319 - [ 5 ] AI Scores [ 5 0 90 0 50 0 ]
+39534 - [ postStepRemove ] Removing a shape and body from postStep callback.
+39568 - [ gam_damageToDroid ] - target -1 damageSource 1 sourceDroid 0
+39568 - [ gam_damageToDroid ] - Damage to droid [ -1 ] from BULLET
+40435 - Console [ Loaded [ static_1.bmp ] with key [ static_1 ] ].
+40435 - Console [ Loaded [ static_2.bmp ] with key [ static_2 ] ].
+40435 - Console [ Loaded [ static_3.bmp ] with key [ static_3 ] ].
+40435 - Console [ Loaded [ static_4.bmp ] with key [ static_4 ] ].
+40435 - Console [ Loaded [ static_5.bmp ] with key [ static_5 ] ].
+40435 - Console [ Loaded [ static_6.bmp ] with key [ static_6 ] ].
+40435 - Console [ Loaded [ static_7.bmp ] with key [ static_7 ] ].
+40435 - Console [ Loaded [ static_8.bmp ] with key [ static_8 ] ].
+40435 - Console [ Loaded [ static_9.bmp ] with key [ static_9 ] ].
+40435 - Console [ Loaded [ db_999.bmp ] with key [ db_droid ] ].
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_useNewRenderer ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_getAudioSpecs ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_loadAudioResources ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_loadTextureResources ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_loadAllDecks ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_getVolume ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_setVolume ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_createGUI ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleMainMenu ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleOptionsMenu ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleVideoOptions ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleAudioMenu ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleControlsMenu ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleGameMenu ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleDeckviewScreen ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleShipviewScreen ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleTerminalMenu ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleDatabaseMenu ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleTransferScreens ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleTutorialElements ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleDialogBoxes ] to execute
+50945 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleHighscoreDisplay ] to execute
+52413 - Looking for function [ as_handleMainMenu ] to [ as_useNewRenderer ] to execute
+52413 - Looking for function [ as_handleMainMenu ] to [ as_getAudioSpecs ] to execute
+52413 - Looking for function [ as_handleMainMenu ] to [ as_loadAudioResources ] to execute
+52413 - Looking for function [ as_handleMainMenu ] to [ as_loadTextureResources ] to execute
+52413 - Looking for function [ as_handleMainMenu ] to [ as_loadAllDecks ] to execute
+52413 - Looking for function [ as_handleMainMenu ] to [ as_getVolume ] to execute
+52413 - Looking for function [ as_handleMainMenu ] to [ as_setVolume ] to execute
+52413 - Looking for function [ as_handleMainMenu ] to [ as_createGUI ] to execute
+52413 - Looking for function [ as_handleMainMenu ] to [ as_handleMainMenu ] to execute

@@ -34,7 +34,7 @@ struct _physicWall
 };
 
 std::vector<_physicWall>  solidWalls;
-std::vector<_doorTrigger> doorBulletSensor;
+std::vector<doorTrigger_> doorBulletSensor;
 
 cpSpaceDebugDrawOptions drawOptions;
 
@@ -380,7 +380,7 @@ void sys_setupSolidWalls(const std::string &levelName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add a new door sensor to the array - return the new array size
-unsigned long sys_addNewDoorSensor(const _doorTrigger &newDoorTrigger)
+unsigned long sys_addNewDoorSensor(const doorTrigger_ &newDoorTrigger)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	doorBulletSensor.push_back (newDoorTrigger);

@@ -4,18 +4,18 @@
 #include "../../hdr/io/logFile.h"
 #include "../../hdr/system/gameEvents.h"
 
-typedef struct
+typedef struct paraRegisteredThreads
 {
 	PARA_Thread *thread = nullptr;
 	bool        run     = false;
 	bool        ready   = false;
-	std::string name    = "";
+	std::string name{};
 } paraRegisteredThreads;
 
-typedef struct
+typedef struct paraRegisteredMutexes
 {
 	PARA_Mutex  *mutex = nullptr;
-	std::string name   = "";
+	std::string name{};
 } paraRegisteredMutexes;
 
 std::vector<paraRegisteredThreads> registeredThreads {};
@@ -175,7 +175,7 @@ PARA_Mutex *evt_getMutex(const std::string &mutexName)
 {
 	if (registeredMutexes.size () == 0)
 	{
-		log_addEvent (sys_getString ("[ %s ] Attempting to access mutex [ %s ] but mutex pool is empty.", __func__, mutexName.c_str ()));
+		log_addEvent (sys_getString ("[ %s ] Attempting to access mutex [ %s ] but mutex pool is empty.", "evt_getMutex", mutexName.c_str ()));
 		return nullptr;
 	}
 
