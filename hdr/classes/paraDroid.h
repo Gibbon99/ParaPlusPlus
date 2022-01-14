@@ -56,15 +56,15 @@ public:
 
 	float getInfluenceTimeLeft();
 
-	void setInfluenceFade(float newInfluenceFade);
+	void setInfluenceFadeValue(float newInfluenceFadeValue);
 
-	float getInfluenceFade();
+	float getInfluenceFadeValue();
 
-	void setLowInfluenceTimeLeft(float newlowInfluenceTimeLeft);
+	void setLowInfluenceTimeFlag(bool newLowInfluenceTimeFlag);
 
-	bool getLowInfluenceTimeLeft();
+	bool getLowInfluenceTimeFlag();
 
-	void setInTransferMode(float newInTransferMode);
+	void setInTransferMode(bool newInTransferMode);
 
 	bool getInTransferMode();
 
@@ -87,7 +87,6 @@ public:
 	// ----------------- Vars Public ----------------------
 
 	bool visibleToPlayer {true};
-	bool influenceFadeFlag {false};
 
 	int visibleValue {255};
 	int visibleState {VISIBLE_STATE_IS_VISIBLE};
@@ -105,8 +104,8 @@ public:
 
 
 private:
-	bool        lowInfluenceTimeleft {false};
-	bool        weaponCanFire {true};
+	bool lowInfluenceTimeFlag {false};
+	bool weaponCanFire {true};
 	bool        overHealingTile {false};
 	bool        overTerminalTile {false};
 	bool        inTransferMode {false};

@@ -45,7 +45,7 @@ void paraSprite::create(std::string setTextureKeyname, int setNumFrames, double 
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a sprite at the passed in location
-void paraSprite::render(double posX, double posY, double scale, Uint8 alphaMod)
+void paraSprite::render(float posX, float posY, float scale, Uint8 alphaMod)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Rect                                            srcRect;
@@ -54,7 +54,7 @@ void paraSprite::render(double posX, double posY, double scale, Uint8 alphaMod)
 
 	try
 	{
-//		if (nullptr == texturePtr)
+		if (nullptr == texturePtr)
 		{
 			texturePtr  = textures.at (textureKeyName).getTexture ();
 			textureItr  = textures.find (textureKeyName);
@@ -93,7 +93,7 @@ void paraSprite::render(double posX, double posY, double scale, Uint8 alphaMod)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a sprite at the passed in location
-void paraSprite::render(double posX, double posY, double scale, double angle)
+void paraSprite::render(float posX, float posY, float scale, double angle)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Rect                                            srcRect;
@@ -109,8 +109,8 @@ void paraSprite::render(double posX, double posY, double scale, double angle)
 			frameWidth  = textureItr->second.getWidth () / numFrames;
 			frameHeight = textureItr->second.getHeight ();
 		}
-		destRect.x = posX - (frameWidth / 2);
-		destRect.y = posY - (frameHeight / 2);
+		destRect.x = posX - (static_cast<float>(frameWidth) / 2.0f);
+		destRect.y = posY - (static_cast<float>(frameHeight) / 2.0f);
 		destRect.w = frameWidth * scale;
 		destRect.h = frameHeight * scale;
 

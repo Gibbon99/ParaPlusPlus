@@ -13,7 +13,7 @@
 #include "game/player.h"
 #include "classes/paraBullet.h"
 
-paraDroid playerDroid;
+paraDroid playerDroid {};
 double    playerFriction {};                    // From script
 float     influenceTimelimit {};
 float     influenceTimelimtDelay {};
@@ -315,7 +315,7 @@ void gam_checkPlayerHealth()
 	}
 	//
 	// Work out the player droid animation speed based on health
-	newAnimationSpeed = static_cast<float>(playerDroid.getCurrentHealth ()) / static_cast<float>(dataBaseEntry[playerDroid.getDroidType ()].maxHealth);
+	newAnimationSpeed     = static_cast<float>(playerDroid.getCurrentHealth ()) / static_cast<float>(dataBaseEntry[playerDroid.getDroidType ()].maxHealth);
 	if (newAnimationSpeed < 0.0f)
 		newAnimationSpeed = 0.1f;
 
@@ -378,7 +378,7 @@ void gam_setInfluenceTimelimit(int targetDroidClass)
 //-----------------------------------------------------------------------------------------------------------------
 {
 	playerDroid.setInfluenceTimeLeft (influenceTimelimit - (static_cast<float>(targetDroidClass) * 2));
-	playerDroid.setLowInfluenceTimeLeft (false);
+	playerDroid.setLowInfluenceTimeFlag (false);
 }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -387,7 +387,7 @@ void gam_setInfluenceTimelimit(int targetDroidClass)
 void gam_resetInfluenceTimeLeftFlag()
 //-----------------------------------------------------------------------------------------------------------------
 {
-	playerDroid.setLowInfluenceTimeLeft (false);
+	playerDroid.setLowInfluenceTimeFlag (false);
 }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -399,30 +399,11 @@ void gam_processInfluenceTime()
 	if (playerDroid.getDroidType () == 0)
 		return;
 
-	if (playerDroid.influenceFadeFlag)
-	{
-		playerDroid.setInfluenceFade (playerDroid.getInfluenceFade () - 10);
-		if (playerDroid.getInfluenceFade () < 50)
-		{
-			playerDroid.setInfluenceFade (50);
-			playerDroid.influenceFadeFlag = !playerDroid.influenceFadeFlag;
-		}
-	}
-	else
-	{
-		playerDroid.setInfluenceFade (playerDroid.getInfluenceFade () + 10);
-		if (playerDroid.getInfluenceFade () > 254)
-		{
-			playerDroid.setInfluenceFade (254);
-			playerDroid.influenceFadeFlag = !playerDroid.influenceFadeFlag;
-		}
-	}
-
+	//
+	// Decrement count normally
 	playerDroid.setInfluenceTimeLeft (playerDroid.getInfluenceTimeLeft () - 1.0f * influenceTimelimtDelay);
-
-	if (playerDroid.getInfluenceTimeLeft () < influenceTimeLeftWarning)
-		playerDroid.setLowInfluenceTimeLeft (true);
-
+	//
+	// Check if control time on this droid is up
 	if (playerDroid.getInfluenceTimeLeft () < 0.0f)
 	{
 		playerDroid.setVelocity (cpVect {0, 0});
@@ -431,16 +412,35 @@ void gam_processInfluenceTime()
 		gam_addEmitter (playerDroid.getWorldPosInPixels (), PARTICLE_TYPE_EXPLOSION, 0);
 		trn_transferLostGame ();
 		playerDroid.sprite.setTintColor (255, 255, 255);
-		playerDroid.influenceFadeFlag = false;
-		playerDroid.setLowInfluenceTimeLeft (false);
-
-#ifdef MY_DEBUG
-		log_addEvent (sys_getString ("[ %s ] Influence time is up.", __func__));
-#endif
+		playerDroid.setLowInfluenceTimeFlag (false);
+		return;
+	}
+	//
+	// Flash warning as time will soon be up
+	if (playerDroid.getInfluenceTimeLeft () < influenceTimeLeftWarning)
+	{
+		if (playerDroid.getLowInfluenceTimeFlag())
+		{
+			playerDroid.setInfluenceFadeValue (playerDroid.getInfluenceFadeValue () - 10);
+			if (playerDroid.getInfluenceFadeValue () < 50)
+			{
+				playerDroid.setInfluenceFadeValue (50);
+				playerDroid.setLowInfluenceTimeFlag (!playerDroid.getLowInfluenceTimeFlag());
+			}
+		}
+		else
+		{
+			playerDroid.setInfluenceFadeValue (playerDroid.getInfluenceFadeValue () + 10);
+			if (playerDroid.getInfluenceFadeValue () > 254)
+			{
+				playerDroid.setInfluenceFadeValue (254);
+				playerDroid.setLowInfluenceTimeFlag (!playerDroid.getLowInfluenceTimeFlag());
+			}
+		}
 	}
 
 #ifdef MY_DEBUG
-	if (playerDroid.getLowInfluenceTimeLeft ())
+	if (playerDroid.getLowInfluenceTimeFlag ())
 		log_addEvent (sys_getString ("[ %s ] Influence time is about to run out.", __func__));
 #endif
 }

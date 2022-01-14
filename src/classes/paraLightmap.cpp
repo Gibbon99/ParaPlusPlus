@@ -205,7 +205,8 @@ paraLightmap::paraLightmap(cpVect newWorldPos, int newType, int newWhichBullet)
 void paraLightmap::animate()
 //-----------------------------------------------------------------------------------------------------------
 {
-	float tempAlpha;
+	float tempAlpha{0};
+	cpVect lightmapOffset{};
 
 	switch (type)
 	{
@@ -224,6 +225,13 @@ void paraLightmap::animate()
 
 		case LIGHTMAP_TYPE_BULLET:
 			worldPosInPixels = bullets[gam_getArrayIndex (bulletLink)].worldPosInPixels;
+			//
+			// Offset drawing of lightmap to it looks centered over the bullet
+			lightmapOffset = cpvnormalize (bullets[gam_getArrayIndex (bulletLink)].velocity);
+			lightmapOffset = cpvmult(lightmapOffset, tileSize / 2);
+
+			worldPosInPixels = cpvadd (worldPosInPixels, lightmapOffset);
+
 			colorIndexCounter += 1.0f * colorIndexChangeSpeed;
 			if (colorIndexCounter > 1.0f)
 			{
@@ -231,7 +239,8 @@ void paraLightmap::animate()
 				colorIndex++;
 				if (colorIndex == NUM_BULLET_COLORS)
 					colorIndex = 0;
-				color          = bulletColors[colorIndex];
+
+				color = bulletColors[colorIndex];
 			}
 			break;
 

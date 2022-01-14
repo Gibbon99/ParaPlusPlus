@@ -174,10 +174,8 @@ void sys_renderFrame(double interpolation)
 
 			if (playerDroid.getInTransferMode ())
 				playerDroid.sprite.setTintColor (0, 0, 255);
-
-			else if (playerDroid.getLowInfluenceTimeLeft ())
-				playerDroid.sprite.setTintColor (static_cast<Uint8>(playerDroid.getInfluenceFade ()), static_cast<Uint8>(playerDroid.getInfluenceFade ()), 255);
-
+			else if (playerDroid.getLowInfluenceTimeFlag ())
+				playerDroid.sprite.setTintColor (static_cast<Uint8>(playerDroid.getInfluenceFadeValue ()), static_cast<Uint8>(playerDroid.getInfluenceFadeValue ()), 255);
 			else
 				playerDroid.sprite.setTintColor (255, 255, 255);
 

@@ -197,7 +197,7 @@ void paraDroid::setInfluenceTimeLeft(float newInfluenceTimeLeft)
 //-------------------------------------------------------------------------------------------------------------
 //
 // Return droid influence fade value
-float paraDroid::getInfluenceFade()
+float paraDroid::getInfluenceFadeValue()
 //-------------------------------------------------------------------------------------------------------------
 {
 	return influenceFade;
@@ -206,34 +206,34 @@ float paraDroid::getInfluenceFade()
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the droid influence fade
-void paraDroid::setInfluenceFade(float newInfluenceFade)
+void paraDroid::setInfluenceFadeValue(float newInfluenceFadeValue)
 //-------------------------------------------------------------------------------------------------------------
 {
-	influenceFade = newInfluenceFade;
+	influenceFade = newInfluenceFadeValue;
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set influence time left flag
-void paraDroid::setLowInfluenceTimeLeft(float newLowInfluenceTimeLeft)
+void paraDroid::setLowInfluenceTimeFlag(bool newLowInfluenceTimeFlag)
 //-------------------------------------------------------------------------------------------------------------
 {
-	lowInfluenceTimeleft = newLowInfluenceTimeLeft;
+	lowInfluenceTimeFlag = newLowInfluenceTimeFlag;
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //
 // Get low influence time left
-bool paraDroid::getLowInfluenceTimeLeft()
+bool paraDroid::getLowInfluenceTimeFlag()
 //-------------------------------------------------------------------------------------------------------------
 {
-	return lowInfluenceTimeleft;
+	return lowInfluenceTimeFlag;
 }
 
 //-------------------------------------------------------------------------------------------------------------
 //
 // Set the flag to indicate player is in transfer mode
-void paraDroid::setInTransferMode(float newInTransferMode)
+void paraDroid::setInTransferMode(bool newInTransferMode)
 //-------------------------------------------------------------------------------------------------------------
 {
 	inTransferMode = newInTransferMode;

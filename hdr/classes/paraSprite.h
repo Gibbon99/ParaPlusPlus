@@ -8,9 +8,9 @@ class paraSprite
 {
 
 public:
-	void render(double posX, double posY, double scale, Uint8 alphaMod);
+	void render(float posX, float posY, float scale, Uint8 alphaMod);
 
-	void render(double posX, double posY, double scale, double angle);
+	void render(float posX, float posY, float scale, double angle);
 
 	bool animate();
 
@@ -33,8 +33,8 @@ public:
 private:
 	int         numFrames {-1};
 	int         currentFrame {-1};
-	int         frameWidth {-1};
-	int         frameHeight {-1};
+	float       frameWidth {-1};
+	float       frameHeight {-1};
 	bool        lowHealth {false};
 	double      animateSpeed {-1.0};
 	double      animateCounter {-1.0};
