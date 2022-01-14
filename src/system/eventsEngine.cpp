@@ -170,12 +170,12 @@ void evt_registerMutex(const std::string &mutexName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Find a mutex based on its name
-PARA_Mutex *evt_getMutex(const std::string &mutexName)
+PARA_Mutex *evt_findMutex(const std::string &mutexName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	if (registeredMutexes.size () == 0)
 	{
-		log_addEvent (sys_getString ("[ %s ] Attempting to access mutex [ %s ] but mutex pool is empty.", "evt_getMutex", mutexName.c_str ()));
+//		log_addEvent (sys_getString ("[ %s ] Attempting to access mutex [ %s ] but mutex pool is empty.", "evt_findMutex", mutexName.c_str ()));
 		return nullptr;
 	}
 
@@ -187,7 +187,7 @@ PARA_Mutex *evt_getMutex(const std::string &mutexName)
 		}
 	}
 
-	sys_shutdownWithError (sys_getString ("Unable to locate mutex [ %s ]", mutexName.c_str ()));
+//	sys_shutdownWithError (sys_getString ("Unable to locate mutex [ %s ]", mutexName.c_str ()));
 	return nullptr;
 }
 
@@ -218,15 +218,15 @@ void sys_addEvent(int eventType, int eventAction, int eventDelay, const std::str
 			break;
 
 		case EVENT_TYPE_LOGFILE:
-			tempMutex = evt_getMutex (LOGGING_MUTEX_NAME);
-
+			tempMutex = evt_findMutex (LOGGING_MUTEX_NAME);
 			if (nullptr == tempMutex)
-				sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", LOGGING_MUTEX_NAME, SDL_GetError ()));
+				//sys_shutdownWithError (sys_getString ("Unable to find mutex [ %s ]", LOGGING_MUTEX_NAME));
+				printf("Unable to find mutex [ %s ]", LOGGING_MUTEX_NAME);
 			//
 			// Put the new event onto the logfile queue
-			PARA_LockMutex (evt_getMutex (LOGGING_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
+			PARA_LockMutex (evt_findMutex (LOGGING_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
 			loggingEventQueue.push (new paraEventLogfile (eventAction, eventText));
-			PARA_UnlockMutex (evt_getMutex (LOGGING_MUTEX_NAME));
+			PARA_UnlockMutex (evt_findMutex (LOGGING_MUTEX_NAME));
 			break;
 
 		case EVENT_TYPE_GAME:   // Push an event back into the main thread

@@ -18,7 +18,7 @@ struct highScore
 
 	highScore(const std::string &newName, int newScore)
 	{
-		strncpy_s(name, newName.c_str(), sizeof(name));
+		strncpy(name, newName.c_str(), sizeof(name));
 //		strncpy (name, newName.c_str (), 3);
 		score = newScore;
 	};

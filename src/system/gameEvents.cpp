@@ -47,7 +47,7 @@ void gam_addEvent(int newAction, int newCounter, const std::string &newLine)
 
 	tempEventGame = new paraEventGame (newAction, newCounter, stringText1, stringText2, stringText3);
 
-	tempMutex = evt_getMutex (GAME_MUTEX_NAME);
+	tempMutex = evt_findMutex (GAME_MUTEX_NAME);
 	if (nullptr == tempMutex)
 		sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", GAME_MUTEX_NAME, SDL_GetError ()));
 
@@ -93,7 +93,7 @@ void gam_processGameEventQueue()
 #endif
 		if (nullptr == gameMutex)
 		{
-			gameMutex = evt_getMutex (GAME_MUTEX_NAME);    // cache the mutex value
+			gameMutex = evt_findMutex (GAME_MUTEX_NAME);    // cache the mutex value
 			if (nullptr == gameMutex)
 				sys_shutdownWithError (sys_getString ("Unable to get Mutex value [ %s ] - [ %s ]", GAME_MUTEX_NAME, SDL_GetError ()));
 		}
@@ -237,7 +237,7 @@ void gam_clearGameEvents()
 
 	if (nullptr == gameMutex)
 	{
-		gameMutex = evt_getMutex (GAME_MUTEX_NAME);    // cache the mutex value
+		gameMutex = evt_findMutex (GAME_MUTEX_NAME);    // cache the mutex value
 		if (nullptr == gameMutex)
 			sys_shutdownWithError (sys_getString ("Unable to get Mutex value [ %s ] - [ %s ]", GAME_MUTEX_NAME, SDL_GetError ()));
 	}

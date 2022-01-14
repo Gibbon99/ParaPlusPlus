@@ -28,7 +28,7 @@ paraHighScore::paraHighScore(std::string filePath, int numScores, const std::str
 			tableScore -= stepScore;
 		}
 
-		strncpy_s (lastNameUsed, defaultName.c_str (), sizeof (defaultName));
+		myStrCpy (lastNameUsed, defaultName.c_str (), NUM_CHARS);
 
 		saveFile ();
 	}
@@ -106,7 +106,7 @@ void paraHighScore::addNewScore(const std::string &newName, int newScore)
 	removeLast--;
 	highScores.erase (removeLast);
 
-	strncpy_s (lastNameUsed, newName.c_str (), sizeof (lastNameUsed));
+	myStrCpy (lastNameUsed, newName.c_str (), sizeof (lastNameUsed));
 
 	saveFile ();
 }
@@ -129,6 +129,12 @@ void paraHighScore::saveFile()
 	//
 	// Attach root node to the file
 	xmlFileSave->InsertFirstChild(rootNode);
+	//
+	// Save last name used
+	elementPtrSave = xmlFileSave->NewElement("LastName");
+	elementPtrSave->SetText(lastNameUsed);
+	elementPtrSave->InsertEndChild(elementPtrSave);
+	rootNode->InsertEndChild(elementPtrSave);
 
 	elementPtrSave = xmlFileSave->NewElement("Names");
 	//
@@ -188,6 +194,21 @@ void paraHighScore::loadFile()
 		log_addEvent(sys_getString("Unable to load XML file [ %s ]", highScoreFileName.c_str()));
 		return;
 	}
+	//
+	// Get the last name used
+	const char *tempLastNameUsed;
+	elementPtrLoad = rootNodeLoad->FirstChildElement("LastName");
+	if (nullptr == elementPtrLoad)
+	{
+		log_addEvent(sys_getString("Unable to locate node 'LastName' in XML file [ %s ]", highScoreFileName.c_str()));
+	}
+	else
+	{
+		tempLastNameUsed = elementPtrLoad->GetText();
+		myStrCpy(lastNameUsed, tempLastNameUsed, NUM_CHARS);
+	}
+
+
 	//
 	// Get all the names for the high score table first
 	elementPtrLoad = rootNodeLoad->FirstChildElement("Names");

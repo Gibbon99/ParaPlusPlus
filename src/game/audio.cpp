@@ -21,16 +21,16 @@ void gam_addAudioEvent(int action, bool loop, int distance, int pan, const std::
 
 	tempAudioEvent = new paraEventAudio (action, distance, pan, loop, keyName);
 
-	tempMutex = evt_getMutex (AUDIO_MUTEX_NAME);
+	tempMutex = evt_findMutex (AUDIO_MUTEX_NAME);
 
 	if (nullptr == tempMutex)
 		sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", AUDIO_MUTEX_NAME, SDL_GetError ()));
 
 	//
 	// Put the new event onto the logfile queue
-	PARA_LockMutex (evt_getMutex (AUDIO_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
+	PARA_LockMutex (evt_findMutex (AUDIO_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
 	audioEventQueue.push (tempAudioEvent);
-	PARA_UnlockMutex (evt_getMutex (AUDIO_MUTEX_NAME));
+	PARA_UnlockMutex (evt_findMutex (AUDIO_MUTEX_NAME));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ void gam_processAudioEventQueue()
 			{
 				if (nullptr == audioMutex)
 				{
-					audioMutex = evt_getMutex (AUDIO_MUTEX_NAME);    // Cache getting the mutex value
+					audioMutex = evt_findMutex (AUDIO_MUTEX_NAME);    // Cache getting the mutex value
 					if (nullptr == audioMutex)
 					{
 						sys_shutdownWithError (sys_getString ("Unable to locate audio mutex - [ %s ]", AUDIO_MUTEX_NAME));

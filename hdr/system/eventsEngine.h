@@ -25,7 +25,7 @@ void evt_registerMutex (const std::string &mutexName);
 void sys_addEvent(int eventType, int eventAction, int eventDelay, const std::string &eventText);
 
 // Find a mutex based on its name
-PARA_Mutex *evt_getMutex(const std::string& mutexName);
+PARA_Mutex *evt_findMutex(const std::string& mutexName);
 
 // Destroy all the mutexes
 void evt_destroyMutexes();

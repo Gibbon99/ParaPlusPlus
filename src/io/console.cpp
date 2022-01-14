@@ -34,7 +34,7 @@ void con_processConsoleEventQueue()
 			{
 				if (nullptr == consoleMutex)
 				{
-					consoleMutex = evt_getMutex (CONSOLE_MUTEX_NAME);    // cache the mutex value
+					consoleMutex = evt_findMutex (CONSOLE_MUTEX_NAME);    // cache the mutex value
 					if (nullptr == consoleMutex)
 						sys_shutdownWithError (sys_getString ("Unable to get Mutex value [ %s ] - [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
 				}
@@ -89,7 +89,7 @@ void con_addEvent(int newAction, std::string newLine)
 
 	if (nullptr == tempMutex)
 	{
-		tempMutex = evt_getMutex (CONSOLE_MUTEX_NAME);
+		tempMutex = evt_findMutex (CONSOLE_MUTEX_NAME);
 		if (nullptr == tempMutex)
 			sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
 	}
@@ -136,7 +136,7 @@ void con_renderConsole()
 	// Block the thread from inserting new text while the iterator is rendering the array
 	if (nullptr == consoleMutex)
 	{
-		consoleMutex = evt_getMutex (CONSOLE_MUTEX_NAME);    // cache the mutex value
+		consoleMutex = evt_findMutex (CONSOLE_MUTEX_NAME);    // cache the mutex value
 		if (nullptr == consoleMutex)
 			sys_shutdownWithError (sys_getString ("Unable to get Mutex value to render console [ %s ] - [ %s ]", CONSOLE_MUTEX_NAME, SDL_GetError ()));
 	}

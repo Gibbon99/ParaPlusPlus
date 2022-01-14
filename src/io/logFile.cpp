@@ -14,16 +14,16 @@ void log_addEvent(std::string newLine)
 {
 	PARA_Mutex *tempMutex;
 
-	tempMutex = evt_getMutex (LOGGING_MUTEX_NAME);
-
+	tempMutex = evt_findMutex (LOGGING_MUTEX_NAME);
 	if (nullptr == tempMutex)
-		sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", LOGGING_MUTEX_NAME, SDL_GetError ()));
+		//sys_shutdownWithError (sys_getString ("Unable to get mutex details [ %s ] [ %s ]", LOGGING_MUTEX_NAME, SDL_GetError ()));
+		printf("Unable to find mutex for [ %s ] [ %s ]", LOGGING_MUTEX_NAME, "log_addEvent");
 
 	//
 	// Put the new event onto the logfile queue
-	PARA_LockMutex (evt_getMutex (LOGGING_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
+	PARA_LockMutex (evt_findMutex (LOGGING_MUTEX_NAME));   // Blocks if the mutex is locked by another thread
 	loggingEventQueue.push (new paraEventLogfile (EVENT_ACTION_LOGFILE_WRITE, std::move (newLine)));
-	PARA_UnlockMutex (evt_getMutex (LOGGING_MUTEX_NAME));
+	PARA_UnlockMutex (evt_findMutex (LOGGING_MUTEX_NAME));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ void io_processLoggingEventQueue()
 			{
 				if (nullptr == logfileMutex)
 				{
-					logfileMutex = evt_getMutex (LOGGING_MUTEX_NAME);    // Cache getting the mutex value
+					logfileMutex = evt_findMutex (LOGGING_MUTEX_NAME);    // Cache getting the mutex value
 					if (nullptr == logfileMutex)
 					{
 						sys_shutdownWithError (sys_getString ("Unable to locate logfile mutex - [ %s ]", LOGGING_MUTEX_NAME));

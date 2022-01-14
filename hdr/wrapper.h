@@ -18,3 +18,9 @@
 #define PARA_DestroyMutex   SDL_DestroyMutex
 #define PARA_Delay          SDL_Delay
 #define PARA_Scancode       SDL_Scancode
+
+#if (WIN32)
+	#define myStrCpy strncpy_s
+#else
+	#define myStrCpy strncpy
+#endif
