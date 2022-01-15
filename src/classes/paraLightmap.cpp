@@ -226,7 +226,7 @@ void paraLightmap::animate()
 		case LIGHTMAP_TYPE_BULLET:
 			worldPosInPixels = bullets[gam_getArrayIndex (bulletLink)].worldPosInPixels;
 			//
-			// Offset drawing of lightmap to it looks centered over the bullet
+			// Offset drawing of lightmap so it looks centered over the bullet
 			lightmapOffset = cpvnormalize (bullets[gam_getArrayIndex (bulletLink)].velocity);
 			lightmapOffset = cpvmult(lightmapOffset, tileSize / 2);
 

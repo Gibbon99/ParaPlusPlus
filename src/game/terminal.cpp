@@ -18,7 +18,7 @@ void gam_createTerminalSensor(int whichTerminal)
 	cpShapeSetCollisionType (terminals[whichTerminal].shape, PHYSIC_TYPE_TERMINAL);
 	cpShapeSetSensor (terminals[whichTerminal].shape, cpTrue);
 
-	terminals[whichTerminal].userData            = std::make_shared<_userData> ();
+	terminals[whichTerminal].userData            = std::make_shared<userData_> ();
 	terminals[whichTerminal].userData->userType  = cpShapeGetCollisionType (terminals[whichTerminal].shape);
 	terminals[whichTerminal].userData->dataValue = whichTerminal;
 	cpShapeSetUserData (terminals[whichTerminal].shape, terminals[whichTerminal].userData.get ());
@@ -34,11 +34,18 @@ void gam_clearTerminals()
 	{
 		if (terminalItr.shape != nullptr)
 		{
-			cpSpaceRemoveShape (sys_returnPhysicsWorld (), terminalItr.shape);
+			if (cpSpaceContainsShape (sys_returnPhysicsWorld(), terminalItr.shape))
+				cpSpaceRemoveShape (sys_returnPhysicsWorld (), terminalItr.shape);
+
+			cpShapeFree(terminalItr.shape);
 			terminalItr.shape = nullptr;
 		}
 		if (terminalItr.body != nullptr)
 		{
+			if (cpSpaceContainsBody (sys_returnPhysicsWorld(), terminalItr.body))
+				cpSpaceRemoveBody (sys_returnPhysicsWorld(), terminalItr.body);
+
+			cpBodyFree(terminalItr.body);
 			terminalItr.body = nullptr;
 		}
 	}

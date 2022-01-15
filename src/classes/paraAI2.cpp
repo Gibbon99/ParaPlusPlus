@@ -1186,7 +1186,7 @@ void paraAI2::checkAttackVisibility()
 			auto shapePointer = cpShapeGetUserData (returnShape);
 			if (nullptr != shapePointer)
 			{
-				auto *userDataA = reinterpret_cast<_userData *>(shapePointer);
+				auto *userDataA = reinterpret_cast<userData_ *>(shapePointer);
 
 				if (userDataA->dataValue == targetDroid)
 				{

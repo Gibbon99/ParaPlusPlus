@@ -7,6 +7,18 @@ std::queue<paraEventLogfile *> loggingEventQueue {};
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Clear out the logfile queue
+void log_clearQueue()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	while (!loggingEventQueue.empty ())   // stuff in the queue to process
+	{
+		delete (loggingEventQueue.front ());     // Free memory
+		loggingEventQueue.pop ();
+	}
+}
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Push an event onto the logging queue
 //void log_addEvent(std::string & newLine)
 void log_addEvent(std::string newLine)
@@ -95,6 +107,7 @@ void io_processLoggingEventQueue()
 #ifdef MY_DEBUG
 	std::cout << sys_getString ("[ %s ] LOGGING thread stopped.", __func__) << std::endl;
 #endif
+	log_clearQueue();   // Free any memory used by entries still in the queue
 }
 
 //----------------------------------------------------------------------------------------------------------------------

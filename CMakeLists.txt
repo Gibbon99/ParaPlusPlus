@@ -115,7 +115,7 @@ if (UNIX)
 	if (CMAKE_BUILD_TYPE MATCHES Release)
 		message("Doing RELEASE build")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -DNDEBUG")
-		add_executable(Linux_Para_release ${CXX_SRCS})
+		add_executable(Linux_Para_release ${SOURCES})
 	endif (CMAKE_BUILD_TYPE MATCHES Release)
 
 endif (UNIX)

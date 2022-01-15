@@ -63,7 +63,7 @@ paraParticle::paraParticle(int newType, cpVect newWorldPos)
 		cpShapeSetCollisionType(shape, PHYSIC_TYPE_PARTICLE);
 		cpShapeSetFilter(shape, FILTER_CAT_PARTICLE);
 
-		userData = std::make_shared<_userData>();
+		userData = std::make_shared<userData_>();
 		userData->bulletID = -1;
 		userData->userType = cpShapeGetCollisionType(shape);
 		userData->dataValue = -1;
@@ -96,12 +96,18 @@ paraParticle::~paraParticle()
 	{
 		if (shape != nullptr)
 		{
-			cpSpaceRemoveShape(sys_returnPhysicsWorld(), shape);
+			if (cpSpaceContainsShape (sys_returnPhysicsWorld(), shape))
+				cpSpaceRemoveShape(sys_returnPhysicsWorld(), shape);
+
+			cpShapeFree(shape);
 			shape = nullptr;
 		}
 		if (body != nullptr)
 		{
-			cpSpaceRemoveBody(sys_returnPhysicsWorld(), body);
+			if (cpSpaceContainsBody (sys_returnPhysicsWorld(), body))
+				cpSpaceRemoveBody(sys_returnPhysicsWorld(), body);
+
+			cpBodyFree(body);
 			body = nullptr;
 		}
 	}

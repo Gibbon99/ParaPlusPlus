@@ -24,17 +24,16 @@ paraAudio::paraAudio()
 paraAudio::~paraAudio()
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	Mix_Quit();
-
 	auto audioItr = audio.begin();
 
 	while (audioItr != audio.end())
 	{
 		if (audioItr->second.audio != nullptr)
-			free(audioItr->second.audio);		//TODO Causing exception on exit
+			Mix_FreeChunk(audioItr->second.audio);		//TODO Causing exception on exit
 
 		audioItr++;
 	}
+	Mix_Quit();
 }
 
 void paraAudio::AddRef()

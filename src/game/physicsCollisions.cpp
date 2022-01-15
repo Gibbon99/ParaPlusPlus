@@ -88,8 +88,8 @@ unsigned char handleCollisionDroidToDroid([[maybe_unused]]cpArbiter *arb, [[mayb
 	dataPointerA = cpShapeGetUserData (a);      // Enemy droid
 	dataPointerB = cpShapeGetUserData (b);      // Player droid
 
-	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
-	auto *userDataB = reinterpret_cast<_userData *>(dataPointerB);
+	auto *userDataA = reinterpret_cast<userData_ *>(dataPointerA);
+	auto *userDataB = reinterpret_cast<userData_ *>(dataPointerB);
 
 	if (-1 == userDataB->dataValue)     // Player
 	{
@@ -163,7 +163,7 @@ unsigned char handleSensorPlayerToLiftBegin(cpArbiter *arb, [[maybe_unused]]cpSp
 	cpArbiterGetShapes (arb, &a, &b);
 	dataPointerB = cpShapeGetUserData (b);
 
-	auto *userDataB = reinterpret_cast<_userData *>(dataPointerB);
+	auto *userDataB = reinterpret_cast<userData_ *>(dataPointerB);
 
 	playerDroid.setLiftIndex (userDataB->dataValue);
 	playerDroid.setOverLiftTile (true);
@@ -223,7 +223,7 @@ unsigned char handleBulletToWall(cpArbiter *arb, [[maybe_unused]]cpSpace *space,
 	cpArbiterGetShapes (arb, &a, &b);
 	dataPointerA = cpShapeGetUserData (a);
 
-	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
+	auto *userDataA = reinterpret_cast<userData_ *>(dataPointerA);
 
 	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
 
@@ -251,8 +251,8 @@ unsigned char handleBulletToBullet(cpArbiter *arb, [[maybe_unused]]cpSpace *spac
 	dataPointerA = cpShapeGetUserData (a);
 	dataPointerB = cpShapeGetUserData (b);
 
-	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
-	auto *userDataB = reinterpret_cast<_userData *>(dataPointerB);
+	auto *userDataA = reinterpret_cast<userData_ *>(dataPointerA);
+	auto *userDataB = reinterpret_cast<userData_ *>(dataPointerB);
 
 	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
 	bullets[gam_getArrayIndex (userDataB->bulletID)].inUse = false;
@@ -284,8 +284,8 @@ unsigned char handleBulletToDroid(cpArbiter *arb, [[maybe_unused]]cpSpace *space
 	dataPointerA = cpShapeGetUserData (a);  // a is the bullet - either player or another droids
 	dataPointerB = cpShapeGetUserData (b);  // b is which droid
 
-	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
-	auto *userDataB = reinterpret_cast<_userData *>(dataPointerB);
+	auto *userDataA = reinterpret_cast<userData_ *>(dataPointerA);
+	auto *userDataB = reinterpret_cast<userData_ *>(dataPointerB);
 
 	if (userDataA->dataValue == userDataB->dataValue)
 		return cpFalse;
@@ -311,7 +311,7 @@ unsigned char handleBulletToDoor(cpArbiter *arb, [[maybe_unused]]cpSpace *space,
 	cpArbiterGetShapes (arb, &a, &b);
 	dataPointerA = cpShapeGetUserData (a);  // a is the bullet - either player or another droids
 
-	auto *userDataA = reinterpret_cast<_userData *>(dataPointerA);
+	auto *userDataA = reinterpret_cast<userData_ *>(dataPointerA);
 
 	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
 

@@ -150,10 +150,10 @@ void paraHighScore::saveFile()
 	// Now write out the scores
 	elementPtrSave = xmlFileSave->NewElement("Scores");
 
-	for (auto fileItr = highScores.begin(); fileItr != highScores.end(); fileItr++)
+	for (auto highScore : highScores)
 	{
 		tinyxml2::XMLElement* scoreScorePtr = xmlFileSave->NewElement("scoreScore");
-		scoreScorePtr->SetText(fileItr->score);
+		scoreScorePtr->SetText(highScore.score);
 		elementPtrSave->InsertEndChild(scoreScorePtr);
 		rootNode->InsertEndChild(elementPtrSave);
 	}
@@ -162,6 +162,8 @@ void paraHighScore::saveFile()
 	tinyxml2::XMLError eResult = xmlFileSave->SaveFile(highScoreFileName.c_str());
 	if (eResult != tinyxml2::XML_SUCCESS)
 		log_addEvent(sys_getString("Error writing high score file. Code [ %i ]\n", eResult));
+
+	delete xmlFileSave;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -266,4 +268,6 @@ void paraHighScore::loadFile()
 	{
 		highScores.insert(highScore(tableItr, tempScoreScore[scoreIndex++]));
 	}
+
+	delete xmlFileLoad;
 }

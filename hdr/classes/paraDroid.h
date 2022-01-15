@@ -94,8 +94,8 @@ public:
 	int transferTargetDroidType {};
 
 	cpBody                *body {nullptr};
-	cpShape               *shape {nullptr};
-	std::shared_ptr<_userData> userData {};
+	cpShape                    *shape {nullptr};
+	std::shared_ptr<userData_> userData {};
 
 	paraSprite sprite;
 	paraAI2    ai2;

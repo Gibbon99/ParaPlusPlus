@@ -339,4 +339,5 @@ void paraFileSystem::getSearchPath()
 	{
 		funcOutput (-1, int_getString ("[%s] is in the search path.", *i));
 	}
+	PHYSFS_freeList(i);
 }

@@ -108,7 +108,7 @@ private:
 	cpVect                     m_worldPos {};
 	cpBody                     *body {};
 	cpShape                    *shape {};
-	std::shared_ptr<_userData> userData {};
+	std::shared_ptr<userData_> userData {};
 
 	PARA_Color color {};
 };

@@ -177,6 +177,10 @@ void gam_clearLifts()
 		}
 		if (liftItr.body != nullptr)
 		{
+			if (cpSpaceContainsBody (sys_returnPhysicsWorld(), liftItr.body))
+				cpSpaceRemoveBody(sys_returnPhysicsWorld(), liftItr.body);
+
+			cpBodyFree(liftItr.body);
 			liftItr.body = nullptr;
 		}
 	}
@@ -198,7 +202,7 @@ void gam_createLiftSensor(int whichLift)
 	cpShapeSetCollisionType (lifts[whichLift].shape, PHYSIC_TYPE_LIFT);
 	cpShapeSetSensor (lifts[whichLift].shape, cpTrue);
 
-	lifts[whichLift].userData            = std::make_shared<_userData> ();
+	lifts[whichLift].userData            = std::make_shared<userData_> ();
 	lifts[whichLift].userData->userType  = cpShapeGetCollisionType (lifts[whichLift].shape);
 	lifts[whichLift].userData->dataValue = whichLift;
 	cpShapeSetUserData (lifts[whichLift].shape, lifts[whichLift].userData.get ());

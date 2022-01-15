@@ -20,7 +20,7 @@ public:
 	cpVect                     velocity {};
 	cpBody                     *body {};
 	cpShape                    *shape {};
-	std::shared_ptr<_userData> userData {};
+	std::shared_ptr<userData_> userData {};
 
 	paraSprite sprite {};
 private:

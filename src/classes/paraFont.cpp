@@ -101,10 +101,7 @@ bool paraFont::load(int fontSize, const std::string &keyName, const std::string 
 		funcOutput (-1, int_getString ("Running with SDL_ttf version: %d.%d.%d", link_version->major, link_version->minor, link_version->patch));
 	}
 
-//	tempFont.handle = TTF_OpenFont(fileName.c_str(), fontSize);
-//
-// Load from packfile rather than filesystem - should be done via load function redirect like texture class
-	tempFont.handle     = TTF_OpenFontRW (io_loadRawFile (fileName), 0, fontSize);       // Font closed in class deconstructor
+	tempFont.handle = TTF_OpenFontRW (io_loadRawFile (fileName), 0, fontSize);       // Font closed in class deconstructor
 
 	if (nullptr == tempFont.handle)
 	{
@@ -118,7 +115,9 @@ bool paraFont::load(int fontSize, const std::string &keyName, const std::string 
 
 	fonts.insert (std::pair<std::string, __PARA_FONT> (keyName, tempFont));
 
+#if MY_DEBUG
 	funcOutput (-1, int_getString ("Loaded font file [ %s ]", fileName.c_str ()));
+#endif
 
 	return true;
 }

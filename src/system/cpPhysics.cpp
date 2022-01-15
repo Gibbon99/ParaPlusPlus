@@ -7,6 +7,10 @@
 #include "game/shipDecks.h"
 #include "game/physicsCollisions.h"
 #include "io/logFile.h"
+#include "game/lifts.h"
+#include "game/terminal.h"
+#include "game/healing.h"
+#include "game/particles.h"
 
 double  gravity;         // Set from script
 cpSpace *worldSpace;
@@ -26,14 +30,14 @@ cpFloat droidFriction {};
 cpFloat wallFricton {};
 cpFloat wallRadius {3.0f};
 
-struct _physicWall
+struct physicWall_
 {
 	cpBody                     *body {nullptr};
 	cpShape                    *shape {nullptr};
-	std::shared_ptr<_userData> userData {};
+	std::shared_ptr<userData_> userData {};
 };
 
-std::vector<_physicWall>  solidWalls;
+std::vector<physicWall_>  solidWalls;
 std::vector<doorTrigger_> doorBulletSensor;
 
 cpSpaceDebugDrawOptions drawOptions;
@@ -143,9 +147,17 @@ void sys_createWorldPhysics()
 void sys_freePhysicsEngine()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	gam_clearLifts ();
+	sys_clearAllDoors();
+	gam_clearTerminals ();
+	gam_clearHealing();
+	gam_clearEmitters();
+	sys_clearDroidPhysics(gam_getCurrentDeckName());
+	sys_clearSolidWalls ();
+
 	if (nullptr != worldSpace)
 	{
-		sys_clearSolidWalls ();
+
 		cpSpaceDestroy (worldSpace);
 		worldSpace = nullptr;
 	}
@@ -191,7 +203,7 @@ void sys_setupPlayerPhysics()
 	cpShapeSetCollisionType (playerDroid.shape, PHYSIC_TYPE_PLAYER);
 	cpShapeSetFilter (playerDroid.shape, FILTER_CAT_PLAYER);
 
-	playerDroid.userData = std::make_shared<_userData> ();
+	playerDroid.userData = std::make_shared<userData_> ();
 
 	playerDroid.userData->bulletID              = -1;
 	playerDroid.userData->userType              = cpShapeGetCollisionType (playerDroid.shape);
@@ -247,7 +259,7 @@ void sys_setupDroidPhysics(const std::string &levelName)
 				cpShapeSetCollisionType (droidItr.shape, PHYSIC_TYPE_ENEMY);
 				cpShapeSetFilter (droidItr.shape, FILTER_CAT_ENEMY);
 
-				droidItr.userData                        = std::make_shared<_userData> ();
+				droidItr.userData                        = std::make_shared<userData_> ();
 				droidItr.userData->bulletID              = -1;
 				droidItr.userData->userType              = cpShapeGetCollisionType (droidItr.shape);
 				droidItr.userData->dataValue             = droidItr.ai2.getArrayIndex ();
@@ -289,14 +301,16 @@ void sys_clearDroidPhysics(const std::string &levelName)
 	{
 		if (nullptr != droidItr.shape)
 		{
-			cpSpaceRemoveShape (worldSpace, droidItr.shape);
+			if (cpSpaceContainsShape (sys_returnPhysicsWorld(), droidItr.shape))
+				cpSpaceRemoveShape (worldSpace, droidItr.shape);
 			cpShapeFree (droidItr.shape);
 			droidItr.shape = nullptr;
 		}
 
 		if (nullptr != droidItr.body)
 		{
-			cpSpaceRemoveBody (worldSpace, droidItr.body);
+			if (cpSpaceContainsBody (sys_returnPhysicsWorld(), droidItr.body))
+				cpSpaceRemoveBody (worldSpace, droidItr.body);
 			cpBodyFree (droidItr.body);
 			droidItr.body = nullptr;
 		}
@@ -321,7 +335,13 @@ void sys_clearSolidWalls()
 
 		if (nullptr != wallItr.body)
 		{
+			if (cpSpaceContainsBody (worldSpace, wallItr.body))
+			{
+				cpSpaceRemoveBody (worldSpace, wallItr.body);
+			}
+			cpBodyFree (wallItr.body);
 			wallItr.body = nullptr;
+
 		}
 	}
 	solidWalls.clear ();
@@ -335,7 +355,7 @@ void sys_setupSolidWalls(const std::string &levelName)
 {
 	cpVect              wallStart, wallFinish;
 	std::vector<cpVect> wallPositions;
-	_physicWall         tempWall;
+	physicWall_         tempWall;
 
 	if (0 == shipdecks.at (levelName).numLineSegments)
 		return;
@@ -354,25 +374,18 @@ void sys_setupSolidWalls(const std::string &levelName)
 		wallFinish.x = (shipdecks.at (levelName).lineSegments[i].finish.x - (tileSize / 2));
 		wallFinish.y = (shipdecks.at (levelName).lineSegments[i].finish.y - (tileSize / 2));
 
-		tempWall.body = cpBodyNewStatic ();
+		wallPositions.push_back (wallStart);
 
-		tempWall.shape = cpSegmentShapeNew (tempWall.body, wallStart, wallFinish, wallRadius);
 		solidWalls.push_back (tempWall);
 
-		cpShapeSetFriction (solidWalls[i].shape, wallFricton);
-		cpShapeSetCollisionType (solidWalls[i].shape, PHYSIC_TYPE_WALL);
-		cpShapeSetFilter (solidWalls[i].shape, FILTER_CAT_WALL);
+		auto wallItr = solidWalls.end () - 1;       // Allocate the memory directly in the array otherwise it leaks from tempWall
+		wallItr->body  = cpBodyNewStatic ();
+		wallItr->shape = cpSegmentShapeNew (wallItr->body, wallStart, wallFinish, wallRadius);
 
-		tempWall.userData                        = std::make_shared<_userData> ();
-		tempWall.userData->bulletID              = -1;
-		tempWall.userData->userType              = cpShapeGetCollisionType (tempWall.shape);
-		tempWall.userData->dataValue             = i;
-		tempWall.userData->ignoreCollisionDroid  = true;
-		tempWall.userData->ignoreCollisionPlayer = true;
-		cpShapeSetUserData (tempWall.shape, tempWall.userData.get ());
-
-		cpSpaceAddShape (worldSpace, solidWalls[i].shape);
-		wallPositions.push_back (wallStart);
+		cpShapeSetFriction (wallItr->shape, wallFricton);
+		cpShapeSetCollisionType (wallItr->shape, PHYSIC_TYPE_WALL);
+		cpShapeSetFilter (wallItr->shape, FILTER_CAT_WALL);
+		cpSpaceAddShape (worldSpace, wallItr->shape);
 	}
 	shipdecks.at (levelName).wallPhysicsCreated = true;
 }
@@ -399,14 +412,18 @@ void sys_clearAllDoors()
 	{
 		if (nullptr != doorBulletItr.shape)
 		{
-			cpSpaceRemoveShape (sys_returnPhysicsWorld (), doorBulletItr.shape);
+			if (cpSpaceContainsShape (sys_returnPhysicsWorld(), doorBulletItr.shape))
+				cpSpaceRemoveShape (sys_returnPhysicsWorld (), doorBulletItr.shape);
+
 			cpShapeFree (doorBulletItr.shape);
 			doorBulletItr.shape = nullptr;
 		}
 
 		if (nullptr != doorBulletItr.body)
 		{
-			cpSpaceRemoveBody (sys_returnPhysicsWorld (), doorBulletItr.body);
+			if (cpSpaceContainsBody (sys_returnPhysicsWorld(), doorBulletItr.body))
+				cpSpaceRemoveBody (sys_returnPhysicsWorld (), doorBulletItr.body);
+
 			cpBodyFree (doorBulletItr.body);
 			doorBulletItr.body = nullptr;
 		}
@@ -430,7 +447,7 @@ void sys_createDoorBulletSensor(unsigned long whichDoor)
 	cpShapeSetCollisionType (doorBulletSensor[whichDoor].shape, PHYSIC_TYPE_DOOR_CLOSED);
 	cpShapeSetFilter (doorBulletSensor[whichDoor].shape, FILTER_CAT_DOOR_CLOSED);
 
-	doorBulletSensor[whichDoor].userData            = std::make_shared<_userData> ();
+	doorBulletSensor[whichDoor].userData            = std::make_shared<userData_> ();
 	doorBulletSensor[whichDoor].userData->userType  = cpShapeGetCollisionType (doorBulletSensor[whichDoor].shape);
 	doorBulletSensor[whichDoor].userData->dataValue = whichDoor;
 	cpShapeSetUserData (doorBulletSensor[whichDoor].shape, doorBulletSensor[whichDoor].userData.get ());

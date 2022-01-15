@@ -130,7 +130,7 @@ paraBullet gam_createBullet(int bulletSourceIndex, Uint32 bulletID)
 
 		tempBullet.angle = getAngle (tempBullet.worldPosInPixels, tempBullet.worldDestInPixels);
 
-		tempBullet.userData               = std::make_shared<_userData> ();
+		tempBullet.userData               = std::make_shared<userData_> ();
 		if (bulletSourceIndex == -1)
 			tempBullet.userData->userType = PHYSIC_TYPE_BULLET_PLAYER;
 		else

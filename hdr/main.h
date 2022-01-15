@@ -97,7 +97,7 @@ extern unsigned long g_debugDroidCount;
 
 extern Uint32 sys_getCurrentTime();
 
-struct _userData
+struct userData_
 {
 	cpCollisionType userType;
 	Uint32          bulletID;
@@ -131,5 +131,5 @@ struct doorTrigger_
 
 	cpBody                     *body {nullptr};
 	cpShape                    *shape {nullptr};
-	std::shared_ptr<_userData> userData {};
+	std::shared_ptr<userData_> userData {};
 };

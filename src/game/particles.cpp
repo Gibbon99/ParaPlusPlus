@@ -34,8 +34,6 @@ void gam_removeDeadEmitters()
 {
 	std::vector<int> test;
 
-//	test.remove_if(0);
-
 	auto removeIndex = 0;
 
 //	particleEmitters.remove(particleEmitters.begin(), particleEmitters.end(), particleEmitters.getCanBeRemoved());

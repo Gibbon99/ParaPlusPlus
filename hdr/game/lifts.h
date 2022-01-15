@@ -11,7 +11,7 @@ struct __tileSensor
 	cpVect                     worldPosition = {0, 0};
 	cpBody                     *body {};
 	cpShape                    *shape {};
-	std::shared_ptr<_userData> userData {};
+	std::shared_ptr<userData_> userData {};
 };
 
 extern int currentTunnel;
@@ -36,3 +36,6 @@ void gam_setCurrentTunnelDeckIndex();
 
 // Return the current tunnel in use
 int gam_getCurrentTunnel();
+
+// Clear out memory and free bodies
+void gam_clearLifts();

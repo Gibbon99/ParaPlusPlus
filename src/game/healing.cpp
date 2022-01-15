@@ -81,6 +81,10 @@ void gam_clearHealing()
 		}
 		if (healingItr.body != nullptr)
 		{
+			if (cpSpaceContainsBody (sys_returnPhysicsWorld(), healingItr.body))
+				cpSpaceRemoveBody (sys_returnPhysicsWorld(), healingItr.body);
+
+			cpBodyFree(healingItr.body);
 			healingItr.body = nullptr;
 		}
 	}
@@ -101,7 +105,7 @@ void gam_createHealingSensor(int whichHealingTile)
 	cpShapeSetCollisionType (healingTiles[whichHealingTile].shape, PHYSIC_TYPE_HEALING);
 	cpShapeSetSensor (healingTiles[whichHealingTile].shape, cpTrue);
 
-	healingTiles[whichHealingTile].userData            = std::make_shared<_userData> ();
+	healingTiles[whichHealingTile].userData            = std::make_shared<userData_> ();
 	healingTiles[whichHealingTile].userData->userType  = cpShapeGetCollisionType (healingTiles[whichHealingTile].shape);
 	healingTiles[whichHealingTile].userData->dataValue = whichHealingTile;
 	cpShapeSetUserData (healingTiles[whichHealingTile].shape, healingTiles[whichHealingTile].userData.get ());
