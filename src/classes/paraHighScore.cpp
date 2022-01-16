@@ -9,8 +9,8 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Constructor
-paraHighScore::paraHighScore(std::string filePath, int numScores, const std::string &defaultName, int startScore, int stepScore)
+// Setup the highscore table if not found and load it
+void paraHighScore::init(std::string filePath, int numScores, const std::string &defaultName, int startScore, int stepScore)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	int tableScore {};
@@ -125,7 +125,7 @@ void paraHighScore::saveFile()
 	xmlFileSave = new tinyxml2::XMLDocument;
 	//
 	// Create pointer to the root node
-	rootNode = xmlFileSave->NewElement("Root");
+	rootNode = xmlFileSave->NewElement("HighScores");
 	//
 	// Attach root node to the file
 	xmlFileSave->InsertFirstChild(rootNode);
@@ -158,10 +158,12 @@ void paraHighScore::saveFile()
 		rootNode->InsertEndChild(elementPtrSave);
 	}
 	//
-	// Save the file
-	tinyxml2::XMLError eResult = xmlFileSave->SaveFile(highScoreFileName.c_str());
-	if (eResult != tinyxml2::XML_SUCCESS)
-		log_addEvent(sys_getString("Error writing high score file. Code [ %i ]\n", eResult));
+	// Save the file using the PHYSFS filesystem
+	tinyxml2::XMLPrinter printOutFile;
+	xmlFileSave->Print( &printOutFile );
+
+	if (!fileSystem.writeStringToFile (printOutFile.CStr(), highScoreFileName))
+		log_addEvent(sys_getString("Error writing high score file - [ %s ].", highScoreFileName.c_str()));
 
 	delete xmlFileSave;
 }

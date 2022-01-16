@@ -113,9 +113,12 @@ void sys_startSystems()
 	if (!fileSystem.init ("data", "data"))
 		sys_shutdownWithError ("Error. Could not start filesystem. Check directory structure.");
 
-//	fileSystem.addPath ("data/data");
-	fileSystem.addPath ("data/scripts");
-	fileSystem.addPath ("data/data.zip");
+	if (!fileSystem.addPath ("data/data.zip"))
+		sys_shutdownWithError ("Error. Could not add archive file. Check directory structure.");
+
+	if (!fileSystem.addPath ("data/scripts"))
+		sys_shutdownWithError ("Error. Could not add script location. Check directory structure.");
+
 	//
 	// Load and create the fontClass for the console
 	fontClass.setOutputFunction (con_addEvent);
@@ -218,6 +221,8 @@ int sys_startInit([[maybe_unused]]void *ptr)
 
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 250, std::to_string (MODE_GUI_MAINMENU) + "|" + std::to_string (true));
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, std::to_string (MODE_SHOW_SPLASH) + "|" + std::to_string (true));
+
+	highScores.init("highscore.dat", NUM_HIGHSCORE_ROWS, "DAB", 600, 100);
 
 	return 0;
 }

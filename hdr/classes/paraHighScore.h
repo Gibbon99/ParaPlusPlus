@@ -27,7 +27,7 @@ struct highScore
 class paraHighScore
 {
 public:
-	paraHighScore(std::string filePath, int numScores, const std::string &defaultName, int startScore, int stepScore);
+	void init(std::string filePath, int numScores, const std::string &defaultName, int startScore, int stepScore);
 
 	void addNewScore(const std::string &newName, int newScore);
 

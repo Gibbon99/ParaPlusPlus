@@ -34,6 +34,9 @@ public:
 
 	void getSearchPath();
 
+	// Write a string file into archive
+	bool writeStringToFile(const std::string& writeBuffer, const std::string& fileName);
+
 private:
 	bool                    fileSystemReady = false;
 	filesystemFuncPtrStr    funcShutdown;

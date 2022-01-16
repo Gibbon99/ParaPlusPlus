@@ -74,15 +74,6 @@ bool paraFileSystem::init(const std::string &baseDirectory, const std::string &w
 
 	funcOutput (-1, int_getString ("%s", outputTest.c_str ()));
 	funcOutput (-1, int_getString ("Linked against PhysFS version %d.%d.%d.", linked.major, linked.minor, linked.patch));
-
-	//
-	// Setup directory to write if needed
-	if (0 == PHYSFS_setWriteDir (writeDirectory.c_str ()))
-	{
-		funcOutput (-1, int_getString ("Failed to set write path [ %s ] - [ %s ]", writeDirectory.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
-		fileSystemReady = false;
-		return false;
-	}
 	//
 	// Set base directory
 	if (0 == PHYSFS_mount (baseDirectory.c_str (), "/", 1))
@@ -94,7 +85,14 @@ bool paraFileSystem::init(const std::string &baseDirectory, const std::string &w
 		fileSystemReady = false;
 		return false;
 	}
-
+	//
+	// Setup directory to write if needed
+	if (0 == PHYSFS_setWriteDir (writeDirectory.c_str ()))
+	{
+		funcOutput (-1, int_getString ("Failed to set write path [ %s ] - [ %s ]", writeDirectory.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+		fileSystemReady = false;
+		return false;
+	}
 	//
 	// What compression types are available
 	//	io_getArchivers();
@@ -106,7 +104,7 @@ bool paraFileSystem::init(const std::string &baseDirectory, const std::string &w
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Add another directory to use in seach path
+// Add another directory to use in search path
 bool paraFileSystem::addPath(const std::string &newDirectory)
 //----------------------------------------------------------------------------------------------------------------------
 {
@@ -161,6 +159,41 @@ PHYSFS_sint64 paraFileSystem::getFileSize(std::string fileName)
 	PHYSFS_close (compFile);
 
 	return fileLength;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Write a string file into archive
+bool paraFileSystem::writeStringToFile(const std::string& writeBuffer, const std::string& fileName)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	PHYSFS_file   *saveFile = nullptr;
+
+	if (!fileSystemReady)
+	{
+		funcOutput (-1, int_getString ("PHYSFS system has not been initialised. Can't save [ %s ].", fileName.c_str ()));
+		return "";
+	}
+	//
+	// Get a handle to the file
+	saveFile = PHYSFS_openWrite (fileName.c_str());
+	if (nullptr == saveFile)
+	{
+		funcOutput (-1, int_getString ("Filesystem can't save file [ %s ] - [ %s ].", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+		return false;
+	}
+	//
+	// Read contents of file into the pointer
+	PHYSFS_sint64 returnCode = PHYSFS_writeBytes(saveFile, writeBuffer.data(), writeBuffer.size());
+	if ((-1 == returnCode) || (returnCode < writeBuffer.size()))
+	{
+		funcOutput (-1, int_getString ("Filesystem write failed - [ %s ] for [ %s ].", PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ()), fileName.c_str ()));
+		PHYSFS_close (saveFile);
+		return false;
+	}
+
+	PHYSFS_close (saveFile);
+	return true;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

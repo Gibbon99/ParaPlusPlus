@@ -3496,12 +3496,14 @@ void paraGui::saveKeymap()
 	addData ("KEY_CONSOLE", keyBinding[KEY_CONSOLE].keyValue);
 	addData ("KEY_SCREENSHOT", keyBinding[KEY_SCREENSHOT].keyValue);
 
-	tinyxml2::XMLError eResult = xmlFileSave->SaveFile (fileName.c_str ());
-	if (eResult != tinyxml2::XML_SUCCESS)
-	{
-		funcOutput (-1, int_getString ("Failed to save XML keybinding file. Code [ %i ]", eResult));
-		return;
-	}
+	//
+	// Save the file using the PHYSFS filesystem
+	tinyxml2::XMLPrinter printOutFile;
+	xmlFileSave->Print( &printOutFile );
+
+	if (!fileSystem.writeStringToFile (printOutFile.CStr(), fileName))
+		funcOutput (-1, int_getString ("Error writing high score file."));
+
 	delete xmlFileSave;
 }
 

@@ -307,7 +307,7 @@ bool gam_loadXMLShipDesk(const std::string &fileName)
 		logFile.write(sys_getString("Unable to load file [ %s ] into memory.", fileName.c_str()));
 		return false;
 	}
-	auto memFilePtr = fmemopen((void *)memFile.data(), memFile.size(), "r");
+	auto memFilePtr = fmemopen((void *)memFile.data(), memFile.size(), "rb");
 
 	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile (memFilePtr);
 	gam_checkXMLReturnCode (eResult);

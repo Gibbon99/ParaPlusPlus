@@ -15,7 +15,7 @@ paraStarfield  backgroundStarfield {};
 paraStarfield  sideviewStarfield {};
 paraStarfield  deckviewStarfield {};
 paraSprite     databaseSprite {};
-paraHighScore  highScores {"data/highscore.dat", NUM_HIGHSCORE_ROWS, "DAB", 600, 100};
+paraHighScore  highScores{};
 
 std::map<std::string, paraTexture> textures;
 
