@@ -6,6 +6,8 @@
 #include "io/console.h"
 #include "system/util.h"
 #include "classes/paraGui.h"
+#include "tinyxml2.h"
+#include "gui/guiLanguage.h"
 
 void paraGui::AddRef()
 {
@@ -294,17 +296,15 @@ void paraGui::setOutputFunction(funcPtrIntStr outputFunction)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Init the GUI system
-void paraGui::init(funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, int newRenderWidthGame, int newRenderHeightGame, std::string newFileName)
+void paraGui::init(funcPtrIntStr outputFunction, int newRenderWidth, int newRenderHeight, int newRenderWidthGame, int newRenderHeightGame, std::string newFileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	setOutputFunction (outputFunction);
 	setRenderDimensions (newRenderWidth, newRenderHeight);
 	setRenderDimensionsGameMode (newRenderWidthGame, newRenderHeightGame);
 
-	funcOutput    = outputFunction;
-	funcGetString = getStringFunc;
-	fileName      = std::move (newFileName);
-	load ();
+	funcOutput = outputFunction;
+	fileName   = std::move (newFileName);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -3461,77 +3461,152 @@ void paraGui::setMouse(int newPosX, int newPosY)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Write the keyboard layout to disk - currently using physfs library - assuming its been started
-//
-// TODO: read / write to platforms native byte order
-void paraGui::save()
+// Add data to the XML file - INT version
+void paraGui::addData(const std::string &newElementName, int newElementValue)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	PHYSFS_file   *fileHandle;
-	PHYSFS_sint64 returnCode;
-
-	if (!PHYSFS_isInit ())
-	{
-		funcOutput (-1, int_getString ("PHYSFS has not been started."));
-		return;
-	}
-
-	fileHandle = PHYSFS_openWrite (fileName.c_str ());
-	if (nullptr == fileHandle)
-	{
-		funcOutput (-1, int_getString ("Unable to open keybinding file for writing [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
-		return;
-	}
-
-	for (auto keyIndex = 0; keyIndex != KEY_NUMBER_ACTIONS; keyIndex++)
-	{
-		returnCode = PHYSFS_writeBytes (fileHandle, &keyBinding[keyIndex].keyValue, sizeof (keyBinding[keyIndex].keyValue));
-		if (returnCode < static_cast<PHYSFS_sint64>(sizeof (keyBinding[keyIndex].keyValue)))
-			funcOutput (-1, int_getString ("Unable to write keybinding file [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
-	}
-
-	if (PHYSFS_close (fileHandle) == 0)
-		funcOutput (-1, int_getString ("Unable to close keybinding file [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+	elementPtr = xmlFileSave->NewElement (newElementName.c_str ());
+	elementPtr->SetText (newElementValue);
+	rootNode->InsertEndChild (elementPtr);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //
-// Read in the keyboard binding file - currently using physfs library - assuming its been started
-void paraGui::load()
+// Write the keyboard layout to disk - changed to XML format instead of binary
+void paraGui::saveKeymap()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	PHYSFS_file   *fileHandle;
-	PHYSFS_sint64 returnCode;
+	//
+	// Create new XML file to use
+	xmlFileSave = new tinyxml2::XMLDocument;
+	//
+	// Create pointer to the root node
+	rootNode    = xmlFileSave->NewElement ("KeyBinding");
+	//
+	// Attach root pointer to the file
+	xmlFileSave->InsertFirstChild (rootNode);
 
-	if (!PHYSFS_isInit ())
+	addData ("KEY_LEFT", keyBinding[KEY_LEFT].keyValue);
+	addData ("KEY_RIGHT", keyBinding[KEY_RIGHT].keyValue);
+	addData ("KEY_DOWN", keyBinding[KEY_DOWN].keyValue);
+	addData ("KEY_UP", keyBinding[KEY_UP].keyValue);
+	addData ("KEY_ACTION", keyBinding[KEY_ACTION].keyValue);
+	addData ("KEY_PAUSE", keyBinding[KEY_PAUSE].keyValue);
+	addData ("KEY_ESCAPE", keyBinding[KEY_ESCAPE].keyValue);
+	addData ("KEY_CONSOLE", keyBinding[KEY_CONSOLE].keyValue);
+	addData ("KEY_SCREENSHOT", keyBinding[KEY_SCREENSHOT].keyValue);
+
+	tinyxml2::XMLError eResult = xmlFileSave->SaveFile (fileName.c_str ());
+	if (eResult != tinyxml2::XML_SUCCESS)
 	{
-		funcOutput (-1, int_getString ("PHYSFS has not been started."));
+		funcOutput (-1, int_getString ("Failed to save XML keybinding file. Code [ %i ]", eResult));
 		return;
 	}
+	delete xmlFileSave;
+}
 
-	fileHandle = PHYSFS_openRead (fileName.c_str ());
-	if (nullptr == fileHandle)
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Get data from keybinding XML file
+bool paraGui::getKeybindingValue(const std::string& xmlKeyName, int keyBindingIndex)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	tinyxml2::XMLError eResult;
+	int tempValue;
+
+	elementPtr = rootNode->FirstChildElement (xmlKeyName.c_str());
+	if (nullptr == elementPtr)
 	{
-		funcOutput (-1, int_getString ("Unable to open keybinding file [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+		funcOutput(-1, int_getString("Unable to find XML key value,"));
+		return false;
+	}
+
+	eResult = elementPtr->QueryIntText(&tempValue);
+	if (eResult != tinyxml2::XML_SUCCESS)
+	{
+		funcOutput(-1, int_getString("Unable to convert keybinding value."));
+		return false;
+	}
+
+	keyBinding[keyBindingIndex].keyValue = static_cast<SDL_Scancode>(tempValue);
+
+	return true;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Read in the keyboard binding file
+void paraGui::loadKeymap()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	xmlFileLoad = new tinyxml2::XMLDocument;
+
+	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile (fileName.c_str ());
+	if (eResult != tinyxml2::XML_SUCCESS)
+	{
+		funcOutput (-1, int_getString ("Failed to open keybinding file. Code [ %i ]", eResult));
 		setDefaultKeybindings ();
 		setKeyDescription ();
+		saveKeymap ();
 		return;
 	}
 
-	for (auto keyIndex = 0; keyIndex != KEY_NUMBER_ACTIONS; keyIndex++)
+	rootNode = xmlFileLoad->FirstChild ();
+	if (nullptr == rootNode)
 	{
-		returnCode = PHYSFS_readBytes (fileHandle, &keyBinding[keyIndex].keyValue, sizeof (keyBinding[keyIndex].keyValue));
-		if (returnCode < 0)
-		{
-			funcOutput (-1, int_getString ("Unable to read keybinding file [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
-			return;
-		}
+		funcOutput (-1, int_getString ("Unable to find root node in keybinding file."));
+		return;
+	}
+	if (!getKeybindingValue ("KEY_LEFT", KEY_LEFT))
+	{
+		funcOutput (-1, int_getString ("Failed to get keyBinding value [ %i ].", KEY_LEFT));
+		return;
 	}
 
-	setKeyDescription ();   // Get text for current language after loading the key values
+	if (!getKeybindingValue ("KEY_RIGHT", KEY_RIGHT))
+	{
+		funcOutput (-1, int_getString ("Failed to get keyBinding value [ %i ].", KEY_LEFT));
+		return;
+	}
+	if (!getKeybindingValue ("KEY_DOWN", KEY_DOWN))
+	{
+		funcOutput (-1, int_getString ("Failed to get keyBinding value [ %i ].", KEY_LEFT));
+		return;
+	}
+	if (!getKeybindingValue ("KEY_UP", KEY_UP))
+	{
+		funcOutput (-1, int_getString ("Failed to get keyBinding value [ %i ].", KEY_LEFT));
+		return;
+	}
+	if (!getKeybindingValue ("KEY_ACTION", KEY_ACTION))
+	{
+		funcOutput (-1, int_getString ("Failed to get keyBinding value [ %i ].", KEY_LEFT));
+		return;
+	}
+	if (!getKeybindingValue ("KEY_PAUSE", KEY_PAUSE))
+	{
+		funcOutput (-1, int_getString ("Failed to get keyBinding value [ %i ].", KEY_LEFT));
+		return;
+	}
+	if (!getKeybindingValue ("KEY_ESCAPE", KEY_ESCAPE))
+	{
+		funcOutput (-1, int_getString ("Failed to get keyBinding value [ %i ].", KEY_LEFT));
+		return;
+	}
+	if (!getKeybindingValue ("KEY_CONSOLE", KEY_CONSOLE))
+	{
+		funcOutput (-1, int_getString ("Failed to get keyBinding value [ %i ].", KEY_LEFT));
+		return;
+	}
+	if (!getKeybindingValue ("KEY_SCREENSHOT", KEY_SCREENSHOT))
+	{
+		funcOutput (-1, int_getString ("Failed to get keyBinding value [ %i ].", KEY_LEFT));
+		return;
+	}
 
-	if (PHYSFS_close (fileHandle) == 0)
-		funcOutput (-1, int_getString ("Unable to close keybinding file [ %s ] - [ %s ]", fileName.c_str (), PHYSFS_getErrorByCode (PHYSFS_getLastErrorCode ())));
+	delete xmlFileLoad;
+
+	setKeyDescription ();   // Get text for current language after loading the key values
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -3586,31 +3661,15 @@ void paraGui::setState(int whichKey, bool newState, int newActionSource)
 void paraGui::setKeyDescription()
 //----------------------------------------------------------------------------------------------------------------------
 {
-
-	return;
-
-#ifdef WIN_32
-	return;
-	keyBinding[KEY_LEFT].text       = funcGetString ((string1)"gameLeft");
-	keyBinding[KEY_RIGHT].text      = funcGetString ((string1)"gameRight");
-	keyBinding[KEY_DOWN].text       = funcGetString ((string1)"gameDown");
-	keyBinding[KEY_UP].text         = funcGetString ((string1)"gameUp");
-	keyBinding[KEY_PAUSE].text      = funcGetString ((string1)"gamePause");
-	keyBinding[KEY_ACTION].text     = funcGetString ((string1)"gameAction");
-	keyBinding[KEY_ESCAPE].text     = funcGetString ((string1)"gameEscape");
-	keyBinding[KEY_CONSOLE].text    = funcGetString ((string1)"consoleAction");
-	keyBinding[KEY_SCREENSHOT].text = funcGetString ((string1)"gameScreenShot");
-#else
-	keyBinding[KEY_LEFT].text       = funcGetString ("gameLeft");
-	keyBinding[KEY_RIGHT].text      = funcGetString ("gameRight");
-	keyBinding[KEY_DOWN].text       = funcGetString ("gameDown");
-	keyBinding[KEY_UP].text         = funcGetString ("gameUp");
-	keyBinding[KEY_PAUSE].text      = funcGetString ("gamePause");
-	keyBinding[KEY_ACTION].text     = funcGetString ("gameAction");
-	keyBinding[KEY_ESCAPE].text     = funcGetString ("gameEscape");
-	keyBinding[KEY_CONSOLE].text    = funcGetString ("consoleAction");
-	keyBinding[KEY_SCREENSHOT].text = funcGetString ("gameScreenShot");
-#endif
+	keyBinding[KEY_LEFT].text       = gui_getString ("gameLeft");
+	keyBinding[KEY_RIGHT].text      = gui_getString ("gameRight");
+	keyBinding[KEY_DOWN].text       = gui_getString ("gameDown");
+	keyBinding[KEY_UP].text         = gui_getString ("gameUp");
+	keyBinding[KEY_PAUSE].text      = gui_getString ("gamePause");
+	keyBinding[KEY_ACTION].text     = gui_getString ("gameAction");
+	keyBinding[KEY_ESCAPE].text     = gui_getString ("gameEscape");
+	keyBinding[KEY_CONSOLE].text    = gui_getString ("consoleAction");
+	keyBinding[KEY_SCREENSHOT].text = gui_getString ("gameScreenShot");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -3869,7 +3928,7 @@ void paraGui::setTickedStatus(const std::string &objectID, int whichGroup, bool 
 	int objectIndex = 0;
 	//
 	// Find the index for this object
-	objectIndex = getIndex (GUI_OBJECT_CHECKBOX, objectID);
+	objectIndex                        = getIndex (GUI_OBJECT_CHECKBOX, objectID);
 	if (-1 == objectIndex)
 	{
 		funcOutput (-1, int_getString ("ERROR: Couldn't find GUI object index [ %s ]", objectID.c_str ()));

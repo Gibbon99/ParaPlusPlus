@@ -3,7 +3,9 @@
 #include <string>
 #include <vector>
 #include <wrapper.h>
+#include <functional>
 #include "../../data/scripts/enum.h"
+#include "tinyxml2.h"
 
 #define DEBUG_GUI_SETUP 1
 
@@ -11,7 +13,9 @@ typedef void (*funcPtrIntStr)(int, std::string);
 
 typedef std::string &string1;
 
-typedef std::string (*funcStrIn)(std::string);     // Function to provide the key descriptions
+typedef std::string (funcStrIn)(std::string);     // Function to provide the key descriptions
+
+typedef std::function<std::string(std::string)> fp;
 
 struct __BOUNDING_BOX
 {
@@ -173,7 +177,7 @@ public:
 
 	void ReleaseRef();
 
-	void init(funcPtrIntStr outputFunction, funcStrIn getStringFunc, int newRenderWidth, int newRenderHeight, int newRenderWidthGame, int newRenderHeightGame, std::string newFileName);
+	void init(funcPtrIntStr outputFunction, int newRenderWidth, int newRenderHeight, int newRenderWidthGame, int newRenderHeightGame, std::string newFileName);
 
 	std::string int_getString(std::string format, ...);
 
@@ -343,9 +347,9 @@ public:
 
 	void setKeyDescription();
 
-	void load();
+	void loadKeymap();
 
-	void save();
+	void saveKeymap();
 
 	void update();
 
@@ -365,6 +369,12 @@ public:
 
 	const Uint8 *keyboardState;
 
+	// Add data to the XML file - INT version
+	void addData(const std::string &newElementName, int newElementValue);
+
+	// Get data from keybinding XML file
+	bool getKeybindingValue(const std::string& xmlKeyName, int keyBindingIndex);
+
 private:
 
 	void setColorByIndex(int objectType, int objectIndex, int whichColor, int red, int green, int blue, int alpha);
@@ -374,7 +384,6 @@ private:
 	int                          actionSource;
 	__KeyBindings                keyBinding[KEY_NUMBER_ACTIONS];
 	std::string                  fileName;
-	funcStrIn                    funcGetString;
 	bool                         repeatOff        = true;
 	int                          currentScreen    = 0;
 	int                          currentDialogbox = NO_DIALOG_BOX;
@@ -392,4 +401,8 @@ private:
 	std::vector<__GUI_SCROLLBOX> guiScrollBoxes;
 	std::vector<__GUI_CHECKBOX>  guiCheckBoxes;
 	funcPtrIntStr                funcOutput;
+	tinyxml2::XMLDocument        *xmlFileSave;
+	tinyxml2::XMLDocument        *xmlFileLoad;
+	tinyxml2::XMLNode            *rootNode;
+	tinyxml2::XMLElement         *elementPtr;
 };

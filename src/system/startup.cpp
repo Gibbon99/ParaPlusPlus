@@ -166,8 +166,6 @@ int sys_startInit([[maybe_unused]]void *ptr)
 	logFile.write (sys_getString ("[ %s ] Run setupPhysicsEngine.", __func__));
 #endif
 
-//	sys_setupPhysicsEngine ();
-
 	sys_createWorldPhysics ();
 
 	gam_initAudio ();
@@ -186,9 +184,10 @@ int sys_startInit([[maybe_unused]]void *ptr)
 
 //	SDL_Delay (100);
 
-	gui.init (con_addEvent, reinterpret_cast<funcStrIn>(gui_getString), windowWidth, windowHeight, gameWinWidth, gameWinHeight, "keybinding.para");
+	gui.init (con_addEvent, windowWidth, windowHeight, gameWinWidth, gameWinHeight, "keybinding.para");
 	gui_loadSideViewData ("sideview.dat");
 	paraScriptInstance.run ("as_createGUI", "");
+	gui.loadKeymap();
 
 	io_initJoystick ();
 

@@ -254,7 +254,7 @@ void sys_scriptInitFunctions()
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "string getKeyName (int keyIndex)", asMETHOD(paraGui, getKeyName), asCALL_THISCALL);
 	assert(r >= 0);
 
-	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void save ()", asMETHOD(paraGui, save), asCALL_THISCALL);
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void saveKeymap ()", asMETHOD(paraGui, saveKeymap), asCALL_THISCALL);
 	assert(r >= 0);
 
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraGui", "void setLabel (int objectType, string objectID, int gapSize, int newLabelPos, string newLabel)", asMETHOD(paraGui, setLabel), asCALL_THISCALL);

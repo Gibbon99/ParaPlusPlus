@@ -166,7 +166,7 @@ PHYSFS_sint64 paraFileSystem::getFileSize(std::string fileName)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Load a file into a pointer
-std::string paraFileSystem::getString(std::string fileName)
+std::string paraFileSystem::getString(const std::string& fileName)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	PHYSFS_file   *compFile = nullptr;

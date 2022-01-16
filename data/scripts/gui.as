@@ -195,7 +195,7 @@ void as_handleControlsMenu()
 
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "controlsMenu.applyButton"))
     {
-        as_paraGui.save();  // Save keymappings to file
+        as_paraGui.saveKeymap();  // Save keymappings to file
         gam_setHudText("hudOptions");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
         as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "optionsMenu.controlsButton");

@@ -299,10 +299,17 @@ bool gam_loadXMLShipDesk(const std::string &fileName)
 	drawOffset.y = static_cast<float>(gameWinHeight) / 2;    // Padding to make tilePosY always positive
 
 	xmlFileLoad = new tinyxml2::XMLDocument;
+	//
+	// Load file from packfile into memory for reading by tinyxml
+	std::string memFile = fileSystem.getString(fileName);
+	if (memFile.empty())
+	{
+		logFile.write(sys_getString("Unable to load file [ %s ] into memory.", fileName.c_str()));
+		return false;
+	}
+	auto memFilePtr = fmemopen((void *)memFile.data(), memFile.size(), "r");
 
-	auto tempFileName = "data/" + fileName;
-
-	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile (tempFileName.c_str ());
+	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile (memFilePtr);
 	gam_checkXMLReturnCode (eResult);
 	rootNode = xmlFileLoad->FirstChild ();
 	if (nullptr == rootNode)

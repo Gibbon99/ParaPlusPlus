@@ -18,13 +18,12 @@
 0 - Console [ Script: Script Engine version - [ 2.35.0 ] ].
 0 - Console [ Script: Options - [  AS_64BIT_PTR AS_LINUX AS_X64_GCC  ] ].
 0 - Console [ Scripting started. ].
-0 - Console [ Script: Registered function - [ void sys_printConInt (string &in, int param) ] ].
 0 - Script [ consoleFunctions.as ]
 0 - Script [ dialogBox.as ]
 0 - Script [ english.as ]
+0 - Console [ Script: Registered function - [ void sys_printConInt (string &in, int param) ] ].
 0 - Script [ enum.h ]
 0 - Script [ german.as ]
-0 - Console [ Script: Registered function - [ void sys_setNewMode (int newMode, bool doFade) ] ].
 0 - Script [ gui.as ]
 0 - Script [ highScore.as ]
 0 - Script [ italian.as ]
@@ -33,6 +32,7 @@
 0 - Script [ terminal.as ]
 0 - Script [ transfer.as ]
 0 - Script [ tutorial.as ]
+0 - Console [ Script: Registered function - [ void sys_setNewMode (int newMode, bool doFade) ] ].
 0 - Console [ Script: Registered function - [ void sys_addEvent (int eventType, int eventAction, int eventDelay, string &in) ] ].
 0 - Console [ Script: Registered function - [ void gam_addAudioEvent (int action, bool loop, int distance, int pan, string &in) ] ].
 0 - Console [ Script: Registered function - [ void gui_addKeyAndText (string &in, string &in) ] ].
@@ -84,1841 +84,613 @@
 0 - Console [ Script: Registered variable - [ float bulletDensity ] ].
 0 - Console [ Script: Registered variable - [ float bulletFriction ] ].
 0 - Console [ Script: Registered variable - [ float bulletAnimationSpeed ] ].
-5357 - Console [ Script: Registered variable - [ float numDisrupterFrames ] ].
-5357 - Console [ Script: Registered variable - [ float disrupterFadeAmount ] ].
-5357 - Console [ Script: Registered variable - [ float bulletMoveSpeed ] ].
-5357 - Console [ Script: Registered variable - [ int visibleFadeValue ] ].
-5357 - Console [ Script: Registered variable - [ int redAlertLevel ] ].
-5357 - Console [ Script: Registered variable - [ int yellowAlertLevel ] ].
-5357 - Console [ Script: Registered variable - [ float updateScoreDelay ] ].
-5357 - Console [ Script: Registered variable - [ float distanceForDoorSoundMax ] ].
-5357 - Console [ Script: Registered variable - [ int numberTransferRows ] ].
-5357 - Console [ Script: Registered variable - [ int transferBitmapHeight ] ].
-5357 - Console [ Script: Registered variable - [ int transferBitmapWidth ] ].
-5357 - Console [ Script: Registered variable - [ float transferRowHeight ] ].
-5357 - Console [ Script: Registered variable - [ float transferRowStartY ] ].
-5357 - Console [ Script: Registered variable - [ float transferRowCellWidth ] ].
-5357 - Console [ Script: Registered variable - [ float transferBackgroundStartX ] ].
-5357 - Console [ Script: Registered variable - [ float transferBackgroundStartY ] ].
-5357 - Console [ Script: Registered variable - [ float transferBackgroundWidth ] ].
-5357 - Console [ Script: Registered variable - [ float transferBackgroundHeight ] ].
-5357 - Console [ Script: Registered variable - [ int transferBorderThickness ] ].
-5357 - Console [ Script: Registered variable - [ float transferStatusTabWidth ] ].
-5357 - Console [ Script: Registered variable - [ float transferStatusTabHeight ] ].
-5357 - Console [ Script: Registered variable - [ float transferSidebarGap ] ].
-5357 - Console [ Script: Registered variable - [ float transferSidebarWidth ] ].
-5357 - Console [ Script: Registered variable - [ float transferLineThickness ] ].
-5357 - Console [ Script: Registered variable - [ int chooseSideTimeOut ] ].
-5357 - Console [ Script: Registered variable - [ float chooseSideDelayTime ] ].
-5357 - Console [ Script: Registered variable - [ float chooseRowDelayTime ] ].
-5357 - Console [ Script: Registered variable - [ float activeRowCounter ] ].
-5357 - Console [ Script: Registered variable - [ int transferTimeOut ] ].
-5357 - Console [ Script: Registered variable - [ float transferDelayTime ] ].
-5357 - Console [ Script: Registered variable - [ int powerdownLevelScore ] ].
-5357 - Console [ Script: Registered variable - [ float healingDelayCounter ] ].
-5357 - Console [ Script: Registered variable - [ int healingAmountPerTick ] ].
-5357 - Console [ Script: Registered variable - [ float explosionAnimationSpeed ] ].
-5357 - Console [ Script: Registered variable - [ int explosionDamage ] ].
-5357 - Console [ Script: Registered variable - [ int alertLevelVolume ] ].
-5357 - Console [ Script: Registered variable - [ float staticAnimationDelay ] ].
-5357 - Console [ Script: Registered variable - [ int lostScreenShowTime ] ].
-5357 - Console [ Script: Registered variable - [ float influenceTimelimit ] ].
-5357 - Console [ Script: Registered variable - [ float influenceTimelimtDelay ] ].
-5357 - Console [ Script: Registered variable - [ float influenceTimeLeftWarning ] ].
-5357 - Console [ Script: Registered variable - [ int transferResultDelay ] ].
-5357 - Console [ Script: Registered variable - [ int maxNumBumps ] ].
-5357 - Console [ Script: Registered variable - [ float bounceCounterDelay ] ].
-5357 - Console [ Script: Registered variable - [ int databaseDroidRenderYOffset ] ].
-5357 - Console [ Section has been added [ consoleFunctions.as ] ].
-5357 - Console [ Section has been added [ dialogBox.as ] ].
-5357 - Console [ Section has been added [ english.as ] ].
-5357 - Console [ Section has been added [ enum.h ] ].
-5357 - Console [ Section has been added [ german.as ] ].
-5357 - Console [ Section has been added [ gui.as ] ].
-5357 - Console [ Section has been added [ highScore.as ] ].
-5357 - Console [ Section has been added [ italian.as ] ].
-5357 - Console [ Section has been added [ language.as ] ].
-5357 - Console [ Section has been added [ resources.as ] ].
-5357 - Console [ Section has been added [ terminal.as ] ].
-5357 - Console [ Section has been added [ transfer.as ] ].
-5357 - Console [ Section has been added [ tutorial.as ] ].
-5357 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5713 - [ sys_startInit ] Run setupPhysicsEngine.
-5713 - Looking for function [ as_loadTextureResources ] to [ as_useNewRenderer ] to execute
-5713 - Looking for function [ as_loadTextureResources ] to [ as_getAudioSpecs ] to execute
-5713 - Looking for function [ as_loadTextureResources ] to [ as_loadAudioResources ] to execute
-5713 - Looking for function [ as_loadTextureResources ] to [ as_loadTextureResources ] to execute
-5713 - Looking for function [ as_loadAllDecks ] to [ as_useNewRenderer ] to execute
-5713 - Looking for function [ as_loadAllDecks ] to [ as_getAudioSpecs ] to execute
-5713 - Looking for function [ as_loadAllDecks ] to [ as_loadAudioResources ] to execute
-5713 - Looking for function [ as_loadAllDecks ] to [ as_loadTextureResources ] to execute
-5713 - Looking for function [ as_loadAllDecks ] to [ as_loadAllDecks ] to execute
-5713 - Looking for function [ as_createGUI ] to [ as_useNewRenderer ] to execute
-5713 - Looking for function [ as_createGUI ] to [ as_getAudioSpecs ] to execute
-5713 - Looking for function [ as_createGUI ] to [ as_loadAudioResources ] to execute
-5713 - Looking for function [ as_createGUI ] to [ as_loadTextureResources ] to execute
-5713 - Looking for function [ as_createGUI ] to [ as_loadAllDecks ] to execute
-5713 - Looking for function [ as_createGUI ] to [ as_getVolume ] to execute
-5713 - Looking for function [ as_createGUI ] to [ as_setVolume ] to execute
-5713 - Looking for function [ as_createGUI ] to [ as_createGUI ] to execute
-5713 - [ evt_setThreadReady ] Thread [ audioThread ] set to ready = true
-5713 - Console [ Finished buildModule. ].
-5713 - Console [ Func ID for [ void as_useNewRenderer(int &in newRenderer) ] - [ 136320 ] ].
-5713 - Console [ Func ID for [ void as_getAudioSpecs() ] - [ 135168 ] ].
-5713 - Console [ Func ID for [ void as_loadAudioResources() ] - [ 147456 ] ].
-5713 - Console [ Func ID for [ void as_loadTextureResources() ] - [ 147840 ] ].
-5713 - Console [ Func ID for [ void as_loadAllDecks() ] - [ 148224 ] ].
-5713 - Console [ Func ID for [ int as_getVolume() ] - [ 135936 ] ].
-5713 - Console [ Func ID for [ void as_setVolume(int newVolume) ] - [ 135552 ] ].
-5713 - Console [ Func ID for [ void as_createGUI() ] - [ 144768 ] ].
-5713 - Console [ Func ID for [ void as_handleMainMenu() ] - [ 138624 ] ].
-5713 - Console [ Func ID for [ void as_handleOptionsMenu() ] - [ 139008 ] ].
-5713 - Console [ Func ID for [ void as_handleVideoOptions() ] - [ 140928 ] ].
-5713 - Console [ Func ID for [ void as_handleAudioMenu() ] - [ 139392 ] ].
-5713 - 0: pulseaudio
-5713 - 1: alsa
-5713 - 2: sndio
-5713 - 3: dsp
-5713 - 4: disk
-5816 - 5: dummy
-5816 - Using audio driver: pulseaudio
+0 - Console [ Script: Registered variable - [ float numDisrupterFrames ] ].
+0 - Console [ Script: Registered variable - [ float disrupterFadeAmount ] ].
+0 - Console [ Script: Registered variable - [ float bulletMoveSpeed ] ].
+0 - Console [ Script: Registered variable - [ int visibleFadeValue ] ].
+0 - Console [ Script: Registered variable - [ int redAlertLevel ] ].
+0 - Console [ Script: Registered variable - [ int yellowAlertLevel ] ].
+0 - Console [ Script: Registered variable - [ float updateScoreDelay ] ].
+0 - Console [ Script: Registered variable - [ float distanceForDoorSoundMax ] ].
+0 - Console [ Script: Registered variable - [ int numberTransferRows ] ].
+0 - Console [ Script: Registered variable - [ int transferBitmapHeight ] ].
+0 - Console [ Script: Registered variable - [ int transferBitmapWidth ] ].
+0 - Console [ Script: Registered variable - [ float transferRowHeight ] ].
+0 - Console [ Script: Registered variable - [ float transferRowStartY ] ].
+0 - Console [ Script: Registered variable - [ float transferRowCellWidth ] ].
+0 - Console [ Script: Registered variable - [ float transferBackgroundStartX ] ].
+0 - Console [ Script: Registered variable - [ float transferBackgroundStartY ] ].
+0 - Console [ Script: Registered variable - [ float transferBackgroundWidth ] ].
+0 - Console [ Script: Registered variable - [ float transferBackgroundHeight ] ].
+0 - Console [ Script: Registered variable - [ int transferBorderThickness ] ].
+0 - Console [ Script: Registered variable - [ float transferStatusTabWidth ] ].
+4565 - Console [ Script: Registered variable - [ float transferStatusTabHeight ] ].
+4565 - Console [ Script: Registered variable - [ float transferSidebarGap ] ].
+4565 - Console [ Script: Registered variable - [ float transferSidebarWidth ] ].
+4565 - Console [ Script: Registered variable - [ float transferLineThickness ] ].
+4565 - Console [ Script: Registered variable - [ int chooseSideTimeOut ] ].
+4565 - Console [ Script: Registered variable - [ float chooseSideDelayTime ] ].
+4565 - Console [ Script: Registered variable - [ float chooseRowDelayTime ] ].
+4565 - Console [ Script: Registered variable - [ float activeRowCounter ] ].
+4565 - Console [ Script: Registered variable - [ int transferTimeOut ] ].
+4565 - Console [ Script: Registered variable - [ float transferDelayTime ] ].
+4565 - Console [ Script: Registered variable - [ int powerdownLevelScore ] ].
+4565 - Console [ Script: Registered variable - [ float healingDelayCounter ] ].
+4565 - Console [ Script: Registered variable - [ int healingAmountPerTick ] ].
+4565 - Console [ Script: Registered variable - [ float explosionAnimationSpeed ] ].
+4565 - Console [ Script: Registered variable - [ int explosionDamage ] ].
+4565 - Console [ Script: Registered variable - [ int alertLevelVolume ] ].
+4565 - Console [ Script: Registered variable - [ float staticAnimationDelay ] ].
+4565 - Console [ Script: Registered variable - [ int lostScreenShowTime ] ].
+4565 - Console [ Script: Registered variable - [ float influenceTimelimit ] ].
+4565 - Console [ Script: Registered variable - [ float influenceTimelimtDelay ] ].
+4565 - Console [ Script: Registered variable - [ float influenceTimeLeftWarning ] ].
+4565 - Console [ Script: Registered variable - [ int transferResultDelay ] ].
+4565 - Console [ Script: Registered variable - [ int maxNumBumps ] ].
+4565 - Console [ Script: Registered variable - [ float bounceCounterDelay ] ].
+4565 - Console [ Script: Registered variable - [ int databaseDroidRenderYOffset ] ].
+4565 - Console [ Section has been added [ consoleFunctions.as ] ].
+4565 - Console [ Section has been added [ dialogBox.as ] ].
+4565 - Console [ Section has been added [ english.as ] ].
+4565 - Console [ Section has been added [ enum.h ] ].
+4565 - Console [ Section has been added [ german.as ] ].
+4565 - Console [ Section has been added [ gui.as ] ].
+4565 - Console [ Section has been added [ highScore.as ] ].
+4565 - Console [ Section has been added [ italian.as ] ].
+4565 - Console [ Section has been added [ language.as ] ].
+4565 - Console [ Section has been added [ resources.as ] ].
+4565 - Console [ Section has been added [ terminal.as ] ].
+4565 - Console [ Section has been added [ transfer.as ] ].
+4565 - Console [ Section has been added [ tutorial.as ] ].
+4565 - Console [ About to run BuildModule. ].
+4942 - [ sys_startInit ] Run setupPhysicsEngine.
+4942 - Looking for function [ as_loadTextureResources ] to [ as_useNewRenderer ] to execute
+4942 - Looking for function [ as_loadTextureResources ] to [ as_getAudioSpecs ] to execute
+4942 - Looking for function [ as_loadTextureResources ] to [ as_loadAudioResources ] to execute
+4942 - Looking for function [ as_loadTextureResources ] to [ as_loadTextureResources ] to execute
+4942 - Looking for function [ as_loadAllDecks ] to [ as_useNewRenderer ] to execute
+4942 - Looking for function [ as_loadAllDecks ] to [ as_getAudioSpecs ] to execute
+4942 - Looking for function [ as_loadAllDecks ] to [ as_loadAudioResources ] to execute
+4942 - Looking for function [ as_loadAllDecks ] to [ as_loadTextureResources ] to execute
+4942 - Looking for function [ as_loadAllDecks ] to [ as_loadAllDecks ] to execute
+4942 - Looking for function [ as_createGUI ] to [ as_useNewRenderer ] to execute
+4942 - Looking for function [ as_createGUI ] to [ as_getAudioSpecs ] to execute
+4942 - Looking for function [ as_createGUI ] to [ as_loadAudioResources ] to execute
+4942 - Looking for function [ as_createGUI ] to [ as_loadTextureResources ] to execute
+4942 - Looking for function [ as_createGUI ] to [ as_loadAllDecks ] to execute
+4942 - Looking for function [ as_createGUI ] to [ as_getVolume ] to execute
+4942 - Looking for function [ as_createGUI ] to [ as_setVolume ] to execute
+4942 - Looking for function [ as_createGUI ] to [ as_createGUI ] to execute
+4942 - [ evt_setThreadReady ] Thread [ audioThread ] set to ready = true
+4942 - Console [ Finished buildModule. ].
+4942 - Console [ Func ID for [ void as_useNewRenderer(int &in newRenderer) ] - [ 136320 ] ].
+4942 - Console [ Func ID for [ void as_getAudioSpecs() ] - [ 135168 ] ].
+4942 - Console [ Func ID for [ void as_loadAudioResources() ] - [ 147456 ] ].
+4942 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
+4942 - Console [ Func ID for [ void as_loadTextureResources() ] - [ 147840 ] ].
+4942 - Console [ Func ID for [ void as_loadAllDecks() ] - [ 148224 ] ].
+4942 - Console [ Func ID for [ int as_getVolume() ] - [ 135936 ] ].
+4942 - Console [ Func ID for [ void as_setVolume(int newVolume) ] - [ 135552 ] ].
+4942 - Console [ Func ID for [ void as_createGUI() ] - [ 144768 ] ].
+4942 - Console [ Func ID for [ void as_handleMainMenu() ] - [ 138624 ] ].
+4942 - Console [ Func ID for [ void as_handleOptionsMenu() ] - [ 139008 ] ].
+4942 - 0: pulseaudio
+4942 - 1: alsa
+4942 - 2: sndio
+4942 - 3: dsp
+4942 - 4: disk
+4942 - 5: dummy
+4942 - Using audio driver: pulseaudio
 
-5816 - Console [ Func ID for [ void as_handleControlsMenu() ] - [ 140160 ] ].
-5816 - Console [ Func ID for [ void as_handleGameMenu() ] - [ 140544 ] ].
-5816 - Console [ Func ID for [ void as_handleDeckviewScreen() ] - [ 148608 ] ].
-5816 - Console [ Func ID for [ void as_handleShipviewScreen() ] - [ 148992 ] ].
-5816 - Console [ Func ID for [ void as_handleTerminalMenu() ] - [ 149376 ] ].
-5816 - Console [ Func ID for [ void as_handleDatabaseMenu() ] - [ 149760 ] ].
-5816 - [ load ] Loaded file [ future_blue.bmp ]
-5816 - Console [ Func ID for [ void as_handleTransferScreens() ] - [ 151680 ] ].
-5816 - Console [ Func ID for [ void as_handleTutorialElements () ] - [ 153216 ] ].
-5816 - Console [ Func ID for [ void as_handleDialogBoxes () ] - [ 137088 ] ].
-5816 - Console [ Func ID for [ void as_handleHighscoreDisplay() ] - [ 145536 ] ].
-5816 - [ load ] Loaded file [ splash.bmp ]
-5816 - Console [ Func ID for [ void as_refreshHighscoreLabels() ] - [ 145152 ] ].
-5816 - Console [ Func ID for [ void as_refreshControlLabels() ] - [ 139776 ] ].
-5816 - Console [ Created new object [ introScreen.scrollbox ] ].
-5816 - Console [ Added Object [ introScreen.scrollbox ] to Screen [ introScreen ] ].
-5816 - Console [ Created new object [ wonScreen ] ].
-5816 - Console [ Created new object [ wonScreen.scrollbox ] ].
-5816 - Console [ Added Object [ wonScreen.scrollbox ] to Screen [ wonScreen ] ].
-5816 - Console [ Created new object [ quitGameDialogbox.text ] ].
-5816 - Console [ Added Object [ quitGameDialogbox.text ] to Dialogbox [ quitGameDialogbox ] ].
-5816 - [ load ] Loaded file [ planetAlpha.bmp ]
-5816 - Console [ Added Object [ quitGameDialogbox.confirmButton ] to Dialogbox [ quitGameDialogbox ] ].
-5816 - [ load ] Loaded file [ hudNew.bmp ]
-5816 - Console [ Created new object [ quitGameDialogbox.denyButton ] ].
-5816 - [ load ] Loaded file [ screen.bmp ]
-5816 - Console [ Added Object [ quitGameDialogbox.denyButton ] to Dialogbox [ quitGameDialogbox ] ].
-5816 - [ load ] Loaded file [ lightmap.bmp ]
-5816 - Console [ Created new object [ guiTransferOne ] ].
-5816 - [ load ] Loaded file [ explosion.bmp ]
-5816 - Console [ Added Object [ guiTransferOne.heading ] to Screen [ guiTransferOne ] ].
-5816 - Console [ Created new object [ guiTransferOne.textbox ] ].
-5816 - Console [ Added Object [ guiTransferOne.textbox ] to Screen [ guiTransferOne ] ].
-5816 - Console [ Created new object [ guiTransferOne.nextButton ] ].
-5816 - Console [ Added Object [ guiTransferOne.nextButton ] to Screen [ guiTransferOne ] ].
-5816 - Console [ Created new object [ guiTransferTwo ] ].
-5816 - Console [ Created new object [ guiTransferTwo.heading ] ].
-5816 - Console [ Added Object [ guiTransferTwo.heading ] to Screen [ guiTransferTwo ] ].
-5816 - Console [ Created new object [ guiTransferTwo.textbox ] ].
-5816 - Console [ Added Object [ guiTransferTwo.textbox ] to Screen [ guiTransferTwo ] ].
-5816 - Console [ Created new object [ guiTransferTwo.nextButton ] ].
-5816 - Console [ Added Object [ guiTransferTwo.nextButton ] to Screen [ guiTransferTwo ] ].
-5816 - Console [ Created new object [ mainMenu ] ].
-5816 - Console [ Created new object [ mainMenu.backGround ] ].
-5816 - Console [ Added Object [ mainMenu.backGround ] to Screen [ mainMenu ] ].
-5816 - Console [ Created new object [ mainMenu.startGameButton ] ].
-5816 - Console [ Added Object [ mainMenu.startGameButton ] to Screen [ mainMenu ] ].
-5816 - Console [ Created new object [ mainMenu.optionsButton ] ].
-5816 - Console [ Added Object [ mainMenu.optionsButton ] to Screen [ mainMenu ] ].
-5816 - Console [ Created new object [ mainMenu.tutorialButton ] ].
-5816 - Console [ Added Object [ mainMenu.tutorialButton ] to Screen [ mainMenu ] ].
-5816 - Console [ Created new object [ mainMenu.briefingButton ] ].
-5816 - Console [ Added Object [ mainMenu.briefingButton ] to Screen [ mainMenu ] ].
-5816 - Console [ Created new object [ mainMenu.quitButton ] ].
-5816 - Console [ Added Object [ mainMenu.quitButton ] to Screen [ mainMenu ] ].
-5816 - Console [ Created new object [ optionsMenu ] ].
-5816 - Console [ Created new object [ optionsMenu.backGround ] ].
-5816 - Console [ Added Object [ optionsMenu.backGround ] to Screen [ optionsMenu ] ].
-5816 - Console [ Created new object [ optionsMenu.videoButton ] ].
-5816 - Console [ Added Object [ optionsMenu.videoButton ] to Screen [ optionsMenu ] ].
-5816 - Console [ Created new object [ optionsMenu.audioButton ] ].
-5816 - Console [ Added Object [ optionsMenu.audioButton ] to Screen [ optionsMenu ] ].
-5816 - Console [ Created new object [ optionsMenu.controlsButton ] ].
-5816 - Console [ Added Object [ optionsMenu.controlsButton ] to Screen [ optionsMenu ] ].
-5816 - Console [ Created new object [ optionsMenu.gameButton ] ].
-5816 - Console [ Added Object [ optionsMenu.gameButton ] to Screen [ optionsMenu ] ].
-5816 - Console [ Created new object [ optionsMenu.backButton ] ].
-5816 - Console [ Added Object [ optionsMenu.backButton ] to Screen [ optionsMenu ] ].
-5816 - Console [ Created new object [ videoOptions ] ].
-5816 - Console [ Added Object [ videoOptions.renderers ] to Screen [ videoOptions ] ].
-5816 - [ load ] Loaded file [ universe.bmp ]
-5816 - Console [ Created new object [ videoOptions.display ] ].
-5816 - Console [ Added Object [ videoOptions.display ] to Screen [ videoOptions ] ].
-5816 - Console [ Created new object [ videoOptions.scalequality ] ].
-5816 - Console [ Added Object [ videoOptions.scalequality ] to Screen [ videoOptions ] ].
-5816 - Console [ Created new object [ videoOptions.usevsync ] ].
-5816 - Console [ Added Object [ videoOptions.usevsync ] to Screen [ videoOptions ] ].
-5816 - Console [ Created new object [ videoOptions.borderlesswindow ] ].
-5816 - Console [ Added Object [ videoOptions.borderlesswindow ] to Screen [ videoOptions ] ].
-5816 - Console [ Created new object [ videoOptions.highdpi ] ].
-5816 - Console [ Added Object [ videoOptions.highdpi ] to Screen [ videoOptions ] ].
-5816 - Console [ Created new object [ videoOptions.screeneffect ] ].
-5816 - Console [ Added Object [ videoOptions.screeneffect ] to Screen [ videoOptions ] ].
-5816 - Console [ Created new object [ videoOptions.applyButton ] ].
-5816 - Console [ Added Object [ videoOptions.applyButton ] to Screen [ videoOptions ] ].
-5816 - Console [ Created new object [ videoOptions.backButton ] ].
-5816 - Console [ Added Object [ videoOptions.backButton ] to Screen [ videoOptions ] ].
-5816 - Console [ Created new object [ audioOptions ] ].
-5816 - Console [ Created new object [ audioOptions.enableSound ] ].
-5816 - Console [ Added Object [ audioOptions.enableSound ] to Screen [ audioOptions ] ].
-5816 - Console [ Created new object [ audioOptions.volume ] ].
-5816 - Console [ Added Object [ audioOptions.volume ] to Screen [ audioOptions ] ].
-5816 - Console [ Created new object [ audioOptions.speakers ] ].
-5816 - Console [ Added Object [ audioOptions.speakers ] to Screen [ audioOptions ] ].
-5816 - Console [ Created new object [ audioOptions.backButton ] ].
-5816 - Console [ Added Object [ audioOptions.backButton ] to Screen [ audioOptions ] ].
-5816 - [ load ] Loaded file [ db_999.bmp ]
-5816 - [ load ] Loaded file [ 001.bmp ]
-5816 - [ load ] Loaded file [ 123.bmp ]
-5816 - [ load ] Loaded file [ 139.bmp ]
-5816 - Console [ Created new object [ controlsMenu ] ].
-5816 - [ load ] Loaded file [ 247.bmp ]
-5816 - [ load ] Loaded file [ 249.bmp ]
-5816 - [ load ] Loaded file [ 296.bmp ]
-5816 - [ load ] Loaded file [ 302.bmp ]
-5816 - [ load ] Loaded file [ 329.bmp ]
-5816 - Console [ Created new object [ controlsOptions.heading ] ].
-5816 - [ load ] Loaded file [ 420.bmp ]
-5816 - [ load ] Loaded file [ 476.bmp ]
-5816 - [ load ] Loaded file [ 493.bmp ]
-5816 - [ load ] Loaded file [ 516.bmp ]
-5816 - [ load ] Loaded file [ 571.bmp ]
-5816 - Console [ Added Object [ controlsOptions.heading ] to Screen [ controlsMenu ] ].
-5816 - [ load ] Loaded file [ 598.bmp ]
-5816 - [ load ] Loaded file [ 614.bmp ]
-5816 - [ load ] Loaded file [ 615.bmp ]
-5816 - [ load ] Loaded file [ 629.bmp ]
-5816 - [ load ] Loaded file [ 711.bmp ]
-5816 - Console [ Created new object [ controlsOptions.left ] ].
-5816 - [ load ] Loaded file [ 742.bmp ]
-5816 - [ load ] Loaded file [ 751.bmp ]
-5816 - [ load ] Loaded file [ 821.bmp ]
-5816 - Console [ Added Object [ controlsOptions.left ] to Screen [ controlsMenu ] ].
-5816 - [ load ] Loaded file [ 834.bmp ]
-5816 - [ load ] Loaded file [ 883.bmp ]
-5816 - [ load ] Loaded file [ 999.bmp ]
-5816 - [ load ] Loaded file [ tut_healing.bmp ]
-5816 - Console [ Created new object [ controlsOptions.right ] ].
-5816 - [ load ] Loaded file [ tut_lift.bmp ]
-5816 - [ load ] Loaded file [ tut_terminal.bmp ]
-5816 - [ load ] Loaded file [ bullet_001.bmp ]
-5816 - [ load ] Loaded file [ bullet_476.bmp ]
-5816 - Console [ Added Object [ controlsOptions.right ] to Screen [ controlsMenu ] ].
-5816 - [ load ] Loaded file [ bullet_821.bmp ]
-5816 - Console [ Created new object [ controlsOptions.up ] ].
-5816 - Console [ Added Object [ controlsOptions.up ] to Screen [ controlsMenu ] ].
-5816 - Console [ Created new object [ controlsOptions.down ] ].
-5816 - Console [ Added Object [ controlsOptions.down ] to Screen [ controlsMenu ] ].
-5816 - Console [ Created new object [ controlsOptions.action ] ].
-5816 - Console [ Added Object [ controlsOptions.action ] to Screen [ controlsMenu ] ].
-5816 - Console [ Created new object [ controlsOptions.leftKeyname ] ].
-5816 - Console [ Added Object [ controlsOptions.leftKeyname ] to Screen [ controlsMenu ] ].
-5816 - Console [ Object name or object label cannot be empty. ].
-5816 - Console [ Created new object [ controlsOptions.rightKeyname ] ].
-5816 - Console [ Added Object [ controlsOptions.rightKeyname ] to Screen [ controlsMenu ] ].
-5816 - Console [ Object name or object label cannot be empty. ].
-5816 - Console [ Created new object [ controlsOptions.upKeyname ] ].
-5816 - Console [ Added Object [ controlsOptions.upKeyname ] to Screen [ controlsMenu ] ].
-5816 - Console [ Object name or object label cannot be empty. ].
-5816 - Console [ Created new object [ controlsOptions.downKeyname ] ].
-5816 - Console [ Added Object [ controlsOptions.downKeyname ] to Screen [ controlsMenu ] ].
-5816 - Console [ Object name or object label cannot be empty. ].
-5816 - Console [ Created new object [ controlsOptions.actionKeyname ] ].
-5816 - Console [ Added Object [ controlsOptions.actionKeyname ] to Screen [ controlsMenu ] ].
-5816 - Console [ Object name or object label cannot be empty. ].
-5816 - Console [ Created new object [ controlsMenu.backButton ] ].
-5816 - Console [ Added Object [ controlsMenu.backButton ] to Screen [ controlsMenu ] ].
-5816 - Console [ Created new object [ controlsMenu.applyButton ] ].
-5816 - Console [ Added Object [ controlsMenu.applyButton ] to Screen [ controlsMenu ] ].
-5816 - Console [ Created new object [ gameMenu ] ].
-5816 - Console [ Created new object [ gameMenu.language ] ].
-5816 - Console [ Added Object [ gameMenu.language ] to Screen [ gameMenu ] ].
-5816 - Console [ Created new object [ gameMenu.tileStyle ] ].
-5816 - Console [ Added Object [ gameMenu.tileStyle ] to Screen [ gameMenu ] ].
-5816 - Console [ Created new object [ gameMenu.tileColor ] ].
-5816 - Console [ Added Object [ gameMenu.tileColor ] to Screen [ gameMenu ] ].
-5816 - Console [ Created new object [ gameMenu.backButton ] ].
-5816 - Console [ Added Object [ gameMenu.backButton ] to Screen [ gameMenu ] ].
-5816 - Console [ Created new object [ databaseScreen ] ].
-5816 - Console [ Created new object [ databaseScreen.scrollbox ] ].
-5816 - Console [ Added Object [ databaseScreen.scrollbox ] to Screen [ databaseScreen ] ].
-5816 - Console [ Created new object [ databaseScreen.previousButton ] ].
-5816 - Console [ Added Object [ databaseScreen.previousButton ] to Screen [ databaseScreen ] ].
-5816 - Console [ Created new object [ databaseScreen.backButton ] ].
-5816 - Console [ Added Object [ databaseScreen.backButton ] to Screen [ databaseScreen ] ].
-5816 - Console [ Created new object [ databaseScreen.nextButton ] ].
-5816 - Console [ Added Object [ databaseScreen.nextButton ] to Screen [ databaseScreen ] ].
-5816 - Console [ Created new object [ terminalMenu ] ].
-5816 - Console [ Created new object [ terminalMenu.backGround ] ].
-5816 - Console [ Added Object [ terminalMenu.backGround ] to Screen [ terminalMenu ] ].
-5816 - Console [ Created new object [ terminalMenu.databaseButton ] ].
-5816 - Console [ Added Object [ terminalMenu.databaseButton ] to Screen [ terminalMenu ] ].
-5816 - Console [ Created new object [ terminalMenu.deckviewButton ] ].
-5816 - Console [ Added Object [ terminalMenu.deckviewButton ] to Screen [ terminalMenu ] ].
-5816 - Console [ Created new object [ terminalMenu.shipviewButton ] ].
-5816 - Console [ Added Object [ terminalMenu.shipviewButton ] to Screen [ terminalMenu ] ].
-5816 - Console [ Created new object [ terminalMenu.logoffButton ] ].
-5816 - Console [ Added Object [ terminalMenu.logoffButton ] to Screen [ terminalMenu ] ].
-5816 - Console [ Created new object [ deckviewScreen ] ].
-5816 - Console [ Created new object [ deckviewScreen.backButton ] ].
-5816 - Console [ Added Object [ deckviewScreen.backButton ] to Screen [ deckviewScreen ] ].
-5816 - Console [ Created new object [ shipviewScreen ] ].
-5816 - Console [ Created new object [ shipviewScreen.backButton ] ].
-5816 - Console [ Added Object [ shipviewScreen.backButton ] to Screen [ shipviewScreen ] ].
-5816 - Console [ Created new object [ scrTutorial ] ].
-5816 - Console [ Created new object [ scrTutorial.textLabelTutMove ] ].
-5816 - Console [ Added Object [ scrTutorial.textLabelTutMove ] to Screen [ scrTutorial ] ].
-5816 - Console [ Created new object [ scrTutorial.tutTextBox ] ].
-5816 - Console [ Added Object [ scrTutorial.tutTextBox ] to Screen [ scrTutorial ] ].
-5816 - Console [ Created new object [ scrTutorial.buttonTutMoveNext ] ].
-5816 - Console [ Added Object [ scrTutorial.buttonTutMoveNext ] to Screen [ scrTutorial ] ].
-5816 - Console [ Created new object [ scrTutorial.buttonTutorialCancel ] ].
-5816 - Console [ Added Object [ scrTutorial.buttonTutorialCancel ] to Screen [ scrTutorial ] ].
-5816 - Console [ Created new object [ scrTutTransfer ] ].
-5816 - Console [ Created new object [ scrTutTransfer.textLabelTutTransMove ] ].
-5816 - Console [ Added Object [ scrTutTransfer.textLabelTutTransMove ] to Screen [ scrTutTransfer ] ].
-5816 - Console [ Created new object [ scrTutTransfer.tutTransTextBox ] ].
-5816 - Console [ Added Object [ scrTutTransfer.tutTransTextBox ] to Screen [ scrTutTransfer ] ].
-5816 - Console [ Created new object [ scrTutTransfer.buttonTutTransNext ] ].
-5816 - Console [ Added Object [ scrTutTransfer.buttonTutTransNext ] to Screen [ scrTutTransfer ] ].
-6062 - Console [ Created new object [ scrTutTransfer.buttonTutTransCancel ] ].
-6062 - Console [ Added Object [ scrTutTransfer.buttonTutTransCancel ] to Screen [ scrTutTransfer ] ].
-6062 - Console [ Created new object [ scrTutTransGame ] ].
-6065 - Console [ Created new object [ scrTutTransGame.textLabelTutTransGame ] ].
-6065 - Console [ Added Object [ scrTutTransGame.textLabelTutTransGame ] to Screen [ scrTutTransGame ] ].
-6065 - Console [ Created new object [ scrTutTransGame.tutTransGameTextBox ] ].
-6065 - Console [ Added Object [ scrTutTransGame.tutTransGameTextBox ] to Screen [ scrTutTransGame ] ].
-6065 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameNext ] ].
-6065 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameNext ] to Screen [ scrTutTransGame ] ].
-6065 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameCancel ] ].
-6065 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameCancel ] to Screen [ scrTutTransGame ] ].
-6065 - Console [ Created new object [ scrTutLifts ] ].
-6065 - Console [ Created new object [ scrTutLifts.textLabelTutLifts ] ].
-6065 - Console [ Added Object [ scrTutLifts.textLabelTutLifts ] to Screen [ scrTutLifts ] ].
-6065 - Console [ Created new object [ scrTutLifts.tutLiftTextBox ] ].
-6065 - Console [ Added Object [ scrTutLifts.tutLiftTextBox ] to Screen [ scrTutLifts ] ].
-6082 - Console [ Created new object [ scrTutLifts.tutImageLift ] ].
-6082 - Console [ Added Object [ scrTutLifts.tutImageLift ] to Screen [ scrTutLifts ] ].
-6082 - Console [ Created new object [ scrTutLifts.buttonTutLiftNext ] ].
-6082 - Console [ Added Object [ scrTutLifts.buttonTutLiftNext ] to Screen [ scrTutLifts ] ].
-6082 - Console [ Created new object [ scrTutLifts.buttonTutLiftCancel ] ].
-6082 - Console [ Added Object [ scrTutLifts.buttonTutLiftCancel ] to Screen [ scrTutLifts ] ].
-6082 - Console [ Created new object [ scrTutTerminals ] ].
-6082 - Console [ Created new object [ scrTutTerminals.textLabelTutTerminals ] ].
-6082 - Console [ Added Object [ scrTutTerminals.textLabelTutTerminals ] to Screen [ scrTutTerminals ] ].
-6082 - Console [ Created new object [ scrTutTerminals.tutTerminalTextBox ] ].
-6082 - Console [ Added Object [ scrTutTerminals.tutTerminalTextBox ] to Screen [ scrTutTerminals ] ].
-6082 - Console [ Created new object [ scrTutTerminals.tutImageTerminal ] ].
-6082 - Console [ Added Object [ scrTutTerminals.tutImageTerminal ] to Screen [ scrTutTerminals ] ].
-6099 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalNext ] ].
-6099 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalNext ] to Screen [ scrTutTerminals ] ].
-6099 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalCancel ] ].
-6099 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalCancel ] to Screen [ scrTutTerminals ] ].
-6099 - Console [ Created new object [ scrTutHealing ] ].
-6099 - Console [ Created new object [ scrTutHealing.textLabelTutHealing ] ].
-6099 - Console [ Added Object [ scrTutHealing.textLabelTutHealing ] to Screen [ scrTutHealing ] ].
-6099 - Console [ Created new object [ scrTutHealing.tutHealingTextBox ] ].
-6099 - Console [ Added Object [ scrTutHealing.tutHealingTextBox ] to Screen [ scrTutHealing ] ].
-6099 - Console [ Created new object [ scrTutHealing.tutImageHealing ] ].
-6099 - Console [ Added Object [ scrTutHealing.tutImageHealing ] to Screen [ scrTutHealing ] ].
-6099 - Console [ Created new object [ scrTutHealing.buttonTutHealinglNext ] ].
-6099 - Console [ Added Object [ scrTutHealing.buttonTutHealinglNext ] to Screen [ scrTutHealing ] ].
-6115 - Console [ Created new object [ scrTutHealing.buttonTutHealingCancel ] ].
-6115 - Console [ Added Object [ scrTutHealing.buttonTutHealingCancel ] to Screen [ scrTutHealing ] ].
-6115 - Console [ Created new object [ scrTutTips ] ].
-6115 - Console [ Created new object [ scrTutTips.textLabelTutTips ] ].
-6115 - Console [ Added Object [ scrTutTips.textLabelTutTips ] to Screen [ scrTutTips ] ].
-6115 - Console [ Created new object [ scrTutTips.tutTipsTextBox ] ].
-6115 - Console [ Added Object [ scrTutTips.tutTipsTextBox ] to Screen [ scrTutTips ] ].
-6115 - Console [ Created new object [ scrTutTips.buttonTutTipsCancel ] ].
-6115 - Console [ Added Object [ scrTutTips.buttonTutTipsCancel ] to Screen [ scrTutTips ] ].
-6115 - Console [ Created new object [ highScoreDisplay ] ].
-6115 - Console [ Created new object [ highScoreDisplay.backGround ] ].
-6115 - Console [ Added Object [ highScoreDisplay.backGround ] to Screen [ highScoreDisplay ] ].
-6115 - Console [ Created new object [ highScoreDisplay.heading ] ].
-6115 - Console [ Added Object [ highScoreDisplay.heading ] to Screen [ highScoreDisplay ] ].
-6132 - Console [ Created new object [ highScoreDisplay.row1 ] ].
-6132 - Console [ Added Object [ highScoreDisplay.row1 ] to Screen [ highScoreDisplay ] ].
-6132 - Console [ Created new object [ highScoreDisplay.score1 ] ].
-6132 - Console [ Added Object [ highScoreDisplay.score1 ] to Screen [ highScoreDisplay ] ].
-6132 - Console [ Created new object [ highScoreDisplay.name1 ] ].
-6132 - Console [ Added Object [ highScoreDisplay.name1 ] to Screen [ highScoreDisplay ] ].
-6132 - Console [ Created new object [ highScoreDisplay.row2 ] ].
-6132 - Console [ Added Object [ highScoreDisplay.row2 ] to Screen [ highScoreDisplay ] ].
-6132 - Console [ Created new object [ highScoreDisplay.score2 ] ].
-6132 - Console [ Added Object [ highScoreDisplay.score2 ] to Screen [ highScoreDisplay ] ].
-6132 - Console [ Created new object [ highScoreDisplay.name2 ] ].
-6132 - Console [ Added Object [ highScoreDisplay.name2 ] to Screen [ highScoreDisplay ] ].
-6132 - Console [ Created new object [ highScoreDisplay.row3 ] ].
-6132 - Console [ Added Object [ highScoreDisplay.row3 ] to Screen [ highScoreDisplay ] ].
-6149 - Console [ Created new object [ highScoreDisplay.score3 ] ].
-6149 - Console [ Added Object [ highScoreDisplay.score3 ] to Screen [ highScoreDisplay ] ].
-6149 - Console [ Created new object [ highScoreDisplay.name3 ] ].
-6149 - Console [ Added Object [ highScoreDisplay.name3 ] to Screen [ highScoreDisplay ] ].
-6149 - Console [ Created new object [ highScoreDisplay.row4 ] ].
-6149 - Console [ Added Object [ highScoreDisplay.row4 ] to Screen [ highScoreDisplay ] ].
-6149 - Console [ Created new object [ highScoreDisplay.score4 ] ].
-6149 - Console [ Added Object [ highScoreDisplay.score4 ] to Screen [ highScoreDisplay ] ].
-6149 - Console [ Created new object [ highScoreDisplay.name4 ] ].
-6149 - Console [ Added Object [ highScoreDisplay.name4 ] to Screen [ highScoreDisplay ] ].
-6149 - Console [ Created new object [ highScoreDisplay.row5 ] ].
-6149 - Console [ Added Object [ highScoreDisplay.row5 ] to Screen [ highScoreDisplay ] ].
-6149 - Console [ Created new object [ highScoreDisplay.score5 ] ].
-6167 - Console [ Added Object [ highScoreDisplay.score5 ] to Screen [ highScoreDisplay ] ].
-6167 - Console [ Created new object [ highScoreDisplay.name5 ] ].
-6167 - Console [ Added Object [ highScoreDisplay.name5 ] to Screen [ highScoreDisplay ] ].
-6167 - Console [ Created new object [ highScoreDisplay.backButton ] ].
-6167 - Console [ Added Object [ highScoreDisplay.backButton ] to Screen [ highScoreDisplay ] ].
-6167 - Console [ Created new object [ highScoreEntry ] ].
-6167 - Console [ Created new object [ highScoreEntry.backGround ] ].
-6167 - Console [ Added Object [ highScoreEntry.backGround ] to Screen [ highScoreEntry ] ].
-6167 - Console [ Created new object [ highScoreEntry.achieved ] ].
-6167 - Console [ Added Object [ highScoreEntry.achieved ] to Screen [ highScoreEntry ] ].
-6167 - Console [ Created new object [ highScoreEntry.initials ] ].
-6167 - Console [ Added Object [ highScoreEntry.initials ] to Screen [ highScoreEntry ] ].
-6167 - Console [ Created new object [ highScoreEntry.initial0 ] ].
-6167 - Console [ Added Object [ highScoreEntry.initial0 ] to Screen [ highScoreEntry ] ].
-6183 - Console [ Object name or function string cannot be empty. ].
-6183 - Console [ Created new object [ highScoreEntry.initial1 ] ].
-6183 - Console [ Added Object [ highScoreEntry.initial1 ] to Screen [ highScoreEntry ] ].
-6183 - Console [ Object name or function string cannot be empty. ].
-6183 - Console [ Created new object [ highScoreEntry.initial2 ] ].
-6183 - Console [ Added Object [ highScoreEntry.initial2 ] to Screen [ highScoreEntry ] ].
-6183 - Console [ Object name or function string cannot be empty. ].
-6183 - Console [ Created new object [ highScoreEntry.backButton ] ].
-6183 - Console [ Added Object [ highScoreEntry.backButton ] to Screen [ highScoreEntry ] ].
-6183 - Console [ Failed to open keybinding file. Code [ 3 ] ].
-6183 - Console [ n ].
-6183 - Console [ [data/scripts] is in the search path. ].
-6183 - Console [ [data/data.zip] is in the search path. ].
-6183 - Console [ Loaded [ future_blue.bmp ] with key [ tiles ] ].
-6200 - Console [ Loaded [ splash.bmp ] with key [ splash ] ].
-6200 - Console [ Loaded [ planetAlpha.bmp ] with key [ planetAlpha ] ].
-6200 - Console [ Loaded [ hudNew.bmp ] with key [ hudNew ] ].
-6200 - Console [ Loaded [ screen.bmp ] with key [ screen ] ].
-6200 - Console [ Loaded [ lightmap.bmp ] with key [ lightmap ] ].
-6200 - Console [ Loaded [ explosion.bmp ] with key [ explosion ] ].
-6200 - Console [ Loaded [ universe.bmp ] with key [ universe ] ].
-6200 - Console [ Loaded [ db_999.bmp ] with key [ db_droid ] ].
-6200 - Console [ Loaded [ 001.bmp ] with key [ 001 ] ].
-6200 - Console [ Loaded [ 123.bmp ] with key [ 123 ] ].
-6200 - Console [ Loaded [ 139.bmp ] with key [ 139 ] ].
-6200 - Console [ Loaded [ 247.bmp ] with key [ 247 ] ].
-6200 - Console [ Loaded [ 249.bmp ] with key [ 249 ] ].
-6200 - Console [ Loaded [ 296.bmp ] with key [ 296 ] ].
-6217 - Console [ Loaded [ 302.bmp ] with key [ 302 ] ].
-6217 - Console [ Loaded [ 329.bmp ] with key [ 329 ] ].
-6217 - Console [ Loaded [ 420.bmp ] with key [ 420 ] ].
-6217 - Console [ Loaded [ 476.bmp ] with key [ 476 ] ].
-6217 - Console [ Loaded [ 493.bmp ] with key [ 493 ] ].
-6217 - Console [ Loaded [ 516.bmp ] with key [ 516 ] ].
-6217 - Console [ Loaded [ 571.bmp ] with key [ 571 ] ].
-6217 - Console [ Loaded [ 598.bmp ] with key [ 598 ] ].
-6217 - Console [ Loaded [ 614.bmp ] with key [ 614 ] ].
-6217 - Console [ Loaded [ 615.bmp ] with key [ 615 ] ].
-6217 - Console [ Loaded [ 629.bmp ] with key [ 629 ] ].
-6217 - Console [ Loaded [ 711.bmp ] with key [ 711 ] ].
-6217 - Console [ Loaded [ 742.bmp ] with key [ 742 ] ].
-6217 - Console [ Loaded [ 751.bmp ] with key [ 751 ] ].
-6233 - Console [ Loaded [ 821.bmp ] with key [ 821 ] ].
-6233 - Console [ Loaded [ 834.bmp ] with key [ 834 ] ].
-6233 - Console [ Loaded [ 883.bmp ] with key [ 883 ] ].
-6233 - Console [ Loaded [ 999.bmp ] with key [ 999 ] ].
-6233 - Console [ Loaded [ tut_healing.bmp ] with key [ tut_healing ] ].
-6233 - Console [ Loaded [ tut_lift.bmp ] with key [ tut_lift ] ].
-6233 - Console [ Loaded [ tut_terminal.bmp ] with key [ tut_terminal ] ].
-6233 - Console [ Loaded [ bullet_001.bmp ] with key [ bullet_001 ] ].
-6233 - Console [ Loaded [ bullet_476.bmp ] with key [ bullet_476 ] ].
-6233 - Console [ Loaded [ bullet_821.bmp ] with key [ bullet_821 ] ].
-6233 - Console [ Loaded ship level [ Vehicle Hold ] - index [ 0 ] ].
-6233 - Console [ Loaded ship level [ Shuttle bay ] - index [ 1 ] ].
-6233 - Console [ Loaded ship level [ Turrent 2 ] - index [ 2 ] ].
-6250 - Console [ Loaded ship level [ Maintenance ] - index [ 3 ] ].
-6250 - Console [ Loaded ship level [ Engineering ] - index [ 4 ] ].
-6250 - Console [ Loaded ship level [ Mid cargo ] - index [ 5 ] ].
-6250 - Console [ Loaded ship level [ Upper cargo ] - index [ 6 ] ].
-6250 - Console [ Loaded ship level [ Kitchen ] - index [ 8 ] ].
-6250 - Console [ Loaded ship level [ Robo stores ] - index [ 9 ] ].
-6250 - Console [ Loaded ship level [ Quarters ] - index [ 10 ] ].
-6250 - Console [ Loaded ship level [ Repairs ] - index [ 11 ] ].
-6250 - Console [ Loaded ship level [ Staterooms ] - index [ 12 ] ].
-6250 - Console [ Loaded ship level [ Stores ] - index [ 13 ] ].
-6250 - Console [ Loaded ship level [ Research ] - index [ 14 ] ].
-6250 - Console [ Loaded ship level [ Reactor ] - index [ 15 ] ].
-6250 - Console [ Loaded ship level [ Airlock ] - index [ 16 ] ].
-6250 - Console [ Loaded ship level [ Bridge ] - index [ 17 ] ].
-6267 - Console [ Loaded ship level [ Turrent 1 ] - index [ 18 ] ].
-6267 - Console [ Loaded ship level [ Turrent 3 ] - index [ 19 ] ].
-6267 - Console [ Loaded ship level [ Observation ] - index [ 20 ] ].
-6267 - Console [ Loaded font file [ gui.ttf ] ].
-6267 - Console [ Loaded font file [ gui.ttf ] ].
-6267 - Console [ Loaded font file [ intro.ttf ] ].
-6300 - Looking for function [ as_loadAudioResources ] to [ as_useNewRenderer ] to execute
-6300 - Looking for function [ as_loadAudioResources ] to [ as_getAudioSpecs ] to execute
-6300 - Looking for function [ as_loadAudioResources ] to [ as_loadAudioResources ] to execute
-6300 - [ load ] Loaded file [ collision1.wav ] with key [ collision1 ]
-6300 - [ load ] Loaded file [ console1.wav ] with key [ console1 ]
-6317 - [ load ] Loaded file [ console2.wav ] with key [ console2 ]
-6317 - [ load ] Loaded file [ doorOpen.wav ] with key [ doorOpen ]
-6317 - [ load ] Loaded file [ doorClose.wav ] with key [ doorClose ]
-6333 - [ load ] Loaded file [ disruptor.wav ] with key [ disruptor ]
-6333 - [ load ] Loaded file [ damage.wav ] with key [ damage ]
-6350 - [ load ] Loaded file [ explode1.wav ] with key [ explode1 ]
-6350 - [ load ] Loaded file [ explode2.wav ] with key [ explode2 ]
-6367 - [ load ] Loaded file [ energyHeal.wav ] with key [ energyHeal ]
-6367 - [ load ] Loaded file [ endTransmission2.wav ] with key [ endTransmission2 ]
-6383 - [ load ] Loaded file [ endTransmission1.wav ] with key [ endTransmission1 ]
-6383 - [ load ] Loaded file [ greenAlert.wav ] with key [ greenAlert ]
-6383 - [ load ] Loaded file [ lift1.wav ] with key [ lift1 ]
-6383 - [ load ] Loaded file [ keyPressGood.wav ] with key [ keyPressGood ]
-6383 - [ load ] Loaded file [ keyPressBad.wav ] with key [ keyPressBad ]
-6383 - [ load ] Loaded file [ laser.wav ] with key [ laser ]
-6400 - [ load ] Loaded file [ lowEnergy.wav ] with key [ lowEnergy ]
-6400 - [ load ] Loaded file [ lift2.wav ] with key [ lift2 ]
-6400 - [ load ] Loaded file [ lift3.wav ] with key [ lift3 ]
-6400 - [ load ] Loaded file [ levelShutdown.wav ] with key [ levelShutdown ]
-6400 - [ load ] Loaded file [ redAlert.wav ] with key [ redAlert ]
-6400 - [ load ] Loaded file [ startAll.wav ] with key [ startAll ]
-6417 - [ load ] Loaded file [ start2.wav ] with key [ start2 ]
-6417 - [ load ] Loaded file [ start1.wav ] with key [ start1 ]
-6450 - [ load ] Loaded file [ scrollBeeps.wav ] with key [ scrollBeeps ]
-6450 - [ load ] Loaded file [ transferdeadlock.wav ] with key [ transferdeadlock ]
-6450 - [ load ] Loaded file [ transferMove.wav ] with key [ transferMove ]
-6467 - [ load ] Loaded file [ transferStage1.wav ] with key [ transferStage1 ]
-6467 - [ load ] Loaded file [ transferStage2.wav ] with key [ transferStage2 ]
-6467 - [ load ] Loaded file [ transfer1.wav ] with key [ transfer1 ]
-6467 - [ load ] Loaded file [ transferStart.wav ] with key [ transferStart ]
-6484 - [ load ] Loaded file [ yellowAlert.wav ] with key [ yellowAlert ]
-6484 - [ load ] Loaded file [ transferBurntout.wav ] with key [ transferBurntout ]
-6484 - [ load ] Loaded file [ transferAction.wav ] with key [ transferAction ]
-6484 - [ load ] Loaded file [ liftButton.wav ] with key [ liftButton ]
-13740 - Looking for function [ as_handleMainMenu ] to [ as_useNewRenderer ] to execute
-13740 - Looking for function [ as_handleMainMenu ] to [ as_getAudioSpecs ] to execute
-13740 - Looking for function [ as_handleMainMenu ] to [ as_loadAudioResources ] to execute
-13740 - Looking for function [ as_handleMainMenu ] to [ as_loadTextureResources ] to execute
-13740 - Looking for function [ as_handleMainMenu ] to [ as_loadAllDecks ] to execute
-13740 - Looking for function [ as_handleMainMenu ] to [ as_getVolume ] to execute
-13740 - Looking for function [ as_handleMainMenu ] to [ as_setVolume ] to execute
-13740 - Looking for function [ as_handleMainMenu ] to [ as_createGUI ] to execute
-13740 - Looking for function [ as_handleMainMenu ] to [ as_handleMainMenu ] to execute
-14941 - Looking for function [ as_handleOptionsMenu ] to [ as_useNewRenderer ] to execute
-14941 - Looking for function [ as_handleOptionsMenu ] to [ as_getAudioSpecs ] to execute
-14941 - Looking for function [ as_handleOptionsMenu ] to [ as_loadAudioResources ] to execute
-14941 - Looking for function [ as_handleOptionsMenu ] to [ as_loadTextureResources ] to execute
-14941 - Looking for function [ as_handleOptionsMenu ] to [ as_loadAllDecks ] to execute
-14941 - Looking for function [ as_handleOptionsMenu ] to [ as_getVolume ] to execute
-14941 - Looking for function [ as_handleOptionsMenu ] to [ as_setVolume ] to execute
-14941 - Looking for function [ as_handleOptionsMenu ] to [ as_createGUI ] to execute
-14941 - Looking for function [ as_handleOptionsMenu ] to [ as_handleMainMenu ] to execute
-14941 - Looking for function [ as_handleOptionsMenu ] to [ as_handleOptionsMenu ] to execute
-14941 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-14941 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-14941 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-14941 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-14941 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-14958 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-14958 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-14958 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-14958 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-14958 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-14975 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-14975 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-14975 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-14975 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-14975 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-14992 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-14992 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-14992 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-14992 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-14992 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15007 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15007 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15007 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15007 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15007 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15024 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15024 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15024 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15024 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15024 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15041 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15041 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15041 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15041 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15041 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15057 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15057 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15057 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15057 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15057 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15073 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15073 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15073 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15073 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15073 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15090 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15090 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15090 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15090 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15090 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15107 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15107 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15107 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15107 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15107 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15124 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15124 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15124 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15124 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15124 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15140 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15140 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15140 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15140 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15140 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15158 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15158 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15158 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15158 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15158 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15175 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15175 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15175 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15175 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15175 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15191 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15191 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15191 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15191 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15191 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15208 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15208 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15208 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15208 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15208 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15224 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15224 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15224 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15224 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15224 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15241 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15241 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15241 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15241 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15241 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15257 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15257 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15257 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15257 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15257 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15274 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15274 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15274 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15274 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15274 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15291 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15291 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15291 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15291 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15291 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15308 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15308 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15308 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15308 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15308 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15324 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15324 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15324 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15324 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15324 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15341 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15341 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15341 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15341 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15341 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15358 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15358 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15358 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15358 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15358 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15375 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15375 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15375 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15375 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15375 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15392 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15392 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15392 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15392 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15392 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15408 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15408 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15408 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15408 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15408 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15425 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15425 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15425 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15425 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15425 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15442 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15442 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15442 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15442 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15442 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15458 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15458 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15458 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15458 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15458 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15475 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15475 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15475 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15475 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15475 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15492 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15492 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15492 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15492 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15492 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15508 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15508 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15508 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15508 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15508 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15525 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15525 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15525 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15525 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15525 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15542 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15542 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15542 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15542 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15542 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15558 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15558 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15558 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15558 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15558 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15575 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15575 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15575 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15575 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15575 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15592 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15592 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15592 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15592 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15592 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15608 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15608 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15608 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15608 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15608 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15625 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15625 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15625 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15625 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15625 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15642 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15642 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15642 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15642 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15642 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15659 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15659 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15659 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15659 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15659 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15675 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15675 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15675 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15675 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15675 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15693 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15693 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15693 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15693 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15693 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15708 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15708 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15708 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15708 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15708 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15725 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15725 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15725 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15725 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15725 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15741 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15741 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15741 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15741 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15741 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15759 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15759 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15759 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15759 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15759 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15775 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15775 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15775 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15775 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15775 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15792 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15792 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15792 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15792 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15792 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15809 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15809 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15809 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15809 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15809 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15826 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15826 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15826 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15826 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15826 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15842 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15842 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15842 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15842 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15842 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15859 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15859 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15859 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15859 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15859 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15875 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15875 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15875 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15875 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15875 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15892 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15892 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15892 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15892 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15892 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15908 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15908 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15908 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15908 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15908 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15925 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15925 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15925 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15925 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15925 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15942 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15942 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15942 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15942 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15942 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15959 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15959 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15959 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15959 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15959 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15975 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15975 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15975 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15975 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15975 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-15992 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-15992 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-15992 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-15992 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-15992 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16007 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16007 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16007 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16007 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16007 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16024 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16024 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16024 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16024 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16024 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16041 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16041 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16041 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16041 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16041 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16057 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16057 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16057 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16057 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16057 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16075 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16075 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16075 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16075 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16075 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16091 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16091 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16091 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16091 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16091 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16107 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16107 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16107 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16107 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16107 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16124 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16124 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16124 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16124 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16124 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16141 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16141 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16141 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16141 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16141 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16159 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16159 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [ Joystick hasn't been opened yet ]
-16159 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16159 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16159 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16176 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16176 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16176 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16176 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16176 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16192 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16192 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16192 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16192 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16192 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16209 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16209 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16209 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16209 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16209 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16225 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16225 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16225 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16225 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16225 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16242 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16242 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16242 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16242 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16242 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16258 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16258 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16258 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16258 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16258 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16275 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16275 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16275 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16275 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16275 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16292 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16292 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16292 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16292 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16292 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16309 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16309 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16309 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16309 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16309 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16326 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16326 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16326 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16326 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16326 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16342 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16342 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16342 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16342 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16342 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16359 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16359 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16359 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16359 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16359 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16376 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16376 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16376 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16376 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16376 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16393 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16393 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16393 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16393 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16393 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16409 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16409 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16409 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16409 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16409 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16426 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16426 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16426 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16426 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16426 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16442 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16442 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16442 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16442 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16442 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16459 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16459 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16459 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16459 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16459 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16475 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16475 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16475 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16475 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16475 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16493 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16493 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16493 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16493 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16493 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16509 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16509 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16509 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16509 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16509 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16525 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16525 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16525 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16525 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16525 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16543 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16543 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16543 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16543 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16543 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16559 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16559 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16559 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16559 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16559 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16576 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16576 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16576 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16576 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16576 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16593 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16593 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16593 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16593 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16593 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16610 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16610 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16610 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16610 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16610 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16626 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16626 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16626 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16626 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16626 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16642 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16642 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16642 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16642 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16642 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16660 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16660 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16660 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16660 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16660 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16676 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16676 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16676 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16676 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16676 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16692 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16692 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16692 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16692 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16692 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16709 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16709 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16709 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16709 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16709 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16725 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16725 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16725 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16725 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16725 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16742 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16742 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16742 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16742 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16742 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16759 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16759 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16759 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16759 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16759 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16776 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16776 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16776 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16776 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16776 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16793 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16793 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16793 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16793 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16793 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16809 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16809 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16809 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16809 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16809 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16830 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16830 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16830 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16830 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16830 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16842 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16842 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16842 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16842 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16842 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16859 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16859 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16859 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16859 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16859 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16876 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16876 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16876 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16876 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16876 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16892 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16892 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16892 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16892 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16892 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16910 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16910 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16910 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16910 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16910 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16926 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16926 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16926 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16926 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16926 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16942 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16942 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16942 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16942 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16942 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16959 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16959 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16959 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16959 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16959 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16976 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16976 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16976 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16976 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16976 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-16993 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-16993 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-16993 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-16993 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-16993 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17008 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17008 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17008 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17008 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17008 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17025 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17025 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17025 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17025 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17025 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17042 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17042 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17042 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17042 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17042 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17059 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17059 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17059 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17059 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17059 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17076 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17076 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17076 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17076 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17076 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17092 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17092 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17092 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17092 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17092 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17109 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17109 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17109 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17109 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17109 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17125 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17125 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17125 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17125 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17125 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17142 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17142 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17142 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17142 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17142 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17159 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17159 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17159 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17159 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17159 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17177 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17177 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17177 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17177 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17177 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17193 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17193 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17193 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17193 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17193 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17209 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17209 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17209 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17209 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17209 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17226 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17226 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17226 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17226 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17226 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17243 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17243 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17243 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17243 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17243 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17259 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17259 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17259 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17259 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17259 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17276 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17276 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17276 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17276 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17276 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17293 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17293 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17293 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17293 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17293 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17310 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17310 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17310 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17310 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17310 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17326 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17326 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17326 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17326 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17326 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17343 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17343 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17343 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17343 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17343 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17360 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17360 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17360 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17360 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17360 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17376 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17376 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17376 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17376 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17376 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17393 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17393 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17393 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17393 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17393 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17410 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17410 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17410 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17410 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17410 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17426 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17426 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17426 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17426 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17426 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17443 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17443 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17443 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17443 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17443 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17460 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17460 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17460 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17460 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17460 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17476 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17476 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17476 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17476 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17476 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17493 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17493 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17493 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17493 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17493 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17510 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17510 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17510 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17510 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17510 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17527 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17527 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17527 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17527 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17527 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17543 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17543 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17543 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17543 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17543 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17560 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17560 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17560 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17560 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17560 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17576 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17576 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17576 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17576 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17576 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17593 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17593 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17593 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17593 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17593 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17610 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17610 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17610 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17610 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17610 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17626 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17626 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17626 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17626 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17626 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17643 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17643 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17643 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17643 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17643 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17660 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17660 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17660 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17660 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17660 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17677 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17677 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17677 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17677 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17677 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17693 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17693 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17693 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17693 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17693 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17710 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17710 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17710 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17710 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17710 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17727 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17727 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17727 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17727 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17727 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17744 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17744 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17744 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17744 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17744 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17761 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17761 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17761 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17761 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17761 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17777 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17777 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17777 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17777 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17777 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17794 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17794 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17794 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17794 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17794 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17810 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17810 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17810 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17810 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17810 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17827 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17827 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17827 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17827 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17827 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17843 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17843 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17843 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17843 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17843 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17860 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17860 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17860 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17860 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17860 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17877 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17877 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17877 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17877 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17877 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17894 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17894 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17894 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17894 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17894 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17910 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17910 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17910 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17910 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17910 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17927 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17927 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17927 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17927 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17927 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17944 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17944 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17944 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17944 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17944 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17960 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17960 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17960 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17960 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17960 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17977 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17977 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17977 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17977 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17977 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-17994 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-17994 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-17994 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-17994 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-17994 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18009 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18009 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18009 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18009 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18009 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18026 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18026 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18026 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18026 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18026 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18043 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18043 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18043 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18043 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18043 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18060 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18060 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18060 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18060 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18060 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18076 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18076 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18076 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18076 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18076 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18093 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18093 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18093 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18093 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18093 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18109 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18109 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18109 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18109 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18109 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18126 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18126 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18126 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18126 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18126 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18143 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18143 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18143 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18143 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18143 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18160 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18160 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18160 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18160 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18160 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18177 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18177 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18177 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18177 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18177 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18194 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18194 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18194 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18194 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18194 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18210 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18210 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18210 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18210 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18210 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18227 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18227 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18227 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18227 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18227 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18244 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18244 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18244 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18244 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18244 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18260 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18260 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18260 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18260 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18260 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18277 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18277 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18277 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18277 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18277 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18294 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18294 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18294 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18294 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18294 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18310 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18310 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18310 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18310 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18310 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18327 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18327 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18327 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18327 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18327 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18344 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18344 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18344 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18344 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18344 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18361 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18361 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18361 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18361 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18361 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18377 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18377 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18377 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18377 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18377 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18394 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18394 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18394 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18394 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18394 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18411 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18411 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18411 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18411 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18411 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18428 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18428 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18428 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18428 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18428 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18445 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18445 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18445 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18445 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18445 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18461 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18461 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18461 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18461 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18461 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18477 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18477 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18477 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18477 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18477 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18494 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18494 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18494 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18494 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18494 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18511 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18511 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18511 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18511 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18511 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18528 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18528 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18528 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18528 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18528 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18544 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18544 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18544 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18544 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18544 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18561 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18561 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18561 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18561 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18561 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18577 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18577 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18577 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18577 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18577 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18594 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18594 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18594 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18594 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18594 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18611 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18611 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18611 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18611 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18611 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18628 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18628 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18628 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18628 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18628 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18644 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18644 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18644 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18644 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18644 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18661 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18661 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18661 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18661 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18661 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18678 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18678 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18678 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18678 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18678 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18694 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18694 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18694 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18694 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18694 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18711 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18711 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18711 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18711 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18711 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18728 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18728 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18728 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18728 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18728 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18744 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18744 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18744 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18744 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18744 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18761 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18761 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18761 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18761 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18761 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18778 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18778 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18778 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18778 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18778 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18794 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18794 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18794 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18794 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18794 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18811 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18811 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18811 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18811 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18811 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18828 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18828 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18828 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18828 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18828 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18845 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18845 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18845 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18845 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18845 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18861 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18861 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18861 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18861 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18861 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18878 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18878 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18878 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18878 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18878 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18895 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18895 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18895 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18895 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18895 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18911 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18911 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18911 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18911 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18911 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18928 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18928 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18928 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18928 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18928 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18945 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18945 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18945 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18945 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18945 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18961 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18961 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18961 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18961 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18961 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18978 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18978 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18978 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18978 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18978 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-18995 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-18995 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-18995 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-18995 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-18995 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-19010 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-19010 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-19010 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-19010 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-19010 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-19027 - Console [ Label index [ 3 ] - [ Unknown ] has no label set. ].
-19027 - Console [ Label index [ 4 ] - [ Unknown ] has no label set. ].
-19027 - Console [ Label index [ 5 ] - [ Unknown ] has no label set. ].
-19027 - Console [ Label index [ 6 ] - [ Unknown ] has no label set. ].
-19027 - Console [ Label index [ 7 ] - [ Unknown ] has no label set. ].
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_useNewRenderer ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_getAudioSpecs ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_loadAudioResources ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_loadTextureResources ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_loadAllDecks ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_getVolume ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_setVolume ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_createGUI ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_handleMainMenu ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_handleOptionsMenu ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_handleVideoOptions ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_handleAudioMenu ] to execute
-19043 - Looking for function [ as_handleControlsMenu ] to [ as_handleControlsMenu ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_useNewRenderer ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_getAudioSpecs ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_loadAudioResources ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_loadTextureResources ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_loadAllDecks ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_getVolume ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_setVolume ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_createGUI ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleMainMenu ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleOptionsMenu ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleVideoOptions ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleAudioMenu ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleControlsMenu ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleGameMenu ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleDeckviewScreen ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleShipviewScreen ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleTerminalMenu ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleDatabaseMenu ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleTransferScreens ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleTutorialElements ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleDialogBoxes ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_handleHighscoreDisplay ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_refreshHighscoreLabels ] to execute
-21447 - Looking for function [ as_refreshControlLabels ] to [ as_refreshControlLabels ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_useNewRenderer ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_getAudioSpecs ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_loadAudioResources ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_loadTextureResources ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_loadAllDecks ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_getVolume ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_setVolume ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_createGUI ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_handleMainMenu ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_handleOptionsMenu ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_handleVideoOptions ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_handleAudioMenu ] to execute
-28903 - Looking for function [ as_handleControlsMenu ] to [ as_handleControlsMenu ] to execute
-29937 - Looking for function [ as_handleOptionsMenu ] to [ as_useNewRenderer ] to execute
-29937 - Looking for function [ as_handleOptionsMenu ] to [ as_getAudioSpecs ] to execute
-29937 - Looking for function [ as_handleOptionsMenu ] to [ as_loadAudioResources ] to execute
-29937 - Looking for function [ as_handleOptionsMenu ] to [ as_loadTextureResources ] to execute
-29937 - Looking for function [ as_handleOptionsMenu ] to [ as_loadAllDecks ] to execute
-29937 - Looking for function [ as_handleOptionsMenu ] to [ as_getVolume ] to execute
-29937 - Looking for function [ as_handleOptionsMenu ] to [ as_setVolume ] to execute
-29937 - Looking for function [ as_handleOptionsMenu ] to [ as_createGUI ] to execute
-29937 - Looking for function [ as_handleOptionsMenu ] to [ as_handleMainMenu ] to execute
-29937 - Looking for function [ as_handleOptionsMenu ] to [ as_handleOptionsMenu ] to execute
-30571 - Looking for function [ as_handleMainMenu ] to [ as_useNewRenderer ] to execute
-30571 - Looking for function [ as_handleMainMenu ] to [ as_getAudioSpecs ] to execute
-30571 - Looking for function [ as_handleMainMenu ] to [ as_loadAudioResources ] to execute
-30571 - Looking for function [ as_handleMainMenu ] to [ as_loadTextureResources ] to execute
-30571 - Looking for function [ as_handleMainMenu ] to [ as_loadAllDecks ] to execute
-30571 - Looking for function [ as_handleMainMenu ] to [ as_getVolume ] to execute
-30571 - Looking for function [ as_handleMainMenu ] to [ as_setVolume ] to execute
-30571 - Looking for function [ as_handleMainMenu ] to [ as_createGUI ] to execute
-30571 - Looking for function [ as_handleMainMenu ] to [ as_handleMainMenu ] to execute
+4942 - Console [ Func ID for [ void as_handleVideoOptions() ] - [ 140928 ] ].
+4942 - Console [ Func ID for [ void as_handleAudioMenu() ] - [ 139392 ] ].
+4942 - Console [ Func ID for [ void as_handleControlsMenu() ] - [ 140160 ] ].
+4942 - Console [ Func ID for [ void as_handleGameMenu() ] - [ 140544 ] ].
+4942 - Console [ Func ID for [ void as_handleDeckviewScreen() ] - [ 148608 ] ].
+4942 - Console [ Func ID for [ void as_handleShipviewScreen() ] - [ 148992 ] ].
+4942 - Console [ Func ID for [ void as_handleTerminalMenu() ] - [ 149376 ] ].
+4942 - Console [ Func ID for [ void as_handleDatabaseMenu() ] - [ 149760 ] ].
+4942 - Console [ Func ID for [ void as_handleTransferScreens() ] - [ 151680 ] ].
+4942 - Console [ Func ID for [ void as_handleTutorialElements () ] - [ 153216 ] ].
+4942 - Console [ Func ID for [ void as_handleDialogBoxes () ] - [ 137088 ] ].
+4942 - Console [ Func ID for [ void as_handleHighscoreDisplay() ] - [ 145536 ] ].
+4942 - Console [ Func ID for [ void as_refreshHighscoreLabels() ] - [ 145152 ] ].
+4942 - Console [ Func ID for [ void as_refreshControlLabels() ] - [ 139776 ] ].
+4942 - Console [ Created new object [ introScreen.scrollbox ] ].
+4942 - Console [ Added Object [ introScreen.scrollbox ] to Screen [ introScreen ] ].
+4942 - Console [ Created new object [ wonScreen ] ].
+4942 - Console [ Created new object [ wonScreen.scrollbox ] ].
+4942 - Console [ Added Object [ wonScreen.scrollbox ] to Screen [ wonScreen ] ].
+4942 - Console [ Created new object [ quitGameDialogbox.text ] ].
+4942 - Console [ Added Object [ quitGameDialogbox.text ] to Dialogbox [ quitGameDialogbox ] ].
+4942 - Console [ Added Object [ quitGameDialogbox.confirmButton ] to Dialogbox [ quitGameDialogbox ] ].
+4942 - Console [ Created new object [ quitGameDialogbox.denyButton ] ].
+4942 - Console [ Added Object [ quitGameDialogbox.denyButton ] to Dialogbox [ quitGameDialogbox ] ].
+4942 - Console [ Created new object [ guiTransferOne ] ].
+4942 - Console [ Added Object [ guiTransferOne.heading ] to Screen [ guiTransferOne ] ].
+4942 - Console [ Created new object [ guiTransferOne.textbox ] ].
+4942 - Console [ Added Object [ guiTransferOne.textbox ] to Screen [ guiTransferOne ] ].
+4942 - Console [ Created new object [ guiTransferOne.nextButton ] ].
+4942 - Console [ Added Object [ guiTransferOne.nextButton ] to Screen [ guiTransferOne ] ].
+4942 - Console [ Created new object [ guiTransferTwo ] ].
+4942 - Console [ Created new object [ guiTransferTwo.heading ] ].
+4942 - Console [ Added Object [ guiTransferTwo.heading ] to Screen [ guiTransferTwo ] ].
+4942 - Console [ Created new object [ guiTransferTwo.textbox ] ].
+4942 - Console [ Added Object [ guiTransferTwo.textbox ] to Screen [ guiTransferTwo ] ].
+4942 - Console [ Created new object [ guiTransferTwo.nextButton ] ].
+4942 - Console [ Added Object [ guiTransferTwo.nextButton ] to Screen [ guiTransferTwo ] ].
+4942 - Console [ Created new object [ mainMenu ] ].
+4942 - Console [ Created new object [ mainMenu.backGround ] ].
+4942 - Console [ Added Object [ mainMenu.backGround ] to Screen [ mainMenu ] ].
+4942 - Console [ Created new object [ mainMenu.startGameButton ] ].
+4942 - Console [ Added Object [ mainMenu.startGameButton ] to Screen [ mainMenu ] ].
+4942 - Console [ Created new object [ mainMenu.optionsButton ] ].
+4942 - Console [ Added Object [ mainMenu.optionsButton ] to Screen [ mainMenu ] ].
+4942 - Console [ Created new object [ mainMenu.tutorialButton ] ].
+4942 - Console [ Added Object [ mainMenu.tutorialButton ] to Screen [ mainMenu ] ].
+4942 - Console [ Created new object [ mainMenu.briefingButton ] ].
+4942 - Console [ Added Object [ mainMenu.briefingButton ] to Screen [ mainMenu ] ].
+4942 - Console [ Created new object [ mainMenu.quitButton ] ].
+4942 - Console [ Added Object [ mainMenu.quitButton ] to Screen [ mainMenu ] ].
+4942 - Console [ Created new object [ optionsMenu ] ].
+4942 - Console [ Created new object [ optionsMenu.backGround ] ].
+4942 - Console [ Added Object [ optionsMenu.backGround ] to Screen [ optionsMenu ] ].
+4942 - Console [ Created new object [ optionsMenu.videoButton ] ].
+4942 - Console [ Added Object [ optionsMenu.videoButton ] to Screen [ optionsMenu ] ].
+4942 - Console [ Created new object [ optionsMenu.audioButton ] ].
+4942 - Console [ Added Object [ optionsMenu.audioButton ] to Screen [ optionsMenu ] ].
+4942 - Console [ Created new object [ optionsMenu.controlsButton ] ].
+4942 - Console [ Added Object [ optionsMenu.controlsButton ] to Screen [ optionsMenu ] ].
+4942 - Console [ Created new object [ optionsMenu.gameButton ] ].
+4942 - Console [ Added Object [ optionsMenu.gameButton ] to Screen [ optionsMenu ] ].
+4942 - Console [ Created new object [ optionsMenu.backButton ] ].
+5043 - Console [ Added Object [ optionsMenu.backButton ] to Screen [ optionsMenu ] ].
+5043 - Console [ Created new object [ videoOptions ] ].
+5043 - Console [ Added Object [ videoOptions.renderers ] to Screen [ videoOptions ] ].
+5043 - Console [ Created new object [ videoOptions.display ] ].
+5043 - Console [ Added Object [ videoOptions.display ] to Screen [ videoOptions ] ].
+5043 - Console [ Created new object [ videoOptions.scalequality ] ].
+5043 - Console [ Added Object [ videoOptions.scalequality ] to Screen [ videoOptions ] ].
+5043 - Console [ Created new object [ videoOptions.usevsync ] ].
+5043 - Console [ Added Object [ videoOptions.usevsync ] to Screen [ videoOptions ] ].
+5043 - [ load ] Loaded file [ future_blue.bmp ]
+5043 - Console [ Created new object [ videoOptions.borderlesswindow ] ].
+5043 - Console [ Added Object [ videoOptions.borderlesswindow ] to Screen [ videoOptions ] ].
+5043 - Console [ Created new object [ videoOptions.highdpi ] ].
+5043 - Console [ Added Object [ videoOptions.highdpi ] to Screen [ videoOptions ] ].
+5043 - [ load ] Loaded file [ splash.bmp ]
+5043 - Console [ Created new object [ videoOptions.screeneffect ] ].
+5043 - Console [ Added Object [ videoOptions.screeneffect ] to Screen [ videoOptions ] ].
+5043 - Console [ Created new object [ videoOptions.applyButton ] ].
+5043 - Console [ Added Object [ videoOptions.applyButton ] to Screen [ videoOptions ] ].
+5043 - Console [ Created new object [ videoOptions.backButton ] ].
+5043 - Console [ Added Object [ videoOptions.backButton ] to Screen [ videoOptions ] ].
+5043 - Console [ Created new object [ audioOptions ] ].
+5043 - Console [ Created new object [ audioOptions.enableSound ] ].
+5043 - Console [ Added Object [ audioOptions.enableSound ] to Screen [ audioOptions ] ].
+5043 - [ load ] Loaded file [ planetAlpha.bmp ]
+5043 - Console [ Created new object [ audioOptions.volume ] ].
+5043 - Console [ Added Object [ audioOptions.volume ] to Screen [ audioOptions ] ].
+5043 - [ load ] Loaded file [ hudNew.bmp ]
+5043 - Console [ Created new object [ audioOptions.speakers ] ].
+5043 - [ load ] Loaded file [ screen.bmp ]
+5043 - [ load ] Loaded file [ lightmap.bmp ]
+5043 - Console [ Added Object [ audioOptions.speakers ] to Screen [ audioOptions ] ].
+5043 - [ load ] Loaded file [ explosion.bmp ]
+5043 - Console [ Created new object [ audioOptions.backButton ] ].
+5043 - Console [ Added Object [ audioOptions.backButton ] to Screen [ audioOptions ] ].
+5043 - Console [ Created new object [ controlsMenu ] ].
+5043 - Console [ Created new object [ controlsOptions.heading ] ].
+5043 - Console [ Added Object [ controlsOptions.heading ] to Screen [ controlsMenu ] ].
+5043 - Console [ Created new object [ controlsOptions.left ] ].
+5043 - Console [ Added Object [ controlsOptions.left ] to Screen [ controlsMenu ] ].
+5043 - Console [ Created new object [ controlsOptions.right ] ].
+5043 - Console [ Added Object [ controlsOptions.right ] to Screen [ controlsMenu ] ].
+5043 - Console [ Created new object [ controlsOptions.up ] ].
+5043 - Console [ Added Object [ controlsOptions.up ] to Screen [ controlsMenu ] ].
+5043 - Console [ Created new object [ controlsOptions.down ] ].
+5043 - Console [ Added Object [ controlsOptions.down ] to Screen [ controlsMenu ] ].
+5043 - Console [ Created new object [ controlsOptions.action ] ].
+5043 - Console [ Added Object [ controlsOptions.action ] to Screen [ controlsMenu ] ].
+5043 - Console [ Created new object [ controlsOptions.leftKeyname ] ].
+5043 - Console [ Added Object [ controlsOptions.leftKeyname ] to Screen [ controlsMenu ] ].
+5043 - Console [ Object name or object label cannot be empty. ].
+5043 - Console [ Created new object [ controlsOptions.rightKeyname ] ].
+5043 - Console [ Added Object [ controlsOptions.rightKeyname ] to Screen [ controlsMenu ] ].
+5043 - Console [ Object name or object label cannot be empty. ].
+5043 - Console [ Created new object [ controlsOptions.upKeyname ] ].
+5043 - Console [ Added Object [ controlsOptions.upKeyname ] to Screen [ controlsMenu ] ].
+5043 - Console [ Object name or object label cannot be empty. ].
+5043 - Console [ Created new object [ controlsOptions.downKeyname ] ].
+5043 - Console [ Added Object [ controlsOptions.downKeyname ] to Screen [ controlsMenu ] ].
+5043 - Console [ Object name or object label cannot be empty. ].
+5043 - Console [ Created new object [ controlsOptions.actionKeyname ] ].
+5043 - Console [ Added Object [ controlsOptions.actionKeyname ] to Screen [ controlsMenu ] ].
+5043 - Console [ Object name or object label cannot be empty. ].
+5043 - Console [ Created new object [ controlsMenu.backButton ] ].
+5043 - Console [ Added Object [ controlsMenu.backButton ] to Screen [ controlsMenu ] ].
+5043 - Console [ Created new object [ controlsMenu.applyButton ] ].
+5043 - Console [ Added Object [ controlsMenu.applyButton ] to Screen [ controlsMenu ] ].
+5043 - Console [ Created new object [ gameMenu ] ].
+5043 - Console [ Created new object [ gameMenu.language ] ].
+5043 - Console [ Added Object [ gameMenu.language ] to Screen [ gameMenu ] ].
+5043 - Console [ Created new object [ gameMenu.tileStyle ] ].
+5043 - Console [ Added Object [ gameMenu.tileStyle ] to Screen [ gameMenu ] ].
+5043 - Console [ Created new object [ gameMenu.tileColor ] ].
+5043 - Console [ Added Object [ gameMenu.tileColor ] to Screen [ gameMenu ] ].
+5043 - Console [ Created new object [ gameMenu.backButton ] ].
+5043 - Console [ Added Object [ gameMenu.backButton ] to Screen [ gameMenu ] ].
+5043 - [ load ] Loaded file [ universe.bmp ]
+5043 - Console [ Created new object [ databaseScreen ] ].
+5043 - Console [ Created new object [ databaseScreen.scrollbox ] ].
+5043 - Console [ Added Object [ databaseScreen.scrollbox ] to Screen [ databaseScreen ] ].
+5043 - Console [ Created new object [ databaseScreen.previousButton ] ].
+5043 - Console [ Added Object [ databaseScreen.previousButton ] to Screen [ databaseScreen ] ].
+5043 - Console [ Created new object [ databaseScreen.backButton ] ].
+5043 - Console [ Added Object [ databaseScreen.backButton ] to Screen [ databaseScreen ] ].
+5043 - Console [ Created new object [ databaseScreen.nextButton ] ].
+5043 - Console [ Added Object [ databaseScreen.nextButton ] to Screen [ databaseScreen ] ].
+5043 - Console [ Created new object [ terminalMenu ] ].
+5043 - Console [ Created new object [ terminalMenu.backGround ] ].
+5043 - Console [ Added Object [ terminalMenu.backGround ] to Screen [ terminalMenu ] ].
+5043 - Console [ Added Object [ terminalMenu.databaseButton ] to Screen [ terminalMenu ] ].
+5043 - Console [ Created new object [ terminalMenu.deckviewButton ] ].
+5043 - Console [ Added Object [ terminalMenu.deckviewButton ] to Screen [ terminalMenu ] ].
+5043 - Console [ Created new object [ terminalMenu.shipviewButton ] ].
+5043 - Console [ Added Object [ terminalMenu.shipviewButton ] to Screen [ terminalMenu ] ].
+5043 - Console [ Created new object [ terminalMenu.logoffButton ] ].
+5043 - Console [ Added Object [ terminalMenu.logoffButton ] to Screen [ terminalMenu ] ].
+5043 - Console [ Created new object [ deckviewScreen ] ].
+5043 - Console [ Created new object [ deckviewScreen.backButton ] ].
+5043 - Console [ Added Object [ deckviewScreen.backButton ] to Screen [ deckviewScreen ] ].
+5043 - Console [ Created new object [ shipviewScreen ] ].
+5043 - Console [ Created new object [ shipviewScreen.backButton ] ].
+5043 - Console [ Added Object [ shipviewScreen.backButton ] to Screen [ shipviewScreen ] ].
+5043 - Console [ Created new object [ scrTutorial ] ].
+5043 - [ load ] Loaded file [ db_999.bmp ]
+5043 - [ load ] Loaded file [ 001.bmp ]
+5043 - [ load ] Loaded file [ 123.bmp ]
+5043 - [ load ] Loaded file [ 139.bmp ]
+5043 - Console [ Created new object [ scrTutorial.textLabelTutMove ] ].
+5043 - [ load ] Loaded file [ 247.bmp ]
+5043 - [ load ] Loaded file [ 249.bmp ]
+5043 - [ load ] Loaded file [ 296.bmp ]
+5043 - [ load ] Loaded file [ 302.bmp ]
+5043 - Console [ Added Object [ scrTutorial.textLabelTutMove ] to Screen [ scrTutorial ] ].
+5043 - [ load ] Loaded file [ 329.bmp ]
+5043 - [ load ] Loaded file [ 420.bmp ]
+5043 - [ load ] Loaded file [ 476.bmp ]
+5043 - [ load ] Loaded file [ 493.bmp ]
+5043 - [ load ] Loaded file [ 516.bmp ]
+5043 - Console [ Created new object [ scrTutorial.tutTextBox ] ].
+5043 - [ load ] Loaded file [ 571.bmp ]
+5043 - [ load ] Loaded file [ 598.bmp ]
+5043 - [ load ] Loaded file [ 614.bmp ]
+5043 - [ load ] Loaded file [ 615.bmp ]
+5043 - [ load ] Loaded file [ 629.bmp ]
+5043 - Console [ Added Object [ scrTutorial.tutTextBox ] to Screen [ scrTutorial ] ].
+5043 - [ load ] Loaded file [ 711.bmp ]
+5043 - [ load ] Loaded file [ 742.bmp ]
+5043 - [ load ] Loaded file [ 751.bmp ]
+5043 - [ load ] Loaded file [ 821.bmp ]
+5043 - Console [ Created new object [ scrTutorial.buttonTutMoveNext ] ].
+5043 - [ load ] Loaded file [ 834.bmp ]
+5043 - [ load ] Loaded file [ 883.bmp ]
+5043 - [ load ] Loaded file [ 999.bmp ]
+5043 - [ load ] Loaded file [ tut_healing.bmp ]
+5043 - Console [ Added Object [ scrTutorial.buttonTutMoveNext ] to Screen [ scrTutorial ] ].
+5043 - [ load ] Loaded file [ tut_lift.bmp ]
+5043 - [ load ] Loaded file [ tut_terminal.bmp ]
+5043 - [ load ] Loaded file [ bullet_001.bmp ]
+5043 - [ load ] Loaded file [ bullet_476.bmp ]
+5043 - Console [ Created new object [ scrTutorial.buttonTutorialCancel ] ].
+5043 - [ load ] Loaded file [ bullet_821.bmp ]
+5043 - Console [ Added Object [ scrTutorial.buttonTutorialCancel ] to Screen [ scrTutorial ] ].
+5043 - Console [ Created new object [ scrTutTransfer ] ].
+5043 - Console [ Created new object [ scrTutTransfer.textLabelTutTransMove ] ].
+5043 - Console [ Added Object [ scrTutTransfer.textLabelTutTransMove ] to Screen [ scrTutTransfer ] ].
+5043 - Console [ Created new object [ scrTutTransfer.tutTransTextBox ] ].
+5043 - Console [ Added Object [ scrTutTransfer.tutTransTextBox ] to Screen [ scrTutTransfer ] ].
+5043 - Console [ Created new object [ scrTutTransfer.buttonTutTransNext ] ].
+5043 - Console [ Added Object [ scrTutTransfer.buttonTutTransNext ] to Screen [ scrTutTransfer ] ].
+5043 - Console [ Created new object [ scrTutTransfer.buttonTutTransCancel ] ].
+5043 - Console [ Added Object [ scrTutTransfer.buttonTutTransCancel ] to Screen [ scrTutTransfer ] ].
+5043 - Console [ Created new object [ scrTutTransGame ] ].
+5043 - Console [ Created new object [ scrTutTransGame.textLabelTutTransGame ] ].
+5043 - Console [ Added Object [ scrTutTransGame.textLabelTutTransGame ] to Screen [ scrTutTransGame ] ].
+5043 - Console [ Created new object [ scrTutTransGame.tutTransGameTextBox ] ].
+5043 - Console [ Added Object [ scrTutTransGame.tutTransGameTextBox ] to Screen [ scrTutTransGame ] ].
+5043 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameNext ] ].
+5043 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameNext ] to Screen [ scrTutTransGame ] ].
+5043 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameCancel ] ].
+5043 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameCancel ] to Screen [ scrTutTransGame ] ].
+5043 - Console [ Created new object [ scrTutLifts ] ].
+5043 - Console [ Created new object [ scrTutLifts.textLabelTutLifts ] ].
+5043 - Console [ Added Object [ scrTutLifts.textLabelTutLifts ] to Screen [ scrTutLifts ] ].
+5043 - Console [ Created new object [ scrTutLifts.tutLiftTextBox ] ].
+5043 - Console [ Added Object [ scrTutLifts.tutLiftTextBox ] to Screen [ scrTutLifts ] ].
+5043 - Console [ Created new object [ scrTutLifts.tutImageLift ] ].
+5043 - Console [ Added Object [ scrTutLifts.tutImageLift ] to Screen [ scrTutLifts ] ].
+5043 - Console [ Created new object [ scrTutLifts.buttonTutLiftNext ] ].
+5043 - Console [ Added Object [ scrTutLifts.buttonTutLiftNext ] to Screen [ scrTutLifts ] ].
+5043 - Console [ Created new object [ scrTutLifts.buttonTutLiftCancel ] ].
+5043 - Console [ Added Object [ scrTutLifts.buttonTutLiftCancel ] to Screen [ scrTutLifts ] ].
+5043 - Console [ Created new object [ scrTutTerminals ] ].
+5043 - Console [ Created new object [ scrTutTerminals.textLabelTutTerminals ] ].
+5043 - Console [ Added Object [ scrTutTerminals.textLabelTutTerminals ] to Screen [ scrTutTerminals ] ].
+5043 - Console [ Created new object [ scrTutTerminals.tutTerminalTextBox ] ].
+5043 - Console [ Added Object [ scrTutTerminals.tutTerminalTextBox ] to Screen [ scrTutTerminals ] ].
+5043 - Console [ Created new object [ scrTutTerminals.tutImageTerminal ] ].
+5043 - Console [ Added Object [ scrTutTerminals.tutImageTerminal ] to Screen [ scrTutTerminals ] ].
+5043 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalNext ] ].
+5043 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalNext ] to Screen [ scrTutTerminals ] ].
+5043 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalCancel ] ].
+5043 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalCancel ] to Screen [ scrTutTerminals ] ].
+5043 - Console [ Created new object [ scrTutHealing ] ].
+5043 - Console [ Created new object [ scrTutHealing.textLabelTutHealing ] ].
+5043 - Console [ Added Object [ scrTutHealing.textLabelTutHealing ] to Screen [ scrTutHealing ] ].
+5043 - Console [ Created new object [ scrTutHealing.tutHealingTextBox ] ].
+5043 - Console [ Added Object [ scrTutHealing.tutHealingTextBox ] to Screen [ scrTutHealing ] ].
+5043 - Console [ Created new object [ scrTutHealing.tutImageHealing ] ].
+5043 - Console [ Added Object [ scrTutHealing.tutImageHealing ] to Screen [ scrTutHealing ] ].
+5043 - Console [ Created new object [ scrTutHealing.buttonTutHealinglNext ] ].
+5043 - Console [ Added Object [ scrTutHealing.buttonTutHealinglNext ] to Screen [ scrTutHealing ] ].
+5043 - Console [ Created new object [ scrTutHealing.buttonTutHealingCancel ] ].
+5043 - Console [ Added Object [ scrTutHealing.buttonTutHealingCancel ] to Screen [ scrTutHealing ] ].
+5043 - Console [ Created new object [ scrTutTips ] ].
+5043 - Console [ Created new object [ scrTutTips.textLabelTutTips ] ].
+5043 - Console [ Added Object [ scrTutTips.textLabelTutTips ] to Screen [ scrTutTips ] ].
+5043 - Console [ Created new object [ scrTutTips.tutTipsTextBox ] ].
+5043 - Console [ Added Object [ scrTutTips.tutTipsTextBox ] to Screen [ scrTutTips ] ].
+5043 - Console [ Created new object [ scrTutTips.buttonTutTipsCancel ] ].
+5043 - Console [ Added Object [ scrTutTips.buttonTutTipsCancel ] to Screen [ scrTutTips ] ].
+5043 - Console [ Created new object [ highScoreDisplay ] ].
+5043 - Console [ Created new object [ highScoreDisplay.backGround ] ].
+5043 - Console [ Added Object [ highScoreDisplay.backGround ] to Screen [ highScoreDisplay ] ].
+5043 - Console [ Created new object [ highScoreDisplay.heading ] ].
+5043 - Console [ Added Object [ highScoreDisplay.heading ] to Screen [ highScoreDisplay ] ].
+5043 - Console [ Created new object [ highScoreDisplay.row1 ] ].
+5043 - Console [ Added Object [ highScoreDisplay.row1 ] to Screen [ highScoreDisplay ] ].
+5043 - Console [ Created new object [ highScoreDisplay.score1 ] ].
+5274 - Console [ Added Object [ highScoreDisplay.score1 ] to Screen [ highScoreDisplay ] ].
+5274 - Console [ Created new object [ highScoreDisplay.name1 ] ].
+5274 - Console [ Added Object [ highScoreDisplay.name1 ] to Screen [ highScoreDisplay ] ].
+5274 - Console [ Created new object [ highScoreDisplay.row2 ] ].
+5278 - Console [ Added Object [ highScoreDisplay.row2 ] to Screen [ highScoreDisplay ] ].
+5278 - Console [ Created new object [ highScoreDisplay.score2 ] ].
+5278 - Console [ Added Object [ highScoreDisplay.score2 ] to Screen [ highScoreDisplay ] ].
+5278 - Console [ Created new object [ highScoreDisplay.name2 ] ].
+5278 - Console [ Added Object [ highScoreDisplay.name2 ] to Screen [ highScoreDisplay ] ].
+5278 - Console [ Created new object [ highScoreDisplay.row3 ] ].
+5278 - Console [ Added Object [ highScoreDisplay.row3 ] to Screen [ highScoreDisplay ] ].
+5278 - Console [ Created new object [ highScoreDisplay.score3 ] ].
+5278 - Console [ Added Object [ highScoreDisplay.score3 ] to Screen [ highScoreDisplay ] ].
+5278 - Console [ Created new object [ highScoreDisplay.name3 ] ].
+5278 - Console [ Added Object [ highScoreDisplay.name3 ] to Screen [ highScoreDisplay ] ].
+5278 - Console [ Created new object [ highScoreDisplay.row4 ] ].
+5278 - Console [ Added Object [ highScoreDisplay.row4 ] to Screen [ highScoreDisplay ] ].
+5278 - Console [ Created new object [ highScoreDisplay.score4 ] ].
+5295 - Console [ Added Object [ highScoreDisplay.score4 ] to Screen [ highScoreDisplay ] ].
+5295 - Console [ Created new object [ highScoreDisplay.name4 ] ].
+5295 - Console [ Added Object [ highScoreDisplay.name4 ] to Screen [ highScoreDisplay ] ].
+5295 - Console [ Created new object [ highScoreDisplay.row5 ] ].
+5295 - Console [ Added Object [ highScoreDisplay.row5 ] to Screen [ highScoreDisplay ] ].
+5295 - Console [ Created new object [ highScoreDisplay.score5 ] ].
+5295 - Console [ Added Object [ highScoreDisplay.score5 ] to Screen [ highScoreDisplay ] ].
+5295 - Console [ Created new object [ highScoreDisplay.name5 ] ].
+5295 - Console [ Added Object [ highScoreDisplay.name5 ] to Screen [ highScoreDisplay ] ].
+5295 - Console [ Created new object [ highScoreDisplay.backButton ] ].
+5295 - Console [ Added Object [ highScoreDisplay.backButton ] to Screen [ highScoreDisplay ] ].
+5295 - Console [ Created new object [ highScoreEntry ] ].
+5295 - Console [ Created new object [ highScoreEntry.backGround ] ].
+5311 - Console [ Added Object [ highScoreEntry.backGround ] to Screen [ highScoreEntry ] ].
+5311 - Console [ Created new object [ highScoreEntry.achieved ] ].
+5311 - Console [ Added Object [ highScoreEntry.achieved ] to Screen [ highScoreEntry ] ].
+5311 - Console [ Created new object [ highScoreEntry.initials ] ].
+5311 - Console [ Added Object [ highScoreEntry.initials ] to Screen [ highScoreEntry ] ].
+5311 - Console [ Created new object [ highScoreEntry.initial0 ] ].
+5311 - Console [ Added Object [ highScoreEntry.initial0 ] to Screen [ highScoreEntry ] ].
+5311 - Console [ Object name or function string cannot be empty. ].
+5311 - Console [ Created new object [ highScoreEntry.initial1 ] ].
+5311 - Console [ Added Object [ highScoreEntry.initial1 ] to Screen [ highScoreEntry ] ].
+5311 - Console [ Object name or function string cannot be empty. ].
+5311 - Console [ Created new object [ highScoreEntry.initial2 ] ].
+5311 - Console [ Added Object [ highScoreEntry.initial2 ] to Screen [ highScoreEntry ] ].
+5311 - Console [ Object name or function string cannot be empty. ].
+5328 - Console [ Created new object [ highScoreEntry.backButton ] ].
+5328 - Console [ Added Object [ highScoreEntry.backButton ] to Screen [ highScoreEntry ] ].
+5328 - Console [ n ].
+5328 - Console [ [data/scripts] is in the search path. ].
+5328 - Console [ [data/data.zip] is in the search path. ].
+5328 - Console [ Loaded [ future_blue.bmp ] with key [ tiles ] ].
+5328 - Console [ Loaded [ splash.bmp ] with key [ splash ] ].
+5328 - Console [ Loaded [ planetAlpha.bmp ] with key [ planetAlpha ] ].
+5328 - Console [ Loaded [ hudNew.bmp ] with key [ hudNew ] ].
+5328 - Console [ Loaded [ screen.bmp ] with key [ screen ] ].
+5328 - Console [ Loaded [ lightmap.bmp ] with key [ lightmap ] ].
+5328 - Console [ Loaded [ explosion.bmp ] with key [ explosion ] ].
+5328 - Console [ Loaded [ universe.bmp ] with key [ universe ] ].
+5328 - Console [ Loaded [ db_999.bmp ] with key [ db_droid ] ].
+5328 - Console [ Loaded [ 001.bmp ] with key [ 001 ] ].
+5345 - Console [ Loaded [ 123.bmp ] with key [ 123 ] ].
+5345 - Console [ Loaded [ 139.bmp ] with key [ 139 ] ].
+5345 - Console [ Loaded [ 247.bmp ] with key [ 247 ] ].
+5345 - Console [ Loaded [ 249.bmp ] with key [ 249 ] ].
+5345 - Console [ Loaded [ 296.bmp ] with key [ 296 ] ].
+5345 - Console [ Loaded [ 302.bmp ] with key [ 302 ] ].
+5345 - Console [ Loaded [ 329.bmp ] with key [ 329 ] ].
+5345 - Console [ Loaded [ 420.bmp ] with key [ 420 ] ].
+5345 - Console [ Loaded [ 476.bmp ] with key [ 476 ] ].
+5345 - Console [ Loaded [ 493.bmp ] with key [ 493 ] ].
+5345 - Console [ Loaded [ 516.bmp ] with key [ 516 ] ].
+5345 - Console [ Loaded [ 571.bmp ] with key [ 571 ] ].
+5345 - Console [ Loaded [ 598.bmp ] with key [ 598 ] ].
+5345 - Console [ Loaded [ 614.bmp ] with key [ 614 ] ].
+5363 - Console [ Loaded [ 615.bmp ] with key [ 615 ] ].
+5363 - Console [ Loaded [ 629.bmp ] with key [ 629 ] ].
+5363 - Console [ Loaded [ 711.bmp ] with key [ 711 ] ].
+5363 - Console [ Loaded [ 742.bmp ] with key [ 742 ] ].
+5363 - Console [ Loaded [ 751.bmp ] with key [ 751 ] ].
+5363 - Console [ Loaded [ 821.bmp ] with key [ 821 ] ].
+5363 - Console [ Loaded [ 834.bmp ] with key [ 834 ] ].
+5363 - Console [ Loaded [ 883.bmp ] with key [ 883 ] ].
+5363 - Console [ Loaded [ 999.bmp ] with key [ 999 ] ].
+5363 - Console [ Loaded [ tut_healing.bmp ] with key [ tut_healing ] ].
+5363 - Console [ Loaded [ tut_lift.bmp ] with key [ tut_lift ] ].
+5363 - Console [ Loaded [ tut_terminal.bmp ] with key [ tut_terminal ] ].
+5363 - Console [ Loaded [ bullet_001.bmp ] with key [ bullet_001 ] ].
+5363 - Console [ Loaded [ bullet_476.bmp ] with key [ bullet_476 ] ].
+5379 - Console [ Loaded [ bullet_821.bmp ] with key [ bullet_821 ] ].
+5379 - Console [ Loaded ship level [ Vehicle Hold ] - index [ 0 ] ].
+5379 - Console [ Loaded ship level [ Shuttle bay ] - index [ 1 ] ].
+5379 - Console [ Loaded ship level [ Turrent 2 ] - index [ 2 ] ].
+5379 - Console [ Loaded ship level [ Maintenance ] - index [ 3 ] ].
+5379 - Console [ Loaded ship level [ Engineering ] - index [ 4 ] ].
+5379 - Console [ Loaded ship level [ Mid cargo ] - index [ 5 ] ].
+5379 - Console [ Loaded ship level [ Upper cargo ] - index [ 6 ] ].
+5379 - Console [ Loaded ship level [ Kitchen ] - index [ 8 ] ].
+5379 - Console [ Loaded ship level [ Robo stores ] - index [ 9 ] ].
+5379 - Console [ Loaded ship level [ Quarters ] - index [ 10 ] ].
+5379 - Console [ Loaded ship level [ Repairs ] - index [ 11 ] ].
+5379 - Console [ Loaded ship level [ Staterooms ] - index [ 12 ] ].
+5379 - Console [ Loaded ship level [ Stores ] - index [ 13 ] ].
+5379 - Console [ Loaded ship level [ Research ] - index [ 14 ] ].
+5396 - Console [ Loaded ship level [ Reactor ] - index [ 15 ] ].
+5396 - Console [ Loaded ship level [ Airlock ] - index [ 16 ] ].
+5396 - Console [ Loaded ship level [ Bridge ] - index [ 17 ] ].
+5396 - Console [ Loaded ship level [ Turrent 1 ] - index [ 18 ] ].
+5396 - Console [ Loaded ship level [ Turrent 3 ] - index [ 19 ] ].
+5396 - Console [ Loaded ship level [ Observation ] - index [ 20 ] ].
+5396 - Console [ Loaded font file [ gui.ttf ] ].
+5396 - Console [ Loaded font file [ gui.ttf ] ].
+5396 - Console [ Loaded font file [ intro.ttf ] ].
+5463 - Looking for function [ as_loadAudioResources ] to [ as_useNewRenderer ] to execute
+5463 - Looking for function [ as_loadAudioResources ] to [ as_getAudioSpecs ] to execute
+5463 - Looking for function [ as_loadAudioResources ] to [ as_loadAudioResources ] to execute
+5463 - [ load ] Loaded file [ collision1.wav ] with key [ collision1 ]
+5463 - [ load ] Loaded file [ console1.wav ] with key [ console1 ]
+5463 - [ load ] Loaded file [ console2.wav ] with key [ console2 ]
+5479 - [ load ] Loaded file [ doorOpen.wav ] with key [ doorOpen ]
+5479 - [ load ] Loaded file [ doorClose.wav ] with key [ doorClose ]
+5479 - [ load ] Loaded file [ disruptor.wav ] with key [ disruptor ]
+5479 - [ load ] Loaded file [ damage.wav ] with key [ damage ]
+5513 - [ load ] Loaded file [ explode1.wav ] with key [ explode1 ]
+5513 - [ load ] Loaded file [ explode2.wav ] with key [ explode2 ]
+5529 - [ load ] Loaded file [ energyHeal.wav ] with key [ energyHeal ]
+5529 - [ load ] Loaded file [ endTransmission2.wav ] with key [ endTransmission2 ]
+5529 - [ load ] Loaded file [ endTransmission1.wav ] with key [ endTransmission1 ]
+5546 - [ load ] Loaded file [ greenAlert.wav ] with key [ greenAlert ]
+5546 - [ load ] Loaded file [ lift1.wav ] with key [ lift1 ]
+5546 - [ load ] Loaded file [ keyPressGood.wav ] with key [ keyPressGood ]
+5546 - [ load ] Loaded file [ keyPressBad.wav ] with key [ keyPressBad ]
+5546 - [ load ] Loaded file [ laser.wav ] with key [ laser ]
+5546 - [ load ] Loaded file [ lowEnergy.wav ] with key [ lowEnergy ]
+5546 - [ load ] Loaded file [ lift2.wav ] with key [ lift2 ]
+5563 - [ load ] Loaded file [ lift3.wav ] with key [ lift3 ]
+5563 - [ load ] Loaded file [ levelShutdown.wav ] with key [ levelShutdown ]
+5563 - [ load ] Loaded file [ redAlert.wav ] with key [ redAlert ]
+5563 - [ load ] Loaded file [ startAll.wav ] with key [ startAll ]
+5563 - [ load ] Loaded file [ start2.wav ] with key [ start2 ]
+5579 - [ load ] Loaded file [ start1.wav ] with key [ start1 ]
+5596 - [ load ] Loaded file [ scrollBeeps.wav ] with key [ scrollBeeps ]
+5612 - [ load ] Loaded file [ transferdeadlock.wav ] with key [ transferdeadlock ]
+5612 - [ load ] Loaded file [ transferMove.wav ] with key [ transferMove ]
+5612 - [ load ] Loaded file [ transferStage1.wav ] with key [ transferStage1 ]
+5629 - [ load ] Loaded file [ transferStage2.wav ] with key [ transferStage2 ]
+5629 - [ load ] Loaded file [ transfer1.wav ] with key [ transfer1 ]
+5629 - [ load ] Loaded file [ transferStart.wav ] with key [ transferStart ]
+5629 - [ load ] Loaded file [ yellowAlert.wav ] with key [ yellowAlert ]
+5629 - [ load ] Loaded file [ transferBurntout.wav ] with key [ transferBurntout ]
+5646 - [ load ] Loaded file [ transferAction.wav ] with key [ transferAction ]
+5646 - [ load ] Loaded file [ liftButton.wav ] with key [ liftButton ]
+13302 - Looking for function [ as_handleMainMenu ] to [ as_useNewRenderer ] to execute
+13302 - Looking for function [ as_handleMainMenu ] to [ as_getAudioSpecs ] to execute
+13302 - Looking for function [ as_handleMainMenu ] to [ as_loadAudioResources ] to execute
+13302 - Looking for function [ as_handleMainMenu ] to [ as_loadTextureResources ] to execute
+13302 - Looking for function [ as_handleMainMenu ] to [ as_loadAllDecks ] to execute
+13302 - Looking for function [ as_handleMainMenu ] to [ as_getVolume ] to execute
+13302 - Looking for function [ as_handleMainMenu ] to [ as_setVolume ] to execute
+13302 - Looking for function [ as_handleMainMenu ] to [ as_createGUI ] to execute
+13302 - Looking for function [ as_handleMainMenu ] to [ as_handleMainMenu ] to execute
+13302 - [ load ] Loaded file [ future_blue.bmp ]
+13302 - Console [ Loaded [ future_blue.bmp ] with key [ tiles ] ].
+13302 - [ sys_setupDroidPhysics ] Setting up enemy physics for level[ Staterooms ].
+13302 - [ sys_setupDroidPhysics ] Droid physics created for level [ Staterooms ]
+20008 - [ postStepRemove ] Removing a shape and body from postStep callback.
+21844 - [ postStepRemove ] Removing a shape and body from postStep callback.
+23612 - [ postStepRemove ] Removing a shape and body from postStep callback.
+23646 - [ gam_damageToDroid ] - target 4 damageSource 1 sourceDroid -1
+23646 - [ gam_damageToDroid ] - Damage to droid [ 4 ] from BULLET
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_useNewRenderer ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_getAudioSpecs ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_loadAudioResources ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_loadTextureResources ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_loadAllDecks ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_getVolume ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_setVolume ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_createGUI ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleMainMenu ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleOptionsMenu ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleVideoOptions ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleAudioMenu ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleControlsMenu ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleGameMenu ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleDeckviewScreen ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleShipviewScreen ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleTerminalMenu ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleDatabaseMenu ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleTransferScreens ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleTutorialElements ] to execute
+27315 - Looking for function [ as_handleDialogBoxes ] to [ as_handleDialogBoxes ] to execute
+27349 - [ gam_checkPlayerHealth ] Player mode set to DROID_MODE_EXPLODING.
+28215 - [ load ] Loaded file [ static_1.bmp ]
+28215 - Console [ Loaded [ static_1.bmp ] with key [ static_1 ] ].
+28215 - [ load ] Loaded file [ static_2.bmp ]
+28215 - Console [ Loaded [ static_2.bmp ] with key [ static_2 ] ].
+28215 - [ load ] Loaded file [ static_3.bmp ]
+28215 - Console [ Loaded [ static_3.bmp ] with key [ static_3 ] ].
+28215 - [ load ] Loaded file [ static_4.bmp ]
+28215 - Console [ Loaded [ static_4.bmp ] with key [ static_4 ] ].
+28215 - [ load ] Loaded file [ static_5.bmp ]
+28215 - Console [ Loaded [ static_5.bmp ] with key [ static_5 ] ].
+28215 - [ load ] Loaded file [ static_6.bmp ]
+28215 - Console [ Loaded [ static_6.bmp ] with key [ static_6 ] ].
+28215 - [ load ] Loaded file [ static_7.bmp ]
+28215 - Console [ Loaded [ static_7.bmp ] with key [ static_7 ] ].
+28215 - [ load ] Loaded file [ static_8.bmp ]
+28215 - Console [ Loaded [ static_8.bmp ] with key [ static_8 ] ].
+28215 - [ load ] Loaded file [ static_9.bmp ]
+28215 - Console [ Loaded [ static_9.bmp ] with key [ static_9 ] ].
+28215 - [ load ] Loaded file [ db_999.bmp ]
+28294 - Console [ Loaded [ db_999.bmp ] with key [ db_droid ] ].
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_useNewRenderer ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_getAudioSpecs ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_loadAudioResources ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_loadTextureResources ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_loadAllDecks ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_getVolume ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_setVolume ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_createGUI ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleMainMenu ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleOptionsMenu ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleVideoOptions ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleAudioMenu ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleControlsMenu ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleGameMenu ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleDeckviewScreen ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleShipviewScreen ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleTerminalMenu ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleDatabaseMenu ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleTransferScreens ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleTutorialElements ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleDialogBoxes ] to execute
+34906 - Looking for function [ as_handleHighscoreDisplay ] to [ as_handleHighscoreDisplay ] to execute
+35539 - Looking for function [ as_handleMainMenu ] to [ as_useNewRenderer ] to execute
+35539 - Looking for function [ as_handleMainMenu ] to [ as_getAudioSpecs ] to execute
+35539 - Looking for function [ as_handleMainMenu ] to [ as_loadAudioResources ] to execute
+35539 - Looking for function [ as_handleMainMenu ] to [ as_loadTextureResources ] to execute
+35539 - Looking for function [ as_handleMainMenu ] to [ as_loadAllDecks ] to execute
+35539 - Looking for function [ as_handleMainMenu ] to [ as_getVolume ] to execute
+35539 - Looking for function [ as_handleMainMenu ] to [ as_setVolume ] to execute
+35539 - Looking for function [ as_handleMainMenu ] to [ as_createGUI ] to execute
+35539 - Looking for function [ as_handleMainMenu ] to [ as_handleMainMenu ] to execute
