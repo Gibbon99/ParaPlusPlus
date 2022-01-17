@@ -785,7 +785,7 @@ void paraGui::getNextLineOfText(int objectIndex)
 	previousSpace = 0;
 
 	fontName = gui.getFontName (GUI_OBJECT_SCROLLBOX, objectIndex);
-	if (fontName.size () == 0)
+	if (fontName.empty())
 	{
 		con_addEvent (EVENT_ACTION_CONSOLE_ADD_CHAR_LINE, sys_getString ("Unable to get fontname for scrollbox [ %i ]", objectIndex));
 		return;
@@ -832,7 +832,7 @@ void paraGui::getNextLineOfText(int objectIndex)
 				nextWord.clear ();
 				foundLine = true;
 				guiScrollBoxes[objectIndex].currentChar++;
-				guiScrollBoxes[objectIndex].scrollDelay = 40;
+				guiScrollBoxes[objectIndex].scrollDelay = 40;       // TODO: Make configurable
 				break;
 
 			default:
@@ -885,6 +885,15 @@ void paraGui::setScrollY(int objectIndex, double newScrollY)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	guiScrollBoxes[objectIndex].scrollY = newScrollY;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return how fast the scroll happens
+double paraGui::getScrollSpeed(int objectIndex)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return guiScrollBoxes[objectIndex].scrollSpeed;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

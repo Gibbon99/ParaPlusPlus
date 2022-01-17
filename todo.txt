@@ -14,8 +14,6 @@ Droid AI - Attack
 Droid AI - Help
 Check bottom edge of animated tiles in graphics
 Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
-Fix free textures - backing screens?? nvidia leak
-
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
@@ -190,6 +188,8 @@ BUG - Fade on low health disappears completely
 BUG - Not all particles fire on explosion - random
 >Commit
 FIXED - BUG - Transfer screen one - shows player droid at wrong position on start
+>Commit
+DONE - Fix free textures - backing screens?? nvidia leak
 >Commit
 
 

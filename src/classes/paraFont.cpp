@@ -215,13 +215,13 @@ int paraFont::width(const std::string &fontText)
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Render a string of text
-void paraFont::render(SDL_Renderer *whichRendererIn, double posX, double posY, int r, int g, int b, int a, std::string text)
+void paraFont::render(SDL_Renderer *whichRendererIn, double posX, double posY, int r, int g, int b, int a, const std::string& text)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_Surface *tempSurface;
 	SDL_Texture *tempTexture;
 
-	if (text.size () == 0)
+	if (text.empty())
 		return;
 
 	setColor (r, g, b, a);
@@ -240,10 +240,10 @@ void paraFont::render(SDL_Renderer *whichRendererIn, double posX, double posY, i
 
 	if ((currentMode == MODE_GAME) || (currentMode == MODE_GAME_OVER)) // Scale font down to low res gameplay resolution
 	{
-		pos.y *= (static_cast<float>(gameWinHeight) / hiresVirtualHeight);
-		pos.x *= (static_cast<float>(gameWinWidth) / hiresVirtualWidth);
-		pos.h = tempSurface->h * (static_cast<float>(gameWinHeight) / hiresVirtualHeight);
-		pos.w = tempSurface->w * (static_cast<float>(gameWinWidth) / hiresVirtualWidth);
+		pos.y *= (static_cast<float>(gameWinHeight) / static_cast<float>(hiresVirtualHeight));
+		pos.x *= (static_cast<float>(gameWinWidth) / static_cast<float>(hiresVirtualWidth));
+		pos.h = static_cast<float>(tempSurface->h) * (static_cast<float>(gameWinHeight) / static_cast<float>(hiresVirtualHeight));
+		pos.w = static_cast<float>(tempSurface->w) * (static_cast<float>(gameWinWidth) / static_cast<float>(hiresVirtualWidth));
 	}
 
 	SDL_RenderCopyF (whichRendererIn, tempTexture, nullptr, &pos);

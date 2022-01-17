@@ -82,9 +82,14 @@ void gui_renderScrollbox (std::string whichScrollbox, double interpolate)
 	}
 	else
 	{
-		drawPositionY = gui.getScrollY (objectIndex) - gui.getPreviousScrollY (objectIndex);
+		drawPositionY = (gui.getScrollY (objectIndex) - gui.getPreviousScrollY (objectIndex));
+		if (drawPositionY < 0)
+			drawPositionY = 0;
 		drawPositionY *= interpolate;
 		drawPositionY += gui.getPreviousScrollY (objectIndex);
+
+//		logFile.write(sys_getString("scroll Y [ %f ] previous Y [ %f ] drawDelta [ %f ]", gui.getScrollY (objectIndex), gui.getPreviousScrollY (objectIndex), drawPositionY));
+
 	}
 
 #ifdef CLIP_SCROLLBOX
@@ -128,7 +133,7 @@ void gui_renderScrollbox (std::string whichScrollbox, double interpolate)
 #endif
 
 #ifdef CLIP_SCROLLBOX
-		fontClass.render (renderer.renderer, renderPosX, renderPosY, fontColor.r, fontColor.g, fontColor.b, 250, lineItr->c_str ());
+		fontClass.render (renderer.renderer, renderPosX, renderPosY, fontColor.r, fontColor.g, fontColor.b, 250, *lineItr);
 #else
 		fontClass.render(renderer.renderer, renderPosX, renderPosY, fontColor.r, fontColor.g, fontColor.b, static_cast<Uint8>(lineAlpha), lineItr->c_str());
 #endif
@@ -153,11 +158,11 @@ void gui_renderScrollbox (std::string whichScrollbox, double interpolate)
 void gui_scrollOnePixel (int objectIndex)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	std::string    fontName;
+	std::string    fontName{};
 	__BOUNDING_BOX bb {};
 
 	fontName = gui.getFontName (GUI_OBJECT_SCROLLBOX, objectIndex);
-	if (fontName.size () == 0)
+	if (fontName.empty())
 	{
 		con_addEvent (EVENT_ACTION_CONSOLE_ADD_CHAR_LINE, sys_getString ("Unable to get fontname for scrollbox [ %i ]", objectIndex));
 		return;
@@ -172,12 +177,12 @@ void gui_scrollOnePixel (int objectIndex)
 	}
 
 	gui.setPreviousScrollY (objectIndex, gui.getScrollY (objectIndex));
-	gui.setScrollY (objectIndex, gui.getScrollY (objectIndex) + 2.0); //gui.getScrollDelay (objectIndex));
+	gui.setScrollY (objectIndex, gui.getScrollY (objectIndex) + gui.getScrollSpeed (objectIndex));  // TODO - check this - not set ?
 
 	if (gui.getScrollY (objectIndex) > fontClass.height () - 1)
 	{
 		gui.setScrollY (objectIndex, 0.0);
-		gui.setPreviousScrollY (objectIndex, -1.0);
+		gui.setPreviousScrollY (objectIndex, 0.0);
 
 		gui.getNextLineOfText (objectIndex);
 		gui.setNumberPrintLines (objectIndex, gui.getNumberPrintLines (objectIndex) + 1);
@@ -194,7 +199,7 @@ void gui_scrollOnePixel (int objectIndex)
 void gui_scrollScrollBox (std::string whichScrollbox)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int objectIndex;
+	int objectIndex{};
 
 	//
 	// Find the index for this object

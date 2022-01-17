@@ -829,7 +829,7 @@ void as_setupWinScreenScrollBox()
     as_paraGui.setPosition(GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", 8, GUI_COORD_ABSOLUTE, scrollBoxBorderWidth, 100, hiresVirtualWidth - scrollBoxBorderWidth, hiresVirtualHeight - scrollBoxBorderWidth - 100);
     as_paraGui.setColor(GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", GUI_COL_ACTIVE, 100, 100, 15, 100);
     as_paraGui.setColor(GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", GUI_COL_ACTIVE_LABEL, 20, 150, 100, 240);
-    as_paraGui.setScrollSpeed(GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", 60.0);
+    as_paraGui.setScrollSpeed(GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", 2.0);
     as_paraGui.setReady(GUI_OBJECT_SCROLLBOX, "wonScreen.scrollbox", true);
 }
 
@@ -848,7 +848,7 @@ void as_setupIntroScrollBox()
     as_paraGui.setPosition(GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 8, GUI_COORD_ABSOLUTE, scrollBoxBorderWidth, 100, hiresVirtualWidth - scrollBoxBorderWidth, hiresVirtualHeight - scrollBoxBorderWidth - 100);
     as_paraGui.setColor(GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", GUI_COL_ACTIVE, 100, 100, 15, 100);
     as_paraGui.setColor(GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", GUI_COL_ACTIVE_LABEL, 20, 150, 100, 240);
-    as_paraGui.setScrollSpeed(GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 60.0);
+    as_paraGui.setScrollSpeed(GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", 2.0);
     as_paraGui.setReady(GUI_OBJECT_SCROLLBOX, "introScreen.scrollbox", true);
 }
 

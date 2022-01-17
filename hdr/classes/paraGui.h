@@ -117,21 +117,21 @@ struct __GUI_SLIDER
 
 struct __GUI_SCROLLBOX
 {
-	bool                     ready        = false;
+	bool                     ready{false};
 	bool                     canFocus;
 	bool                     positionCalled;
 	std::string              ID;
 	int                      labelPos;
 	int                      gapSize;
-	int                      cornerRadius = 0;
-	int                      coordType;
-	int                      currentChar  = 0;
+	int                      cornerRadius{0};
+//	int                      coordType;
+	int                      currentChar{0};
 	int                      numLinesToPrint;
 	double                   lineFade;
-	double                   scrollDelay  = 0.2;
+	double                   scrollDelay{40};   // Make configureable
 	double                   scrollY;
 	double                   previousScrollY;
-	double                   scrollSpeed;
+	double                   scrollSpeed{0.5};
 	std::string              label;
 	std::string              fontName;
 	std::string              action;
@@ -208,6 +208,9 @@ public:
 	int getCurrentScreen();
 
 	void setCurrentScreen(int newScreen);
+
+	// Return how fast the scroll happens
+	double getScrollSpeed(int objectIndex);
 
 	void setScrollSpeed(int objectType, const std::string &objectID, double newScrollSpeed);
 
