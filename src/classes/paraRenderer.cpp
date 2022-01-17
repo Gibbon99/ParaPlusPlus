@@ -108,6 +108,15 @@ Uint32 paraRenderer::createRendererFlags(int rendererIndex)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Teardown the renderer and textures
+void paraRenderer::destroy()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	SDL_DestroyRenderer(renderer);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Create a OS window and create the renderer for that window
 void paraRenderer::create(int newWinWidth, int newWinHeight, int winFlags, int rendererIndex, bool useVSync, const std::string &windowTitle)
 //----------------------------------------------------------------------------------------------------------------------

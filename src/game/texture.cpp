@@ -41,4 +41,6 @@ void gam_freeTextures()
 	{
 		SDL_FreeSurface (texItr.second.getSurface ());
 	}
+
+	renderer.destroy();
 }

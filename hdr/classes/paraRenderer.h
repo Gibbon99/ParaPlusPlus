@@ -45,6 +45,9 @@ public:
 
 	Uint32 createRendererFlags(int rendererIndex);
 
+	// Teardown the renderer and textures
+	void destroy();
+
 	// Get things
 	void getRendererInfo();
 
@@ -61,7 +64,6 @@ public:
 	std::string getRendererByIndex(int whichRenderer);
 
 	int getCurrentRendererIndex();
-
 
 	// Set things
 	void setShutdownFunction(functionPtrStr outputFunction);
