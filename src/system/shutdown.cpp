@@ -1,8 +1,7 @@
 #include "system/util.h"
 #include "system/cpPhysics.h"
 #include "game/particles.h"
-#include "gui/guiHighScore.h"
-#include "../../hdr/system/shutdown.h"
+#include "game/texture.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -18,6 +17,7 @@ void sys_closeSystems ()
 	io_closeJoystick ();
 	paraScriptInstance.stop ();
 	sys_freeMemory ();
+	gam_freeTextures();
 	logFile.close ();
 
 	evt_stopThreads ();

@@ -16,6 +16,19 @@ void paraTexture::ReleaseRef()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Deconstructor for a texture - free memory
+paraTexture::~paraTexture()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	if (nullptr != surface)
+	{
+//		SDL_FreeSurface (surface);
+//		surface = nullptr;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Constructor
 paraTexture::paraTexture(textureFunctionPtrStr outputFunction, textureFunctionPtrLoad loadFunction)
 //----------------------------------------------------------------------------------------------------------------------
@@ -31,6 +44,15 @@ PARA_Texture *paraTexture::getTexture()
 //----------------------------------------------------------------------------------------------------------------------
 {
 	return texture;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Return a pointer to the surface
+PARA_Surface *paraTexture::getSurface()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return surface;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -106,8 +128,11 @@ bool paraTexture::load(std::string newFileName, std::string newKeyName)
 
 	loaded = false;
 
+	if (nullptr != surface)
+		SDL_FreeSurface (surface);
+
 	fileName = std::move (newFileName);
-	surface  = SDL_LoadBMP_RW (funcLoad (fileName), 0);     // TODO Free surface - memory leak
+	surface  = SDL_LoadBMP_RW (funcLoad (fileName), 0);     // TODO Free surface - memory leak - make constructor and free SDL_FreeSurface(surface)
 	if (nullptr == surface)
 	{
 		funcOutput (-1, int_getString ("Unable to load texture file [ %s ] - [ %s ]", fileName.c_str (), SDL_GetError ()));

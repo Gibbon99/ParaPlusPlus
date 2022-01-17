@@ -13,6 +13,8 @@ void gam_loadTexture(std::string &fileName, std::string &keyName)
 {
 	paraTexture tempTexture (con_addEvent, io_loadRawFile);
 
+	paraTexture test(con_addEvent, io_loadRawFile);
+
 	if (tempTexture.load (fileName, keyName))
 	{
 		tempTexture.setFileName (fileName);
@@ -31,3 +33,14 @@ void gam_loadTexture(std::string &fileName, std::string &keyName)
 		sys_shutdownWithError (sys_getString ("Unable to load texture [ %s ]", fileName.c_str ()));
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Free all the textures
+void gam_freeTextures()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	for (auto &texItr : textures)
+	{
+		SDL_FreeSurface (texItr.second.getSurface ());
+	}
+}

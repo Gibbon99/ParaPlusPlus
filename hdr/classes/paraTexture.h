@@ -13,6 +13,9 @@ class paraTexture
 {
 public:
 
+	// Deconstructor for a texture - free memory
+	~paraTexture();
+
 	void ReleaseRef();
 
 	void AddRef();
@@ -40,6 +43,7 @@ public:
 	bool isLoaded();
 
 	PARA_Texture *getTexture();
+	PARA_Surface *getSurface();
 
 private:
 	bool              loaded {false};

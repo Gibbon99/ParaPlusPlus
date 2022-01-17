@@ -126,7 +126,6 @@ bool gui_loadSideViewData (std::string sideviewFileName)
 	int           count;
 	int           buf[1];
 	unsigned char levelCount[1];
-//	SDL_RWops     *fp;
 	UniqueRWops   fp;
 
 	float smallX, largeX;

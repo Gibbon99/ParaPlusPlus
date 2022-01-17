@@ -29,12 +29,12 @@ void io_getScriptFileNames(std::string directoryName)
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Load function callback for the audio class - this function loads a file and returns a pointer to memory
-SDL_RWops *io_loadRawFile(std::string fileName)
+SDL_RWops * io_loadRawFile(std::string fileName) // NOLINT(performance-unnecessary-value-param)
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_RWops *memFilePtr {};
-	int       fileSize {};
-	char      *rawFileData {};
+//	int       fileSize {};
+	char *rawFileData {};
 //	std::unique_ptr<char *> soundFileData;
 
 	if (!fileSystem.doesFileExist (fileName))
@@ -44,14 +44,16 @@ SDL_RWops *io_loadRawFile(std::string fileName)
 	}
 	//
 	// How much memory does it need
-	fileSize = fileSystem.getFileSize (fileName);
+	auto fileSize = fileSystem.getFileSize (fileName);
 	if (-1 == fileSize)
 	{
 		sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, sys_getString ("Unable to get file size [ %s ]", fileName.c_str ()));
 		return nullptr;
 	}
 
-	rawFileData = sys_malloc (fileSize, fileName);  // TODO Needs to be free'd
+	rawFileData = sys_malloc (static_cast<int>(fileSize), fileName);  // TODO Needs to be free'd
+
+//	std::unique_ptr<char *>rawFileData = static_cast<const std::unique_ptr<char *> &>(sys_malloc (static_cast<int>(fileSize), fileName));  // TODO Needs to be free'd
 	if (nullptr == rawFileData)
 	{
 		sys_addEvent (EVENT_TYPE_CONSOLE, EVENT_ACTION_CONSOLE_ADD_LINE, 0, sys_getString ("Unable to get memory to hold file [ %s ]", fileName.c_str ()));
@@ -61,7 +63,7 @@ SDL_RWops *io_loadRawFile(std::string fileName)
 	// Load into memory
 	fileSystem.getFileIntoMemory (fileName, rawFileData);
 
-	memFilePtr = SDL_RWFromMem (rawFileData, fileSize);
+	memFilePtr = SDL_RWFromMem (rawFileData, static_cast<int>(fileSize));
 
 	return memFilePtr;
 }
