@@ -237,7 +237,7 @@ public:
 
 	void setTickedStatus(const std::string &objectID, int whichGroup, bool newValue);
 
-	void setActiveObject(int whichScreen, int objectType, std::string objectID);
+	void setActiveObject(int whichScreen, std::string objectID);
 
 	int getActiveObjectIndex();
 

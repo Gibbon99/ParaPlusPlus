@@ -10,7 +10,7 @@ void as_handleDeckviewScreen()
 		gam_setHudText("terminalMenu.terminalText");
 		sys_setNewMode (MODE_GUI_TERMINAL, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.deckviewButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "terminalMenu.deckviewButton");
 		return;
 	}
 }
@@ -26,7 +26,7 @@ void as_handleShipviewScreen()
 		gam_setHudText("terminalMenu.terminalText");
 		sys_setNewMode (MODE_GUI_TERMINAL, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.shipviewButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "terminalMenu.shipviewButton");
 		return;
 	}
 }
@@ -44,7 +44,7 @@ void as_handleTerminalMenu ()
 		as_paraGui.restartScrollBox("databaseScreen.scrollbox");
 		sys_setNewMode(MODE_GUI_DATABASE, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "databaseScreen"));
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "databaseScreen.backButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "databaseScreen.backButton");
 		return;
 	}
 
@@ -54,7 +54,7 @@ void as_handleTerminalMenu ()
 		gam_setHudText("terminalMenu.deckviewButton");
 		sys_setNewMode(MODE_GUI_DECKVIEW, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "deckviewScreen"));
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "deckviewScreen.backButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "deckviewScreen.backButton");
 		return;
 	}
 
@@ -63,7 +63,7 @@ void as_handleTerminalMenu ()
 		gam_setHudText("terminalMenu.shipviewButton");
 		sys_setNewMode(MODE_GUI_SHIPVIEW, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "shipviewScreen"));
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "shipviewScreen.backButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "shipviewScreen.backButton");
 		return;
 	}
 
@@ -88,7 +88,7 @@ void as_handleDatabaseMenu ()
 		gam_setHudText("terminalMenu.terminalText");
 		sys_setNewMode (MODE_GUI_TERMINAL, true);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.databaseButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "terminalMenu.databaseButton");
 		return;
 	}
 

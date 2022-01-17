@@ -18,9 +18,9 @@
 0 - Console [ Script: Script Engine version - [ 2.35.0 ] ].
 0 - Console [ Script: Options - [  AS_64BIT_PTR AS_LINUX AS_X64_GCC  ] ].
 0 - Console [ Scripting started. ].
-0 - Console [ Script: Registered function - [ void sys_printConInt (string &in, int param) ] ].
 0 - Script [ consoleFunctions.as ]
 0 - Script [ dialogBox.as ]
+0 - Console [ Script: Registered function - [ void sys_printConInt (string &in, int param) ] ].
 0 - Script [ english.as ]
 0 - Script [ enum.h ]
 0 - Script [ german.as ]
@@ -31,8 +31,8 @@
 0 - Script [ resources.as ]
 0 - Script [ terminal.as ]
 0 - Script [ transfer.as ]
-0 - Console [ Script: Registered function - [ void sys_setNewMode (int newMode, bool doFade) ] ].
 0 - Script [ tutorial.as ]
+0 - Console [ Script: Registered function - [ void sys_setNewMode (int newMode, bool doFade) ] ].
 0 - Console [ Script: Registered function - [ void sys_addEvent (int eventType, int eventAction, int eventDelay, string &in) ] ].
 0 - Console [ Script: Registered function - [ void gam_addAudioEvent (int action, bool loop, int distance, int pan, string &in) ] ].
 0 - Console [ Script: Registered function - [ void gui_addKeyAndText (string &in, string &in) ] ].
@@ -98,521 +98,536 @@
 0 - Console [ Script: Registered variable - [ float transferRowHeight ] ].
 0 - Console [ Script: Registered variable - [ float transferRowStartY ] ].
 0 - Console [ Script: Registered variable - [ float transferRowCellWidth ] ].
-0 - Console [ Script: Registered variable - [ float transferBackgroundStartX ] ].
-0 - Console [ Script: Registered variable - [ float transferBackgroundStartY ] ].
-0 - Console [ Script: Registered variable - [ float transferBackgroundWidth ] ].
-0 - Console [ Script: Registered variable - [ float transferBackgroundHeight ] ].
-0 - Console [ Script: Registered variable - [ int transferBorderThickness ] ].
-0 - Console [ Script: Registered variable - [ float transferStatusTabWidth ] ].
-4741 - Console [ Script: Registered variable - [ float transferStatusTabHeight ] ].
-4741 - Console [ Script: Registered variable - [ float transferSidebarGap ] ].
-4741 - Console [ Script: Registered variable - [ float transferSidebarWidth ] ].
-4741 - Console [ Script: Registered variable - [ float transferLineThickness ] ].
-4741 - Console [ Script: Registered variable - [ int chooseSideTimeOut ] ].
-4741 - Console [ Script: Registered variable - [ float chooseSideDelayTime ] ].
-4741 - Console [ Script: Registered variable - [ float chooseRowDelayTime ] ].
-4741 - Console [ Script: Registered variable - [ float activeRowCounter ] ].
-4741 - Console [ Script: Registered variable - [ int transferTimeOut ] ].
-4741 - Console [ Script: Registered variable - [ float transferDelayTime ] ].
-4741 - Console [ Script: Registered variable - [ int powerdownLevelScore ] ].
-4741 - Console [ Script: Registered variable - [ float healingDelayCounter ] ].
-4741 - Console [ Script: Registered variable - [ int healingAmountPerTick ] ].
-4741 - Console [ Script: Registered variable - [ float explosionAnimationSpeed ] ].
-4741 - Console [ Script: Registered variable - [ int explosionDamage ] ].
-4741 - Console [ Script: Registered variable - [ int alertLevelVolume ] ].
-4741 - Console [ Script: Registered variable - [ float staticAnimationDelay ] ].
-4741 - Console [ Script: Registered variable - [ int lostScreenShowTime ] ].
-4741 - Console [ Script: Registered variable - [ float influenceTimelimit ] ].
-4741 - Console [ Script: Registered variable - [ float influenceTimelimtDelay ] ].
-4741 - Console [ Script: Registered variable - [ float influenceTimeLeftWarning ] ].
-4741 - Console [ Script: Registered variable - [ int transferResultDelay ] ].
-4741 - Console [ Script: Registered variable - [ int maxNumBumps ] ].
-4741 - Console [ Script: Registered variable - [ float bounceCounterDelay ] ].
-4741 - Console [ Script: Registered variable - [ int databaseDroidRenderYOffset ] ].
-4741 - Console [ Section has been added [ consoleFunctions.as ] ].
-4741 - Console [ Section has been added [ dialogBox.as ] ].
-4741 - Console [ Section has been added [ english.as ] ].
-4741 - Console [ Section has been added [ enum.h ] ].
-4741 - Console [ Section has been added [ german.as ] ].
-4741 - Console [ Section has been added [ gui.as ] ].
-4741 - Console [ Section has been added [ highScore.as ] ].
-4741 - Console [ Section has been added [ italian.as ] ].
-4741 - Console [ Section has been added [ language.as ] ].
-4741 - Console [ Section has been added [ resources.as ] ].
-4741 - Console [ Section has been added [ terminal.as ] ].
-4741 - Console [ Section has been added [ transfer.as ] ].
-4741 - Console [ Section has been added [ tutorial.as ] ].
-4846 - Console [ About to run BuildModule. ].
-5053 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5053 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5053 - [ sys_startInit ] Run setupPhysicsEngine.
-5053 - Looking for function [ as_loadTextureResources ] to [ as_useNewRenderer ] to execute
-5053 - Looking for function [ as_loadTextureResources ] to [ as_getAudioSpecs ] to execute
-5053 - Looking for function [ as_loadTextureResources ] to [ as_loadAudioResources ] to execute
-5053 - Looking for function [ as_loadTextureResources ] to [ as_loadTextureResources ] to execute
-5053 - Looking for function [ as_loadAllDecks ] to [ as_useNewRenderer ] to execute
-5053 - Looking for function [ as_loadAllDecks ] to [ as_getAudioSpecs ] to execute
-5053 - Looking for function [ as_loadAllDecks ] to [ as_loadAudioResources ] to execute
-5053 - Looking for function [ as_loadAllDecks ] to [ as_loadTextureResources ] to execute
-5053 - Looking for function [ as_loadAllDecks ] to [ as_loadAllDecks ] to execute
-5053 - Looking for function [ as_createGUI ] to [ as_useNewRenderer ] to execute
-5053 - Looking for function [ as_createGUI ] to [ as_getAudioSpecs ] to execute
-5053 - Looking for function [ as_createGUI ] to [ as_loadAudioResources ] to execute
-5053 - Looking for function [ as_createGUI ] to [ as_loadTextureResources ] to execute
-5053 - Looking for function [ as_createGUI ] to [ as_loadAllDecks ] to execute
-5053 - Looking for function [ as_createGUI ] to [ as_getVolume ] to execute
-5053 - Looking for function [ as_createGUI ] to [ as_setVolume ] to execute
-5053 - Looking for function [ as_createGUI ] to [ as_createGUI ] to execute
-5053 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ evt_setThreadReady ] Thread [ audioThread ] set to ready = true
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
-5155 - Console [ Created new object [ wonScreen ] ].
-5155 - Console [ Created new object [ wonScreen.scrollbox ] ].
-5155 - [ load ] Loaded file [ future_blue.bmp ]
-5155 - Console [ Added Object [ wonScreen.scrollbox ] to Screen [ wonScreen ] ].
-5155 - Console [ Created new object [ quitGameDialogbox.text ] ].
-5155 - Console [ Added Object [ quitGameDialogbox.text ] to Dialogbox [ quitGameDialogbox ] ].
-5155 - Console [ Added Object [ quitGameDialogbox.confirmButton ] to Dialogbox [ quitGameDialogbox ] ].
-5155 - [ load ] Loaded file [ splash.bmp ]
-5155 - Console [ Created new object [ quitGameDialogbox.denyButton ] ].
-5155 - Console [ Added Object [ quitGameDialogbox.denyButton ] to Dialogbox [ quitGameDialogbox ] ].
-5155 - Console [ Created new object [ guiTransferOne ] ].
-5155 - Console [ Added Object [ guiTransferOne.heading ] to Screen [ guiTransferOne ] ].
-5155 - 0: pulseaudio
-5155 - 1: alsa
-5155 - 2: sndio
-5155 - 3: dsp
-5155 - 4: disk
-5155 - 5: dummy
-5155 - Using audio driver: pulseaudio
+4569 - Console [ Script: Registered variable - [ float transferBackgroundStartX ] ].
+4569 - Console [ Script: Registered variable - [ float transferBackgroundStartY ] ].
+4569 - Console [ Script: Registered variable - [ float transferBackgroundWidth ] ].
+4569 - Console [ Script: Registered variable - [ float transferBackgroundHeight ] ].
+4569 - Console [ Script: Registered variable - [ int transferBorderThickness ] ].
+4569 - Console [ Script: Registered variable - [ float transferStatusTabWidth ] ].
+4569 - Console [ Script: Registered variable - [ float transferStatusTabHeight ] ].
+4569 - Console [ Script: Registered variable - [ float transferSidebarGap ] ].
+4569 - Console [ Script: Registered variable - [ float transferSidebarWidth ] ].
+4569 - Console [ Script: Registered variable - [ float transferLineThickness ] ].
+4569 - Console [ Script: Registered variable - [ int chooseSideTimeOut ] ].
+4569 - Console [ Script: Registered variable - [ float chooseSideDelayTime ] ].
+4569 - Console [ Script: Registered variable - [ float chooseRowDelayTime ] ].
+4569 - Console [ Script: Registered variable - [ float activeRowCounter ] ].
+4569 - Console [ Script: Registered variable - [ int transferTimeOut ] ].
+4569 - Console [ Script: Registered variable - [ float transferDelayTime ] ].
+4569 - Console [ Script: Registered variable - [ int powerdownLevelScore ] ].
+4569 - Console [ Script: Registered variable - [ float healingDelayCounter ] ].
+4569 - Console [ Script: Registered variable - [ int healingAmountPerTick ] ].
+4569 - Console [ Script: Registered variable - [ float explosionAnimationSpeed ] ].
+4569 - Console [ Script: Registered variable - [ int explosionDamage ] ].
+4569 - Console [ Script: Registered variable - [ int alertLevelVolume ] ].
+4569 - Console [ Script: Registered variable - [ float staticAnimationDelay ] ].
+4569 - Console [ Script: Registered variable - [ int lostScreenShowTime ] ].
+4569 - Console [ Script: Registered variable - [ float influenceTimelimit ] ].
+4569 - Console [ Script: Registered variable - [ float influenceTimelimtDelay ] ].
+4569 - Console [ Script: Registered variable - [ float influenceTimeLeftWarning ] ].
+4569 - Console [ Script: Registered variable - [ int transferResultDelay ] ].
+4569 - Console [ Script: Registered variable - [ int maxNumBumps ] ].
+4569 - Console [ Script: Registered variable - [ float bounceCounterDelay ] ].
+4569 - Console [ Script: Registered variable - [ int databaseDroidRenderYOffset ] ].
+4569 - Console [ Section has been added [ consoleFunctions.as ] ].
+4569 - Console [ Section has been added [ dialogBox.as ] ].
+4569 - Console [ Section has been added [ english.as ] ].
+4569 - Console [ Section has been added [ enum.h ] ].
+4569 - Console [ Section has been added [ german.as ] ].
+4569 - Console [ Section has been added [ gui.as ] ].
+4569 - Console [ Section has been added [ highScore.as ] ].
+4569 - Console [ Section has been added [ italian.as ] ].
+4569 - Console [ Section has been added [ language.as ] ].
+4569 - Console [ Section has been added [ resources.as ] ].
+4569 - Console [ Section has been added [ terminal.as ] ].
+4569 - Console [ Section has been added [ transfer.as ] ].
+4569 - Console [ Section has been added [ tutorial.as ] ].
+4569 - [ con_addEvent ] Timed out waiting for console mutex to unlock [ consoleMutex ] [  ]
+4897 - [ sys_startInit ] Run setupPhysicsEngine.
+4897 - Looking for function [ as_loadTextureResources ] to [ as_useNewRenderer ] to execute
+4897 - Looking for function [ as_loadTextureResources ] to [ as_getAudioSpecs ] to execute
+4897 - Looking for function [ as_loadTextureResources ] to [ as_loadAudioResources ] to execute
+4897 - Looking for function [ as_loadTextureResources ] to [ as_loadTextureResources ] to execute
+4897 - Looking for function [ as_loadAllDecks ] to [ as_useNewRenderer ] to execute
+4897 - Looking for function [ as_loadAllDecks ] to [ as_getAudioSpecs ] to execute
+4897 - Looking for function [ as_loadAllDecks ] to [ as_loadAudioResources ] to execute
+4897 - Looking for function [ as_loadAllDecks ] to [ as_loadTextureResources ] to execute
+4897 - Looking for function [ as_loadAllDecks ] to [ as_loadAllDecks ] to execute
+4897 - [ evt_setThreadReady ] Thread [ audioThread ] set to ready = true
+4897 - Looking for function [ as_createGUI ] to [ as_useNewRenderer ] to execute
+4897 - Looking for function [ as_createGUI ] to [ as_getAudioSpecs ] to execute
+4897 - Looking for function [ as_createGUI ] to [ as_loadAudioResources ] to execute
+4897 - Looking for function [ as_createGUI ] to [ as_loadTextureResources ] to execute
+4897 - Looking for function [ as_createGUI ] to [ as_loadAllDecks ] to execute
+4897 - Looking for function [ as_createGUI ] to [ as_getVolume ] to execute
+4897 - Looking for function [ as_createGUI ] to [ as_setVolume ] to execute
+4897 - Looking for function [ as_createGUI ] to [ as_createGUI ] to execute
+4897 - Console [ Finished buildModule. ].
+4897 - Console [ Func ID for [ void as_useNewRenderer(int &in newRenderer) ] - [ 136320 ] ].
+4897 - Console [ Func ID for [ void as_getAudioSpecs() ] - [ 135168 ] ].
+4897 - Console [ Func ID for [ void as_loadAudioResources() ] - [ 147456 ] ].
+4897 - Console [ Func ID for [ void as_loadTextureResources() ] - [ 147840 ] ].
+4897 - Console [ Func ID for [ void as_loadAllDecks() ] - [ 148224 ] ].
+4897 - Console [ Func ID for [ int as_getVolume() ] - [ 135936 ] ].
+4897 - Console [ Func ID for [ void as_setVolume(int newVolume) ] - [ 135552 ] ].
+4897 - Console [ Func ID for [ void as_createGUI() ] - [ 144768 ] ].
+4897 - Console [ Func ID for [ void as_handleMainMenu() ] - [ 138624 ] ].
+4897 - Console [ Func ID for [ void as_handleOptionsMenu() ] - [ 139008 ] ].
+4897 - Console [ Func ID for [ void as_handleVideoOptions() ] - [ 140928 ] ].
+4897 - Console [ Func ID for [ void as_handleAudioMenu() ] - [ 139392 ] ].
+4897 - Console [ Func ID for [ void as_handleControlsMenu() ] - [ 140160 ] ].
+4897 - 0: pulseaudio
+4897 - 1: alsa
+4897 - 2: sndio
+4897 - 3: dsp
+4897 - 4: disk
+5000 - 5: dummy
+5000 - Using audio driver: pulseaudio
 
-5155 - Console [ Created new object [ guiTransferOne.textbox ] ].
-5155 - Console [ Added Object [ guiTransferOne.textbox ] to Screen [ guiTransferOne ] ].
-5155 - Console [ Created new object [ guiTransferOne.nextButton ] ].
-5155 - Console [ Added Object [ guiTransferOne.nextButton ] to Screen [ guiTransferOne ] ].
-5155 - Console [ Created new object [ guiTransferTwo ] ].
-5155 - Console [ Created new object [ guiTransferTwo.heading ] ].
-5155 - [ load ] Loaded file [ planetAlpha.bmp ]
-5155 - Console [ Added Object [ guiTransferTwo.heading ] to Screen [ guiTransferTwo ] ].
-5155 - Error reading high score file. Code [ 3 ]
-
-5155 - Console [ Created new object [ guiTransferTwo.textbox ] ].
-5155 - Console [ Added Object [ guiTransferTwo.textbox ] to Screen [ guiTransferTwo ] ].
-5155 - [ load ] Loaded file [ hudNew.bmp ]
-5155 - Console [ Created new object [ guiTransferTwo.nextButton ] ].
-5155 - [ load ] Loaded file [ screen.bmp ]
-5155 - [ load ] Loaded file [ lightmap.bmp ]
-5155 - Console [ Added Object [ guiTransferTwo.nextButton ] to Screen [ guiTransferTwo ] ].
-5155 - [ load ] Loaded file [ explosion.bmp ]
-5155 - Console [ Created new object [ mainMenu ] ].
-5155 - Console [ Created new object [ mainMenu.backGround ] ].
-5155 - Console [ Added Object [ mainMenu.backGround ] to Screen [ mainMenu ] ].
-5155 - Console [ Created new object [ mainMenu.startGameButton ] ].
-5155 - Console [ Added Object [ mainMenu.startGameButton ] to Screen [ mainMenu ] ].
-5155 - Console [ Created new object [ mainMenu.optionsButton ] ].
-5155 - Console [ Added Object [ mainMenu.optionsButton ] to Screen [ mainMenu ] ].
-5155 - Console [ Created new object [ mainMenu.tutorialButton ] ].
-5155 - Console [ Added Object [ mainMenu.tutorialButton ] to Screen [ mainMenu ] ].
-5155 - Console [ Created new object [ mainMenu.briefingButton ] ].
-5155 - Console [ Added Object [ mainMenu.briefingButton ] to Screen [ mainMenu ] ].
-5155 - Console [ Created new object [ mainMenu.quitButton ] ].
-5155 - Console [ Added Object [ mainMenu.quitButton ] to Screen [ mainMenu ] ].
-5155 - Console [ Created new object [ optionsMenu ] ].
-5155 - Console [ Created new object [ optionsMenu.backGround ] ].
-5155 - Console [ Added Object [ optionsMenu.backGround ] to Screen [ optionsMenu ] ].
-5155 - Console [ Created new object [ optionsMenu.videoButton ] ].
-5155 - Console [ Added Object [ optionsMenu.videoButton ] to Screen [ optionsMenu ] ].
-5155 - Console [ Created new object [ optionsMenu.audioButton ] ].
-5155 - Console [ Added Object [ optionsMenu.audioButton ] to Screen [ optionsMenu ] ].
-5155 - Console [ Created new object [ optionsMenu.controlsButton ] ].
-5155 - Console [ Added Object [ optionsMenu.controlsButton ] to Screen [ optionsMenu ] ].
-5155 - Console [ Created new object [ optionsMenu.gameButton ] ].
-5155 - Console [ Added Object [ optionsMenu.gameButton ] to Screen [ optionsMenu ] ].
-5155 - Console [ Created new object [ optionsMenu.backButton ] ].
-5155 - Console [ Added Object [ optionsMenu.backButton ] to Screen [ optionsMenu ] ].
-5155 - Console [ Created new object [ videoOptions ] ].
-5155 - Console [ Added Object [ videoOptions.renderers ] to Screen [ videoOptions ] ].
-5155 - Console [ Created new object [ videoOptions.display ] ].
-5155 - Console [ Added Object [ videoOptions.display ] to Screen [ videoOptions ] ].
-5155 - Console [ Created new object [ videoOptions.scalequality ] ].
-5155 - Console [ Added Object [ videoOptions.scalequality ] to Screen [ videoOptions ] ].
-5155 - Console [ Created new object [ videoOptions.usevsync ] ].
-5155 - Console [ Added Object [ videoOptions.usevsync ] to Screen [ videoOptions ] ].
-5155 - Console [ Created new object [ videoOptions.borderlesswindow ] ].
-5155 - Console [ Added Object [ videoOptions.borderlesswindow ] to Screen [ videoOptions ] ].
-5155 - Console [ Created new object [ videoOptions.highdpi ] ].
-5155 - Console [ Added Object [ videoOptions.highdpi ] to Screen [ videoOptions ] ].
-5155 - Console [ Created new object [ videoOptions.screeneffect ] ].
-5155 - Console [ Added Object [ videoOptions.screeneffect ] to Screen [ videoOptions ] ].
-5155 - Console [ Created new object [ videoOptions.applyButton ] ].
-5155 - Console [ Added Object [ videoOptions.applyButton ] to Screen [ videoOptions ] ].
-5155 - [ load ] Loaded file [ universe.bmp ]
-5155 - Console [ Created new object [ videoOptions.backButton ] ].
-5155 - Console [ Added Object [ videoOptions.backButton ] to Screen [ videoOptions ] ].
-5155 - Console [ Created new object [ audioOptions ] ].
-5155 - Console [ Created new object [ audioOptions.enableSound ] ].
-5155 - Console [ Added Object [ audioOptions.enableSound ] to Screen [ audioOptions ] ].
-5155 - Console [ Created new object [ audioOptions.volume ] ].
-5155 - Console [ Added Object [ audioOptions.volume ] to Screen [ audioOptions ] ].
-5155 - Console [ Created new object [ audioOptions.speakers ] ].
-5155 - Console [ Added Object [ audioOptions.speakers ] to Screen [ audioOptions ] ].
-5155 - Console [ Created new object [ audioOptions.backButton ] ].
-5155 - Console [ Added Object [ audioOptions.backButton ] to Screen [ audioOptions ] ].
-5155 - Console [ Created new object [ controlsMenu ] ].
-5155 - Console [ Created new object [ controlsOptions.heading ] ].
-5155 - Console [ Added Object [ controlsOptions.heading ] to Screen [ controlsMenu ] ].
-5155 - Console [ Created new object [ controlsOptions.left ] ].
-5155 - Console [ Added Object [ controlsOptions.left ] to Screen [ controlsMenu ] ].
-5155 - Console [ Loaded [ future_blue.bmp ] with key [ tiles ] ].
-5155 - Console [ Created new object [ controlsOptions.right ] ].
-5155 - Console [ Added Object [ controlsOptions.right ] to Screen [ controlsMenu ] ].
-5155 - Console [ Created new object [ controlsOptions.up ] ].
-5155 - Console [ Added Object [ controlsOptions.up ] to Screen [ controlsMenu ] ].
-5155 - Console [ Created new object [ controlsOptions.down ] ].
-5155 - Console [ Added Object [ controlsOptions.down ] to Screen [ controlsMenu ] ].
-5155 - Console [ Created new object [ controlsOptions.action ] ].
-5155 - Console [ Added Object [ controlsOptions.action ] to Screen [ controlsMenu ] ].
-5155 - [ load ] Loaded file [ db_999.bmp ]
-5155 - Console [ Created new object [ controlsOptions.leftKeyname ] ].
-5155 - [ load ] Loaded file [ 001.bmp ]
-5155 - [ load ] Loaded file [ 123.bmp ]
-5155 - [ load ] Loaded file [ 139.bmp ]
-5155 - [ load ] Loaded file [ 247.bmp ]
-5155 - Console [ Added Object [ controlsOptions.leftKeyname ] to Screen [ controlsMenu ] ].
-5155 - [ load ] Loaded file [ 249.bmp ]
-5155 - [ load ] Loaded file [ 296.bmp ]
-5155 - [ load ] Loaded file [ 302.bmp ]
-5155 - [ load ] Loaded file [ 329.bmp ]
-5155 - Console [ Object name or object label cannot be empty. ].
-5155 - [ load ] Loaded file [ 420.bmp ]
-5155 - [ load ] Loaded file [ 476.bmp ]
-5155 - [ load ] Loaded file [ 493.bmp ]
-5155 - [ load ] Loaded file [ 516.bmp ]
-5155 - [ load ] Loaded file [ 571.bmp ]
-5155 - Console [ Created new object [ controlsOptions.rightKeyname ] ].
-5155 - [ load ] Loaded file [ 598.bmp ]
-5155 - [ load ] Loaded file [ 614.bmp ]
-5155 - [ load ] Loaded file [ 615.bmp ]
-5155 - [ load ] Loaded file [ 629.bmp ]
-5155 - [ load ] Loaded file [ 711.bmp ]
-5155 - Console [ Added Object [ controlsOptions.rightKeyname ] to Screen [ controlsMenu ] ].
-5155 - [ load ] Loaded file [ 742.bmp ]
-5155 - [ load ] Loaded file [ 751.bmp ]
-5155 - [ load ] Loaded file [ 821.bmp ]
-5155 - [ load ] Loaded file [ 834.bmp ]
-5155 - [ load ] Loaded file [ 883.bmp ]
-5155 - Console [ Object name or object label cannot be empty. ].
-5155 - [ load ] Loaded file [ 999.bmp ]
-5155 - [ load ] Loaded file [ tut_healing.bmp ]
-5155 - [ load ] Loaded file [ tut_lift.bmp ]
-5155 - Console [ Created new object [ controlsOptions.upKeyname ] ].
-5155 - [ load ] Loaded file [ tut_terminal.bmp ]
-5155 - [ load ] Loaded file [ bullet_001.bmp ]
-5155 - [ load ] Loaded file [ bullet_476.bmp ]
-5155 - [ load ] Loaded file [ bullet_821.bmp ]
-5155 - Console [ Added Object [ controlsOptions.upKeyname ] to Screen [ controlsMenu ] ].
-5155 - Console [ Object name or object label cannot be empty. ].
-5155 - Console [ Created new object [ controlsOptions.downKeyname ] ].
-5155 - Console [ Added Object [ controlsOptions.downKeyname ] to Screen [ controlsMenu ] ].
-5155 - Console [ Object name or object label cannot be empty. ].
-5155 - Console [ Created new object [ controlsOptions.actionKeyname ] ].
-5155 - Console [ Added Object [ controlsOptions.actionKeyname ] to Screen [ controlsMenu ] ].
-5155 - Console [ Object name or object label cannot be empty. ].
-5155 - Console [ Created new object [ controlsMenu.backButton ] ].
-5155 - Console [ Added Object [ controlsMenu.backButton ] to Screen [ controlsMenu ] ].
-5155 - Console [ Created new object [ controlsMenu.applyButton ] ].
-5155 - Console [ Added Object [ controlsMenu.applyButton ] to Screen [ controlsMenu ] ].
-5155 - Console [ Created new object [ gameMenu ] ].
-5155 - Console [ Created new object [ gameMenu.language ] ].
-5155 - Console [ Added Object [ gameMenu.language ] to Screen [ gameMenu ] ].
-5155 - Console [ Created new object [ gameMenu.tileStyle ] ].
-5155 - Console [ Added Object [ gameMenu.tileStyle ] to Screen [ gameMenu ] ].
-5155 - Console [ Created new object [ gameMenu.tileColor ] ].
-5155 - Console [ Added Object [ gameMenu.tileColor ] to Screen [ gameMenu ] ].
-5155 - Console [ Created new object [ gameMenu.backButton ] ].
-5155 - Console [ Added Object [ gameMenu.backButton ] to Screen [ gameMenu ] ].
-5155 - Console [ Created new object [ databaseScreen ] ].
-5155 - Console [ Created new object [ databaseScreen.scrollbox ] ].
-5155 - Console [ Added Object [ databaseScreen.scrollbox ] to Screen [ databaseScreen ] ].
-5155 - Console [ Created new object [ databaseScreen.previousButton ] ].
-5155 - Console [ Added Object [ databaseScreen.previousButton ] to Screen [ databaseScreen ] ].
-5155 - Console [ Created new object [ databaseScreen.backButton ] ].
-5155 - Console [ Added Object [ databaseScreen.backButton ] to Screen [ databaseScreen ] ].
-5155 - Console [ Created new object [ databaseScreen.nextButton ] ].
-5155 - Console [ Added Object [ databaseScreen.nextButton ] to Screen [ databaseScreen ] ].
-5155 - Console [ Created new object [ terminalMenu ] ].
-5155 - Console [ Created new object [ terminalMenu.backGround ] ].
-5155 - Console [ Added Object [ terminalMenu.backGround ] to Screen [ terminalMenu ] ].
-5155 - Console [ Created new object [ terminalMenu.databaseButton ] ].
-5155 - Console [ Added Object [ terminalMenu.databaseButton ] to Screen [ terminalMenu ] ].
-5155 - Console [ Created new object [ terminalMenu.deckviewButton ] ].
-5155 - Console [ Added Object [ terminalMenu.deckviewButton ] to Screen [ terminalMenu ] ].
-5155 - Console [ Created new object [ terminalMenu.shipviewButton ] ].
-5155 - Console [ Added Object [ terminalMenu.shipviewButton ] to Screen [ terminalMenu ] ].
-5155 - Console [ Created new object [ terminalMenu.logoffButton ] ].
-5155 - Console [ Added Object [ terminalMenu.logoffButton ] to Screen [ terminalMenu ] ].
-5155 - Console [ Created new object [ deckviewScreen ] ].
-5155 - Console [ Created new object [ deckviewScreen.backButton ] ].
-5155 - Console [ Added Object [ deckviewScreen.backButton ] to Screen [ deckviewScreen ] ].
-5155 - Console [ Created new object [ shipviewScreen ] ].
-5155 - Console [ Created new object [ shipviewScreen.backButton ] ].
-5155 - Console [ Added Object [ shipviewScreen.backButton ] to Screen [ shipviewScreen ] ].
-5155 - Console [ Created new object [ scrTutorial ] ].
-5155 - Console [ Created new object [ scrTutorial.textLabelTutMove ] ].
-5155 - Console [ Added Object [ scrTutorial.textLabelTutMove ] to Screen [ scrTutorial ] ].
-5155 - Console [ Created new object [ scrTutorial.tutTextBox ] ].
-5155 - Console [ Added Object [ scrTutorial.tutTextBox ] to Screen [ scrTutorial ] ].
-5155 - Console [ Created new object [ scrTutorial.buttonTutMoveNext ] ].
-5155 - Console [ Added Object [ scrTutorial.buttonTutMoveNext ] to Screen [ scrTutorial ] ].
-5393 - Console [ Created new object [ scrTutorial.buttonTutorialCancel ] ].
-5393 - Console [ Added Object [ scrTutorial.buttonTutorialCancel ] to Screen [ scrTutorial ] ].
-5395 - Console [ Created new object [ scrTutTransfer ] ].
-5395 - Console [ Created new object [ scrTutTransfer.textLabelTutTransMove ] ].
-5395 - Console [ Added Object [ scrTutTransfer.textLabelTutTransMove ] to Screen [ scrTutTransfer ] ].
-5395 - Console [ Created new object [ scrTutTransfer.tutTransTextBox ] ].
-5395 - Console [ Added Object [ scrTutTransfer.tutTransTextBox ] to Screen [ scrTutTransfer ] ].
-5395 - Console [ Created new object [ scrTutTransfer.buttonTutTransNext ] ].
-5395 - Console [ Added Object [ scrTutTransfer.buttonTutTransNext ] to Screen [ scrTutTransfer ] ].
-5395 - Console [ Created new object [ scrTutTransfer.buttonTutTransCancel ] ].
-5395 - Console [ Added Object [ scrTutTransfer.buttonTutTransCancel ] to Screen [ scrTutTransfer ] ].
-5395 - Console [ Created new object [ scrTutTransGame ] ].
-5395 - Console [ Created new object [ scrTutTransGame.textLabelTutTransGame ] ].
-5395 - Console [ Added Object [ scrTutTransGame.textLabelTutTransGame ] to Screen [ scrTutTransGame ] ].
-5395 - Console [ Created new object [ scrTutTransGame.tutTransGameTextBox ] ].
-5395 - Console [ Added Object [ scrTutTransGame.tutTransGameTextBox ] to Screen [ scrTutTransGame ] ].
-5395 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameNext ] ].
-5412 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameNext ] to Screen [ scrTutTransGame ] ].
-5412 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameCancel ] ].
-5412 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameCancel ] to Screen [ scrTutTransGame ] ].
-5412 - Console [ Created new object [ scrTutLifts ] ].
-5412 - Console [ Created new object [ scrTutLifts.textLabelTutLifts ] ].
-5412 - Console [ Added Object [ scrTutLifts.textLabelTutLifts ] to Screen [ scrTutLifts ] ].
-5412 - Console [ Created new object [ scrTutLifts.tutLiftTextBox ] ].
-5412 - Console [ Added Object [ scrTutLifts.tutLiftTextBox ] to Screen [ scrTutLifts ] ].
-5412 - Console [ Created new object [ scrTutLifts.tutImageLift ] ].
-5412 - Console [ Added Object [ scrTutLifts.tutImageLift ] to Screen [ scrTutLifts ] ].
-5412 - Console [ Created new object [ scrTutLifts.buttonTutLiftNext ] ].
-5412 - Console [ Added Object [ scrTutLifts.buttonTutLiftNext ] to Screen [ scrTutLifts ] ].
-5412 - Console [ Created new object [ scrTutLifts.buttonTutLiftCancel ] ].
-5412 - Console [ Added Object [ scrTutLifts.buttonTutLiftCancel ] to Screen [ scrTutLifts ] ].
-5412 - Console [ Created new object [ scrTutTerminals ] ].
-5428 - Console [ Created new object [ scrTutTerminals.textLabelTutTerminals ] ].
-5428 - Console [ Added Object [ scrTutTerminals.textLabelTutTerminals ] to Screen [ scrTutTerminals ] ].
-5428 - Console [ Created new object [ scrTutTerminals.tutTerminalTextBox ] ].
-5428 - Console [ Added Object [ scrTutTerminals.tutTerminalTextBox ] to Screen [ scrTutTerminals ] ].
-5428 - Console [ Created new object [ scrTutTerminals.tutImageTerminal ] ].
-5428 - Console [ Added Object [ scrTutTerminals.tutImageTerminal ] to Screen [ scrTutTerminals ] ].
-5428 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalNext ] ].
-5428 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalNext ] to Screen [ scrTutTerminals ] ].
-5428 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalCancel ] ].
-5428 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalCancel ] to Screen [ scrTutTerminals ] ].
-5428 - Console [ Created new object [ scrTutHealing ] ].
-5428 - Console [ Created new object [ scrTutHealing.textLabelTutHealing ] ].
-5428 - Console [ Added Object [ scrTutHealing.textLabelTutHealing ] to Screen [ scrTutHealing ] ].
-5428 - Console [ Created new object [ scrTutHealing.tutHealingTextBox ] ].
-5428 - Console [ Added Object [ scrTutHealing.tutHealingTextBox ] to Screen [ scrTutHealing ] ].
-5445 - Console [ Created new object [ scrTutHealing.tutImageHealing ] ].
-5445 - Console [ Added Object [ scrTutHealing.tutImageHealing ] to Screen [ scrTutHealing ] ].
-5445 - Console [ Created new object [ scrTutHealing.buttonTutHealinglNext ] ].
-5445 - Console [ Added Object [ scrTutHealing.buttonTutHealinglNext ] to Screen [ scrTutHealing ] ].
-5445 - Console [ Created new object [ scrTutHealing.buttonTutHealingCancel ] ].
-5445 - Console [ Added Object [ scrTutHealing.buttonTutHealingCancel ] to Screen [ scrTutHealing ] ].
-5445 - Console [ Created new object [ scrTutTips ] ].
-5445 - Console [ Created new object [ scrTutTips.textLabelTutTips ] ].
-5445 - Console [ Added Object [ scrTutTips.textLabelTutTips ] to Screen [ scrTutTips ] ].
-5445 - Console [ Created new object [ scrTutTips.tutTipsTextBox ] ].
-5445 - Console [ Added Object [ scrTutTips.tutTipsTextBox ] to Screen [ scrTutTips ] ].
-5445 - Console [ Created new object [ scrTutTips.buttonTutTipsCancel ] ].
-5445 - Console [ Added Object [ scrTutTips.buttonTutTipsCancel ] to Screen [ scrTutTips ] ].
-5445 - Console [ Created new object [ highScoreDisplay ] ].
-5445 - Console [ Created new object [ highScoreDisplay.backGround ] ].
-5445 - Console [ Added Object [ highScoreDisplay.backGround ] to Screen [ highScoreDisplay ] ].
-5462 - Console [ Created new object [ highScoreDisplay.heading ] ].
-5462 - Console [ Added Object [ highScoreDisplay.heading ] to Screen [ highScoreDisplay ] ].
-5462 - Console [ Created new object [ highScoreDisplay.row1 ] ].
-5462 - Console [ Added Object [ highScoreDisplay.row1 ] to Screen [ highScoreDisplay ] ].
-5462 - Console [ Created new object [ highScoreDisplay.score1 ] ].
-5462 - Console [ Added Object [ highScoreDisplay.score1 ] to Screen [ highScoreDisplay ] ].
-5462 - Console [ Created new object [ highScoreDisplay.name1 ] ].
-5462 - Console [ Added Object [ highScoreDisplay.name1 ] to Screen [ highScoreDisplay ] ].
-5462 - Console [ Created new object [ highScoreDisplay.row2 ] ].
-5462 - Console [ Added Object [ highScoreDisplay.row2 ] to Screen [ highScoreDisplay ] ].
-5462 - Console [ Created new object [ highScoreDisplay.score2 ] ].
-5462 - Console [ Added Object [ highScoreDisplay.score2 ] to Screen [ highScoreDisplay ] ].
-5462 - Console [ Created new object [ highScoreDisplay.name2 ] ].
-5462 - Console [ Added Object [ highScoreDisplay.name2 ] to Screen [ highScoreDisplay ] ].
-5462 - Console [ Created new object [ highScoreDisplay.row3 ] ].
-5479 - Console [ Added Object [ highScoreDisplay.row3 ] to Screen [ highScoreDisplay ] ].
-5479 - Console [ Created new object [ highScoreDisplay.score3 ] ].
-5479 - Console [ Added Object [ highScoreDisplay.score3 ] to Screen [ highScoreDisplay ] ].
-5479 - Console [ Created new object [ highScoreDisplay.name3 ] ].
-5479 - Console [ Added Object [ highScoreDisplay.name3 ] to Screen [ highScoreDisplay ] ].
-5479 - Console [ Created new object [ highScoreDisplay.row4 ] ].
-5479 - Console [ Added Object [ highScoreDisplay.row4 ] to Screen [ highScoreDisplay ] ].
-5479 - Console [ Created new object [ highScoreDisplay.score4 ] ].
-5479 - Console [ Added Object [ highScoreDisplay.score4 ] to Screen [ highScoreDisplay ] ].
-5479 - Console [ Created new object [ highScoreDisplay.name4 ] ].
-5479 - Console [ Added Object [ highScoreDisplay.name4 ] to Screen [ highScoreDisplay ] ].
-5479 - Console [ Created new object [ highScoreDisplay.row5 ] ].
-5479 - Console [ Added Object [ highScoreDisplay.row5 ] to Screen [ highScoreDisplay ] ].
-5479 - Console [ Created new object [ highScoreDisplay.score5 ] ].
-5479 - Console [ Added Object [ highScoreDisplay.score5 ] to Screen [ highScoreDisplay ] ].
-5495 - Console [ Created new object [ highScoreDisplay.name5 ] ].
-5495 - Console [ Added Object [ highScoreDisplay.name5 ] to Screen [ highScoreDisplay ] ].
-5495 - Console [ Created new object [ highScoreDisplay.backButton ] ].
-5495 - Console [ Added Object [ highScoreDisplay.backButton ] to Screen [ highScoreDisplay ] ].
-5495 - Console [ Created new object [ highScoreEntry ] ].
-5495 - Console [ Created new object [ highScoreEntry.backGround ] ].
-5495 - Console [ Added Object [ highScoreEntry.backGround ] to Screen [ highScoreEntry ] ].
-5495 - Console [ Created new object [ highScoreEntry.achieved ] ].
-5495 - Console [ Added Object [ highScoreEntry.achieved ] to Screen [ highScoreEntry ] ].
-5495 - Console [ Created new object [ highScoreEntry.initials ] ].
-5495 - Console [ Loaded [ splash.bmp ] with key [ splash ] ].
-5495 - Console [ Added Object [ highScoreEntry.initials ] to Screen [ highScoreEntry ] ].
-5495 - Console [ Created new object [ highScoreEntry.initial0 ] ].
-5495 - Console [ Added Object [ highScoreEntry.initial0 ] to Screen [ highScoreEntry ] ].
-5495 - Console [ Object name or function string cannot be empty. ].
-5495 - Console [ Created new object [ highScoreEntry.initial1 ] ].
-5512 - Console [ Added Object [ highScoreEntry.initial1 ] to Screen [ highScoreEntry ] ].
-5512 - Console [ Object name or function string cannot be empty. ].
-5512 - Console [ Created new object [ highScoreEntry.initial2 ] ].
-5512 - Console [ Added Object [ highScoreEntry.initial2 ] to Screen [ highScoreEntry ] ].
-5512 - Console [ Object name or function string cannot be empty. ].
-5512 - Console [ Created new object [ highScoreEntry.backButton ] ].
-5512 - Console [ Added Object [ highScoreEntry.backButton ] to Screen [ highScoreEntry ] ].
-5512 - Console [ Failed to open keybinding file. Code [ 3 ] ].
-5512 - Console [ n ].
-5512 - Console [ [data/data.zip] is in the search path. ].
-5512 - Console [ [data/scripts] is in the search path. ].
-5512 - Console [ Loaded [ planetAlpha.bmp ] with key [ planetAlpha ] ].
-5512 - Console [ Loaded [ hudNew.bmp ] with key [ hudNew ] ].
-5512 - Console [ Loaded [ screen.bmp ] with key [ screen ] ].
-5512 - Console [ Loaded [ lightmap.bmp ] with key [ lightmap ] ].
-5529 - Console [ Loaded [ explosion.bmp ] with key [ explosion ] ].
-5529 - Console [ Loaded [ universe.bmp ] with key [ universe ] ].
-5529 - Console [ Loaded [ db_999.bmp ] with key [ db_droid ] ].
-5529 - Console [ Loaded [ 001.bmp ] with key [ 001 ] ].
-5529 - Console [ Loaded [ 123.bmp ] with key [ 123 ] ].
-5529 - Console [ Loaded [ 139.bmp ] with key [ 139 ] ].
-5529 - Console [ Loaded [ 247.bmp ] with key [ 247 ] ].
-5529 - Console [ Loaded [ 249.bmp ] with key [ 249 ] ].
-5529 - Console [ Loaded [ 296.bmp ] with key [ 296 ] ].
-5529 - Console [ Loaded [ 302.bmp ] with key [ 302 ] ].
-5529 - Console [ Loaded [ 329.bmp ] with key [ 329 ] ].
-5529 - Console [ Loaded [ 420.bmp ] with key [ 420 ] ].
-5529 - Console [ Loaded [ 476.bmp ] with key [ 476 ] ].
-5529 - Console [ Loaded [ 493.bmp ] with key [ 493 ] ].
-5529 - Console [ Loaded [ 516.bmp ] with key [ 516 ] ].
-5545 - Console [ Loaded [ 571.bmp ] with key [ 571 ] ].
-5545 - Console [ Loaded [ 598.bmp ] with key [ 598 ] ].
-5545 - Console [ Loaded [ 614.bmp ] with key [ 614 ] ].
-5545 - Console [ Loaded [ 615.bmp ] with key [ 615 ] ].
-5545 - Console [ Loaded [ 629.bmp ] with key [ 629 ] ].
-5545 - Console [ Loaded [ 711.bmp ] with key [ 711 ] ].
-5545 - Console [ Loaded [ 742.bmp ] with key [ 742 ] ].
-5545 - Console [ Loaded [ 751.bmp ] with key [ 751 ] ].
-5545 - Console [ Loaded [ 821.bmp ] with key [ 821 ] ].
-5545 - Console [ Loaded [ 834.bmp ] with key [ 834 ] ].
-5545 - Console [ Loaded [ 883.bmp ] with key [ 883 ] ].
-5545 - Console [ Loaded [ 999.bmp ] with key [ 999 ] ].
-5545 - Console [ Loaded [ tut_healing.bmp ] with key [ tut_healing ] ].
-5545 - Console [ Loaded [ tut_lift.bmp ] with key [ tut_lift ] ].
-5545 - Console [ Loaded [ tut_terminal.bmp ] with key [ tut_terminal ] ].
-5562 - Console [ Loaded [ bullet_001.bmp ] with key [ bullet_001 ] ].
-5562 - Console [ Loaded [ bullet_476.bmp ] with key [ bullet_476 ] ].
-5562 - Console [ Loaded [ bullet_821.bmp ] with key [ bullet_821 ] ].
-5562 - Console [ Loaded ship level [ Vehicle Hold ] - index [ 0 ] ].
-5562 - Console [ Loaded ship level [ Shuttle bay ] - index [ 1 ] ].
-5562 - Console [ Loaded ship level [ Turrent 2 ] - index [ 2 ] ].
-5562 - Console [ Loaded ship level [ Maintenance ] - index [ 3 ] ].
-5562 - Console [ Loaded ship level [ Engineering ] - index [ 4 ] ].
-5562 - Console [ Loaded ship level [ Mid cargo ] - index [ 5 ] ].
-5562 - Console [ Loaded ship level [ Upper cargo ] - index [ 6 ] ].
-5562 - Console [ Loaded ship level [ Kitchen ] - index [ 8 ] ].
-5562 - Console [ Loaded ship level [ Robo stores ] - index [ 9 ] ].
-5562 - Console [ Loaded ship level [ Quarters ] - index [ 10 ] ].
-5562 - Console [ Loaded ship level [ Repairs ] - index [ 11 ] ].
-5562 - Console [ Loaded ship level [ Staterooms ] - index [ 12 ] ].
-5579 - Console [ Loaded ship level [ Stores ] - index [ 13 ] ].
-5579 - Console [ Loaded ship level [ Research ] - index [ 14 ] ].
-5579 - Console [ Loaded ship level [ Reactor ] - index [ 15 ] ].
-5579 - Console [ Loaded ship level [ Airlock ] - index [ 16 ] ].
-5579 - Console [ Loaded ship level [ Bridge ] - index [ 17 ] ].
-5579 - Console [ Loaded ship level [ Turrent 1 ] - index [ 18 ] ].
-5579 - Console [ Loaded ship level [ Turrent 3 ] - index [ 19 ] ].
-5579 - Console [ Loaded ship level [ Observation ] - index [ 20 ] ].
-5579 - Console [ Loaded font file [ gui.ttf ] ].
-5579 - Console [ Loaded font file [ gui.ttf ] ].
-5579 - Console [ Loaded font file [ intro.ttf ] ].
-5662 - Looking for function [ as_loadAudioResources ] to [ as_useNewRenderer ] to execute
-5662 - Looking for function [ as_loadAudioResources ] to [ as_getAudioSpecs ] to execute
-5662 - Looking for function [ as_loadAudioResources ] to [ as_loadAudioResources ] to execute
-5662 - [ load ] Loaded file [ collision1.wav ] with key [ collision1 ]
-5662 - [ load ] Loaded file [ console1.wav ] with key [ console1 ]
-5662 - [ load ] Loaded file [ console2.wav ] with key [ console2 ]
-5662 - [ load ] Loaded file [ doorOpen.wav ] with key [ doorOpen ]
-5662 - [ load ] Loaded file [ doorClose.wav ] with key [ doorClose ]
-5662 - [ load ] Loaded file [ disruptor.wav ] with key [ disruptor ]
-5679 - [ load ] Loaded file [ damage.wav ] with key [ damage ]
-5679 - [ load ] Loaded file [ explode1.wav ] with key [ explode1 ]
-5679 - [ load ] Loaded file [ explode2.wav ] with key [ explode2 ]
-5695 - [ load ] Loaded file [ energyHeal.wav ] with key [ energyHeal ]
-5695 - [ load ] Loaded file [ endTransmission2.wav ] with key [ endTransmission2 ]
-5695 - [ load ] Loaded file [ endTransmission1.wav ] with key [ endTransmission1 ]
-5712 - [ load ] Loaded file [ greenAlert.wav ] with key [ greenAlert ]
-5712 - [ load ] Loaded file [ lift1.wav ] with key [ lift1 ]
-5712 - [ load ] Loaded file [ keyPressGood.wav ] with key [ keyPressGood ]
-5712 - [ load ] Loaded file [ keyPressBad.wav ] with key [ keyPressBad ]
-5712 - [ load ] Loaded file [ laser.wav ] with key [ laser ]
-5712 - [ load ] Loaded file [ lowEnergy.wav ] with key [ lowEnergy ]
-5729 - [ load ] Loaded file [ lift2.wav ] with key [ lift2 ]
-5729 - [ load ] Loaded file [ lift3.wav ] with key [ lift3 ]
-5729 - [ load ] Loaded file [ levelShutdown.wav ] with key [ levelShutdown ]
-5729 - [ load ] Loaded file [ redAlert.wav ] with key [ redAlert ]
-5729 - [ load ] Loaded file [ startAll.wav ] with key [ startAll ]
-5729 - [ load ] Loaded file [ start2.wav ] with key [ start2 ]
-5745 - [ load ] Loaded file [ start1.wav ] with key [ start1 ]
-5762 - [ load ] Loaded file [ scrollBeeps.wav ] with key [ scrollBeeps ]
-5779 - [ load ] Loaded file [ transferdeadlock.wav ] with key [ transferdeadlock ]
-5779 - [ load ] Loaded file [ transferMove.wav ] with key [ transferMove ]
-5779 - [ load ] Loaded file [ transferStage1.wav ] with key [ transferStage1 ]
-5795 - [ load ] Loaded file [ transferStage2.wav ] with key [ transferStage2 ]
-5795 - [ load ] Loaded file [ transfer1.wav ] with key [ transfer1 ]
-5795 - [ load ] Loaded file [ transferStart.wav ] with key [ transferStart ]
-5795 - [ load ] Loaded file [ yellowAlert.wav ] with key [ yellowAlert ]
-5812 - [ load ] Loaded file [ transferBurntout.wav ] with key [ transferBurntout ]
-5812 - [ load ] Loaded file [ transferAction.wav ] with key [ transferAction ]
-5812 - [ load ] Loaded file [ liftButton.wav ] with key [ liftButton ]
-13169 - Looking for function [ as_handleMainMenu ] to [ as_useNewRenderer ] to execute
-13169 - Looking for function [ as_handleMainMenu ] to [ as_getAudioSpecs ] to execute
-13169 - Looking for function [ as_handleMainMenu ] to [ as_loadAudioResources ] to execute
-13169 - Looking for function [ as_handleMainMenu ] to [ as_loadTextureResources ] to execute
-13169 - Looking for function [ as_handleMainMenu ] to [ as_loadAllDecks ] to execute
-13169 - Looking for function [ as_handleMainMenu ] to [ as_getVolume ] to execute
-13169 - Looking for function [ as_handleMainMenu ] to [ as_setVolume ] to execute
-13169 - Looking for function [ as_handleMainMenu ] to [ as_createGUI ] to execute
-13169 - Looking for function [ as_handleMainMenu ] to [ as_handleMainMenu ] to execute
+5000 - Console [ Func ID for [ void as_handleGameMenu() ] - [ 140544 ] ].
+5000 - Console [ Func ID for [ void as_handleDeckviewScreen() ] - [ 148608 ] ].
+5000 - Console [ Func ID for [ void as_handleShipviewScreen() ] - [ 148992 ] ].
+5000 - Console [ Func ID for [ void as_handleTerminalMenu() ] - [ 149376 ] ].
+5000 - Console [ Func ID for [ void as_handleDatabaseMenu() ] - [ 149760 ] ].
+5000 - Console [ Func ID for [ void as_handleTransferScreens() ] - [ 151680 ] ].
+5000 - [ load ] Loaded file [ future_blue.bmp ]
+5000 - Console [ Func ID for [ void as_handleTutorialElements () ] - [ 153216 ] ].
+5000 - Console [ Func ID for [ void as_handleDialogBoxes () ] - [ 137088 ] ].
+5000 - Console [ Func ID for [ void as_handleHighscoreDisplay() ] - [ 145536 ] ].
+5000 - Console [ Func ID for [ void as_refreshHighscoreLabels() ] - [ 145152 ] ].
+5000 - [ load ] Loaded file [ splash.bmp ]
+5000 - Console [ Func ID for [ void as_refreshControlLabels() ] - [ 139776 ] ].
+5000 - Console [ Created new object [ introScreen.scrollbox ] ].
+5000 - Console [ Added Object [ introScreen.scrollbox ] to Screen [ introScreen ] ].
+5000 - Console [ Created new object [ wonScreen ] ].
+5000 - Console [ Created new object [ wonScreen.scrollbox ] ].
+5000 - Console [ Added Object [ wonScreen.scrollbox ] to Screen [ wonScreen ] ].
+5000 - Console [ Created new object [ quitGameDialogbox.text ] ].
+5000 - Console [ Added Object [ quitGameDialogbox.text ] to Dialogbox [ quitGameDialogbox ] ].
+5000 - Console [ Added Object [ quitGameDialogbox.confirmButton ] to Dialogbox [ quitGameDialogbox ] ].
+5000 - [ load ] Loaded file [ planetAlpha.bmp ]
+5000 - Console [ Created new object [ quitGameDialogbox.denyButton ] ].
+5000 - [ load ] Loaded file [ hudNew.bmp ]
+5000 - Console [ Added Object [ quitGameDialogbox.denyButton ] to Dialogbox [ quitGameDialogbox ] ].
+5000 - [ load ] Loaded file [ screen.bmp ]
+5000 - Console [ Created new object [ guiTransferOne ] ].
+5000 - [ load ] Loaded file [ lightmap.bmp ]
+5000 - [ load ] Loaded file [ explosion.bmp ]
+5000 - Console [ Added Object [ guiTransferOne.heading ] to Screen [ guiTransferOne ] ].
+5000 - Console [ Created new object [ guiTransferOne.textbox ] ].
+5000 - Console [ Added Object [ guiTransferOne.textbox ] to Screen [ guiTransferOne ] ].
+5000 - Console [ Created new object [ guiTransferOne.nextButton ] ].
+5000 - Console [ Added Object [ guiTransferOne.nextButton ] to Screen [ guiTransferOne ] ].
+5000 - Console [ Created new object [ guiTransferTwo ] ].
+5000 - Console [ Created new object [ guiTransferTwo.heading ] ].
+5000 - Console [ Added Object [ guiTransferTwo.heading ] to Screen [ guiTransferTwo ] ].
+5000 - Console [ Created new object [ guiTransferTwo.textbox ] ].
+5000 - Console [ Added Object [ guiTransferTwo.textbox ] to Screen [ guiTransferTwo ] ].
+5000 - Console [ Created new object [ guiTransferTwo.nextButton ] ].
+5000 - Console [ Added Object [ guiTransferTwo.nextButton ] to Screen [ guiTransferTwo ] ].
+5000 - Console [ Created new object [ mainMenu ] ].
+5000 - Console [ Created new object [ mainMenu.backGround ] ].
+5000 - Console [ Added Object [ mainMenu.backGround ] to Screen [ mainMenu ] ].
+5000 - Console [ Created new object [ mainMenu.startGameButton ] ].
+5000 - Console [ Added Object [ mainMenu.startGameButton ] to Screen [ mainMenu ] ].
+5000 - Console [ Created new object [ mainMenu.optionsButton ] ].
+5000 - Console [ Added Object [ mainMenu.optionsButton ] to Screen [ mainMenu ] ].
+5000 - Console [ Created new object [ mainMenu.tutorialButton ] ].
+5000 - Console [ Added Object [ mainMenu.tutorialButton ] to Screen [ mainMenu ] ].
+5000 - Console [ Created new object [ mainMenu.briefingButton ] ].
+5000 - Console [ Added Object [ mainMenu.briefingButton ] to Screen [ mainMenu ] ].
+5000 - Console [ Created new object [ mainMenu.quitButton ] ].
+5000 - Console [ Added Object [ mainMenu.quitButton ] to Screen [ mainMenu ] ].
+5000 - Console [ Created new object [ optionsMenu ] ].
+5000 - Console [ Created new object [ optionsMenu.backGround ] ].
+5000 - Console [ Added Object [ optionsMenu.backGround ] to Screen [ optionsMenu ] ].
+5000 - Console [ Created new object [ optionsMenu.videoButton ] ].
+5000 - Console [ Added Object [ optionsMenu.videoButton ] to Screen [ optionsMenu ] ].
+5000 - Console [ Created new object [ optionsMenu.audioButton ] ].
+5000 - Console [ Added Object [ optionsMenu.audioButton ] to Screen [ optionsMenu ] ].
+5000 - Console [ Created new object [ optionsMenu.controlsButton ] ].
+5000 - Console [ Added Object [ optionsMenu.controlsButton ] to Screen [ optionsMenu ] ].
+5000 - Console [ Created new object [ optionsMenu.gameButton ] ].
+5000 - Console [ Added Object [ optionsMenu.gameButton ] to Screen [ optionsMenu ] ].
+5000 - Console [ Created new object [ optionsMenu.backButton ] ].
+5000 - Console [ Added Object [ optionsMenu.backButton ] to Screen [ optionsMenu ] ].
+5000 - Console [ Created new object [ videoOptions ] ].
+5000 - Console [ Added Object [ videoOptions.renderers ] to Screen [ videoOptions ] ].
+5000 - [ load ] Loaded file [ universe.bmp ]
+5000 - Console [ Created new object [ videoOptions.display ] ].
+5000 - Console [ Added Object [ videoOptions.display ] to Screen [ videoOptions ] ].
+5000 - Console [ Created new object [ videoOptions.scalequality ] ].
+5000 - Console [ Added Object [ videoOptions.scalequality ] to Screen [ videoOptions ] ].
+5000 - Console [ Created new object [ videoOptions.usevsync ] ].
+5000 - Console [ Added Object [ videoOptions.usevsync ] to Screen [ videoOptions ] ].
+5000 - Console [ Created new object [ videoOptions.borderlesswindow ] ].
+5000 - Console [ Added Object [ videoOptions.borderlesswindow ] to Screen [ videoOptions ] ].
+5000 - Console [ Created new object [ videoOptions.highdpi ] ].
+5000 - Console [ Added Object [ videoOptions.highdpi ] to Screen [ videoOptions ] ].
+5000 - Console [ Created new object [ videoOptions.screeneffect ] ].
+5000 - Console [ Added Object [ videoOptions.screeneffect ] to Screen [ videoOptions ] ].
+5000 - Console [ Created new object [ videoOptions.applyButton ] ].
+5000 - Console [ Added Object [ videoOptions.applyButton ] to Screen [ videoOptions ] ].
+5000 - Console [ Created new object [ videoOptions.backButton ] ].
+5000 - Console [ Added Object [ videoOptions.backButton ] to Screen [ videoOptions ] ].
+5000 - Console [ Created new object [ audioOptions ] ].
+5000 - Console [ Created new object [ audioOptions.enableSound ] ].
+5000 - Console [ Added Object [ audioOptions.enableSound ] to Screen [ audioOptions ] ].
+5000 - Console [ Created new object [ audioOptions.volume ] ].
+5000 - Console [ Added Object [ audioOptions.volume ] to Screen [ audioOptions ] ].
+5000 - Console [ Created new object [ audioOptions.speakers ] ].
+5000 - Console [ Added Object [ audioOptions.speakers ] to Screen [ audioOptions ] ].
+5000 - Console [ Created new object [ audioOptions.backButton ] ].
+5000 - Console [ Added Object [ audioOptions.backButton ] to Screen [ audioOptions ] ].
+5000 - [ load ] Loaded file [ db_999.bmp ]
+5000 - [ load ] Loaded file [ 001.bmp ]
+5000 - Console [ Created new object [ controlsMenu ] ].
+5000 - [ load ] Loaded file [ 123.bmp ]
+5000 - [ load ] Loaded file [ 139.bmp ]
+5000 - [ load ] Loaded file [ 247.bmp ]
+5000 - [ load ] Loaded file [ 249.bmp ]
+5000 - [ load ] Loaded file [ 296.bmp ]
+5000 - Console [ Created new object [ controlsOptions.heading ] ].
+5000 - [ load ] Loaded file [ 302.bmp ]
+5000 - [ load ] Loaded file [ 329.bmp ]
+5000 - [ load ] Loaded file [ 420.bmp ]
+5000 - [ load ] Loaded file [ 476.bmp ]
+5000 - [ load ] Loaded file [ 493.bmp ]
+5000 - Console [ Added Object [ controlsOptions.heading ] to Screen [ controlsMenu ] ].
+5000 - [ load ] Loaded file [ 516.bmp ]
+5000 - [ load ] Loaded file [ 571.bmp ]
+5000 - [ load ] Loaded file [ 598.bmp ]
+5000 - [ load ] Loaded file [ 614.bmp ]
+5000 - [ load ] Loaded file [ 615.bmp ]
+5000 - Console [ Created new object [ controlsOptions.left ] ].
+5000 - [ load ] Loaded file [ 629.bmp ]
+5000 - [ load ] Loaded file [ 711.bmp ]
+5000 - [ load ] Loaded file [ 742.bmp ]
+5000 - [ load ] Loaded file [ 751.bmp ]
+5000 - [ load ] Loaded file [ 821.bmp ]
+5000 - Console [ Added Object [ controlsOptions.left ] to Screen [ controlsMenu ] ].
+5000 - [ load ] Loaded file [ 834.bmp ]
+5000 - [ load ] Loaded file [ 883.bmp ]
+5000 - [ load ] Loaded file [ 999.bmp ]
+5000 - [ load ] Loaded file [ tut_healing.bmp ]
+5000 - Console [ Created new object [ controlsOptions.right ] ].
+5000 - [ load ] Loaded file [ tut_lift.bmp ]
+5000 - [ load ] Loaded file [ tut_terminal.bmp ]
+5000 - [ load ] Loaded file [ bullet_001.bmp ]
+5000 - [ load ] Loaded file [ bullet_476.bmp ]
+5000 - [ load ] Loaded file [ bullet_821.bmp ]
+5000 - Console [ Added Object [ controlsOptions.right ] to Screen [ controlsMenu ] ].
+5000 - Console [ Created new object [ controlsOptions.up ] ].
+5000 - Console [ Added Object [ controlsOptions.up ] to Screen [ controlsMenu ] ].
+5000 - Console [ Created new object [ controlsOptions.down ] ].
+5000 - Console [ Added Object [ controlsOptions.down ] to Screen [ controlsMenu ] ].
+5000 - Console [ Created new object [ controlsOptions.action ] ].
+5000 - Console [ Added Object [ controlsOptions.action ] to Screen [ controlsMenu ] ].
+5000 - Console [ Created new object [ controlsOptions.leftKeyname ] ].
+5000 - Console [ Added Object [ controlsOptions.leftKeyname ] to Screen [ controlsMenu ] ].
+5000 - Console [ Object name or object label cannot be empty. ].
+5000 - Console [ Created new object [ controlsOptions.rightKeyname ] ].
+5000 - Console [ Added Object [ controlsOptions.rightKeyname ] to Screen [ controlsMenu ] ].
+5000 - Console [ Object name or object label cannot be empty. ].
+5000 - Console [ Created new object [ controlsOptions.upKeyname ] ].
+5000 - Console [ Added Object [ controlsOptions.upKeyname ] to Screen [ controlsMenu ] ].
+5000 - Console [ Object name or object label cannot be empty. ].
+5000 - Console [ Created new object [ controlsOptions.downKeyname ] ].
+5000 - Console [ Added Object [ controlsOptions.downKeyname ] to Screen [ controlsMenu ] ].
+5000 - Console [ Object name or object label cannot be empty. ].
+5000 - Console [ Created new object [ controlsOptions.actionKeyname ] ].
+5000 - Console [ Added Object [ controlsOptions.actionKeyname ] to Screen [ controlsMenu ] ].
+5000 - Console [ Object name or object label cannot be empty. ].
+5000 - Console [ Created new object [ controlsMenu.backButton ] ].
+5000 - Console [ Added Object [ controlsMenu.backButton ] to Screen [ controlsMenu ] ].
+5000 - Console [ Created new object [ controlsMenu.applyButton ] ].
+5000 - Console [ Added Object [ controlsMenu.applyButton ] to Screen [ controlsMenu ] ].
+5000 - Console [ Created new object [ gameMenu ] ].
+5000 - Console [ Created new object [ gameMenu.language ] ].
+5000 - Console [ Added Object [ gameMenu.language ] to Screen [ gameMenu ] ].
+5000 - Console [ Created new object [ gameMenu.tileStyle ] ].
+5000 - Console [ Added Object [ gameMenu.tileStyle ] to Screen [ gameMenu ] ].
+5000 - Console [ Created new object [ gameMenu.tileColor ] ].
+5000 - Console [ Added Object [ gameMenu.tileColor ] to Screen [ gameMenu ] ].
+5000 - Console [ Created new object [ gameMenu.backButton ] ].
+5000 - Console [ Added Object [ gameMenu.backButton ] to Screen [ gameMenu ] ].
+5000 - Console [ Created new object [ databaseScreen ] ].
+5000 - Console [ Created new object [ databaseScreen.scrollbox ] ].
+5000 - Console [ Added Object [ databaseScreen.scrollbox ] to Screen [ databaseScreen ] ].
+5000 - Console [ Created new object [ databaseScreen.previousButton ] ].
+5000 - Console [ Added Object [ databaseScreen.previousButton ] to Screen [ databaseScreen ] ].
+5000 - Console [ Created new object [ databaseScreen.backButton ] ].
+5000 - Console [ Added Object [ databaseScreen.backButton ] to Screen [ databaseScreen ] ].
+5000 - Console [ Created new object [ databaseScreen.nextButton ] ].
+5000 - Console [ Added Object [ databaseScreen.nextButton ] to Screen [ databaseScreen ] ].
+5000 - Console [ Created new object [ terminalMenu ] ].
+5000 - Console [ Created new object [ terminalMenu.backGround ] ].
+5000 - Console [ Added Object [ terminalMenu.backGround ] to Screen [ terminalMenu ] ].
+5000 - Console [ Created new object [ terminalMenu.databaseButton ] ].
+5000 - Console [ Added Object [ terminalMenu.databaseButton ] to Screen [ terminalMenu ] ].
+5000 - Console [ Created new object [ terminalMenu.deckviewButton ] ].
+5000 - Console [ Added Object [ terminalMenu.deckviewButton ] to Screen [ terminalMenu ] ].
+5000 - Console [ Created new object [ terminalMenu.shipviewButton ] ].
+5000 - Console [ Added Object [ terminalMenu.shipviewButton ] to Screen [ terminalMenu ] ].
+5000 - Console [ Created new object [ terminalMenu.logoffButton ] ].
+5000 - Console [ Added Object [ terminalMenu.logoffButton ] to Screen [ terminalMenu ] ].
+5000 - Console [ Created new object [ deckviewScreen ] ].
+5000 - Console [ Created new object [ deckviewScreen.backButton ] ].
+5000 - Console [ Added Object [ deckviewScreen.backButton ] to Screen [ deckviewScreen ] ].
+5000 - Console [ Created new object [ shipviewScreen ] ].
+5000 - Console [ Created new object [ shipviewScreen.backButton ] ].
+5000 - Console [ Added Object [ shipviewScreen.backButton ] to Screen [ shipviewScreen ] ].
+5000 - Console [ Created new object [ scrTutorial ] ].
+5000 - Console [ Created new object [ scrTutorial.textLabelTutMove ] ].
+5000 - Console [ Added Object [ scrTutorial.textLabelTutMove ] to Screen [ scrTutorial ] ].
+5000 - Console [ Created new object [ scrTutorial.tutTextBox ] ].
+5000 - Console [ Added Object [ scrTutorial.tutTextBox ] to Screen [ scrTutorial ] ].
+5000 - Console [ Created new object [ scrTutorial.buttonTutMoveNext ] ].
+5000 - Console [ Added Object [ scrTutorial.buttonTutMoveNext ] to Screen [ scrTutorial ] ].
+5000 - Console [ Created new object [ scrTutorial.buttonTutorialCancel ] ].
+5000 - Console [ Added Object [ scrTutorial.buttonTutorialCancel ] to Screen [ scrTutorial ] ].
+5000 - Console [ Created new object [ scrTutTransfer ] ].
+5000 - Console [ Created new object [ scrTutTransfer.textLabelTutTransMove ] ].
+5000 - Console [ Added Object [ scrTutTransfer.textLabelTutTransMove ] to Screen [ scrTutTransfer ] ].
+5242 - Console [ Created new object [ scrTutTransfer.tutTransTextBox ] ].
+5242 - Console [ Added Object [ scrTutTransfer.tutTransTextBox ] to Screen [ scrTutTransfer ] ].
+5242 - Console [ Created new object [ scrTutTransfer.buttonTutTransNext ] ].
+5242 - Console [ Added Object [ scrTutTransfer.buttonTutTransNext ] to Screen [ scrTutTransfer ] ].
+5242 - Console [ Created new object [ scrTutTransfer.buttonTutTransCancel ] ].
+5242 - Console [ Added Object [ scrTutTransfer.buttonTutTransCancel ] to Screen [ scrTutTransfer ] ].
+5242 - Console [ Created new object [ scrTutTransGame ] ].
+5242 - Console [ Created new object [ scrTutTransGame.textLabelTutTransGame ] ].
+5251 - Console [ Added Object [ scrTutTransGame.textLabelTutTransGame ] to Screen [ scrTutTransGame ] ].
+5251 - Console [ Created new object [ scrTutTransGame.tutTransGameTextBox ] ].
+5251 - Console [ Added Object [ scrTutTransGame.tutTransGameTextBox ] to Screen [ scrTutTransGame ] ].
+5251 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameNext ] ].
+5251 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameNext ] to Screen [ scrTutTransGame ] ].
+5251 - Console [ Created new object [ scrTutTransGame.buttonTutTransGameCancel ] ].
+5251 - Console [ Added Object [ scrTutTransGame.buttonTutTransGameCancel ] to Screen [ scrTutTransGame ] ].
+5251 - Console [ Created new object [ scrTutLifts ] ].
+5251 - Console [ Created new object [ scrTutLifts.textLabelTutLifts ] ].
+5251 - Console [ Added Object [ scrTutLifts.textLabelTutLifts ] to Screen [ scrTutLifts ] ].
+5251 - Console [ Created new object [ scrTutLifts.tutLiftTextBox ] ].
+5251 - Console [ Added Object [ scrTutLifts.tutLiftTextBox ] to Screen [ scrTutLifts ] ].
+5251 - Console [ Created new object [ scrTutLifts.tutImageLift ] ].
+5268 - Console [ Added Object [ scrTutLifts.tutImageLift ] to Screen [ scrTutLifts ] ].
+5268 - Console [ Created new object [ scrTutLifts.buttonTutLiftNext ] ].
+5268 - Console [ Added Object [ scrTutLifts.buttonTutLiftNext ] to Screen [ scrTutLifts ] ].
+5268 - Console [ Created new object [ scrTutLifts.buttonTutLiftCancel ] ].
+5268 - Console [ Added Object [ scrTutLifts.buttonTutLiftCancel ] to Screen [ scrTutLifts ] ].
+5268 - Console [ Created new object [ scrTutTerminals ] ].
+5268 - Console [ Created new object [ scrTutTerminals.textLabelTutTerminals ] ].
+5268 - Console [ Added Object [ scrTutTerminals.textLabelTutTerminals ] to Screen [ scrTutTerminals ] ].
+5268 - Console [ Created new object [ scrTutTerminals.tutTerminalTextBox ] ].
+5268 - Console [ Added Object [ scrTutTerminals.tutTerminalTextBox ] to Screen [ scrTutTerminals ] ].
+5268 - Console [ Created new object [ scrTutTerminals.tutImageTerminal ] ].
+5268 - Console [ Added Object [ scrTutTerminals.tutImageTerminal ] to Screen [ scrTutTerminals ] ].
+5268 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalNext ] ].
+5285 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalNext ] to Screen [ scrTutTerminals ] ].
+5285 - Console [ Created new object [ scrTutTerminals.buttonTutTerminalCancel ] ].
+5285 - Console [ Added Object [ scrTutTerminals.buttonTutTerminalCancel ] to Screen [ scrTutTerminals ] ].
+5285 - Console [ Created new object [ scrTutHealing ] ].
+5285 - Console [ Created new object [ scrTutHealing.textLabelTutHealing ] ].
+5285 - Console [ Added Object [ scrTutHealing.textLabelTutHealing ] to Screen [ scrTutHealing ] ].
+5285 - Console [ Created new object [ scrTutHealing.tutHealingTextBox ] ].
+5285 - Console [ Added Object [ scrTutHealing.tutHealingTextBox ] to Screen [ scrTutHealing ] ].
+5285 - Console [ Created new object [ scrTutHealing.tutImageHealing ] ].
+5285 - Console [ Added Object [ scrTutHealing.tutImageHealing ] to Screen [ scrTutHealing ] ].
+5285 - Console [ Created new object [ scrTutHealing.buttonTutHealinglNext ] ].
+5285 - Console [ Added Object [ scrTutHealing.buttonTutHealinglNext ] to Screen [ scrTutHealing ] ].
+5285 - Console [ Created new object [ scrTutHealing.buttonTutHealingCancel ] ].
+5302 - Console [ Added Object [ scrTutHealing.buttonTutHealingCancel ] to Screen [ scrTutHealing ] ].
+5302 - Console [ Created new object [ scrTutTips ] ].
+5302 - Console [ Created new object [ scrTutTips.textLabelTutTips ] ].
+5302 - Console [ Added Object [ scrTutTips.textLabelTutTips ] to Screen [ scrTutTips ] ].
+5302 - Console [ Created new object [ scrTutTips.tutTipsTextBox ] ].
+5302 - Console [ Added Object [ scrTutTips.tutTipsTextBox ] to Screen [ scrTutTips ] ].
+5302 - Console [ Created new object [ scrTutTips.buttonTutTipsCancel ] ].
+5302 - Console [ Added Object [ scrTutTips.buttonTutTipsCancel ] to Screen [ scrTutTips ] ].
+5302 - Console [ Created new object [ highScoreDisplay ] ].
+5302 - Console [ Created new object [ highScoreDisplay.backGround ] ].
+5302 - Console [ Added Object [ highScoreDisplay.backGround ] to Screen [ highScoreDisplay ] ].
+5302 - Console [ Created new object [ highScoreDisplay.heading ] ].
+5302 - Console [ Added Object [ highScoreDisplay.heading ] to Screen [ highScoreDisplay ] ].
+5302 - Console [ Created new object [ highScoreDisplay.row1 ] ].
+5318 - Console [ Added Object [ highScoreDisplay.row1 ] to Screen [ highScoreDisplay ] ].
+5318 - Console [ Created new object [ highScoreDisplay.score1 ] ].
+5318 - Console [ Added Object [ highScoreDisplay.score1 ] to Screen [ highScoreDisplay ] ].
+5318 - Console [ Created new object [ highScoreDisplay.name1 ] ].
+5318 - Console [ Added Object [ highScoreDisplay.name1 ] to Screen [ highScoreDisplay ] ].
+5318 - Console [ Created new object [ highScoreDisplay.row2 ] ].
+5318 - Console [ Added Object [ highScoreDisplay.row2 ] to Screen [ highScoreDisplay ] ].
+5318 - Console [ Created new object [ highScoreDisplay.score2 ] ].
+5318 - Console [ Added Object [ highScoreDisplay.score2 ] to Screen [ highScoreDisplay ] ].
+5318 - Console [ Created new object [ highScoreDisplay.name2 ] ].
+5318 - Console [ Added Object [ highScoreDisplay.name2 ] to Screen [ highScoreDisplay ] ].
+5318 - Console [ Created new object [ highScoreDisplay.row3 ] ].
+5318 - Console [ Added Object [ highScoreDisplay.row3 ] to Screen [ highScoreDisplay ] ].
+5335 - Console [ Created new object [ highScoreDisplay.score3 ] ].
+5335 - Console [ Added Object [ highScoreDisplay.score3 ] to Screen [ highScoreDisplay ] ].
+5335 - Console [ Created new object [ highScoreDisplay.name3 ] ].
+5335 - Console [ Added Object [ highScoreDisplay.name3 ] to Screen [ highScoreDisplay ] ].
+5335 - Console [ Created new object [ highScoreDisplay.row4 ] ].
+5335 - Console [ Added Object [ highScoreDisplay.row4 ] to Screen [ highScoreDisplay ] ].
+5335 - Console [ Created new object [ highScoreDisplay.score4 ] ].
+5335 - Console [ Added Object [ highScoreDisplay.score4 ] to Screen [ highScoreDisplay ] ].
+5335 - Console [ Created new object [ highScoreDisplay.name4 ] ].
+5335 - Console [ Added Object [ highScoreDisplay.name4 ] to Screen [ highScoreDisplay ] ].
+5335 - Console [ Created new object [ highScoreDisplay.row5 ] ].
+5335 - Console [ Added Object [ highScoreDisplay.row5 ] to Screen [ highScoreDisplay ] ].
+5335 - Console [ Created new object [ highScoreDisplay.score5 ] ].
+5335 - Console [ Added Object [ highScoreDisplay.score5 ] to Screen [ highScoreDisplay ] ].
+5352 - Console [ Created new object [ highScoreDisplay.name5 ] ].
+5352 - Console [ Added Object [ highScoreDisplay.name5 ] to Screen [ highScoreDisplay ] ].
+5352 - Console [ Created new object [ highScoreDisplay.backButton ] ].
+5352 - Console [ Added Object [ highScoreDisplay.backButton ] to Screen [ highScoreDisplay ] ].
+5352 - Console [ Created new object [ highScoreEntry ] ].
+5352 - Console [ Created new object [ highScoreEntry.backGround ] ].
+5352 - Console [ Added Object [ highScoreEntry.backGround ] to Screen [ highScoreEntry ] ].
+5352 - Console [ Created new object [ highScoreEntry.achieved ] ].
+5352 - Console [ Added Object [ highScoreEntry.achieved ] to Screen [ highScoreEntry ] ].
+5352 - Console [ Created new object [ highScoreEntry.initials ] ].
+5352 - Console [ Added Object [ highScoreEntry.initials ] to Screen [ highScoreEntry ] ].
+5352 - Console [ Created new object [ highScoreEntry.initial0 ] ].
+5352 - Console [ Added Object [ highScoreEntry.initial0 ] to Screen [ highScoreEntry ] ].
+5352 - Console [ Object name or function string cannot be empty. ].
+5369 - Console [ Created new object [ highScoreEntry.initial1 ] ].
+5369 - Console [ Added Object [ highScoreEntry.initial1 ] to Screen [ highScoreEntry ] ].
+5369 - Console [ Object name or function string cannot be empty. ].
+5369 - Console [ Created new object [ highScoreEntry.initial2 ] ].
+5369 - Console [ Added Object [ highScoreEntry.initial2 ] to Screen [ highScoreEntry ] ].
+5369 - Console [ Object name or function string cannot be empty. ].
+5369 - Console [ Created new object [ highScoreEntry.backButton ] ].
+5369 - Console [ Added Object [ highScoreEntry.backButton ] to Screen [ highScoreEntry ] ].
+5369 - Console [ È ].
+5369 - Console [ [data/data.zip] is in the search path. ].
+5369 - Console [ [data/scripts] is in the search path. ].
+5369 - Console [ Loaded [ future_blue.bmp ] with key [ tiles ] ].
+5369 - Console [ Loaded [ splash.bmp ] with key [ splash ] ].
+5385 - Console [ Loaded [ planetAlpha.bmp ] with key [ planetAlpha ] ].
+5385 - Console [ Loaded [ hudNew.bmp ] with key [ hudNew ] ].
+5385 - Console [ Loaded [ screen.bmp ] with key [ screen ] ].
+5385 - Console [ Loaded [ lightmap.bmp ] with key [ lightmap ] ].
+5385 - Console [ Loaded [ explosion.bmp ] with key [ explosion ] ].
+5385 - Console [ Loaded [ universe.bmp ] with key [ universe ] ].
+5385 - Console [ Loaded [ db_999.bmp ] with key [ db_droid ] ].
+5385 - Console [ Loaded [ 001.bmp ] with key [ 001 ] ].
+5385 - Console [ Loaded [ 123.bmp ] with key [ 123 ] ].
+5385 - Console [ Loaded [ 139.bmp ] with key [ 139 ] ].
+5385 - Console [ Loaded [ 247.bmp ] with key [ 247 ] ].
+5385 - Console [ Loaded [ 249.bmp ] with key [ 249 ] ].
+5385 - Console [ Loaded [ 296.bmp ] with key [ 296 ] ].
+5385 - Console [ Loaded [ 302.bmp ] with key [ 302 ] ].
+5402 - Console [ Loaded [ 329.bmp ] with key [ 329 ] ].
+5402 - Console [ Loaded [ 420.bmp ] with key [ 420 ] ].
+5402 - Console [ Loaded [ 476.bmp ] with key [ 476 ] ].
+5402 - Console [ Loaded [ 493.bmp ] with key [ 493 ] ].
+5402 - Console [ Loaded [ 516.bmp ] with key [ 516 ] ].
+5402 - Console [ Loaded [ 571.bmp ] with key [ 571 ] ].
+5402 - Console [ Loaded [ 598.bmp ] with key [ 598 ] ].
+5402 - Console [ Loaded [ 614.bmp ] with key [ 614 ] ].
+5402 - Console [ Loaded [ 615.bmp ] with key [ 615 ] ].
+5402 - Console [ Loaded [ 629.bmp ] with key [ 629 ] ].
+5402 - Console [ Loaded [ 711.bmp ] with key [ 711 ] ].
+5402 - Console [ Loaded [ 742.bmp ] with key [ 742 ] ].
+5402 - Console [ Loaded [ 751.bmp ] with key [ 751 ] ].
+5419 - Console [ Loaded [ 821.bmp ] with key [ 821 ] ].
+5419 - Console [ Loaded [ 834.bmp ] with key [ 834 ] ].
+5419 - Console [ Loaded [ 883.bmp ] with key [ 883 ] ].
+5419 - Console [ Loaded [ 999.bmp ] with key [ 999 ] ].
+5419 - Console [ Loaded [ tut_healing.bmp ] with key [ tut_healing ] ].
+5419 - Console [ Loaded [ tut_lift.bmp ] with key [ tut_lift ] ].
+5419 - Console [ Loaded [ tut_terminal.bmp ] with key [ tut_terminal ] ].
+5419 - Console [ Loaded [ bullet_001.bmp ] with key [ bullet_001 ] ].
+5419 - Console [ Loaded [ bullet_476.bmp ] with key [ bullet_476 ] ].
+5419 - Console [ Loaded [ bullet_821.bmp ] with key [ bullet_821 ] ].
+5419 - Console [ Loaded ship level [ Vehicle Hold ] - index [ 0 ] ].
+5419 - Console [ Loaded ship level [ Shuttle bay ] - index [ 1 ] ].
+5419 - Console [ Loaded ship level [ Turrent 2 ] - index [ 2 ] ].
+5419 - Console [ Loaded ship level [ Maintenance ] - index [ 3 ] ].
+5435 - Console [ Loaded ship level [ Engineering ] - index [ 4 ] ].
+5435 - Console [ Loaded ship level [ Mid cargo ] - index [ 5 ] ].
+5435 - Console [ Loaded ship level [ Upper cargo ] - index [ 6 ] ].
+5435 - Console [ Loaded ship level [ Kitchen ] - index [ 8 ] ].
+5435 - Console [ Loaded ship level [ Robo stores ] - index [ 9 ] ].
+5435 - Console [ Loaded ship level [ Quarters ] - index [ 10 ] ].
+5435 - Console [ Loaded ship level [ Repairs ] - index [ 11 ] ].
+5435 - Console [ Loaded ship level [ Staterooms ] - index [ 12 ] ].
+5435 - Console [ Loaded ship level [ Stores ] - index [ 13 ] ].
+5435 - Console [ Loaded ship level [ Research ] - index [ 14 ] ].
+5435 - Console [ Loaded ship level [ Reactor ] - index [ 15 ] ].
+5435 - Console [ Loaded ship level [ Airlock ] - index [ 16 ] ].
+5435 - Console [ Loaded ship level [ Bridge ] - index [ 17 ] ].
+5452 - Console [ Loaded ship level [ Turrent 1 ] - index [ 18 ] ].
+5452 - Console [ Loaded ship level [ Turrent 3 ] - index [ 19 ] ].
+5452 - Console [ Loaded ship level [ Observation ] - index [ 20 ] ].
+5452 - Console [ Loaded font file [ gui.ttf ] ].
+5452 - Console [ Loaded font file [ gui.ttf ] ].
+5452 - Console [ Loaded font file [ intro.ttf ] ].
+5485 - Looking for function [ as_loadAudioResources ] to [ as_useNewRenderer ] to execute
+5485 - Looking for function [ as_loadAudioResources ] to [ as_getAudioSpecs ] to execute
+5485 - Looking for function [ as_loadAudioResources ] to [ as_loadAudioResources ] to execute
+5485 - [ load ] Loaded file [ collision1.wav ] with key [ collision1 ]
+5485 - [ load ] Loaded file [ console1.wav ] with key [ console1 ]
+5485 - [ load ] Loaded file [ console2.wav ] with key [ console2 ]
+5502 - [ load ] Loaded file [ doorOpen.wav ] with key [ doorOpen ]
+5502 - [ load ] Loaded file [ doorClose.wav ] with key [ doorClose ]
+5502 - [ load ] Loaded file [ disruptor.wav ] with key [ disruptor ]
+5519 - [ load ] Loaded file [ damage.wav ] with key [ damage ]
+5535 - [ load ] Loaded file [ explode1.wav ] with key [ explode1 ]
+5552 - [ load ] Loaded file [ explode2.wav ] with key [ explode2 ]
+5552 - [ load ] Loaded file [ energyHeal.wav ] with key [ energyHeal ]
+5569 - [ load ] Loaded file [ endTransmission2.wav ] with key [ endTransmission2 ]
+5569 - [ load ] Loaded file [ endTransmission1.wav ] with key [ endTransmission1 ]
+5569 - [ load ] Loaded file [ greenAlert.wav ] with key [ greenAlert ]
+5569 - [ load ] Loaded file [ lift1.wav ] with key [ lift1 ]
+5569 - [ load ] Loaded file [ keyPressGood.wav ] with key [ keyPressGood ]
+5569 - [ load ] Loaded file [ keyPressBad.wav ] with key [ keyPressBad ]
+5585 - [ load ] Loaded file [ laser.wav ] with key [ laser ]
+5585 - [ load ] Loaded file [ lowEnergy.wav ] with key [ lowEnergy ]
+5585 - [ load ] Loaded file [ lift2.wav ] with key [ lift2 ]
+5585 - [ load ] Loaded file [ lift3.wav ] with key [ lift3 ]
+5585 - [ load ] Loaded file [ levelShutdown.wav ] with key [ levelShutdown ]
+5585 - [ load ] Loaded file [ redAlert.wav ] with key [ redAlert ]
+5602 - [ load ] Loaded file [ startAll.wav ] with key [ startAll ]
+5602 - [ load ] Loaded file [ start2.wav ] with key [ start2 ]
+5602 - [ load ] Loaded file [ start1.wav ] with key [ start1 ]
+5635 - [ load ] Loaded file [ scrollBeeps.wav ] with key [ scrollBeeps ]
+5635 - [ load ] Loaded file [ transferdeadlock.wav ] with key [ transferdeadlock ]
+5652 - [ load ] Loaded file [ transferMove.wav ] with key [ transferMove ]
+5652 - [ load ] Loaded file [ transferStage1.wav ] with key [ transferStage1 ]
+5652 - [ load ] Loaded file [ transferStage2.wav ] with key [ transferStage2 ]
+5652 - [ load ] Loaded file [ transfer1.wav ] with key [ transfer1 ]
+5669 - [ load ] Loaded file [ transferStart.wav ] with key [ transferStart ]
+5669 - [ load ] Loaded file [ yellowAlert.wav ] with key [ yellowAlert ]
+5669 - [ load ] Loaded file [ transferBurntout.wav ] with key [ transferBurntout ]
+5669 - [ load ] Loaded file [ transferAction.wav ] with key [ transferAction ]
+5669 - [ load ] Loaded file [ liftButton.wav ] with key [ liftButton ]
+14109 - Looking for function [ as_handleMainMenu ] to [ as_useNewRenderer ] to execute
+14109 - Looking for function [ as_handleMainMenu ] to [ as_getAudioSpecs ] to execute
+14109 - Looking for function [ as_handleMainMenu ] to [ as_loadAudioResources ] to execute
+14109 - Looking for function [ as_handleMainMenu ] to [ as_loadTextureResources ] to execute
+14109 - Looking for function [ as_handleMainMenu ] to [ as_loadAllDecks ] to execute
+14109 - Looking for function [ as_handleMainMenu ] to [ as_getVolume ] to execute
+14109 - Looking for function [ as_handleMainMenu ] to [ as_setVolume ] to execute
+14109 - Looking for function [ as_handleMainMenu ] to [ as_createGUI ] to execute
+14109 - Looking for function [ as_handleMainMenu ] to [ as_handleMainMenu ] to execute
+15010 - Looking for function [ as_handleOptionsMenu ] to [ as_useNewRenderer ] to execute
+15010 - Looking for function [ as_handleOptionsMenu ] to [ as_getAudioSpecs ] to execute
+15010 - Looking for function [ as_handleOptionsMenu ] to [ as_loadAudioResources ] to execute
+15010 - Looking for function [ as_handleOptionsMenu ] to [ as_loadTextureResources ] to execute
+15010 - Looking for function [ as_handleOptionsMenu ] to [ as_loadAllDecks ] to execute
+15010 - Looking for function [ as_handleOptionsMenu ] to [ as_getVolume ] to execute
+15010 - Looking for function [ as_handleOptionsMenu ] to [ as_setVolume ] to execute
+15010 - Looking for function [ as_handleOptionsMenu ] to [ as_createGUI ] to execute
+15010 - Looking for function [ as_handleOptionsMenu ] to [ as_handleMainMenu ] to execute
+15010 - Looking for function [ as_handleOptionsMenu ] to [ as_handleOptionsMenu ] to execute
+15745 - Looking for function [ as_handleMainMenu ] to [ as_useNewRenderer ] to execute
+15745 - Looking for function [ as_handleMainMenu ] to [ as_getAudioSpecs ] to execute
+15745 - Looking for function [ as_handleMainMenu ] to [ as_loadAudioResources ] to execute
+15745 - Looking for function [ as_handleMainMenu ] to [ as_loadTextureResources ] to execute
+15745 - Looking for function [ as_handleMainMenu ] to [ as_loadAllDecks ] to execute
+15745 - Looking for function [ as_handleMainMenu ] to [ as_getVolume ] to execute
+15745 - Looking for function [ as_handleMainMenu ] to [ as_setVolume ] to execute
+15745 - Looking for function [ as_handleMainMenu ] to [ as_createGUI ] to execute
+15745 - Looking for function [ as_handleMainMenu ] to [ as_handleMainMenu ] to execute

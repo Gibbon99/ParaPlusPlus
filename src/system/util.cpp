@@ -205,7 +205,7 @@ void sys_setNewMode(int newMode, bool doFade)
 
 		audio.stopAllChannels();
 		gui.setCurrentScreen(gui.getIndex(GUI_OBJECT_SCREEN, "mainMenu"));
-		gui.setActiveObject(gui.getCurrentScreen(), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+		gui.setActiveObject (gui.getCurrentScreen (), "mainMenu.startGameButton");
 		break;
 
 	case MODE_GUI_HIGHSCORE_DISPLAY:

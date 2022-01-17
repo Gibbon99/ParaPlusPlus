@@ -10,7 +10,7 @@ void as_handleTransferScreens ()
 
 		sys_setNewMode (MODE_TRANSFER_PRE_SCREEN_TWO, false);
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "guiTransferTwo"));
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "guiTransferTwo.nextButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "guiTransferTwo.nextButton");
 		return;
 	}
 

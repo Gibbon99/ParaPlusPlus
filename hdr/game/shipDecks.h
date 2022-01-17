@@ -126,3 +126,6 @@ void gam_setDeckIsDead();
 
 // Check if all the levels are dead - Game Won
 void gam_checkAllLevels();
+
+// Check the result of loading an XML Shipdeck file
+bool gam_checkXMLReturnCode(tinyxml2::XMLError resultCode);

@@ -54,7 +54,7 @@ void paraSprite::render(float posX, float posY, float scale, Uint8 alphaMod)
 
 	try
 	{
-		if (nullptr == texturePtr)
+//		if (nullptr == texturePtr)
 		{
 			texturePtr  = textures.at (textureKeyName).getTexture ();
 			textureItr  = textures.find (textureKeyName);

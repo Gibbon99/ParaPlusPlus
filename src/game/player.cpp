@@ -225,7 +225,7 @@ void gam_processActionKey()
 					gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
 					sys_setNewMode (MODE_GUI_TERMINAL, true);
 					gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "terminalMenu"));
-					gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "terminalMenu.databaseButton");
+					gui.setActiveObject (gui.getCurrentScreen (), "terminalMenu.databaseButton");
 					return;
 				}
 			}

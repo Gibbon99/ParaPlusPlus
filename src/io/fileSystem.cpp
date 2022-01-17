@@ -29,7 +29,7 @@ void io_getScriptFileNames(std::string directoryName)
 //-----------------------------------------------------------------------------------------------------------------------
 //
 // Load function callback for the audio class - this function loads a file and returns a pointer to memory
-SDL_RWops *io_loadRawFile(const std::string& fileName)
+SDL_RWops *io_loadRawFile(std::string fileName)
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	SDL_RWops *memFilePtr {};

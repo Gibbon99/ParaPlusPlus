@@ -9,11 +9,6 @@ std::vector<paraEmitter> particleEmitters;
 void gam_clearEmitters()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	for (auto &emitterItr: particleEmitters)
-	{
-//		delete emitterItr;
-	}
-
 	particleEmitters.clear ();
 }
 

@@ -88,14 +88,15 @@ void paraGui::setActiveObjectDialogbox(int whichDialogbox, [[maybe_unused]]int o
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Set a new active object
-void paraGui::setActiveObject(int whichScreen, int objectType, std::string objectID)
+void paraGui::setActiveObject(int whichScreen, std::string objectID)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	int indexCount = 0;
+	int indexCount{0};
 
 	if (guiScrollBoxes.empty ())
 		return;
 
+//	for (auto counter = 0; counter != static_cast<int>(guiScreens[whichScreen].objectIDIndex.size()); counter++)
 	for (auto indexItr: guiScreens[whichScreen].objectIDIndex)
 	{
 		switch (guiScreens[whichScreen].objectType[indexCount])
@@ -3543,7 +3544,17 @@ void paraGui::loadKeymap()
 {
 	xmlFileLoad = new tinyxml2::XMLDocument;
 
-	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile (fileName.c_str ());
+	//
+	// Load file from packfile into memory for reading by tinyxml
+	std::string memFile = fileSystem.getString(fileName);
+	if (memFile.empty())
+	{
+		logFile.write(sys_getString("Unable to load file [ %s ] into memory.", fileName.c_str()));
+		return;
+	}
+	auto memFilePtr = fmemopen((void *)memFile.data(), memFile.size(), "rb");
+
+	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile (memFilePtr);
 	if (eResult != tinyxml2::XML_SUCCESS)
 	{
 		funcOutput (-1, int_getString ("Failed to open keybinding file. Code [ %i ]", eResult));

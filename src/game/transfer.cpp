@@ -522,7 +522,7 @@ void trn_initTransferValues(int transferTargetIndex)
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_STOP, false, 0, 127, "transferMove");
 	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, 0, 127, "transferStage1");
 	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "guiTransferOne"));
-	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "guiTransferOne.nextButton");
+	gui.setActiveObject (gui.getCurrentScreen (), "guiTransferOne.nextButton");
 	gui.setState (KEY_ACTION, false, 0);
 
 	gam_setHudText ("hudCaptured");

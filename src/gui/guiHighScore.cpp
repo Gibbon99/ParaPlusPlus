@@ -17,7 +17,7 @@ void gui_showHighscoreEntry()
 
 	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "highScoreEntry"));
 	// Set active object
-	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "highScoreEntry.backButton");
+	gui.setActiveObject (gui.getCurrentScreen (), "highScoreEntry.backButton");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ void gui_showHighscoreTable()
 	gam_setHudText ("hudHighscore");
 	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "highScoreDisplay"));
 	// Set active object
-	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "highScoreDisplay.backButton");
+	gui.setActiveObject (gui.getCurrentScreen (), "highScoreDisplay.backButton");
 }
 
 //----------------------------------------------------------------------------------------------------------------------

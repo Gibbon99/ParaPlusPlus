@@ -5,7 +5,12 @@
 #include "game/texture.h"
 #include "game/database.h"
 
-std::vector<_dataBaseEntry> dataBaseEntry {};
+tinyxml2::XMLDocument *xmlFileSave {};
+tinyxml2::XMLDocument *xmlFileLoad {};
+tinyxml2::XMLNode     *rootNode {};
+
+
+std::vector<dataBaseEntry_> dataBaseEntry {};
 CSimpleIniA                 databaseFile {};
 int                         currentDatabaseRecord {};
 
@@ -15,86 +20,169 @@ int                         currentDatabaseRecord {};
 bool io_getDBDroidInfo(const std::string &fileName)
 //-----------------------------------------------------------------------------------------------------
 {
-	_dataBaseEntry tempDataBaseEntry;
-	std::string    fileInMem;
+	tinyxml2::XMLElement *elementPtr;
+	dataBaseEntry_       tempDataBaseEntry;
 
-	fileInMem = fileSystem.getString (fileName);
+	xmlFileLoad = new tinyxml2::XMLDocument;
+	//
+	// Load file from packfile into memory for reading by tinyxml
+	std::string memFile = fileSystem.getString (fileName);
+	if (memFile.empty ())
+	{
+		logFile.write (sys_getString ("Unable to load file [ %s ] into memory.", fileName.c_str ()));
+		return false;
+	}
+	auto memFilePtr = fmemopen ((void *) memFile.data (), memFile.size (), "rb");
 
-	auto returnCode = databaseFile.LoadData (fileInMem.c_str (), fileInMem.size ());
-	if (returnCode < 0)
-		sys_shutdownWithError (sys_getString ("Unable to open database file [ %s ].", fileName.c_str ()));
+	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile (memFilePtr);
+	gam_checkXMLReturnCode (eResult);
 
+	rootNode = xmlFileLoad->FirstChild ();
+	if (nullptr == rootNode)
+	{
+		logFile.write (sys_getString ("Unable to load XML file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	//
+	// Start getting all the info from the database droid file
 	if (dataBaseEntry.empty ())    // 001 base droid stats
 	{
-		tempDataBaseEntry.maxSpeed = databaseFile.GetDoubleValue ("droidInfo", "max_speed", -1.0);
-		if (tempDataBaseEntry.maxSpeed == -1.0)
-			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "maxSpeed"));
-
+		//
+		// maxHealth - INT
+		elementPtr = rootNode->FirstChildElement ("maxHealth");
+		if (nullptr == elementPtr)
+		{
+			logFile.write (sys_getString ("Unable to find node 'mapVersion' in file [ %s ]", fileName.c_str ()));
+			return false;
+		}
+		eResult = elementPtr->QueryIntText (&tempDataBaseEntry.maxHealth);
+		gam_checkXMLReturnCode (eResult);
+		//
+		// rechargeTime - FLOAT
+		elementPtr = rootNode->FirstChildElement ("rechargeTime");
+		if (nullptr == elementPtr)
+		{
+			logFile.write (sys_getString ("Unable to find node 'rechargeTime' in file [ %s ]", fileName.c_str ()));
+			return false;
+		}
+		eResult = elementPtr->QueryFloatText (&tempDataBaseEntry.rechargeTime);
+		gam_checkXMLReturnCode (eResult);
+		//
+		// maxSpeed - FLOAT
+		elementPtr = rootNode->FirstChildElement ("maxSpeed");
+		if (nullptr == elementPtr)
+		{
+			logFile.write (sys_getString ("Unable to find node 'maxSpeed' in file [ %s ]", fileName.c_str ()));
+			return false;
+		}
+		eResult = elementPtr->QueryFloatText (&tempDataBaseEntry.maxSpeed);
+		gam_checkXMLReturnCode (eResult);
 		tempDataBaseEntry.maxSpeed /= baseGameSpeed;
-
-		tempDataBaseEntry.accelerate = databaseFile.GetDoubleValue ("droidInfo", "accelerate", -1.0);
-		if (tempDataBaseEntry.accelerate == -1.0)
-			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "accelerate"));
-
+		//
+		// accelerate - FLOAT
+		elementPtr = rootNode->FirstChildElement ("accelerate");
+		if (nullptr == elementPtr)
+		{
+			logFile.write (sys_getString ("Unable to find node 'accelerate' in file [ %s ]", fileName.c_str ()));
+			return false;
+		}
+		eResult = elementPtr->QueryFloatText (&tempDataBaseEntry.accelerate);
+		gam_checkXMLReturnCode (eResult);
 		tempDataBaseEntry.accelerate /= baseGameSpeed;
-
-		tempDataBaseEntry.maxHealth = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "max_health", 0));
-		if (tempDataBaseEntry.maxHealth == 0)
-			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "max_health"));
-
-		tempDataBaseEntry.rechargeTime = databaseFile.GetDoubleValue ("droidInfo", "rechargeTime", -1.0);
-		if (tempDataBaseEntry.rechargeTime == -1.0)
-			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "rechargeTime"));
 	}
 	else
 	{
 		//
-		// All other droid speeds and acceleration are based on player droid values
-		// Easy to change overall speed of the game
+		// Base other values on the 001 initial value to make it easier to change all game variables.
+		float tempVarFloat {};
+		int   tempVarInt {};
 		//
-		double tempVar;
-
-		tempVar = databaseFile.GetDoubleValue ("droidInfo", "max_speed", -1.0);
-		if (tempVar == -1.0)
-			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "max_speed"));
-
-		tempDataBaseEntry.maxSpeed = dataBaseEntry[0].maxSpeed + tempVar;
-
-		tempVar = databaseFile.GetDoubleValue ("droidInfo", "accelerate", -1.0);
-		if (tempVar == -1.0)
-			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "accelerate"));
-
-		tempDataBaseEntry.accelerate = dataBaseEntry[0].accelerate + tempVar;
-
-		tempDataBaseEntry.maxSpeed /= baseGameSpeed;
-		tempDataBaseEntry.accelerate /= baseGameSpeed;
-
-		tempVar = databaseFile.GetDoubleValue ("droidInfo", "rechargeTime", -1.0);
-		if (tempVar == -1.0)
-			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "rechargeTime"));
-
-		tempDataBaseEntry.rechargeTime = dataBaseEntry[0].rechargeTime + tempVar;
-
-
-		tempDataBaseEntry.maxHealth = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "max_health", 0));
-		if (tempDataBaseEntry.maxHealth == 0)
-			sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "max_health"));
-		tempDataBaseEntry.maxHealth += dataBaseEntry[0].maxHealth;
+		// maxHealth - INT
+		elementPtr = rootNode->FirstChildElement ("maxHealth");
+		if (nullptr == elementPtr)
+		{
+			logFile.write (sys_getString ("Unable to find node 'maxHealth' in file [ %s ]", fileName.c_str ()));
+			return false;
+		}
+		eResult = elementPtr->QueryIntText (&tempVarInt);
+		gam_checkXMLReturnCode (eResult);
+		tempDataBaseEntry.maxHealth = dataBaseEntry[0].maxHealth + tempVarInt;
+		//
+		// rechargeTime - FLOAT
+		elementPtr = rootNode->FirstChildElement ("rechargeTime");
+		if (nullptr == elementPtr)
+		{
+			logFile.write (sys_getString ("Unable to find node 'rechargeTime' in file [ %s ]", fileName.c_str ()));
+			return false;
+		}
+		eResult = elementPtr->QueryFloatText (&tempVarFloat);
+		gam_checkXMLReturnCode (eResult);
+		tempDataBaseEntry.rechargeTime = dataBaseEntry[0].rechargeTime + tempVarFloat;
+		//
+		// maxSpeed - FLOAT
+		elementPtr = rootNode->FirstChildElement ("maxSpeed");
+		if (nullptr == elementPtr)
+		{
+			logFile.write (sys_getString ("Unable to find node 'maxSpeed' in file [ %s ]", fileName.c_str ()));
+			return false;
+		}
+		eResult = elementPtr->QueryFloatText (&tempVarFloat);
+		gam_checkXMLReturnCode (eResult);
+		tempDataBaseEntry.maxSpeed = dataBaseEntry[0].maxSpeed + tempVarFloat;
+		//
+		// accelerate - FLOAT
+		elementPtr = rootNode->FirstChildElement ("accelerate");
+		if (nullptr == elementPtr)
+		{
+			logFile.write (sys_getString ("Unable to find node 'accelerate' in file [ %s ]", fileName.c_str ()));
+			return false;
+		}
+		eResult = elementPtr->QueryFloatText (&tempVarFloat);
+		gam_checkXMLReturnCode (eResult);
+		tempDataBaseEntry.accelerate = dataBaseEntry[0].accelerate + tempVarFloat;
 	}
-
-	tempDataBaseEntry.score = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "score", -1));
-	if (tempDataBaseEntry.score == -1.0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "score"));
-
-	tempDataBaseEntry.bounceDamage = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "bounce_damage", -1));
-	if (tempDataBaseEntry.bounceDamage == -1.0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "bounce_damage"));
-
-	tempDataBaseEntry.canShoot = databaseFile.GetBoolValue ("droidInfo", "can_shoot", true);
-
-	tempDataBaseEntry.bulletType = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "bullet_type", -2));
-	if (tempDataBaseEntry.bulletType == -2.0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "bullet_type"));
+	//
+	// Now do all the variables that are not changed.
+	//
+	// score - INT
+	elementPtr = rootNode->FirstChildElement ("score");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'score' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryIntText (&tempDataBaseEntry.score);
+	gam_checkXMLReturnCode (eResult);
+	//
+	// bounceDamage - INT
+	elementPtr = rootNode->FirstChildElement ("bounceDamage");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'bounceDamage' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryIntText (&tempDataBaseEntry.bounceDamage);
+	gam_checkXMLReturnCode (eResult);
+	//
+	// canShoot - BOOL
+	elementPtr = rootNode->FirstChildElement ("canShoot");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'canShoot' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryBoolText (&tempDataBaseEntry.canShoot);
+	gam_checkXMLReturnCode (eResult);
+	//
+	// bulletType - INT
+	elementPtr = rootNode->FirstChildElement ("bulletType");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'bulletType' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryIntText (&tempDataBaseEntry.bulletType);
+	gam_checkXMLReturnCode (eResult);
 
 	//
 	// Map the type of bullet to the sprite image for it
@@ -122,39 +210,87 @@ bool io_getDBDroidInfo(const std::string &fileName)
 			tempDataBaseEntry.bulletType = -1;
 			break;
 	}
+	//
+	// bulletDamage - INT
+	elementPtr = rootNode->FirstChildElement ("bulletDamage");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'bulletDamage' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryIntText (&tempDataBaseEntry.bulletDamage);
+	gam_checkXMLReturnCode (eResult);
+	//
+	// disrupterImmune - BOOL
+	elementPtr = rootNode->FirstChildElement ("disrupterImmune");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'disrupterImmune' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryBoolText (&tempDataBaseEntry.disrupterImmune);
+	gam_checkXMLReturnCode (eResult);
 
-	tempDataBaseEntry.chanceToShoot = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "chance_to_shoot", -1));
-	if (tempDataBaseEntry.chanceToShoot == -1.0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "chance_to_shoot"));
-
-	tempDataBaseEntry.bulletDamage = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "bullet_damage", -1));
-	if (tempDataBaseEntry.bulletDamage == -1.0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "bullet_damage"));
-
-	tempDataBaseEntry.disrupterImmune = databaseFile.GetBoolValue ("droidInfo", "disrupter_immune", true);
-
-	tempDataBaseEntry.tokenCount = static_cast<int>(databaseFile.GetLongValue ("droidInfo", "token_count", -1));
-	if (tempDataBaseEntry.tokenCount == -1.0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "token_count"));
-
-	auto returnValue = databaseFile.GetValue ("droidInfo", "height", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "height"));
-	tempDataBaseEntry.height = returnValue;
-
-	returnValue = databaseFile.GetValue ("droidInfo", "weight", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "weight"));
-	tempDataBaseEntry.weight = returnValue;
-
-	returnValue = databaseFile.GetValue ("droidInfo", "dbImageFileName", "default");
-	if (strcmp (returnValue, "default") == 0)
-		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in database file.", "dbImageFileName"));
-	tempDataBaseEntry.dbImageFileName = returnValue;
+	//
+	// tokenCount - INT
+	elementPtr = rootNode->FirstChildElement ("tokenCount");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'tokenCount' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	eResult = elementPtr->QueryIntText (&tempDataBaseEntry.tokenCount);
+	gam_checkXMLReturnCode (eResult);
+	//
+	// height - STRING
+	elementPtr = rootNode->FirstChildElement ("height");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'height' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	tempDataBaseEntry.height = elementPtr->GetText ();
+	if (tempDataBaseEntry.height.empty ())
+		gam_checkXMLReturnCode (tinyxml2::XML_NO_TEXT_NODE);
+	//
+	// weight - STRING
+	elementPtr = rootNode->FirstChildElement ("weight");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'weight' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	tempDataBaseEntry.weight = elementPtr->GetText ();
+	if (tempDataBaseEntry.weight.empty ())
+		gam_checkXMLReturnCode (tinyxml2::XML_NO_TEXT_NODE);
+	//
+	// height - STRING
+	elementPtr = rootNode->FirstChildElement ("height");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'height' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	tempDataBaseEntry.height = elementPtr->GetText ();
+	if (tempDataBaseEntry.height.empty ())
+		gam_checkXMLReturnCode (tinyxml2::XML_NO_TEXT_NODE);
+	//
+	// dbEntry - STRING
+	elementPtr = rootNode->FirstChildElement ("dbEntry");
+	if (nullptr == elementPtr)
+	{
+		logFile.write (sys_getString ("Unable to find node 'dbEntry' in file [ %s ]", fileName.c_str ()));
+		return false;
+	}
+	tempDataBaseEntry.dbImageFileName = elementPtr->GetText ();
+	if (tempDataBaseEntry.dbImageFileName.empty ())
+		gam_checkXMLReturnCode (tinyxml2::XML_NO_TEXT_NODE);
 
 	tempDataBaseEntry.notes = gui_getString (tempDataBaseEntry.dbImageFileName);
 
 	dataBaseEntry.push_back (tempDataBaseEntry);
+
+	delete xmlFileLoad;
 
 	return true;
 }
@@ -165,30 +301,32 @@ bool io_getDBDroidInfo(const std::string &fileName)
 void gam_getDBInformation()
 //------------------------------------------------------------------------------------------------------------------------------------
 {
-	io_getDBDroidInfo ("001.txt");
-	io_getDBDroidInfo ("123.txt");
-	io_getDBDroidInfo ("139.txt");
-	io_getDBDroidInfo ("247.txt");
-	io_getDBDroidInfo ("249.txt");
-	io_getDBDroidInfo ("296.txt");
-	io_getDBDroidInfo ("302.txt");
-	io_getDBDroidInfo ("329.txt");
-	io_getDBDroidInfo ("420.txt");
-	io_getDBDroidInfo ("476.txt");
-	io_getDBDroidInfo ("493.txt");
-	io_getDBDroidInfo ("516.txt");
-	io_getDBDroidInfo ("571.txt");
-	io_getDBDroidInfo ("598.txt");
-	io_getDBDroidInfo ("614.txt");
-	io_getDBDroidInfo ("615.txt");
-	io_getDBDroidInfo ("629.txt");
-	io_getDBDroidInfo ("711.txt");
-	io_getDBDroidInfo ("742.txt");
-	io_getDBDroidInfo ("751.txt");
-	io_getDBDroidInfo ("821.txt");
-	io_getDBDroidInfo ("834.txt");
-	io_getDBDroidInfo ("883.txt");
-	io_getDBDroidInfo ("999.txt");
+	dataBaseEntry.clear();
+
+	io_getDBDroidInfo ("001.data");
+	io_getDBDroidInfo ("123.data");
+	io_getDBDroidInfo ("139.data");
+	io_getDBDroidInfo ("247.data");
+	io_getDBDroidInfo ("249.data");
+	io_getDBDroidInfo ("296.data");
+	io_getDBDroidInfo ("302.data");
+	io_getDBDroidInfo ("329.data");
+	io_getDBDroidInfo ("420.data");
+	io_getDBDroidInfo ("476.data");
+	io_getDBDroidInfo ("493.data");
+	io_getDBDroidInfo ("516.data");
+	io_getDBDroidInfo ("571.data");
+	io_getDBDroidInfo ("598.data");
+	io_getDBDroidInfo ("614.data");
+	io_getDBDroidInfo ("615.data");
+	io_getDBDroidInfo ("629.data");
+	io_getDBDroidInfo ("711.data");
+	io_getDBDroidInfo ("742.data");
+	io_getDBDroidInfo ("751.data");
+	io_getDBDroidInfo ("821.data");
+	io_getDBDroidInfo ("834.data");
+	io_getDBDroidInfo ("883.data");
+	io_getDBDroidInfo ("999.data");
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------

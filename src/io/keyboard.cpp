@@ -1,14 +1,13 @@
-#include <gui/guiLanguage.h>
-#include <gui/guiInput.h>
-#include <io/joystick.h>
-#include <io/mouse.h>
-#include <game/player.h>
-#include <game/lifts.h>
-#include <system/util.h>
-#include <game/transfer.h>
-#include <game/pauseMode.h>
-#include <game/hud.h>
+#include "system/util.h"
+#include "gui/guiInput.h"
+#include "io/joystick.h"
+#include "io/mouse.h"
 #include "io/keyboard.h"
+#include "game/player.h"
+#include "game/lifts.h"
+#include "game/transfer.h"
+#include "game/pauseMode.h"
+#include "game/hud.h"
 
 static int settingCurrentKeyIndex;
 static int previousGuiMode;
@@ -25,7 +24,7 @@ void io_setNewKeycodeValue(int newKeyCode)
 
 	gam_setHudText ("optionsMenu.controlsButton");
 	gui.setCurrentScreen (gui.getIndex (GUI_OBJECT_SCREEN, "controlsMenu"));
-	gui.setActiveObject (gui.getCurrentScreen (), GUI_OBJECT_BUTTON, "controlsMenu.backButton");
+	gui.setActiveObject (gui.getCurrentScreen (), "controlsMenu.backButton");
 
 	paraScriptInstance.run ("as_refreshControlLabels", "");
 }

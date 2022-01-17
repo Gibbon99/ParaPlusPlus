@@ -26,14 +26,14 @@ void as_handleMainMenu()
         gam_setHudText("hudOptions");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
         // Set active object
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "optionsMenu.backButton");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "optionsMenu.backButton");
         return;
     }
 
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "mainMenu.tutorialButton")) {
         gam_setHudText("hudTutorial");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "scrTutorial"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "scrTutorial.buttonTutMoveNext");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "scrTutorial.buttonTutMoveNext");
         sys_setNewMode(MODE_GUI_TUT_TRANSFER_START, true);
         return;
     }
@@ -60,35 +60,35 @@ void as_handleOptionsMenu()
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "optionsMenu.videoButton")) {
         gam_setHudText("optionsMenu.videoButton");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "videoOptions"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "videoOptions.backButton");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "videoOptions.backButton");
         return;
     }
 
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "optionsMenu.audioButton")) {
         gam_setHudText("optionsMenu.audioButton");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "audioOptions"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "audioOptions.backButton");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "audioOptions.backButton");
         return;
     }
 
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "optionsMenu.controlsButton")) {
         gam_setHudText("optionsMenu.controlsButton");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "controlsMenu"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "controlsMenu.backButton");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "controlsMenu.backButton");
         return;
     }
 
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "optionsMenu.gameButton")) {
         gam_setHudText("optionsMenu.gameButton");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "gameMenu"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "gameMenu.backButton");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "gameMenu.backButton");
         return;
     }
 
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "optionsMenu.backButton")) {
         gam_setHudText("hudMainMenu");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "mainMenu"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "mainMenu.optionsButton");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "mainMenu.optionsButton");
         return;
     }
 }
@@ -108,7 +108,7 @@ void as_handleAudioMenu()
         io_updateConfigValueInt("g_volumeLevel", g_volumeLevel);
 
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "optionsMenu.audioButton");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "optionsMenu.audioButton");
         return;
     }
 
@@ -189,7 +189,7 @@ void as_handleControlsMenu()
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "controlsMenu.backButton")) {
         gam_setHudText("hudOptions");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "optionsMenu.controlsButton");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "optionsMenu.controlsButton");
         return;
     }
 
@@ -198,7 +198,7 @@ void as_handleControlsMenu()
         as_paraGui.saveKeymap();  // Save keymappings to file
         gam_setHudText("hudOptions");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "optionsMenu.controlsButton");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "optionsMenu.controlsButton");
         return;
     }
 }
@@ -236,7 +236,7 @@ string guiCurrentLanguage;
 
     gam_setHudText("hudOptions");
     as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
-    as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "optionsMenu.gameButton");
+    as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "optionsMenu.gameButton");
     }
 }
 
@@ -285,7 +285,7 @@ void as_handleVideoOptions()
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "videoOptions.backButton")) {
         gam_setHudText("hudOptions");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "optionsMenu.videoButton");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "optionsMenu.videoButton");
         return;
     }
 }
@@ -922,7 +922,7 @@ void as_createGUI()
     createHighscoreEntry();
 
     as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "mainMenu"));
-    as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "mainMenu.startGame");
+    as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "mainMenu.startGame");
 
     as_paraGui.setColor(GUI_OBJECT_BUTTON, "ALL", GUI_COL_ACTIVE, 50, 50, 200, 255);
     as_paraGui.setColor(GUI_OBJECT_BUTTON, "ALL", GUI_COL_INACTIVE, 50, 50, 100, 255);

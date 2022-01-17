@@ -53,6 +53,9 @@ std::string paraHighScore::getLastNameUsed()
 int paraHighScore::lowestScore()
 //----------------------------------------------------------------------------------------------------------------------
 {
+	if (highScores.empty())
+		sys_shutdownWithError ("Error: Highscore table is invalid.");
+
 	auto lowestScore = highScores.end ();
 
 	lowestScore--;
@@ -184,7 +187,17 @@ void paraHighScore::loadFile()
 
 	xmlFileLoad = new tinyxml2::XMLDocument;
 
-	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile(highScoreFileName.c_str());
+	//
+	// Load file from packfile into memory for reading by tinyxml
+	std::string memFile = fileSystem.getString(highScoreFileName);
+	if (memFile.empty())
+	{
+		logFile.write(sys_getString("Unable to load file [ %s ] into memory.", highScoreFileName.c_str()));
+		return;
+	}
+	auto memFilePtr = fmemopen((void *)memFile.data(), memFile.size(), "rb");
+
+	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile(memFilePtr);
 	if (eResult != tinyxml2::XML_SUCCESS)
 	{
 		log_addEvent(sys_getString("Error reading high score file. Code [ %i ]\n", eResult));

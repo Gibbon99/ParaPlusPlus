@@ -189,6 +189,7 @@ FIXED - BUG - Getting bullet remove on index -1
 DONE - Line up lightmap with center of bullet
 BUG - Fade on low health disappears completely
 BUG - Not all particles fire on explosion - random
+>Commit
 
 
 

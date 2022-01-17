@@ -759,18 +759,21 @@ void gam_showWayPoints(const std::string levelName)
 
 	for (auto it: shipdecks.at (levelName).wayPoints)
 	{
-		tempLine.start.x = shipdecks.at (levelName).wayPoints[indexCount].x;
-		tempLine.start.y = shipdecks.at (levelName).wayPoints[indexCount].y;
+		tempLine.start.x = it.x; //  .wayPoints[indexCount].x;
+		tempLine.start.y = it.y; //shipdecks.at (levelName).wayPoints[indexCount].y;
 
 		if (indexCount + 1 < shipdecks.at (levelName).numWaypoints)
 		{
-			tempLine.finish.x = shipdecks.at (levelName).wayPoints[indexCount + 1].x;
-			tempLine.finish.y = shipdecks.at (levelName).wayPoints[indexCount + 1].y;
+			tempLine.finish.x = ++it.x;
+			tempLine.finish.y = it.y;
+			--it.x;
+//			tempLine.finish.x = shipdecks.at (levelName).wayPoints[indexCount + 1].x;
+//			tempLine.finish.y = shipdecks.at (levelName).wayPoints[indexCount + 1].y;
 		}
 		else
 		{
-			tempLine.finish.x = shipdecks.at (levelName).wayPoints[0].x;
-			tempLine.finish.y = shipdecks.at (levelName).wayPoints[0].y;
+			tempLine.finish.x = shipdecks.at (levelName).wayPoints.begin()->x;
+			tempLine.finish.y = shipdecks.at (levelName).wayPoints.begin()->y;
 		}
 
 		lineStart.x = static_cast<float>(tempLine.start.x);

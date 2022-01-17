@@ -47,7 +47,7 @@ void as_handleHighscoreDisplay()
     {
         gam_setHudText("hudMainMenu");
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "mainMenu"));
-        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "mainMenu.startGameButton");
         return;
     }
 

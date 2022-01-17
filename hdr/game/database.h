@@ -5,8 +5,8 @@
 typedef struct
 {
 	int         maxHealth;
-	double      maxSpeed;
-	double      accelerate;
+	float       maxSpeed;
+	float       accelerate;
 	int         score;
 	int         bounceDamage;
 	bool        canShoot;
@@ -14,28 +14,28 @@ typedef struct
 	int         chanceToShoot;
 	int         bulletDamage;
 	bool        disrupterImmune;
-	double      rechargeTime;
+	float       rechargeTime;
 	int         tokenCount;
 	int         imageIndex;
 	std::string dbImageFileName;
 	std::string height;
 	std::string weight;
 
-	std::string description;
-	std::string className;
-	std::string drive;
-	std::string brain;
-	std::string weapon;
-	std::string sensor1;
-	std::string sensor2;
-	std::string sensor3;
+//	std::string description;
+//	std::string className;
+//	std::string drive;
+//	std::string brain;
+//	std::string weapon;
+//	std::string sensor1;
+//	std::string sensor2;
+//	std::string sensor3;
 	std::string notes;
-} _dataBaseEntry;
+} dataBaseEntry_;
 
-extern std::vector<_dataBaseEntry> dataBaseEntry;
+extern std::vector<dataBaseEntry_> dataBaseEntry;
 
 // Get and build up information for droid database files
-void gam_getDBInformation ();
+void gam_getDBInformation();
 
 // Change to the previous droid information
 void gam_previousDatabase();

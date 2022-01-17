@@ -22,7 +22,7 @@ void as_handleTutorialElements ()
 		gam_setHudText ("hudMainMenu");
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
 		sys_setNewMode (MODE_GUI_MAINMENU, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "mainMenu.startGameButton");
 		return;
 	}
 
@@ -30,7 +30,7 @@ void as_handleTutorialElements ()
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "scrTutTransfer"));
 		sys_setNewMode (MODE_GUI_TUT_TRANSFER_START, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "scrTutTransfer.buttonTutTransNext");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "scrTutTransfer.buttonTutTransNext");
 		return;
 	}
 
@@ -40,7 +40,7 @@ void as_handleTutorialElements ()
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
 		sys_setNewMode (MODE_GUI_MAINMENU, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "mainMenu.startGameButton");
 		return;
 	}
 
@@ -48,7 +48,7 @@ void as_handleTutorialElements ()
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "scrTutTransGame"));
 		sys_setNewMode (MODE_GUI_TUT_TRANSFER_GAME, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "scrTutTransGame.buttonTutTransGameNext");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "scrTutTransGame.buttonTutTransGameNext");
 		return;
 	}
 //
@@ -57,7 +57,7 @@ void as_handleTutorialElements ()
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
 		sys_setNewMode (MODE_GUI_MAINMENU, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "mainMenu.startGameButton");
 		return;
 	}
 
@@ -65,7 +65,7 @@ void as_handleTutorialElements ()
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "scrTutLifts"));
 		sys_setNewMode (MODE_GUI_TUT_LIFTS, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "scrTutLifts.buttonTutLiftNext");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "scrTutLifts.buttonTutLiftNext");
 		return;
 	}
 //
@@ -74,7 +74,7 @@ void as_handleTutorialElements ()
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
 		sys_setNewMode (MODE_GUI_MAINMENU, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "mainMenu.startGameButton");
 		return;
 	}
 
@@ -82,7 +82,7 @@ void as_handleTutorialElements ()
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "scrTutTerminals"));
 		sys_setNewMode (MODE_GUI_TUT_TERMINALS, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "scrTutTerminals.buttonTutTerminalNext");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "scrTutTerminals.buttonTutTerminalNext");
 		return;
 	}
 //
@@ -91,7 +91,7 @@ void as_handleTutorialElements ()
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
 		sys_setNewMode (MODE_GUI_MAINMENU, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "mainMenu.startGameButton");
 		return;
 	}
 
@@ -99,7 +99,7 @@ void as_handleTutorialElements ()
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "scrTutHealing"));
 		sys_setNewMode (MODE_GUI_TUT_HEALING, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "scrTutHealing.buttonTutHealinglNext");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "scrTutHealing.buttonTutHealinglNext");
 		return;
 	}
 //
@@ -108,7 +108,7 @@ void as_handleTutorialElements ()
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
 		sys_setNewMode (MODE_GUI_MAINMENU, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "mainMenu.startGameButton");
 		return;
 	}
 
@@ -116,7 +116,7 @@ void as_handleTutorialElements ()
 	{
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "scrTutTips"));
 		sys_setNewMode (MODE_GUI_TUT_TIPS, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "scrTutTips.buttonTutTipsCancel");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "scrTutTips.buttonTutTipsCancel");
 		return;
 	}
 //
@@ -126,7 +126,7 @@ void as_handleTutorialElements ()
 		gam_setHudText ("hudMainMenu");
 		as_paraGui.setCurrentScreen (as_paraGui.getIndex (GUI_OBJECT_SCREEN, "mainMenu"));
 		sys_setNewMode (MODE_GUI_MAINMENU, true);
-		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), GUI_OBJECT_BUTTON, "mainMenu.startGameButton");
+		as_paraGui.setActiveObject (as_paraGui.getCurrentScreen (), "mainMenu.startGameButton");
 		return;
 	}
 }
