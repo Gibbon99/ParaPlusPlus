@@ -153,11 +153,11 @@ bool paraTexture::load(std::string newFileName, std::string newKeyName)
 		return false;
 	}
 
-	funcOutput (-1, int_getString ("Loaded [ %s ] with key [ %s ]", fileName.c_str (), keyName.c_str ()));
 #ifdef MY_DEBUG
-	log_addEvent (sys_getString ("[ %s ] Loaded file [ %s ]", __func__, fileName.c_str ()));
+	funcOutput (-1, int_getString ("Loaded [ %s ] with key [ %s ]", fileName.c_str (), keyName.c_str ()));
 #endif
-	sys_freeMemory (fileName);
+
+//	sys_freeMemory (fileName);
 
 	loaded = true;
 	return true;

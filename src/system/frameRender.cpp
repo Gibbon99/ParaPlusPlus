@@ -37,7 +37,7 @@ void sys_prepareFrame()
 {
 	//
 	// SDL2_gfx changes the blend mode and draw color
-	// as part of its rendering - remember so we can change it back
+	// as part of its rendering - remember, so we can change it back
 	//
 	SDL_GetRenderDrawColor (renderer.renderer, &r, &g, &b, &a);
 	SDL_GetRenderDrawBlendMode (renderer.renderer, &tempMode);
@@ -75,6 +75,9 @@ void sys_renderFrame(double interpolation)
 	int  frameWidth = databaseSprite.getFrameWidth ();
 	int  halfPoint  = (halfScreen - frameWidth) / 2;
 	int  finalPoint = halfPoint + halfScreen;
+
+	int droidPosX{0};
+	int droidPosY{0};
 
 	switch (currentMode)
 	{
@@ -131,16 +134,10 @@ void sys_renderFrame(double interpolation)
 			break;
 
 		case MODE_TRANSFER_SCREEN_ONE:
-			databaseSprite.render (
-					(hiresVirtualWidth - databaseSprite.getFrameWidth ()) / 2,
-					(((hiresVirtualWidth - databaseSprite.getFrameHeight ()) / 2) + textures.at ("hudNew").getHeight ()) - databaseSprite.getFrameHeight (), 2.0, static_cast<Uint8>(64));
-			gui_renderGUI ();
-			break;
-
 		case MODE_TRANSFER_SCREEN_TWO:
-			databaseSprite.render (
-					(hiresVirtualWidth - databaseSprite.getFrameWidth ()) / 2,
-					(((hiresVirtualWidth - databaseSprite.getFrameHeight ()) / 2) + textures.at ("hudNew").getHeight ()) - databaseSprite.getFrameHeight (), 2.0, static_cast<Uint8>(64));
+			droidPosX = (hiresVirtualWidth - databaseSprite.getFrameWidth ()) / 2;
+			droidPosY = (((hiresVirtualWidth - databaseSprite.getFrameHeight ()) / 2) + textures.at ("hudNew").getHeight ()) - databaseSprite.getFrameHeight ();
+			databaseSprite.render (static_cast<float>(droidPosX), static_cast<float>(droidPosY), 2.0, static_cast<Uint8>(64));
 			gui_renderGUI ();
 			break;
 

@@ -24,6 +24,11 @@
 #define APP_NAME    "ParadroidPlusPlus"
 
 #define DEBUG_AI2 1     // Toggle logging for paraAI2
+// #define DEBUG_SCRIPT 1
+// #define DEBUG_GUI_SETUP 1
+// #define MY_DEBUG 1
+// #define DEBUG_CONSOLE 1
+// #define DEBUG_AUDIO 1
 
 #include "classes/paraScript.h"
 #include "classes/paraLogFile.h"

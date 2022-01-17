@@ -30,6 +30,9 @@ public:
 
 	void animateLowHealth();
 
+	// Update the frame dimension information
+	void updateFrameInfo();
+
 private:
 	int         numFrames {-1};
 	int         currentFrame {-1};

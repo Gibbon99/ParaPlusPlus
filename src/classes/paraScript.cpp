@@ -101,7 +101,9 @@ void paraScript::run(const std::string &functionName, const std::string &param)
 
 	for (const auto &funcItr: scriptFunctions)
 	{
+#ifdef DEBUG_SCRIPT
 		logFile.write (sys_getString ("Looking for function [ %s ] to [ %s ] to execute", functionName.c_str (), funcItr.scriptName.c_str ()));
+#endif
 
 		if (scriptEngine != context->GetEngine ())
 		{
@@ -207,7 +209,9 @@ void paraScript::cacheFunctions()
 		}
 		else
 		{
+#ifdef DEBUG_SCRIPT
 			funcOutput (-1, sys_getString ("Func ID for [ %s ] - [ %i ]", funcItr.functionName.c_str (), tempFunctionName.funcID));
+#endif
 
 			//
 			// Store the funcID and name to execute
@@ -280,7 +284,9 @@ bool paraScript::loadAndCompile()
 				break;
 
 			case 1:
+#ifdef DEBUG_SCRIPT
 				funcOutput (-1, sys_getString ("Section has been added [ %s ]", scriptItr.sectionName.c_str ()));
+#endif
 				break;
 
 			default:
@@ -292,9 +298,10 @@ bool paraScript::loadAndCompile()
 
 	}
 
-	SDL_Delay (200);
-
+//	SDL_Delay (200);
+#ifdef DEBUG_SCRIPT
 	funcOutput (-1, "About to run BuildModule.");
+#endif
 
 	//
 	// Build the script from the loaded sections using ScriptBuilder
@@ -306,7 +313,9 @@ bool paraScript::loadAndCompile()
 		return false;
 	}
 
+#ifdef DEBUG_SCRIPT
 	funcOutput (-1, "Finished buildModule.");
+#endif
 
 	return true;
 }
@@ -354,7 +363,10 @@ void paraScript::addHostFunction(const std::string &funcName, asSFuncPtr funcPtr
 		funcOutput (-1, sys_getString ("Failed to registerGlobalFunction [ %s ] - [ %s ]", funcName.c_str (), paraScript::getScriptError (returnCode).c_str ()));
 	}
 
+#ifdef DEBUG_SCRIPT
 	funcOutput (-1, sys_getString ("Script: Registered function - [ %s ]", funcName.c_str ()));
+#endif
+
 	hostScriptFunctions.push_back (tempFunc);
 }
 
@@ -475,8 +487,10 @@ void paraScript::addHostVariable(const std::string &varName, void *varPtr)
 	{
 		funcOutput (-1, sys_getString ("Script: Error: Couldn't register variable - [ %s ]", varName.c_str ()));
 	}
-
+#ifdef DEBUG_SCRIPT
 	funcOutput (-1, sys_getString ("Script: Registered variable - [ %s ]", varName.c_str ()));
+#endif
+
 	hostVariables.push_back (tempVar);
 }
 

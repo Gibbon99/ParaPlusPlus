@@ -7,8 +7,6 @@
 #include "../../data/scripts/enum.h"
 #include "tinyxml2.h"
 
-#define DEBUG_GUI_SETUP 1
-
 typedef void (*funcPtrIntStr)(int, std::string);
 
 typedef std::string &string1;

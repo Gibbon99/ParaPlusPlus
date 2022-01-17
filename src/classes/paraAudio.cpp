@@ -93,12 +93,14 @@ int paraAudio::init(int numMaxActiveChannels, audioFunctionPtrStr outputFunction
 		return -1;
 	}
 
+#ifdef DEBUG_AUDIO
 	for (auto i = 0; i < SDL_GetNumAudioDrivers(); ++i)
 	{
 		log_addEvent(sys_getString("%i: %s", i, SDL_GetAudioDriver(i)));
 	}
+#endif
 
-	log_addEvent(sys_getString("Using audio driver: %s\n", SDL_GetCurrentAudioDriver()));
+	log_addEvent(sys_getString("[ Audio ] Using audio driver [ %s ]", SDL_GetCurrentAudioDriver()));
 
 	if ((numMaxActiveChannels < 0) || (numMaxActiveChannels > MAX_NUM_CHANNELS))
 	{

@@ -13,8 +13,6 @@ void gam_loadTexture(std::string &fileName, std::string &keyName)
 {
 	paraTexture tempTexture (con_addEvent, io_loadRawFile);
 
-	paraTexture test(con_addEvent, io_loadRawFile);
-
 	if (tempTexture.load (fileName, keyName))
 	{
 		tempTexture.setFileName (fileName);

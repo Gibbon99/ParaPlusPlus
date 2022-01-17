@@ -1,8 +1,7 @@
-#include <system/startup.h>
-#include <system/util.h>
-#include <game/hud.h>
-#include <game/score.h>
-#include "io/logFile.h"
+#include "system/startup.h"
+#include "system/util.h"
+#include "game/hud.h"
+#include "game/score.h"
 #include "gui/guiHighScore.h"
 
 //----------------------------------------------------------------------------------------------------------------------

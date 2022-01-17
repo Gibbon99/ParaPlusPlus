@@ -1,6 +1,5 @@
 BUGS
 --------
-BUG - Transfer screen one - shows player droid at wrong position on start
 BUG - Two consoles not accessible on level - collision lines wrong spot
 BUG - Healing sound kept playing when not on healing tile
 BUG - Briefing scroll not starting on Windows only
@@ -14,8 +13,8 @@ Transfer - enemy AI - do based on priority of circuit types
 Droid AI - Attack
 Droid AI - Help
 Check bottom edge of animated tiles in graphics
-
 Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
+Fix free textures - backing screens?? nvidia leak
 
 
 DONE - Universe background on menu screens
@@ -190,7 +189,7 @@ DONE - Line up lightmap with center of bullet
 BUG - Fade on low health disappears completely
 BUG - Not all particles fire on explosion - random
 >Commit
-
+FIXED - BUG - Transfer screen one - shows player droid at wrong position on start
 
 
 

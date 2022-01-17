@@ -138,9 +138,7 @@ void createHighscoreEntry()
 void createHighscoreDisplay()
 //----------------------------------------------------------------------------------------------------------------------
 {
-
-    int
-    rowCounterInt;
+    int rowCounterInt;
 
     as_paraGui.create(GUI_OBJECT_SCREEN, "highScoreDisplay");
 

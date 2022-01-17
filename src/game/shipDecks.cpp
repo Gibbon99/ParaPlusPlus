@@ -546,7 +546,9 @@ bool gam_loadXMLShipDesk(const std::string &fileName)
 	if (shipdecks.size () == 20)
 		gam_setupLifts ();
 
+#ifdef MY_DEBUG
 	con_addEvent (-1, sys_getString ("Loaded ship level [ %s ] - index [ %i ]", tempLevel.levelName, tempLevel.deckNumber));
+#endif
 
 	return true;
 }

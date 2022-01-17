@@ -308,7 +308,9 @@ void paraConsole::addVariable(const std::string &variableName, int variableType,
 	}
 	consoleVariables.push_back (tempVar);
 
+#ifdef DEBUG_CONSOLE
 	log_addEvent (sys_getString ("[ %s ] Var [ %s ] has been added.", __func__, variableName.c_str ()));
+#endif
 }
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -401,7 +403,11 @@ void paraConsole::setVarFunc(const std::string &varName, float variablePtr)
 	}
 }
 
+//--------------------------------------------------------------------------------------------------------------------
+//
+// Change the value of a variable - STRING version
 void paraConsole::setVarFunc(const std::string &varName, const std::string &variablePtr)
+//--------------------------------------------------------------------------------------------------------------------
 {
 	for (auto &varItr: consoleVariables)
 	{

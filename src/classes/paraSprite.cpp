@@ -92,6 +92,20 @@ void paraSprite::render(float posX, float posY, float scale, Uint8 alphaMod)
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Update the frame dimension information
+void paraSprite::updateFrameInfo()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	static std::map<std::string, paraTexture>::iterator textureItr;
+
+	texturePtr  = textures.at (textureKeyName).getTexture ();
+	textureItr  = textures.find (textureKeyName);
+	frameWidth  = textureItr->second.getWidth () / numFrames;
+	frameHeight = textureItr->second.getHeight ();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Render a sprite at the passed in location
 void paraSprite::render(float posX, float posY, float scale, double angle)
 //----------------------------------------------------------------------------------------------------------------------

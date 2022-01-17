@@ -96,8 +96,7 @@ void paraGui::setActiveObject(int whichScreen, std::string objectID)
 	if (guiScrollBoxes.empty ())
 		return;
 
-//	for (auto counter = 0; counter != static_cast<int>(guiScreens[whichScreen].objectIDIndex.size()); counter++)
-	for (auto indexItr: guiScreens[whichScreen].objectIDIndex)
+	for (auto counter = 0; counter != static_cast<int>(guiScreens[whichScreen].objectIDIndex.size()); counter++)
 	{
 		switch (guiScreens[whichScreen].objectType[indexCount])
 		{

@@ -19,8 +19,9 @@ void io_getScriptFileNames(std::string directoryName)
 		tempFileName = *i;
 
 		paraScriptInstance.addScript (tempFileName, fileSystem.getString (tempFileName));
-
+#ifdef DEBUG_SCRIPT
 		log_addEvent (sys_getString ("Script [ %s ]", tempFileName.c_str ()));
+#endif
 	}
 
 	PHYSFS_freeList (rc);

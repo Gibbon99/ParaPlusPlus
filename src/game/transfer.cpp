@@ -453,9 +453,17 @@ void trn_initTransferValues(int transferTargetIndex)
 	std::string    newFileName;
 	std::string    newKeyName;
 
-	if ((g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode () == DROID_MODE_FOR_REMOVAL) || (g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode () == DROID_MODE_EXPLODING) ||
+	if ((g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode () == DROID_MODE_FOR_REMOVAL) ||
+	    (g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode () == DROID_MODE_EXPLODING) ||
 	    (g_shipDeckItr->second.droid[transferTargetIndex].getCurrentMode () == DROID_MODE_DEAD))
 		return;
+
+	newKeyName  = "db_droid";
+	newFileName = dataBaseEntry[playerDroid.getDroidType ()].dbImageFileName + ".bmp";
+	gam_loadTexture (newFileName, newKeyName);
+	databaseSprite.setCurrentFrame (0);
+	databaseSprite.setTintColor (64, 64, 64);
+	databaseSprite.updateFrameInfo();
 
 	if (transferRows.empty ())
 	{
@@ -509,12 +517,6 @@ void trn_initTransferValues(int transferTargetIndex)
 	numPlayerTokens = dataBaseEntry[playerDroid.getDroidType ()].tokenCount;
 
 	trn_setupTransferCellValues ();
-
-	newKeyName  = "db_droid";
-	newFileName = dataBaseEntry[playerDroid.getDroidType ()].dbImageFileName + ".bmp";
-	gam_loadTexture (newFileName, newKeyName);
-	databaseSprite.setCurrentFrame (0);
-	databaseSprite.setTintColor (64, 64, 64);
 
 	gam_stopAlertLevelSound (gam_getCurrentAlertLevel ());
 

@@ -175,17 +175,18 @@ int sys_startInit([[maybe_unused]]void *ptr)
 
 	gam_setTileType (false);
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_TEXTURE, 0, tileFilename + "|tiles| ");
-//
-// Textures are done from the same thread as window creation - put on the Game Event queue
+	//
+	// Textures are done from the same thread as window creation - put on the Game Event queue
 	paraScriptInstance.run ("as_loadTextureResources", "");
 	paraScriptInstance.run ("as_loadAllDecks", "");
-//
-// Load fonts via Game Event thread
+	//
+	// Load fonts via Game Event thread
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName + "|guiFont|" + std::to_string (guiFontSize));
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, guiFontFileName + "|guiFont28|" + std::to_string (28));
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_LOAD_FONT, 0, introFontFileName + "|introFont|" + std::to_string (introFontSize));
-
-//	SDL_Delay (100);
+	//
+	// Needs to populate before GUI screen is created
+	highScores.init("highscore.dat", NUM_HIGHSCORE_ROWS, "DAB", 600, 100);
 
 	gui.init (con_addEvent, windowWidth, windowHeight, gameWinWidth, gameWinHeight, "keybinding.para");
 	gui_loadSideViewData ("sideview.dat");
@@ -221,8 +222,6 @@ int sys_startInit([[maybe_unused]]void *ptr)
 
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 250, std::to_string (MODE_GUI_MAINMENU) + "|" + std::to_string (true));
 	sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, std::to_string (MODE_SHOW_SPLASH) + "|" + std::to_string (true));
-
-	highScores.init("highscore.dat", NUM_HIGHSCORE_ROWS, "DAB", 600, 100);
 
 	return 0;
 }
