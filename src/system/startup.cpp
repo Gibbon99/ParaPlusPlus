@@ -1,6 +1,5 @@
 #include <system/cpPhysics.h>
 #include <game/audio.h>
-#include <io/fileWatch.h>
 #include <gui/guiLanguage.h>
 #include <io/joystick.h>
 #include <game/database.h>
@@ -90,8 +89,6 @@ void sys_startSystems()
 	log_addEvent ("Running DEBUG version.");
 #endif
 	io_readConfigValues ("data/config.ini");
-
-	io_startFileWatcher ();
 
 	con_initConsole ();
 	//

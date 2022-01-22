@@ -1,7 +1,6 @@
 #include "classes/paraBullet.h"
 #include "gui/guiLostScreen.h"
 #include "gui/guiScrollbox.h"
-#include "io/fileWatch.h"
 #include "io/keyboard.h"
 #include "io/joystick.h"
 #include "io/mouse.h"
@@ -19,6 +18,7 @@
 #include "game/game.h"
 #include "system/util.h"
 #include "system/frameUpdate.h"
+#include "system/gameEvents.h"
 
 SDL_Event evt;
 
@@ -161,8 +161,6 @@ void sys_gameTickRun()
 {
 	if (renderer.currentFadeState != FADE_STATE_NONE)
 		renderer.updateFade ();
-
-	io_checkFileWatcher ();
 
 	if (currentMode == MODE_GUI_KEYCODE_ENTRY)
 	{
