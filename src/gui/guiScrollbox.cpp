@@ -72,9 +72,6 @@ void gui_renderScrollbox (std::string whichScrollbox, double interpolate)
 	// Draw background
 	roundedBoxRGBA (renderer.renderer, bb.x1, bb.y1, bb.x2, bb.y2, cornerRadius, backGroundColor.r, backGroundColor.g, backGroundColor.b, backGroundColor.a);
 
-//	double alphaStep = 255.0 / static_cast<double>(fontClass.height ());
-//	double lineAlpha = 0.0;
-
 	lineCount = 0;
 	if (gui.getScrollDelay (objectIndex) > 0)
 	{
@@ -87,9 +84,6 @@ void gui_renderScrollbox (std::string whichScrollbox, double interpolate)
 			drawPositionY = 0;
 		drawPositionY *= interpolate;
 		drawPositionY += gui.getPreviousScrollY (objectIndex);
-
-//		logFile.write(sys_getString("scroll Y [ %f ] previous Y [ %f ] drawDelta [ %f ]", gui.getScrollY (objectIndex), gui.getPreviousScrollY (objectIndex), drawPositionY));
-
 	}
 
 #ifdef CLIP_SCROLLBOX

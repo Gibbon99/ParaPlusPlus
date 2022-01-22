@@ -2,7 +2,12 @@ BUGS
 --------
 BUG - Two consoles not accessible on level - collision lines wrong spot
 BUG - Healing sound kept playing when not on healing tile
-BUG - Briefing scroll not starting on Windows only
+BUG - Bullet from 7 droids causes bullet release with -1 out of range
+BUG - Highscore table not being saved
+
+GAMEPLAY
+---------
+Slow down the rate of fire for higher droids
 
 TO DO
 -------
@@ -191,8 +196,10 @@ FIXED - BUG - Transfer screen one - shows player droid at wrong position on star
 >Commit
 DONE - Fix free textures - backing screens?? nvidia leak
 >Commit
-
-
+FIXED - BUG - Briefing scroll not starting on Windows only
+FIXED - BUG - Database scroll is too fast
+DONE - Standardise droid speed and acceleration
+DONE - Completed text translations for German and Italian
 
 GUI
 ------

@@ -208,7 +208,7 @@ void createDatabaseScreen ()
 	                        hiresVirtualWidth / 2, hiresVirtualHeight - databaseScrollBoxBorderWidth - 200);
 	as_paraGui.setColor (GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", GUI_COL_ACTIVE, 100, 100, 15, 100);
 	as_paraGui.setColor (GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", GUI_COL_ACTIVE_LABEL, 20, 150, 100, 240);
-	as_paraGui.setScrollSpeed (GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", 30.0);
+	as_paraGui.setScrollSpeed (GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", 2.0);
 	as_paraGui.setReady (GUI_OBJECT_SCROLLBOX, "databaseScreen.scrollbox", true);
 
 	as_paraGui.create (GUI_OBJECT_BUTTON, "databaseScreen.previousButton");
