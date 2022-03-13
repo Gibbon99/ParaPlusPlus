@@ -3,7 +3,6 @@ BUGS
 BUG - Two consoles not accessible on level - collision lines wrong spot
 BUG - Healing sound kept playing when not on healing tile
 BUG - Bullet from 7 droids causes bullet release with -1 out of range
-BUG - Highscore table not being saved
 
 
 GAMEPLAY
@@ -207,7 +206,8 @@ DONE - Completed text translations for German and Italian
 DONE - Save GUI settings for volume level - gui.as 130
 >Commit
 FIXED - BUG - Disrupter immune not working for player
-
+>Commit
+FIXED - BUG - Highscore table not being saved
 
 
 GUI

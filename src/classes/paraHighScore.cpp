@@ -18,8 +18,7 @@ void paraHighScore::init(std::string filePath, int numScores, const std::string 
 	highScoreFileName = std::move (filePath);
 	//
 	// Check if the highscore table file exists or not - fill it with default data and save if not
-	std::ifstream file (highScoreFileName, std::ios::in | std::ios::binary);
-	if (!file.is_open ())
+	if (!fileSystem.doesFileExist (highScoreFileName))
 	{
 		tableScore = startScore;
 		for (int i = 0; i < m_numScores; i++)
@@ -32,8 +31,6 @@ void paraHighScore::init(std::string filePath, int numScores, const std::string 
 
 		saveFile ();
 	}
-	else
-		file.close ();
 
 	loadFile ();
 }
@@ -53,7 +50,7 @@ std::string paraHighScore::getLastNameUsed()
 int paraHighScore::lowestScore()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	if (highScores.empty())
+	if (highScores.empty ())
 		sys_shutdownWithError ("Error: Highscore table is invalid.");
 
 	auto lowestScore = highScores.end ();
@@ -120,53 +117,54 @@ void paraHighScore::addNewScore(const std::string &newName, int newScore)
 void paraHighScore::saveFile()
 //----------------------------------------------------------------------------------------------------------------------
 {
-	tinyxml2::XMLDocument* xmlFileSave{};
-	tinyxml2::XMLNode* rootNode{};
-	tinyxml2::XMLElement* elementPtrSave{};
+	tinyxml2::XMLDocument *xmlFileSave {};
+	tinyxml2::XMLNode     *rootNode {};
+	tinyxml2::XMLElement  *elementPtrSave {};
 	//
 	// Create new XML file to use
 	xmlFileSave = new tinyxml2::XMLDocument;
 	//
 	// Create pointer to the root node
-	rootNode = xmlFileSave->NewElement("HighScores");
+	rootNode    = xmlFileSave->NewElement ("HighScores");
 	//
 	// Attach root node to the file
-	xmlFileSave->InsertFirstChild(rootNode);
+	xmlFileSave->InsertFirstChild (rootNode);
 	//
 	// Save last name used
-	elementPtrSave = xmlFileSave->NewElement("LastName");
-	elementPtrSave->SetText(lastNameUsed);
-	elementPtrSave->InsertEndChild(elementPtrSave);
-	rootNode->InsertEndChild(elementPtrSave);
+	elementPtrSave = xmlFileSave->NewElement ("LastName");
+	elementPtrSave->SetText (lastNameUsed);
+	elementPtrSave->InsertEndChild (elementPtrSave);
+	rootNode->InsertEndChild (elementPtrSave);
 
-	elementPtrSave = xmlFileSave->NewElement("Names");
+	elementPtrSave = xmlFileSave->NewElement ("Names");
 	//
 	// Write out the names
-	for (auto fileItr = highScores.begin (); fileItr != highScores.end (); fileItr++)
+//	for (auto fileItr = highScores.begin (); fileItr != highScores.end (); fileItr++)
+	for (auto highScore : highScores)
 	{
-		tinyxml2::XMLElement* scoreNamePtr = xmlFileSave->NewElement("scoreName");
-		scoreNamePtr->SetText(fileItr->name);
-		elementPtrSave->InsertEndChild(scoreNamePtr);
-		rootNode->InsertEndChild(elementPtrSave);
+		tinyxml2::XMLElement *scoreNamePtr = xmlFileSave->NewElement ("scoreName");
+		scoreNamePtr->SetText (highScore.name);
+		elementPtrSave->InsertEndChild (scoreNamePtr);
+		rootNode->InsertEndChild (elementPtrSave);
 	}
 	//
 	// Now write out the scores
-	elementPtrSave = xmlFileSave->NewElement("Scores");
+	elementPtrSave = xmlFileSave->NewElement ("Scores");
 
-	for (auto highScore : highScores)
+	for (auto highScore: highScores)
 	{
-		tinyxml2::XMLElement* scoreScorePtr = xmlFileSave->NewElement("scoreScore");
-		scoreScorePtr->SetText(highScore.score);
-		elementPtrSave->InsertEndChild(scoreScorePtr);
-		rootNode->InsertEndChild(elementPtrSave);
+		tinyxml2::XMLElement *scoreScorePtr = xmlFileSave->NewElement ("scoreScore");
+		scoreScorePtr->SetText (highScore.score);
+		elementPtrSave->InsertEndChild (scoreScorePtr);
+		rootNode->InsertEndChild (elementPtrSave);
 	}
 	//
 	// Save the file using the PHYSFS filesystem
 	tinyxml2::XMLPrinter printOutFile;
-	xmlFileSave->Print( &printOutFile );
+	xmlFileSave->Print (&printOutFile);
 
-	if (!fileSystem.writeStringToFile (printOutFile.CStr(), highScoreFileName))
-		log_addEvent(sys_getString("Error writing high score file - [ %s ].", highScoreFileName.c_str()));
+	if (!fileSystem.writeStringToFile (printOutFile.CStr (), highScoreFileName))
+		log_addEvent (sys_getString ("Error writing high score file - [ %s ].", highScoreFileName.c_str ()));
 
 	delete xmlFileSave;
 }
@@ -181,107 +179,107 @@ void paraHighScore::loadFile()
 
 	highScores.clear ();
 
-	tinyxml2::XMLDocument* xmlFileLoad{};
-	tinyxml2::XMLNode* rootNodeLoad{};
-	tinyxml2::XMLElement* elementPtrLoad{};
+	tinyxml2::XMLDocument *xmlFileLoad {};
+	tinyxml2::XMLNode     *rootNodeLoad {};
+	tinyxml2::XMLElement  *elementPtrLoad {};
 
 	xmlFileLoad = new tinyxml2::XMLDocument;
 
 	//
 	// Load file from packfile into memory for reading by tinyxml
-	std::string memFile = fileSystem.getString(highScoreFileName);
-	if (memFile.empty())
+	std::string memFile = fileSystem.getString (highScoreFileName);
+	if (memFile.empty ())
 	{
-		logFile.write(sys_getString("Unable to load file [ %s ] into memory.", highScoreFileName.c_str()));
+		logFile.write (sys_getString ("Unable to load file [ %s ] into memory.", highScoreFileName.c_str ()));
 		return;
 	}
-	auto memFilePtr = fmemopen((void *)memFile.data(), memFile.size(), "rb");
+	auto memFilePtr = fmemopen ((void *) memFile.data (), memFile.size (), "rb");
 
-	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile(memFilePtr);
+	tinyxml2::XMLError eResult = xmlFileLoad->LoadFile (memFilePtr);
 	if (eResult != tinyxml2::XML_SUCCESS)
 	{
-		log_addEvent(sys_getString("Error reading high score file. Code [ %i ]\n", eResult));
+		log_addEvent (sys_getString ("Error reading high score file. Code [ %i ]\n", eResult));
 		return;
 	}
 	//
 	// Get root node
-	rootNodeLoad = xmlFileLoad->FirstChild();
+	rootNodeLoad = xmlFileLoad->FirstChild ();
 	if (nullptr == rootNodeLoad)
 	{
-		log_addEvent(sys_getString("Unable to load XML file [ %s ]", highScoreFileName.c_str()));
+		log_addEvent (sys_getString ("Unable to load XML file [ %s ]", highScoreFileName.c_str ()));
 		return;
 	}
 	//
 	// Get the last name used
 	const char *tempLastNameUsed;
-	elementPtrLoad = rootNodeLoad->FirstChildElement("LastName");
+	elementPtrLoad = rootNodeLoad->FirstChildElement ("LastName");
 	if (nullptr == elementPtrLoad)
 	{
-		log_addEvent(sys_getString("Unable to locate node 'LastName' in XML file [ %s ]", highScoreFileName.c_str()));
+		log_addEvent (sys_getString ("Unable to locate node 'LastName' in XML file [ %s ]", highScoreFileName.c_str ()));
 	}
 	else
 	{
-		tempLastNameUsed = elementPtrLoad->GetText();
-		myStrCpy(lastNameUsed, tempLastNameUsed, NUM_CHARS);
+		tempLastNameUsed = elementPtrLoad->GetText ();
+		myStrCpy (lastNameUsed, tempLastNameUsed, NUM_CHARS);
 	}
 
 
 	//
 	// Get all the names for the high score table first
-	elementPtrLoad = rootNodeLoad->FirstChildElement("Names");
+	elementPtrLoad = rootNodeLoad->FirstChildElement ("Names");
 	if (nullptr == elementPtrLoad)
 	{
-		log_addEvent(sys_getString("Unable to find node 'Names' in file [ %s ]", highScoreFileName.c_str()));
+		log_addEvent (sys_getString ("Unable to find node 'Names' in file [ %s ]", highScoreFileName.c_str ()));
 		return;
 	}
-	const char* tempScorename;
-	std::vector<std::string> tempScoreNames{};
+	const char *tempScorename;
+	std::vector<std::string> tempScoreNames {};
 
-	tinyxml2::XMLElement* listElementPtr = elementPtrLoad->FirstChildElement("scoreName");
+	tinyxml2::XMLElement *listElementPtr = elementPtrLoad->FirstChildElement ("scoreName");
 	while (listElementPtr != nullptr)
 	{
-		tempScorename = listElementPtr->GetText();
-		tempScoreNames.emplace_back(tempScorename);
-		listElementPtr = listElementPtr->NextSiblingElement("scoreName");
+		tempScorename = listElementPtr->GetText ();
+		tempScoreNames.emplace_back (tempScorename);
+		listElementPtr = listElementPtr->NextSiblingElement ("scoreName");
 	}
 	//
 	// Now get each of the scores for the name
-	int tempIntScore{0};
-	std::vector<int> tempScoreScore{};
+	int              tempIntScore {0};
+	std::vector<int> tempScoreScore {};
 
-	elementPtrLoad = rootNodeLoad->FirstChildElement("Scores");
+	elementPtrLoad = rootNodeLoad->FirstChildElement ("Scores");
 	if (nullptr == elementPtrLoad)
 	{
-		log_addEvent(sys_getString("Unable to find node 'Scores' in file [ %s ]", highScoreFileName.c_str()));
+		log_addEvent (sys_getString ("Unable to find node 'Scores' in file [ %s ]", highScoreFileName.c_str ()));
 		return;
 	}
-	listElementPtr = elementPtrLoad->FirstChildElement("scoreScore");
+	listElementPtr = elementPtrLoad->FirstChildElement ("scoreScore");
 	while (listElementPtr != nullptr)
 	{
-		eResult = listElementPtr->QueryIntText(&tempIntScore);
+		eResult = listElementPtr->QueryIntText (&tempIntScore);
 		if (eResult != tinyxml2::XML_SUCCESS)
 		{
-			log_addEvent(sys_getString("Error reading high score file. Code [ %i ]\n", eResult));
+			log_addEvent (sys_getString ("Error reading high score file. Code [ %i ]\n", eResult));
 			return;
 		}
-		listElementPtr = listElementPtr->NextSiblingElement("scoreScore");
+		listElementPtr = listElementPtr->NextSiblingElement ("scoreScore");
 
-		tempScoreScore.push_back(tempIntScore);
+		tempScoreScore.push_back (tempIntScore);
 	}
 	//
 	// Check the number of entries are the same
-	if (tempScoreScore.size() != tempScoreNames.size())
+	if (tempScoreScore.size () != tempScoreNames.size ())
 	{
-		log_addEvent(sys_getString("Size mismatch reading in high score entires."));
+		log_addEvent (sys_getString ("Size mismatch reading in high score entires."));
 		return;
 	}
 	//
 	// Store the values into the table
-	highScores.clear();
+	highScores.clear ();
 	int scoreIndex = 0;
-	for (auto& tableItr : tempScoreNames)
+	for (auto &tableItr: tempScoreNames)
 	{
-		highScores.insert(highScore(tableItr, tempScoreScore[scoreIndex++]));
+		highScores.insert (highScore (tableItr, tempScoreScore[scoreIndex++]));
 	}
 
 	delete xmlFileLoad;
