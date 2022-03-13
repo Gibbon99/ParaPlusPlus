@@ -5,6 +5,7 @@ BUG - Healing sound kept playing when not on healing tile
 BUG - Bullet from 7 droids causes bullet release with -1 out of range
 BUG - Highscore table not being saved
 
+
 GAMEPLAY
 ---------
 Slow down the rate of fire for higher droids
@@ -204,7 +205,8 @@ DONE - Standardise droid speed and acceleration
 DONE - Completed text translations for German and Italian
 >Commit
 DONE - Save GUI settings for volume level - gui.as 130
-
+>Commit
+FIXED - BUG - Disrupter immune not working for player
 
 
 

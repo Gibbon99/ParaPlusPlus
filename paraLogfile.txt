@@ -7,12 +7,587 @@
 0 - Console [ Script: Script Engine version - [ 2.35.0 ] ].
 0 - Console [ Script: Options - [  AS_64BIT_PTR AS_LINUX AS_X64_GCC  ] ].
 0 - Console [ Scripting started. ].
-482 - Console [ Object name or object label cannot be empty. ].
-482 - Console [ Object name or object label cannot be empty. ].
-482 - Console [ Object name or object label cannot be empty. ].
-482 - [ Audio ] Using audio driver [ pulseaudio ]
-482 - Console [ Object name or object label cannot be empty. ].
-482 - Console [ Object name or object label cannot be empty. ].
-482 - Console [ Object name or function string cannot be empty. ].
-482 - Console [ Object name or function string cannot be empty. ].
-482 - Console [ Object name or function string cannot be empty. ].
+884 - Console [ Object name or object label cannot be empty. ].
+884 - Console [ Object name or object label cannot be empty. ].
+884 - Console [ Object name or object label cannot be empty. ].
+884 - Console [ Object name or object label cannot be empty. ].
+884 - Console [ Object name or object label cannot be empty. ].
+884 - Console [ Object name or function string cannot be empty. ].
+884 - Console [ Object name or function string cannot be empty. ].
+884 - Console [ Object name or function string cannot be empty. ].
+990 - [ Audio ] Using audio driver [ pulseaudio ]
+96102 - [ postStepRemove ] Removing a shape and body from postStep callback.
+96135 - [ gam_damageToDroid ] - target 2 damageSource 1 sourceDroid -1
+96135 - [ gam_damageToDroid ] - Damage to droid [ 2 ] from BULLET
+96135 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+96703 - [ postStepRemove ] Removing a shape and body from postStep callback.
+96736 - [ gam_damageToDroid ] - target 2 damageSource 1 sourceDroid -1
+96736 - [ gam_damageToDroid ] - Damage to droid [ 2 ] from BULLET
+96736 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+96736 - [ 2 ] Found a new AI mode to change to [ ATTACK ]
+96736 - [ 2 ] - Running function : changeAIModeTo
+96736 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
+96736 - [ 2 ] - In ATTACK mode case statement.
+96736 - [ 2 ] AI Scores [ 95 0 0 11 50 90 ]
+96744 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+96744 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+96744 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+96744 - Console [ 2   --  95 --    0 --    0 --  11  --  50  -- 90 -- ATTACK -  ].
+96744 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+96744 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+96744 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+96744 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+96753 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+98736 - [ postStepRemove ] Removing a shape and body from postStep callback.
+98769 - [ gam_damageToDroid ] - target 2 damageSource 1 sourceDroid -1
+98769 - [ gam_damageToDroid ] - Damage to droid [ 2 ] from BULLET
+98769 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+101469 - [ 2 ] - Running function : changeAIModeTo
+101469 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
+101469 - [ 2 ] - In ATTACK mode case statement.
+101469 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+101469 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101469 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101478 - Console [ 2   --  100 --   45 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+101478 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101478 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101478 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101478 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101478 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101536 - [ 2 ] Found a new AI mode to change to [ HUNT ]
+101536 - [ 2 ] - Running function : changeAIModeTo
+101536 - [ 2 ] - Changing to new AI mode - [ HUNT ]
+101536 - [ 2 ] - Changing to HUNT mode.
+101536 - [ 2 ] - Found the player trail tile [ 23.000 14.000 ]
+101536 - [ requestNewPath ] Index 2
+101544 - [ 2 ] AI Scores [ 80 100 0 17 50 10 ]
+101544 - [ 2 ] - Within attack range of player while in HUNT mode.
+101569 - [ 2 ] Found a new AI mode to change to [ ATTACK ]
+101569 - [ 2 ] - Running function : changeAIModeTo
+101569 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
+101569 - [ 2 ] - In ATTACK mode case statement.
+101569 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+101569 - [ 2 ] AI Scores [ 100 40 0 17 50 10 ]
+101577 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101577 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101577 - Console [ 2   --  100 --   40 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+101577 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101577 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101577 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101577 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101586 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+101602 - [ 2 ] Found a new AI mode to change to [ PATROL ]
+101602 - [ 2 ] - Running function : changeAIModeTo
+101602 - [ 2 ] - Changing to new AI mode - [ PATROL ]
+101602 - [ 2 ] - Changing to PATROL mode. Looking for nearest waypoint to move to.
+101602 - [ 2 ] - [ findLocationWithLOS ] Search for a visible waypoint.
+101602 - [ 0 ] - Found a closer waypoint [ 243 ]
+101611 - [ 10 ] - Found a closer waypoint [ 122 ]
+101611 - [ 2 ] AI Scores [ 45 40 0 17 50 10 ]
+102001 - [ 2 ] Found a new AI mode to change to [ ATTACK ]
+102001 - [ 2 ] - Running function : changeAIModeTo
+102001 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
+102001 - [ 2 ] - In ATTACK mode case statement.
+102001 - [ 2 ] AI Scores [ 50 40 0 17 50 10 ]
+102010 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+102010 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+102010 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+102010 - Console [ 2   --  50 --   40 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+102010 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+102010 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+102010 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+102010 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+102018 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+102035 - [ 2 ] Found a new AI mode to change to [ PATROL ]
+102035 - [ 2 ] - Running function : changeAIModeTo
+102035 - [ 2 ] - Changing to new AI mode - [ PATROL ]
+102035 - [ 2 ] - Changing to PATROL mode. Looking for nearest waypoint to move to.
+102035 - [ 2 ] - [ findLocationWithLOS ] Search for a visible waypoint.
+102043 - [ 0 ] - Found a closer waypoint [ 245 ]
+102043 - [ 10 ] - Found a closer waypoint [ 107 ]
+102043 - [ 2 ] AI Scores [ 0 40 0 17 50 10 ]
+103302 - [ postStepRemove ] Removing a shape and body from postStep callback.
+103336 - [ gam_damageToDroid ] - target 1 damageSource 1 sourceDroid -1
+103336 - [ gam_damageToDroid ] - Damage to droid [ 1 ] from BULLET
+103336 - [ 0 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+103336 - [ 1 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+103769 - [ 1 ] Found a new AI mode to change to [ ATTACK ]
+103769 - [ 1 ] - Running function : changeAIModeTo
+103769 - [ 1 ] - Changing to new AI mode - [ ATTACK ]
+103769 - [ 1 ] - In ATTACK mode case statement.
+103769 - [ 1 ] AI Scores [ 50 0 0 5 50 45 ]
+103769 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+103777 - Console [ 0   --   0 --    0 --    0 --   0  --  50  -- 45 -- PATROL -  ].
+103777 - Console [ 1   --  50 --    0 --    0 --   5  --  50  -- 45 -- ATTACK -  ].
+103777 - Console [ 2   --   5 --   40 --    0 --  17  --  50  -- 10 -- PATROL -  ].
+103777 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+103777 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+103777 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+103777 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+103786 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+104502 - [ postStepRemove ] Removing a shape and body from postStep callback.
+104536 - [ gam_damageToDroid ] - target 1 damageSource 1 sourceDroid -1
+104536 - [ gam_damageToDroid ] - Damage to droid [ 1 ] from BULLET
+104536 - [ 0 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+104536 - [ 1 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+104536 - [ 0 ] - Running function : changeAIModeTo
+104536 - [ 0 ] - Changing to new AI mode - [ ATTACK ]
+104536 - [ 0 ] - In ATTACK mode case statement.
+104536 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+104536 - Console [ 0   --  100 --    0 --    0 --   0  --  50  --  0 -- ATTACK -  ].
+104544 - Console [ 1   --  100 --    0 --    0 --  11  --  50  -- 90 -- ATTACK -  ].
+104544 - Console [ 2   --   5 --   40 --    0 --  17  --  50  -- 10 -- PATROL -  ].
+104544 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+104544 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+104544 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+104544 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+104544 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+105969 - [ postStepRemove ] Removing a shape and body from postStep callback.
+106001 - [ gam_damageToDroid ] - target 0 damageSource 1 sourceDroid -1
+106001 - [ gam_damageToDroid ] - Damage to droid [ 0 ] from BULLET
+106001 - [ 0 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+106001 - [ 1 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+106001 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+106001 - [ gam_damageToDroid ] - target 1 damageSource 1 sourceDroid -1
+106001 - [ gam_damageToDroid ] - Damage to droid [ 1 ] from BULLET
+106001 - [ 0 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+106001 - [ 1 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+106001 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+106001 - [ 2 ] - Running function : changeAIModeTo
+106001 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
+106001 - [ 2 ] - In ATTACK mode case statement.
+106001 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+106001 - Console [ 0   --  100 --    0 --    0 --   5  --  50  -- 90 -- ATTACK -  ].
+106010 - Console [ 1   --  100 --    0 --    0 --  17  --  50  -- 100 -- ATTACK -  ].
+106010 - Console [ 2   --  100 --   40 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+106010 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+106010 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+106010 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+106010 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+106010 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119135 - [ 1 ] - Running function : changeAIModeTo
+119135 - [ 1 ] - Changing to new AI mode - [ ATTACK ]
+119135 - [ 1 ] - In ATTACK mode case statement.
+119135 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+119135 - Console [ 0   --  80 --   90 --    0 --   5  --  50  -- 90 -- ATTACK -  ].
+119135 - Console [ 1   --  100 --   45 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+119143 - Console [ 2   --  90 --   45 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+119143 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119143 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119143 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119143 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119143 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119168 - [ 0 ] Found a new AI mode to change to [ HUNT ]
+119168 - [ 0 ] - Running function : changeAIModeTo
+119168 - [ 0 ] - Changing to new AI mode - [ HUNT ]
+119168 - [ 0 ] - Changing to HUNT mode.
+119168 - [ 0 ] - Found the player trail tile [ 23.000 14.000 ]
+119168 - [ requestNewPath ] Index 0
+119168 - [ 0 ] AI Scores [ 80 90 0 5 50 90 ]
+119168 - [ 0 ] - Within attack range of player while in HUNT mode.
+119168 - [ 2 ] Found a new AI mode to change to [ HUNT ]
+119180 - [ 2 ] - Running function : changeAIModeTo
+119180 - [ 2 ] - Changing to new AI mode - [ HUNT ]
+119180 - [ 2 ] - Changing to HUNT mode.
+119180 - [ 2 ] - Found the player trail tile [ 23.000 14.000 ]
+119184 - [ requestNewPath ] Index 2
+119184 - [ 2 ] AI Scores [ 80 90 0 17 50 10 ]
+119201 - [ 0 ] Found a new AI mode to change to [ ATTACK ]
+119201 - [ 0 ] - Running function : changeAIModeTo
+119201 - [ 0 ] - Changing to new AI mode - [ ATTACK ]
+119201 - [ 0 ] - In ATTACK mode case statement.
+119201 - [ 0 ] AI Scores [ 100 30 0 5 50 90 ]
+119201 - [ 1 ] Found a new AI mode to change to [ HUNT ]
+119201 - [ 1 ] - Running function : changeAIModeTo
+119213 - [ 1 ] - Changing to new AI mode - [ HUNT ]
+119213 - [ 1 ] - Changing to HUNT mode.
+119213 - [ 1 ] - Found the player trail tile [ 23.000 14.000 ]
+119213 - [ requestNewPath ] Index 1
+119218 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+119218 - Console [ 0   --  100 --   30 --    0 --   5  --  50  -- 90 -- ATTACK -  ].
+119218 - Console [ 1   --  80 --   100 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+119218 - Console [ 2   --  80 --   90 --    0 --  17  --  50  -- 10 -- HUNT -  ].
+119218 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119218 - [ 1 ] AI Scores [ 80 100 0 17 50 10 ]
+119218 - [ 1 ] - Within attack range of player while in HUNT mode.
+119226 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119226 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119226 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119226 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119235 - [ 0 ] - Running function : changeAIModeTo
+119235 - [ 0 ] - Changing to new AI mode - [ ATTACK ]
+119235 - [ 0 ] - In ATTACK mode case statement.
+119235 - [ 1 ] Found a new AI mode to change to [ ATTACK ]
+119235 - [ 1 ] - Running function : changeAIModeTo
+119243 - [ 1 ] - Changing to new AI mode - [ ATTACK ]
+119243 - [ 1 ] - In ATTACK mode case statement.
+119243 - [ 1 ] AI Scores [ 100 40 0 17 50 10 ]
+119243 - [ 2 ] - Within attack range of player while in HUNT mode.
+119243 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+119243 - Console [ 0   --  100 --   30 --    0 --   5  --  50  --  0 -- ATTACK -  ].
+119243 - Console [ 1   --  100 --   40 --    0 --  17  --  50  -- 10 -- HUNT -  ].
+119251 - Console [ 2   --  80 --   90 --    0 --  17  --  50  -- 10 -- HUNT -  ].
+119251 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119251 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119251 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119251 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119251 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119251 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+119260 - Console [ 0   --  90 --   75 --    0 --   5  --  50  --  0 -- ATTACK -  ].
+119260 - Console [ 1   --  100 --   40 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+119260 - Console [ 2   --  80 --   90 --    0 --  17  --  50  -- 10 -- HUNT -  ].
+119260 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119260 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119260 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119260 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119269 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119269 - [ 1 ] Found a new AI mode to change to [ PATROL ]
+119269 - [ 1 ] - Running function : changeAIModeTo
+119269 - [ 1 ] - Changing to new AI mode - [ PATROL ]
+119269 - [ 1 ] - Changing to PATROL mode. Looking for nearest waypoint to move to.
+119269 - [ 1 ] - [ findLocationWithLOS ] Search for a visible waypoint.
+119277 - [ 0 ] - Found a closer waypoint [ 127 ]
+119277 - [ 2 ] - Found a closer waypoint [ 120 ]
+119277 - [ 5 ] - Found a closer waypoint [ 113 ]
+119277 - [ 45 ] - Found a closer waypoint [ 81 ]
+119277 - [ 46 ] - Found a closer waypoint [ 63 ]
+119277 - [ 1 ] AI Scores [ 45 40 0 17 50 10 ]
+119277 - [ 2 ] Found a new AI mode to change to [ ATTACK ]
+119285 - [ 2 ] - Running function : changeAIModeTo
+119285 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
+119285 - [ 2 ] - In ATTACK mode case statement.
+119285 - [ 2 ] AI Scores [ 100 30 0 17 50 10 ]
+119285 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+119285 - Console [ 0   --  80 --   100 --    0 --   5  --  50  --  0 -- ATTACK -  ].
+119285 - Console [ 1   --  45 --   40 --    0 --  17  --  50  -- 10 -- PATROL -  ].
+119294 - Console [ 2   --  100 --   30 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+119294 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119294 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119294 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119294 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119294 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119302 - [ 0 ] Found a new AI mode to change to [ HUNT ]
+119302 - [ 0 ] - Running function : changeAIModeTo
+119302 - [ 0 ] - Changing to new AI mode - [ HUNT ]
+119302 - [ 0 ] - Changing to HUNT mode.
+119302 - [ 0 ] - Found the player trail tile [ 23.000 14.000 ]
+119302 - [ requestNewPath ] Index 0
+119302 - [ 0 ] AI Scores [ 80 100 0 5 50 0 ]
+119312 - [ 0 ] - Within attack range of player while in HUNT mode.
+119312 - [ 2 ] Found a new AI mode to change to [ PATROL ]
+119312 - [ 2 ] - Running function : changeAIModeTo
+119312 - [ 2 ] - Changing to new AI mode - [ PATROL ]
+119312 - [ 2 ] - Changing to PATROL mode. Looking for nearest waypoint to move to.
+119312 - [ 2 ] - [ findLocationWithLOS ] Search for a visible waypoint.
+119319 - [ 0 ] - Found a closer waypoint [ 198 ]
+119319 - [ 9 ] - Found a closer waypoint [ 121 ]
+119319 - [ 40 ] - Found a closer waypoint [ 76 ]
+119319 - [ 2 ] AI Scores [ 45 30 0 17 50 10 ]
+119336 - [ 0 ] Found a new AI mode to change to [ ATTACK ]
+119336 - [ 0 ] - Running function : changeAIModeTo
+119336 - [ 0 ] - Changing to new AI mode - [ ATTACK ]
+119336 - [ 0 ] - In ATTACK mode case statement.
+119336 - [ 0 ] AI Scores [ 100 40 0 5 50 0 ]
+119336 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+119344 - Console [ 0   --  100 --   40 --    0 --   5  --  50  --  0 -- ATTACK -  ].
+119344 - Console [ 1   --  45 --   40 --    0 --  17  --  50  -- 10 -- PATROL -  ].
+119344 - Console [ 2   --  45 --   30 --    0 --  17  --  50  -- 10 -- PATROL -  ].
+119344 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119344 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119344 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119352 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119352 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+119369 - [ 0 ] Found a new AI mode to change to [ PATROL ]
+119369 - [ 0 ] - Running function : changeAIModeTo
+119369 - [ 0 ] - Changing to new AI mode - [ PATROL ]
+119369 - [ 0 ] - Changing to PATROL mode. Looking for nearest waypoint to move to.
+119369 - [ 0 ] - [ findLocationWithLOS ] Search for a visible waypoint.
+119377 - [ 0 ] - Found a closer waypoint [ 127 ]
+119377 - [ 2 ] - Found a closer waypoint [ 120 ]
+119377 - [ 5 ] - Found a closer waypoint [ 114 ]
+119377 - [ 45 ] - Found a closer waypoint [ 80 ]
+119377 - [ 46 ] - Found a closer waypoint [ 63 ]
+119377 - [ 0 ] AI Scores [ 45 40 0 5 50 0 ]
+122335 - [ postStepRemove ] Removing a shape and body from postStep callback.
+122369 - [ gam_damageToDroid ] - target 0 damageSource 1 sourceDroid -1
+122369 - [ gam_damageToDroid ] - Damage to droid [ 0 ] from BULLET
+122369 - [ 0 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+122369 - [ 1 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+122369 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+122369 - [ gam_damageToDroid ] - target 1 damageSource 1 sourceDroid -1
+122369 - [ gam_damageToDroid ] - Damage to droid [ 1 ] from BULLET
+122369 - [ 0 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+122369 - [ 1 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+122369 - [ 2 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+122369 - [ gam_damageToDroid ] - target 7 damageSource 1 sourceDroid 0
+122369 - [ gam_damageToDroid ] - Damage to droid [ 7 ] from BULLET
+122369 - [ 0 ] Found a new AI mode to change to [ ATTACK ]
+122369 - [ gam_damageToDroid ] - target 7 damageSource 1 sourceDroid 1
+122369 - [ gam_damageToDroid ] - Damage to droid [ 7 ] from BULLET
+122369 - [ gam_damageToDroid ] - target 7 damageSource 1 sourceDroid 2
+122369 - [ gam_damageToDroid ] - Damage to droid [ 7 ] from BULLET
+122369 - [ 0 ] - Running function : changeAIModeTo
+122369 - [ 0 ] - Changing to new AI mode - [ ATTACK ]
+122369 - [ 0 ] - In ATTACK mode case statement.
+122369 - [ 0 ] AI Scores [ 90 40 0 11 50 90 ]
+122369 - [ 1 ] - Running function : changeAIModeTo
+122369 - [ 1 ] - Changing to new AI mode - [ ATTACK ]
+122369 - [ 1 ] - In ATTACK mode case statement.
+122369 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+122369 - [ 2 ] - Running function : changeAIModeTo
+122369 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
+122369 - [ 2 ] - In ATTACK mode case statement.
+122369 - [ 7 ] Found a new AI mode to change to [ FLEE ]
+122369 - [ 7 ] - Running function : changeAIModeTo
+122369 - [ 7 ] - Changing to new AI mode - [ FLEE ]
+122369 - [ 7 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+122369 - [ 7 ] - Found the destination flee tile [ 13.000 22.000 ]
+122369 - [ requestNewPath ] Index 7
+122369 - Console [ 0   --  90 --   40 --    0 --  11  --  50  -- 90 -- ATTACK -  ].
+122369 - Console [ 1   --  90 --   40 --    0 --  22  --  50  -- 100 -- PATROL -  ].
+122369 - Console [ 2   --  45 --   30 --    0 --  17  --  50  -- 100 -- PATROL -  ].
+122369 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122396 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122396 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122399 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122399 - Console [ 7   --   0 --    0 --   90 --   0  --  50  --  0 -- PATROL -  ].
+122401 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+122401 - Console [ 0   --  100 --   10 --    0 --  11  --  50  -- 90 -- ATTACK -  ].
+122401 - Console [ 1   --  100 --   40 --    0 --  22  --  50  -- 10 -- ATTACK -  ].
+122405 - Console [ 2   --  45 --   30 --    0 --  17  --  50  -- 100 -- PATROL -  ].
+122405 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122405 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122405 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122405 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122410 - Console [ 7   --   0 --    0 --   100 --  23  --  50  --  0 -- PATROL -  ].
+122410 - [ 7 ] AI Scores [ 0 0 100 69 50 0 ]
+122410 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+122410 - Console [ 0   --  100 --   10 --    0 --  11  --  50  -- 90 -- ATTACK -  ].
+122410 - Console [ 1   --  100 --   10 --    0 --  22  --  50  -- 10 -- ATTACK -  ].
+122410 - Console [ 2   --  100 --   30 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+122410 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122418 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122418 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122418 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+122418 - Console [ 7   --   0 --    0 --   100 --  46  --  50  --  0 -- PATROL -  ].
+124068 - [ gam_damageToDroid ] - target 7 damageSource 1 sourceDroid 2
+124068 - [ gam_damageToDroid ] - Damage to droid [ 7 ] from BULLET
+124068 - [ 7 ] - Running function : changeAIModeTo
+124068 - [ 7 ] - Changing to new AI mode - [ HEAL ]
+124068 - [ 7 ] - Changing to HEAL mode. Looking for nearest waypoint to move to.
+124068 - [ 7 ] - Found the destination healing tile [ 40.000 18.000 ]
+124076 - [ requestNewPath ] Index 7
+124101 - [ gam_damageToDroid ] - target 7 damageSource 1 sourceDroid 0
+124101 - [ gam_damageToDroid ] - Damage to droid [ 7 ] from BULLET
+127702 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid 0
+127702 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+127869 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid 2
+127869 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+127869 - [ 6 ] Found a new AI mode to change to [ FLEE ]
+127869 - [ 6 ] - Running function : changeAIModeTo
+127869 - [ 6 ] - Changing to new AI mode - [ FLEE ]
+127869 - [ 6 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+127869 - [ 6 ] - Found the destination flee tile [ 13.000 22.000 ]
+127869 - [ requestNewPath ] Index 6
+127869 - [ 6 ] AI Scores [ 0 0 60 46 50 0 ]
+128201 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid 1
+128201 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+129402 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid 0
+129402 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+129402 - [ 6 ] - Running function : changeAIModeTo
+129402 - [ 6 ] - Changing to new AI mode - [ HEAL ]
+129402 - [ 6 ] - Changing to HEAL mode. Looking for nearest waypoint to move to.
+129402 - [ 6 ] - Found the destination healing tile [ 40.000 18.000 ]
+129402 - [ requestNewPath ] Index 6
+129702 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid 2
+129702 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+133001 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid 0
+133001 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+133168 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid 2
+133168 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+133168 - [ 3 ] Found a new AI mode to change to [ ATTACK ]
+133168 - [ 3 ] - Running function : changeAIModeTo
+133168 - [ 3 ] - Changing to new AI mode - [ ATTACK ]
+133168 - [ 3 ] - In ATTACK mode case statement.
+133168 - [ 3 ] AI Scores [ 90 0 0 33 50 0 ]
+133168 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+133176 - Console [ 0   --  100 --    0 --    0 --  11  --  50  -- 90 -- ATTACK -  ].
+133176 - Console [ 1   --  100 --    0 --    0 --  22  --  50  -- 10 -- ATTACK -  ].
+133176 - Console [ 2   --  100 --    0 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+133176 - Console [ 3   --  90 --    0 --    0 --  33  --  50  --  0 -- ATTACK -  ].
+133176 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+133176 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+133176 - Console [ 6 Dead ].
+133184 - Console [ 7 Dead ].
+133802 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid 1
+133802 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+134702 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid 0
+134702 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+134935 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid 2
+134935 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+134935 - [ 3 ] - Running function : changeAIModeTo
+134935 - [ 3 ] - Changing to new AI mode - [ HEAL ]
+134935 - [ 3 ] - Changing to HEAL mode. Looking for nearest waypoint to move to.
+134935 - [ 3 ] - Found the destination healing tile [ 32.000 16.000 ]
+134935 - [ requestNewPath ] Index 3
+135502 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid 1
+135502 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+136402 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid 0
+136402 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+144702 - [ 0 ] Found a new AI mode to change to [ HUNT ]
+144702 - [ 0 ] - Running function : changeAIModeTo
+144702 - [ 0 ] - Changing to new AI mode - [ HUNT ]
+144702 - [ 0 ] - Changing to HUNT mode.
+144702 - [ 0 ] - Found the player trail tile [ 23.000 14.000 ]
+144702 - [ requestNewPath ] Index 0
+144711 - [ 0 ] AI Scores [ 80 90 0 11 50 90 ]
+144711 - [ 0 ] - Within attack range of player while in HUNT mode.
+144711 - [ 1 ] Found a new AI mode to change to [ HUNT ]
+144711 - [ 1 ] - Running function : changeAIModeTo
+144711 - [ 1 ] - Changing to new AI mode - [ HUNT ]
+144711 - [ 1 ] - Changing to HUNT mode.
+144718 - [ 1 ] - Found the player trail tile [ 23.000 14.000 ]
+144718 - [ requestNewPath ] Index 1
+144718 - [ 1 ] AI Scores [ 80 90 0 22 50 10 ]
+144718 - [ 1 ] - Within attack range of player while in HUNT mode.
+144735 - [ 0 ] Found a new AI mode to change to [ ATTACK ]
+144735 - [ 0 ] - Running function : changeAIModeTo
+144735 - [ 0 ] - Changing to new AI mode - [ ATTACK ]
+144735 - [ 0 ] - In ATTACK mode case statement.
+144735 - [ 0 ] AI Scores [ 100 30 0 11 50 90 ]
+144743 - [ 1 ] Found a new AI mode to change to [ ATTACK ]
+144743 - [ 1 ] - Running function : changeAIModeTo
+144743 - [ 1 ] - Changing to new AI mode - [ ATTACK ]
+144743 - [ 1 ] - In ATTACK mode case statement.
+144743 - [ 1 ] AI Scores [ 100 30 0 22 50 10 ]
+144743 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+144743 - Console [ 0   --  100 --   30 --    0 --  11  --  50  -- 90 -- ATTACK -  ].
+144752 - Console [ 1   --  100 --   30 --    0 --  22  --  50  -- 10 -- HUNT -  ].
+144752 - Console [ 2   --  100 --    0 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+144752 - Console [ 3 Dead ].
+144752 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+144752 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+144752 - Console [ 6 Dead ].
+144752 - Console [ 7 Dead ].
+144760 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+144760 - Console [ 0   --  45 --   30 --    0 --  11  --  50  -- 90 -- ATTACK -  ].
+144760 - Console [ 1   --  100 --   30 --    0 --  22  --  50  -- 10 -- ATTACK -  ].
+144760 - Console [ 2   --  100 --    0 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+144760 - Console [ 3 Dead ].
+144760 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+144760 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+144768 - Console [ 6 Dead ].
+144768 - Console [ 7 Dead ].
+144768 - [ 0 ] - Running function : changeAIModeTo
+144768 - [ 0 ] - Changing to new AI mode - [ ATTACK ]
+144768 - [ 0 ] - In ATTACK mode case statement.
+144768 - [ 1 ] Found a new AI mode to change to [ PATROL ]
+144768 - [ 1 ] - Running function : changeAIModeTo
+144777 - [ 1 ] - Changing to new AI mode - [ PATROL ]
+144777 - [ 1 ] - Changing to PATROL mode. Looking for nearest waypoint to move to.
+144777 - [ 1 ] - [ findLocationWithLOS ] Search for a visible waypoint.
+144777 - [ 0 ] - Found a closer waypoint [ 286 ]
+144777 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+144777 - [ 8 ] - Found a closer waypoint [ 112 ]
+144777 - [ 31 ] - Found a closer waypoint [ 92 ]
+144785 - [ 40 ] - Found a closer waypoint [ 91 ]
+144785 - [ 1 ] AI Scores [ 45 30 0 22 50 10 ]
+144785 - Console [ 0   --  100 --   30 --    0 --  11  --  50  --  0 -- ATTACK -  ].
+144785 - Console [ 1   --  45 --   30 --    0 --  22  --  50  -- 10 -- ATTACK -  ].
+144785 - Console [ 2   --  100 --    0 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+144785 - Console [ 3 Dead ].
+144785 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+144785 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+144793 - Console [ 6 Dead ].
+144793 - Console [ 7 Dead ].
+144835 - [ 0 ] Found a new AI mode to change to [ HUNT ]
+144835 - [ 0 ] - Running function : changeAIModeTo
+144835 - [ 0 ] - Changing to new AI mode - [ HUNT ]
+144835 - [ 0 ] - Changing to HUNT mode.
+144835 - [ 0 ] - Found the player trail tile [ 23.000 14.000 ]
+144843 - [ requestNewPath ] Index 0
+144843 - [ 0 ] AI Scores [ 80 100 0 11 50 0 ]
+145234 - [ 0 ] Found a new AI mode to change to [ ATTACK ]
+145234 - [ 0 ] - Running function : changeAIModeTo
+145234 - [ 0 ] - Changing to new AI mode - [ ATTACK ]
+145234 - [ 0 ] - In ATTACK mode case statement.
+145234 - [ 0 ] AI Scores [ 80 80 0 11 50 0 ]
+145242 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+145242 - Console [ 0   --  80 --   80 --    0 --  11  --  50  --  0 -- ATTACK -  ].
+145242 - Console [ 1   --  45 --   30 --    0 --  22  --  50  -- 10 -- PATROL -  ].
+145242 - Console [ 2   --  100 --    0 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+145242 - Console [ 3 Dead ].
+145242 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+145242 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+145242 - Console [ 6 Dead ].
+145251 - Console [ 7 Dead ].
+145268 - [ 0 ] Found a new AI mode to change to [ HUNT ]
+145268 - [ 0 ] - Running function : changeAIModeTo
+145268 - [ 0 ] - Changing to new AI mode - [ HUNT ]
+145268 - [ 0 ] - Changing to HUNT mode.
+145268 - [ 0 ] - Found the player trail tile [ 23.000 14.000 ]
+145268 - [ requestNewPath ] Index 0
+145277 - [ 0 ] AI Scores [ 25 80 0 11 50 0 ]
+145468 - [ 2 ] Found a new AI mode to change to [ HUNT ]
+145468 - [ 2 ] - Running function : changeAIModeTo
+145468 - [ 2 ] - Changing to new AI mode - [ HUNT ]
+145468 - [ 2 ] - Changing to HUNT mode.
+145468 - [ 2 ] - Found the player trail tile [ 23.000 14.000 ]
+145477 - [ requestNewPath ] Index 2
+145477 - [ 2 ] AI Scores [ 80 90 0 17 50 10 ]
+145668 - [ 2 ] Found a new AI mode to change to [ ATTACK ]
+145668 - [ 2 ] - Running function : changeAIModeTo
+145668 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
+145668 - [ 2 ] - In ATTACK mode case statement.
+145668 - [ 2 ] AI Scores [ 80 80 0 17 50 10 ]
+145677 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+145677 - Console [ 0   --  25 --   60 --    0 --  11  --  50  --  0 -- HUNT -  ].
+145677 - Console [ 1   --  45 --   30 --    0 --  22  --  50  -- 10 -- PATROL -  ].
+145677 - Console [ 2   --  80 --   80 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+145677 - Console [ 3 Dead ].
+145677 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+145677 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+145685 - Console [ 6 Dead ].
+145685 - Console [ 7 Dead ].
+145702 - [ 2 ] Found a new AI mode to change to [ HUNT ]
+145702 - [ 2 ] - Running function : changeAIModeTo
+145702 - [ 2 ] - Changing to new AI mode - [ HUNT ]
+145702 - [ 2 ] - Changing to HUNT mode.
+145702 - [ 2 ] - Found the player trail tile [ 23.000 14.000 ]
+145702 - [ requestNewPath ] Index 2
+145710 - [ 2 ] AI Scores [ 25 80 0 17 50 10 ]
+145835 - [ 2 ] - Within attack range of player while in HUNT mode.
+145868 - [ 2 ] Found a new AI mode to change to [ ATTACK ]
+145868 - [ 2 ] - Running function : changeAIModeTo
+145868 - [ 2 ] - Changing to new AI mode - [ ATTACK ]
+145868 - [ 2 ] - In ATTACK mode case statement.
+145868 - [ 2 ] AI Scores [ 90 20 0 17 50 10 ]
+145877 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+145877 - Console [ 0   --  25 --   50 --    0 --  11  --  50  --  0 -- HUNT -  ].
+145877 - Console [ 1   --  45 --   30 --    0 --  22  --  50  -- 10 -- PATROL -  ].
+145877 - Console [ 2   --  90 --   20 --    0 --  17  --  50  -- 10 -- ATTACK -  ].
+145877 - Console [ 3 Dead ].
+145877 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+145877 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+145885 - Console [ 6 Dead ].
+145885 - Console [ 7 Dead ].
+145902 - [ 2 ] Found a new AI mode to change to [ PATROL ]
+145902 - [ 2 ] - Running function : changeAIModeTo
+145902 - [ 2 ] - Changing to new AI mode - [ PATROL ]
+145902 - [ 2 ] - Changing to PATROL mode. Looking for nearest waypoint to move to.
+145902 - [ 2 ] - [ findLocationWithLOS ] Search for a visible waypoint.
+145910 - [ 0 ] - Found a closer waypoint [ 373 ]
+145910 - [ 8 ] - Found a closer waypoint [ 200 ]
+145910 - [ 9 ] - Found a closer waypoint [ 115 ]
+145910 - [ 31 ] - Found a closer waypoint [ 69 ]
+145910 - [ 2 ] AI Scores [ 35 20 0 17 50 10 ]
+146067 - [ 0 ] Found a new AI mode to change to [ PATROL ]
+146067 - [ 0 ] - Running function : changeAIModeTo
+146067 - [ 0 ] - Changing to new AI mode - [ PATROL ]
+146067 - [ 0 ] - Changing to PATROL mode. Looking for nearest waypoint to move to.
+146067 - [ 0 ] - [ findLocationWithLOS ] Search for a visible waypoint.
+146076 - [ 0 ] - Found a closer waypoint [ 286 ]
+146076 - [ 8 ] - Found a closer waypoint [ 116 ]
+146076 - [ 12 ] - Found a closer waypoint [ 115 ]
+146076 - [ 31 ] - Found a closer waypoint [ 88 ]
+146076 - [ 0 ] AI Scores [ 25 40 0 11 50 0 ]

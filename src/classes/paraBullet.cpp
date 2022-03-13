@@ -49,7 +49,8 @@ void gam_doDisrupterDamage(int sourceDroid)
 		}
 	}
 
-	gam_damageToPlayer (PHYSIC_DAMAGE_BULLET, sourceDroid);
+	if (!dataBaseEntry[playerDroid.getDroidType()].disrupterImmune)
+		gam_damageToPlayer (PHYSIC_DAMAGE_BULLET, sourceDroid);
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -271,9 +272,9 @@ int gam_getBulletID()
 {
 	static int newBulletID {100};
 
-	newBulletID++;
+//	newBulletID++;
 
-	return newBulletID;
+	return ++newBulletID;
 }
 
 //---------------------------------------------------------------------------------------------------------------
