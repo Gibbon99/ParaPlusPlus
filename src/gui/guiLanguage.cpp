@@ -12,6 +12,22 @@ std::vector<_textStrings>		textStrings;
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Return a language string based on the key
+std::string gui_getLanguageString(const std::string& key)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	for (auto & textString : textStrings)
+	{
+		if (key == textString.key)
+		{
+			return textString.textString;
+		}
+	}
+	return key + " not found";
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Return a string based on the key
 std::string gui_getString(const std::string& key)
 //----------------------------------------------------------------------------------------------------------------------

@@ -20,7 +20,6 @@ Droid AI - Help
 Check bottom edge of animated tiles in graphics
 Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
 Make GUI strings dynamic - change setLabel to set the guiString lookup key, and then get the actual string at draw time.
-Save GUI settings for volume level - gui.as 130
 
 
 DONE - Universe background on menu screens
@@ -203,6 +202,11 @@ FIXED - BUG - Briefing scroll not starting on Windows only
 FIXED - BUG - Database scroll is too fast
 DONE - Standardise droid speed and acceleration
 DONE - Completed text translations for German and Italian
+>Commit
+DONE - Save GUI settings for volume level - gui.as 130
+
+
+
 
 GUI
 ------

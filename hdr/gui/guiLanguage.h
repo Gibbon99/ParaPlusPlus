@@ -4,6 +4,9 @@
 
 extern int currentLanguage;
 
+// Return a language string based on the key
+std::string gui_getLanguageString(const std::string& key);
+
 // Return a string based on the key
 std::string gui_getString(const std::string &key);
 

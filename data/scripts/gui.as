@@ -220,14 +220,16 @@ string guiCurrentLanguage;
         tileColor = as_paraGui.getSliderValue("gameMenu.tileColor");
         guiCurrentLanguage = as_paraGui.getSliderValue("gameMenu.language");
 
-    if ("English" == guiCurrentLanguage)
+    if ("1" == guiCurrentLanguage)
         currentLanguage = LANG_ENGLISH;
 
-    if ("Italian" == guiCurrentLanguage)
+    if ("2" == guiCurrentLanguage)
         currentLanguage = LANG_ITALIAN;
 
-    if ("German" == guiCurrentLanguage)
+    if ("3" == guiCurrentLanguage)
         currentLanguage = LANG_GERMAN;
+
+    gui_resetLanguage();
 
     as_setLanguageStrings();
 

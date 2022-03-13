@@ -2,6 +2,7 @@
 #include <cstdarg>
 #include "system/startup.h"
 #include "io/fileSystem.h"
+#include "gui/guiLanguage.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -218,8 +219,8 @@ int paraFont::width(const std::string &fontText)
 void paraFont::render(SDL_Renderer *whichRendererIn, double posX, double posY, int r, int g, int b, int a, const std::string& text)
 //----------------------------------------------------------------------------------------------------------------------
 {
-	SDL_Surface *tempSurface;
-	SDL_Texture *tempTexture;
+	SDL_Surface *tempSurface{};
+	SDL_Texture *tempTexture{};
 
 	if (text.empty())
 		return;
@@ -234,7 +235,7 @@ void paraFont::render(SDL_Renderer *whichRendererIn, double posX, double posY, i
 	tempTexture = SDL_CreateTextureFromSurface (whichRendererIn, tempSurface);
 	if (nullptr == tempTexture)
 	{
-		funcOutput (-1, int_getString ("Unable to create temp texture when rendering console."));
+		funcOutput (-1, int_getString ("Unable to create temp texture when rendering text."));
 		return;
 	}
 
