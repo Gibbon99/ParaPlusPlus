@@ -20,6 +20,11 @@ bool gam_pauseModeOn()
 void gam_changePauseMode(int newPauseMode)
 //-------------------------------------------------------------------------------------------------------------------------------------------
 {
+	//
+	// Only go into pause mode when actually playing the game
+	if (currentMode != MODE_GAME)
+		return;
+
 	switch (newPauseMode)
 	{
 		case MODE_GAME_PAUSE_ON:
