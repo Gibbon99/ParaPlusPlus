@@ -82,6 +82,10 @@ void sys_scriptInitVariables()
 	paraScriptInstance.addHostVariable ("bool enableSound", &enableSound);
 	paraScriptInstance.addHostVariable ("int g_volumeLevel", &g_volumeLevel);
 	paraScriptInstance.addHostVariable ("bool presentVSync", &presentVSync);
+	paraScriptInstance.addHostVariable ("bool windowFullscreen", &windowFullscreen);
+	paraScriptInstance.addHostVariable ("bool windowFullscreenDesktop", &windowFullscreenDesktop);
+
+
 	paraScriptInstance.addHostVariable ("bool windowBorderless", &windowBorderless);
 	paraScriptInstance.addHostVariable ("bool windowAllowHighDPI", &windowAllowHighDPI);
 	paraScriptInstance.addHostVariable ("double baseGameSpeed", &baseGameSpeed);
@@ -152,6 +156,8 @@ void sys_scriptInitVariables()
 	paraScriptInstance.addHostVariable ("int maxNumBumps", &maxNumBumps);
 	paraScriptInstance.addHostVariable ("float bounceCounterDelay", &bounceCounterDelay);
 	paraScriptInstance.addHostVariable ("int databaseDroidRenderYOffset", &databaseDroidRenderYOffset);
+
+	paraScriptInstance.addHostVariable ("int renderScaleQuality", &renderScaleQuality);
 }
 
 void sys_scriptPrintInt(std::string inStr, int inInt)
@@ -240,6 +246,10 @@ void sys_scriptInitFunctions()
 	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraAudio", "int getMasterVolume()", asMETHOD(paraAudio, getMasterVolume), asCALL_THISCALL);
 	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraAudio", "void setSpeakerType(int newSpeakerType)", asMETHOD(paraAudio, setSpeakerType), asCALL_THISCALL);
+	assert(r >= 0);
+	r = paraScriptInstance.scriptEngine->RegisterObjectMethod ("paraAudio", "int getSpeakerType()", asMETHOD(paraAudio, getSpeakerType), asCALL_THISCALL);
+	assert(r >= 0);
 	r = paraScriptInstance.scriptEngine->RegisterGlobalProperty ("paraAudio as_audio", &audio);
 	assert(r >= 0);
 	//
@@ -317,6 +327,7 @@ void sys_scriptInitFunctions()
 	paraScriptInstance.addHostFunction ("void sys_addEvent (int eventType, int eventAction, int eventDelay, string &in)", asFUNCTION(sys_addEvent));
 	paraScriptInstance.addHostFunction ("void gam_addAudioEvent (int action, bool loop, int distance, int pan, string &in)", asFUNCTION(gam_addAudioEvent));
 
+	paraScriptInstance.addHostFunction("void gui_resetLanguage()", asFUNCTION(gui_resetLanguage));
 	paraScriptInstance.addHostFunction ("void gui_addKeyAndText (string &in, string &in)", asFUNCTION(gui_addKeyAndText));
 	paraScriptInstance.addHostFunction ("string gui_getString (string &in)", asFUNCTION(gui_getString));
 

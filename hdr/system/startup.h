@@ -21,6 +21,7 @@ extern int         whichRenderer;
 extern bool        presentVSync;
 extern int         renderScaleQuality;
 extern int         g_volumeLevel;
+extern int         g_speakerType;
 extern int         maxNumChannels;
 extern int         guiFontSize;
 extern std::string guiFontFileName;

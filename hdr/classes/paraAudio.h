@@ -4,6 +4,8 @@
 #include <SDL_mixer.h>
 
 #define PARA_MAX_VOLUME 10
+#define SPEAKER_MONO    1
+#define SPEAKER_STEREO  2
 
 typedef void      (*audioFunctionPtrStr)(int, std::string);
 
@@ -66,10 +68,14 @@ public:
 
 	void stop(std::string keyName);
 
-	void setOutputFunction(audioFunctionPtrStr outputFunction);
+	void setSpeakerType(int newSpeakerType);
+
+	int getSpeakerType();
+
+//	void setOutputFunction(audioFunctionPtrStr outputFunction);
 
 	// Special case - handle number of door sounds playing
-	bool handleDoorSounds(int distance, int pan);
+//	bool handleDoorSounds(int distance, int pan);
 
 private:
 	std::vector<__audioActiveSounds> activeSounds;
@@ -78,5 +84,6 @@ private:
 	audioFunctionPtrLoad             funcLoad {};
 	bool                             audioDeviceOpened    = false;
 	int                              currentVolumeLevel   = 0;
+	int                              speakerType          = SPEAKER_STEREO;
 	int                              maxNumActiveChannels = 0;
 };

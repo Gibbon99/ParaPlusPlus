@@ -1,18 +1,18 @@
 0 - Console [ Console started [ ParadroidPlusPlus ] ].
 0 - Console [ Compiled against PhysFS version 3.0.2. ].
 0 - Console [ Linked against PhysFS version 3.0.2. ].
-0 - Console [ Compiled with SDL_ttf version: 2.0.15 ].
-0 - Console [ Running with SDL_ttf version: 2.0.15 ].
+0 - Console [ Compiled with SDL_ttf version: 2.0.18 ].
+0 - Console [ Running with SDL_ttf version: 2.0.18 ].
 0 - Console [ Script: Script Engine started. ].
 0 - Console [ Script: Script Engine version - [ 2.35.0 ] ].
 0 - Console [ Script: Options - [  AS_64BIT_PTR AS_LINUX AS_X64_GCC  ] ].
 0 - Console [ Scripting started. ].
-4493 - Console [ Object name or object label cannot be empty. ].
-4493 - Console [ Object name or object label cannot be empty. ].
-4493 - Console [ Object name or object label cannot be empty. ].
-4493 - Console [ Object name or object label cannot be empty. ].
-4493 - [ Audio ] Using audio driver [ pulseaudio ]
-4493 - Console [ Object name or object label cannot be empty. ].
-4493 - Console [ Object name or function string cannot be empty. ].
-4493 - Console [ Object name or function string cannot be empty. ].
-4493 - Console [ Object name or function string cannot be empty. ].
+516 - Console [ Object name or object label cannot be empty. ].
+516 - Console [ Object name or object label cannot be empty. ].
+516 - [ Audio ] Using audio driver [ pulseaudio ]
+516 - Console [ Object name or object label cannot be empty. ].
+516 - Console [ Object name or object label cannot be empty. ].
+516 - Console [ Object name or object label cannot be empty. ].
+516 - Console [ Object name or function string cannot be empty. ].
+516 - Console [ Object name or function string cannot be empty. ].
+516 - Console [ Object name or function string cannot be empty. ].

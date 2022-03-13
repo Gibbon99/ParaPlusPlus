@@ -3825,7 +3825,7 @@ std::string paraGui::sliderElementLabel(int whichSlider)
 	if (whichSlider > static_cast<int>(guiSliders.size () - 1))
 		sys_shutdownWithError ("Invalid index passed to sliderElementLabel");
 
-	return guiSliders[whichSlider].element[guiSliders[whichSlider].currentStep].value;
+	return guiSliders[whichSlider].element[guiSliders[whichSlider].currentStep].label;
 }
 
 //-----------------------------------------------------------------------------
@@ -3909,7 +3909,7 @@ void paraGui::setSliderValue(const std::string &objectID, const std::string &val
 //----------------------------------------------------------------------------------------------------------------------
 //
 // Add an element to a slider
-void paraGui::addNewElement(const std::string &objectID, const std::string &newLabel, const std::string &newValue, int type)
+void paraGui::addNewElement(const std::string &objectID, const std::string &newValue, const std::string &newLabel, int type)
 //----------------------------------------------------------------------------------------------------------------------
 {
 	_sliderElement tmpElement;

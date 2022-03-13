@@ -46,6 +46,25 @@ void paraAudio::ReleaseRef()
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+// Set the type of speakers to use
+void paraAudio::setSpeakerType(int newSpeakerType)
+//----------------------------------------------------------------------------------------------------------------------
+{
+	speakerType = newSpeakerType;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//
+// Get the type of speakers to use
+int paraAudio::getSpeakerType()
+//----------------------------------------------------------------------------------------------------------------------
+{
+	return speakerType;
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 // Pass in string and parameters to format and return a string
 // https://stackoverflow.com/questions/19009094/c-variable-arguments-with-stdstring-only
 std::string paraAudio::int_getString(std::string format, ...)
@@ -85,9 +104,10 @@ int paraAudio::init(int numMaxActiveChannels, audioFunctionPtrStr outputFunction
 	paraAudio::funcLoad = loadFunction;
 
 	audioDeviceOpened = false;
+	speakerType = g_speakerType;
 
-	// Open 44.1KHz, signed 16bit, system byte order, stereo audio, using 1024 byte chunks
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
+	// Open 44.1KHz, signed 16bit, system byte order, speaker setup, using 1024 byte chunks
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, speakerType, 1024) == -1)
 	{
 		funcOutput(-1, int_getString("Unable to open audio - [ %s ]", Mix_GetError()));
 		return -1;

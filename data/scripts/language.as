@@ -8,6 +8,8 @@
 void as_setLanguageStrings()
 //------------------------------------------------------------
 {
+    gui_resetLanguage();
+
 	switch (currentLanguage)
 	{
 		case LANG_ENGLISH:

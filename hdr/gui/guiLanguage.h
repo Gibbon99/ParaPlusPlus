@@ -9,3 +9,6 @@ std::string gui_getString(const std::string &key);
 
 // Add a key and string to the map
 void gui_addKeyAndText(std::string &key, std::string &textString);
+
+// Reset the language array
+void gui_resetLanguage();

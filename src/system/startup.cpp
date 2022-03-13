@@ -33,6 +33,7 @@ int         whichRenderer           = 0;
 bool        presentVSync            = true;
 int         renderScaleQuality      = 0;
 int         g_volumeLevel           = 0;
+int         g_speakerType           = 1;
 int         maxNumChannels          = 0;
 int         guiFontSize             = 0;
 std::string guiFontFileName;

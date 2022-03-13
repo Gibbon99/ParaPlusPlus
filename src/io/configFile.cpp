@@ -159,6 +159,10 @@ void io_readConfigValues(const std::string &fileName)
 	if (g_volumeLevel == -1)
 		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in config file.", "g_volumeLevel"));
 
+	g_speakerType = (int) iniFile.GetLongValue ("Main", "g_speakerType", -1);
+	if (g_speakerType == -1)
+		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in config file.", "g_speakerType"));
+
 	maxNumChannels = (int) iniFile.GetLongValue ("Main", "maxNumChannels", -1);
 	if (g_volumeLevel == -1)
 		sys_shutdownWithError (sys_getString ("Unable to locate value [ %s ] in config file.", "maxNumChannels"));

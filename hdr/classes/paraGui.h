@@ -250,7 +250,7 @@ public:
 
 	void setLineFade(int objectIndex, double newLineFade);
 
-	void addNewElement(const std::string &objectID, const std::string &newLabel, const std::string &newValue, int type);
+	void addNewElement(const std::string &objectID, const std::string &newValue, const std::string &newLabel, int type);
 
 	void setSliderValue(const std::string &objectID, const std::string &value);
 

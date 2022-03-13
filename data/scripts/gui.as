@@ -99,13 +99,16 @@ void as_handleOptionsMenu()
 void as_handleAudioMenu()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
-    int
-    enableSoundInt;
+    int enableSoundInt;
 
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "audioOptions.backButton")) {
         g_volumeLevel = parseInt(as_paraGui.getSliderValue("audioOptions.volume"));
         as_audio.setMasterVolume(g_volumeLevel);
         io_updateConfigValueInt("g_volumeLevel", g_volumeLevel);
+
+        int speakerType = parseInt(as_paraGui.getSliderValue("audioOptions.speakers"));
+        io_updateConfigValueInt("g_speakerType", speakerType);
+        as_audio.setSpeakerType(speakerType);
 
         as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
         as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "optionsMenu.audioButton");
@@ -246,8 +249,7 @@ string guiCurrentLanguage;
 void as_handleVideoOptions()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
-    int
-    boolToInt;
+    int boolToInt;
 
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_CHECKBOX, "videoOptions.highdpi")) {
         windowAllowHighDPI = !windowAllowHighDPI;
@@ -280,6 +282,38 @@ void as_handleVideoOptions()
         boolToInt = doScreenEffect ? 1 : 0;
         io_updateConfigValueInt("doScreenEffect", boolToInt);
         return;
+    }
+
+// handle apply button - save video option settings to config file
+
+    if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "videoOptions.applyButton"))
+    {
+        int windowOptionValue = parseInt(as_paraGui.getSliderValue("videoOptions.display"), 10);
+
+        if (windowOptionValue == 0)
+        {
+            windowFullscreen = false;
+        }
+        else if (windowOptionValue == 1)
+        {
+            windowFullscreenDesktop = false;
+            windowFullscreen = true;
+        }
+        else if (windowOptionValue == 2)
+        {
+            windowFullscreenDesktop = true;
+            windowFullscreen = true;
+        }
+
+        int renderScaleQualityValue = parseInt(as_paraGui.getSliderValue("videoOptions.scalequality"));
+        io_updateConfigValueInt("renderScaleQuality", renderScaleQualityValue);
+
+        io_updateConfigValueInt("windowFullscreen", windowFullscreen ? 1 : 0);
+        io_updateConfigValueInt("windowFullscreenDesktop", windowFullscreenDesktop ? 1 : 0);
+
+        gam_setHudText("hudOptions");
+        as_paraGui.setCurrentScreen(as_paraGui.getIndex(GUI_OBJECT_SCREEN, "optionsMenu"));
+        as_paraGui.setActiveObject(as_paraGui.getCurrentScreen(), "optionsMenu.videoButton");
     }
 
     if (as_paraGui.getActiveObjectIndex() == as_paraGui.getIndex(GUI_OBJECT_BUTTON, "videoOptions.backButton")) {
@@ -342,8 +376,18 @@ void createVideoOptions()
     as_paraGui.addNewElement("videoOptions.display", "1", gui_getString("videoOptions.fullscreen"), SLIDER_TYPE_INT);
     as_paraGui.addNewElement("videoOptions.display", "2", gui_getString("videoOptions.desktop"), SLIDER_TYPE_INT);
 
-//	currentRendererStr = formatInt(as_renderer.getCurrentRendererIndex(), "l");
-//	as_paraGui.setSliderValue ("videoOptions.display", currentRendererStr);
+    if (!windowFullscreen)
+    {
+    as_paraGui.setSliderValue("videoOptions.display", formatInt(0, "l"));
+    }
+    else if ((windowFullscreen) && (!windowFullscreenDesktop))
+    {
+    as_paraGui.setSliderValue("videoOptions.display", formatInt(1, "l"));
+    }
+    else if ((windowFullscreen) && (windowFullscreenDesktop))
+    {
+    as_paraGui.setSliderValue("videoOptions.display", formatInt(2, "l"));
+    }
     as_paraGui.setFontName(GUI_OBJECT_SLIDER, "videoOptions.display", "guiFont28");
     as_paraGui.setReady(GUI_OBJECT_SLIDER, "videoOptions.display", true);
     //
@@ -358,9 +402,10 @@ void createVideoOptions()
     as_paraGui.addNewElement("videoOptions.scalequality", "0", gui_getString("videoOptions.nearest"), SLIDER_TYPE_INT);
     as_paraGui.addNewElement("videoOptions.scalequality", "1", gui_getString("videoOptions.linear"), SLIDER_TYPE_INT);
     as_paraGui.addNewElement("videoOptions.scalequality", "2", gui_getString("videoOptions.best"), SLIDER_TYPE_INT);
+    //
+    // Set slider to current value
+	as_paraGui.setSliderValue ("videoOptions.scalequality", formatInt(renderScaleQuality, "l"));
 
-//	currentRendererStr = formatInt(as_renderer.getCurrentRendererIndex(), "l");
-//	as_paraGui.setSliderValue ("videoOptions.display", currentRendererStr);
     as_paraGui.setFontName(GUI_OBJECT_SLIDER, "videoOptions.scalequality", "guiFont28");
     as_paraGui.setReady(GUI_OBJECT_SLIDER, "videoOptions.scalequality", true);
     //
@@ -436,6 +481,7 @@ void createAudioMenu()
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
     string currentVolumeStr;
+    string currentSpeakerType;
     string tempNum;
 
     as_paraGui.create(GUI_OBJECT_SCREEN, "audioOptions");
@@ -481,6 +527,10 @@ void createAudioMenu()
     as_paraGui.setAction(GUI_OBJECT_SLIDER, "audioOptions.speakers", "as_handleAudioMenu");
     as_paraGui.addNewElement("audioOptions.speakers", "0", "Mono", SLIDER_TYPE_INT);
     as_paraGui.addNewElement("audioOptions.speakers", "1", "Stereo", SLIDER_TYPE_INT);
+
+    currentSpeakerType = formatInt(as_audio.getSpeakerType(), "l");
+    as_paraGui.setSliderValue("audioOptions.speakers", currentSpeakerType);
+
     as_paraGui.setFontName(GUI_OBJECT_SLIDER, "audioOptions.speakers", "guiFont28");
 
     if (enableSound == true)
@@ -871,7 +921,7 @@ void as_createGUI()
     bulletDensity = 0.1;
     bulletFriction = 0.01;
     bulletAnimationSpeed = 0.5;
-    bulletMoveSpeed = 100.0;
+    bulletMoveSpeed = 80.0;
     hudTextPosX = 15;
     hudTextPosY = 27;
     hudScorePosX = 620;
