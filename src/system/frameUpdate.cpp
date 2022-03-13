@@ -88,6 +88,9 @@ void sys_processInputEvents()
 			case SDL_KEYDOWN:
 				if (currentMode == MODE_SHOW_SPLASH)
 				{
+					//
+					// Clear GAME queue to avoid changing to main menu from event already in queue
+					gam_clearGameEvents();
 					sys_addEvent (EVENT_TYPE_GAME, EVENT_ACTION_GAME_CHANGE_MODE, 0, std::to_string (MODE_GUI_MAINMENU) + "|" + std::to_string (true));
 					return;
 				}

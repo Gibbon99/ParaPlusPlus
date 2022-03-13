@@ -3,7 +3,7 @@ BUGS
 BUG - Two consoles not accessible on level - collision lines wrong spot
 BUG - Healing sound kept playing when not on healing tile
 BUG - Bullet from 7 droids causes bullet release with -1 out of range
-
+BUG - Pause mode on start results in jumping screen
 
 GAMEPLAY
 ---------
@@ -208,7 +208,9 @@ DONE - Save GUI settings for volume level - gui.as 130
 FIXED - BUG - Disrupter immune not working for player
 >Commit
 FIXED - BUG - Highscore table not being saved
-
+>
+Commit
+FIXED - BUG - Pressing key on splash screen also means splash screen exit event is still on queue
 
 GUI
 ------
