@@ -286,8 +286,6 @@ int gam_getBulletID()
 {
 	static int newBulletID {100};
 
-//	newBulletID++;
-
 	return ++newBulletID;
 }
 
@@ -312,15 +310,20 @@ void gam_addBullet(int bulletSourceIndex)
 		if (!bulletItr.inUse)
 		{
 			bulletItr = gam_createBullet (bulletSourceIndex, bulletID);
-			if (bulletSourceIndex < 0)  // Player bullet
+			//
+			// Only add particles and lightmaps for non disrupter bullets
+			if (bulletItr.type != BULLET_TYPE_DISRUPTER)
 			{
-				gam_addEmitter (playerDroid.getWorldPosInPixels (), PARTICLE_TYPE_TRAIL, bulletID);
-				gam_addNewLightmap (playerDroid.getWorldPosInPixels (), LIGHTMAP_TYPE_BULLET, bulletID);
-			}
-			else
-			{
-				gam_addEmitter (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels (), PARTICLE_TYPE_TRAIL, bulletID);
-				gam_addNewLightmap (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels (), LIGHTMAP_TYPE_BULLET, bulletID);
+				if (bulletSourceIndex < 0)  // Player bullet
+				{
+					gam_addEmitter (playerDroid.getWorldPosInPixels (), PARTICLE_TYPE_TRAIL, bulletID);
+					gam_addNewLightmap (playerDroid.getWorldPosInPixels (), LIGHTMAP_TYPE_BULLET, bulletID);
+				}
+				else
+				{
+					gam_addEmitter (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels (), PARTICLE_TYPE_TRAIL, bulletID);
+					gam_addNewLightmap (g_shipDeckItr->second.droid[bulletSourceIndex].getWorldPosInPixels (), LIGHTMAP_TYPE_BULLET, bulletID);
+				}
 			}
 #ifdef DEBUG_BULLET
 			logFile.write (sys_getString ("[ %s ] Bullet with ID [ %i ] added to bullet array at [ %i ]", __func__, bulletID, indexCounter));
@@ -439,7 +442,7 @@ void gam_debugBullets()
 	{
 		if (bulletItr.inUse)
 		{
-			con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("Index [ %i ] inUse [ %i ] Velocity [ %3.3f %3.3f ]", bulletItr.userData->dataValue, bulletItr.inUse, bulletItr.velocity.x, bulletItr.velocity.y));
+			con_addEvent (EVENT_ACTION_CONSOLE_ADD_LINE, sys_getString ("Source [ %i ] inUse [ %i ] Velocity [ %3.3f %3.3f ]", bulletItr.userData->dataValue, bulletItr.inUse, bulletItr.velocity.x, bulletItr.velocity.y));
 			activeCounter++;
 		}
 	}

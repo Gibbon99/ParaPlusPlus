@@ -6,7 +6,7 @@ BUG - Bullet from 7 droids causes bullet release with -1 out of range
 
 GAMEPLAY
 ---------
-Slow down the rate of fire for higher droids
+
 
 TO DO
 -------
@@ -213,6 +213,8 @@ FIXED - BUG - Highscore table not being saved
 FIXED - BUG - Pressing key on splash screen also means splash screen exit event is still on queue
 >Commit
 FIXED - BUG - Pause mode on start results in jumping screen
+>Commit
+DONE - Slow down the rate of fire for higher droids
 
 GUI
 ------

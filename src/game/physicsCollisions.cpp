@@ -227,8 +227,8 @@ unsigned char handleBulletToWall(cpArbiter *arb, [[maybe_unused]]cpSpace *space,
 
 //	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
 
-	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
 	auto renderPosition = gam_getBulletWorldPosition (userDataA->bulletID);
+	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
 	gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
 	gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
 
@@ -318,7 +318,6 @@ unsigned char handleBulletToDoor(cpArbiter *arb, [[maybe_unused]]cpSpace *space,
 	auto renderPosition = gam_getBulletWorldPosition (userDataA->bulletID);
 	gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
 	gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
-
 	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
 
 	cpSpaceAddPostStepCallback (space, reinterpret_cast<cpPostStepFunc>(postStepRemove), a, nullptr);
