@@ -54,3 +54,6 @@ void gam_debugBullets();
 void gam_initBulletArray();
 
 int gam_getArrayIndex(Uint32 bulletID);        // Return the index of a bullet using its ID
+
+// Return the position of the bullet in world space
+cpVect gam_getBulletWorldPosition(Uint32 bulletID);

@@ -225,10 +225,10 @@ unsigned char handleBulletToWall(cpArbiter *arb, [[maybe_unused]]cpSpace *space,
 
 	auto *userDataA = reinterpret_cast<userData_ *>(dataPointerA);
 
-	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
+//	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
 
 	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
-	auto renderPosition = bullets[gam_getArrayIndex (userDataA->bulletID)].worldPosInPixels;    // TODO Do this with a function, not a call into the array
+	auto renderPosition = gam_getBulletWorldPosition (userDataA->bulletID);
 	gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
 	gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
 
@@ -254,10 +254,10 @@ unsigned char handleBulletToBullet(cpArbiter *arb, [[maybe_unused]]cpSpace *spac
 	auto *userDataA = reinterpret_cast<userData_ *>(dataPointerA);
 	auto *userDataB = reinterpret_cast<userData_ *>(dataPointerB);
 
-	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
-	bullets[gam_getArrayIndex (userDataB->bulletID)].inUse = false;
+//	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
+//	bullets[gam_getArrayIndex (userDataB->bulletID)].inUse = false;
 
-	auto renderPosition = bullets[gam_getArrayIndex (userDataA->bulletID)].worldPosInPixels;    // TODO Do this with a function, not a call into the array
+	auto renderPosition = gam_getBulletWorldPosition (userDataA->bulletID);
 	gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
 	gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
 
@@ -290,7 +290,7 @@ unsigned char handleBulletToDroid(cpArbiter *arb, [[maybe_unused]]cpSpace *space
 	if (userDataA->dataValue == userDataB->dataValue)
 		return cpFalse;
 
-	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
+//	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
 
 	gam_addEvent (EVENT_ACTION_DAMAGE_TO_DROID, 0, sys_getString ("%i|%i|%i", userDataB->dataValue, PHYSIC_DAMAGE_BULLET, userDataA->dataValue));
 	gam_addEvent (EVENT_ACTION_REMOVE_BULLET, 0, sys_getString ("%i|", userDataA->bulletID));
@@ -313,9 +313,9 @@ unsigned char handleBulletToDoor(cpArbiter *arb, [[maybe_unused]]cpSpace *space,
 
 	auto *userDataA = reinterpret_cast<userData_ *>(dataPointerA);
 
-	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
+//	bullets[gam_getArrayIndex (userDataA->bulletID)].inUse = false;
 
-	auto renderPosition = bullets[gam_getArrayIndex (userDataA->bulletID)].worldPosInPixels;    // TODO Do this with a function, not a call into the array
+	auto renderPosition = gam_getBulletWorldPosition (userDataA->bulletID);
 	gam_addEvent (EVENT_ACTION_ADD_EMITTER, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, PARTICLE_TYPE_SPARK));
 	gam_addEvent (EVENT_ACTION_ADD_LIGHTMAP, 0, sys_getString ("%f|%f|%i", renderPosition.x, renderPosition.y, LIGHTMAP_TYPE_SPARK));
 

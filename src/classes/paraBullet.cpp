@@ -49,7 +49,7 @@ void gam_doDisrupterDamage(int sourceDroid)
 		}
 	}
 
-	if (!dataBaseEntry[playerDroid.getDroidType()].disrupterImmune)
+	if (!dataBaseEntry[playerDroid.getDroidType ()].disrupterImmune)
 		gam_damageToPlayer (PHYSIC_DAMAGE_BULLET, sourceDroid);
 }
 
@@ -245,6 +245,20 @@ void gam_initBulletArray()
 
 //---------------------------------------------------------------------------------------------------------------
 //
+// Return the position of the bullet in pixels
+cpVect gam_getBulletWorldPosition(Uint32 bulletID)
+//---------------------------------------------------------------------------------------------------------------
+{
+
+	auto bulletIndex = gam_getArrayIndex (bulletID);
+	if (-1 == bulletIndex)
+		return cpVect{0, 0};
+
+	return bullets[bulletIndex].worldPosInPixels;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+//
 // Return the index of a bullet using its ID - return -1 if the bullet could not be found
 int gam_getArrayIndex(Uint32 bulletID)
 //---------------------------------------------------------------------------------------------------------------
@@ -335,8 +349,18 @@ void gam_removeBullet(Uint32 bulletID)
 		bullets.at (bulletIndex).inUse    = false;
 		bullets.at (bulletIndex).velocity = {0, 0};
 
+		if (bullets.at (bulletIndex).type == BULLET_TYPE_DISRUPTER)
+			return;
+
+		if (cpSpaceContainsBody (sys_returnPhysicsWorld (), bullets.at (bulletIndex).body))
+			cpSpaceRemoveBody (sys_returnPhysicsWorld (), bullets.at (bulletIndex).body);
+
+		if (cpSpaceContainsShape (sys_returnPhysicsWorld (), bullets.at (bulletIndex).shape))
+			cpSpaceRemoveShape (sys_returnPhysicsWorld (), bullets.at (bulletIndex).shape);
+
 		gam_removeEmitter (bulletID);
 		gam_removeLightmap (bulletID);
+
 	}
 
 	catch (const std::out_of_range &outOfRange)
@@ -357,11 +381,14 @@ void gam_processBullets()
 		{
 			if (bulletItr.type != BULLET_TYPE_DISRUPTER)
 			{
-				bulletItr.velocity = cpvnormalize (bulletItr.velocity);
-				bulletItr.velocity = cpvmult (bulletItr.velocity, bulletMoveSpeed);
-				cpBodyApplyForceAtLocalPoint (bulletItr.body, bulletItr.velocity, cpvzero);
-				bulletItr.sprite.animate ();
-				bulletItr.worldPosInPixels = cpBodyGetPosition (bulletItr.body);
+				if (cpSpaceContainsBody (sys_returnPhysicsWorld (), bulletItr.body))
+				{
+					bulletItr.velocity = cpvnormalize (bulletItr.velocity);
+					bulletItr.velocity = cpvmult (bulletItr.velocity, bulletMoveSpeed);
+					cpBodyApplyForceAtLocalPoint (bulletItr.body, bulletItr.velocity, cpvzero);
+					bulletItr.sprite.animate ();
+					bulletItr.worldPosInPixels = cpBodyGetPosition (bulletItr.body);
+				}
 			}
 			else
 			{

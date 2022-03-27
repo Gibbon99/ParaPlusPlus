@@ -7,12 +7,233 @@
 0 - Console [ Script: Script Engine version - [ 2.35.0 ] ].
 0 - Console [ Script: Options - [  AS_64BIT_PTR AS_LINUX AS_X64_GCC  ] ].
 0 - Console [ Scripting started. ].
-496 - Console [ Object name or object label cannot be empty. ].
-496 - Console [ Object name or object label cannot be empty. ].
-496 - Console [ Object name or object label cannot be empty. ].
-496 - Console [ Object name or object label cannot be empty. ].
-496 - Console [ Object name or object label cannot be empty. ].
-496 - [ Audio ] Using audio driver [ pulseaudio ]
-496 - Console [ Object name or function string cannot be empty. ].
-496 - Console [ Object name or function string cannot be empty. ].
-496 - Console [ Object name or function string cannot be empty. ].
+833 - Console [ Object name or object label cannot be empty. ].
+833 - Console [ Object name or object label cannot be empty. ].
+833 - Console [ Object name or object label cannot be empty. ].
+833 - Console [ Object name or object label cannot be empty. ].
+833 - Console [ Object name or object label cannot be empty. ].
+833 - Console [ Object name or function string cannot be empty. ].
+833 - Console [ Object name or function string cannot be empty. ].
+833 - Console [ Object name or function string cannot be empty. ].
+935 - [ Audio ] Using audio driver [ pulseaudio ]
+11735 - [ postStepRemove ] Removing a shape and body from postStep callback.
+11768 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid -1
+11768 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+11768 - [ 3 ] Found a new AI mode to change to [ ATTACK ]
+11768 - [ 3 ] - Running function : changeAIModeTo
+11768 - [ 3 ] - Changing to new AI mode - [ ATTACK ]
+11768 - [ 3 ] - In ATTACK mode case statement.
+11768 - [ 3 ] - Droid can not shoot. Increase FLEE amount.
+11768 - [ 3 ] AI Scores [ 0 0 85 8 50 0 ]
+11777 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+11777 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+11777 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+11777 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+11777 - Console [ 3   --  50 --    0 --   45 --   8  --  50  --  0 -- ATTACK -  ].
+11777 - Console [ 4   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+11777 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+11785 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+11785 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+11802 - [ 3 ] Found a new AI mode to change to [ FLEE ]
+11802 - [ 3 ] - Running function : changeAIModeTo
+11802 - [ 3 ] - Changing to new AI mode - [ FLEE ]
+11802 - [ 3 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+11802 - [ 3 ] - Found the destination flee tile [ 45.000 16.000 ]
+11802 - [ requestNewPath ] Index 3
+11802 - [ 3 ] AI Scores [ 45 0 85 8 50 0 ]
+12301 - [ postStepRemove ] Removing a shape and body from postStep callback.
+12334 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid -1
+12334 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+12334 - [ 6 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+12467 - [ 3 ] Found a new AI mode to change to [ ATTACK ]
+12467 - [ 3 ] - Running function : changeAIModeTo
+12467 - [ 3 ] - Changing to new AI mode - [ ATTACK ]
+12467 - [ 3 ] - In ATTACK mode case statement.
+12467 - [ 3 ] - Droid can not shoot. Increase FLEE amount.
+12476 - [ 3 ] AI Scores [ 0 0 100 16 50 0 ]
+12476 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+12476 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+12476 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+12476 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+12476 - Console [ 3   --  100 --    0 --   100 --  16  --  50  --  0 -- ATTACK -  ].
+12476 - Console [ 4   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+12484 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+12484 - Console [ 6   --   0 --    0 --    0 --   0  --  50  -- 45 -- PATROL -  ].
+12484 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+12501 - [ 3 ] Found a new AI mode to change to [ FLEE ]
+12501 - [ 3 ] - Running function : changeAIModeTo
+12501 - [ 3 ] - Changing to new AI mode - [ FLEE ]
+12501 - [ 3 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+12501 - [ 3 ] - Found the destination flee tile [ 45.000 16.000 ]
+12501 - [ requestNewPath ] Index 3
+12501 - [ 3 ] AI Scores [ 45 0 100 16 50 0 ]
+12968 - [ postStepRemove ] Removing a shape and body from postStep callback.
+13001 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid -1
+13001 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+13001 - [ 6 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+13001 - [ 3 ] Found a new AI mode to change to [ ATTACK ]
+13001 - [ 3 ] - Running function : changeAIModeTo
+13001 - [ 3 ] - Changing to new AI mode - [ ATTACK ]
+13001 - [ 3 ] - In ATTACK mode case statement.
+13001 - [ 3 ] - Droid can not shoot. Increase FLEE amount.
+13009 - [ 3 ] AI Scores [ 0 0 100 25 50 0 ]
+13009 - [ 6 ] - Running function : changeAIModeTo
+13009 - [ 6 ] - Changing to new AI mode - [ ATTACK ]
+13009 - [ 6 ] - In ATTACK mode case statement.
+13009 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+13009 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13009 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13017 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13017 - Console [ 3   --  100 --    0 --   100 --  25  --  50  --  0 -- ATTACK -  ].
+13017 - Console [ 4   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+13017 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13017 - Console [ 6   --   0 --    0 --    0 --   0  --  50  -- 90 -- PATROL -  ].
+13017 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13017 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+13017 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13026 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13026 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13026 - Console [ 3   --  45 --    0 --   100 --  25  --  50  --  0 -- ATTACK -  ].
+13026 - Console [ 4   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+13026 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13026 - Console [ 6   --  100 --    0 --    0 --   0  --  50  --  0 -- ATTACK -  ].
+13026 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13034 - [ 3 ] Found a new AI mode to change to [ FLEE ]
+13034 - [ 3 ] - Running function : changeAIModeTo
+13034 - [ 3 ] - Changing to new AI mode - [ FLEE ]
+13034 - [ 3 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+13034 - [ 3 ] - Found the destination flee tile [ 45.000 16.000 ]
+13034 - [ requestNewPath ] Index 3
+13042 - [ 3 ] AI Scores [ 45 0 100 25 50 0 ]
+13835 - [ postStepRemove ] Removing a shape and body from postStep callback.
+13868 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid 6
+13868 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+13868 - [ 3 ] Found a new AI mode to change to [ ATTACK ]
+13868 - [ 3 ] - Running function : changeAIModeTo
+13868 - [ 3 ] - Changing to new AI mode - [ ATTACK ]
+13868 - [ 3 ] - In ATTACK mode case statement.
+13868 - [ 3 ] - Droid can not shoot. Increase FLEE amount.
+13877 - [ 3 ] AI Scores [ 0 0 100 45 50 0 ]
+13877 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+13877 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13877 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13877 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13877 - Console [ 3   --  100 --    0 --   100 --  45  --  50  --  0 -- ATTACK -  ].
+13877 - Console [ 4   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+13885 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13885 - Console [ 6   --  100 --    0 --    0 --   0  --  50  --  0 -- ATTACK -  ].
+13885 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+13902 - [ 3 ] Found a new AI mode to change to [ FLEE ]
+13902 - [ 3 ] - Running function : changeAIModeTo
+13902 - [ 3 ] - Changing to new AI mode - [ FLEE ]
+13902 - [ 3 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+13902 - [ 3 ] - Found the destination flee tile [ 45.000 16.000 ]
+13902 - [ requestNewPath ] Index 3
+13902 - [ 3 ] AI Scores [ 0 0 100 45 50 0 ]
+15101 - [ postStepRemove ] Removing a shape and body from postStep callback.
+15134 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid -1
+15134 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+15134 - [ 6 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+15234 - [ 3 ] Found a new AI mode to change to [ ATTACK ]
+15234 - [ 3 ] - Running function : changeAIModeTo
+15234 - [ 3 ] - Changing to new AI mode - [ ATTACK ]
+15234 - [ 3 ] - In ATTACK mode case statement.
+15234 - [ 3 ] - Droid can not shoot. Increase FLEE amount.
+15242 - [ 3 ] AI Scores [ 0 0 100 54 50 0 ]
+15242 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+15242 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+15242 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+15242 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+15242 - Console [ 3   --  100 --    0 --   100 --  54  --  50  --  0 -- ATTACK -  ].
+15242 - Console [ 4   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+15251 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+15251 - Console [ 6   --  100 --    0 --    0 --   0  --  50  -- 45 -- ATTACK -  ].
+15251 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+15267 - [ 3 ] Found a new AI mode to change to [ FLEE ]
+15267 - [ 3 ] - Running function : changeAIModeTo
+15267 - [ 3 ] - Changing to new AI mode - [ FLEE ]
+15267 - [ 3 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+15267 - [ 3 ] - Found the destination flee tile [ 45.000 16.000 ]
+15267 - [ requestNewPath ] Index 3
+15275 - [ 3 ] AI Scores [ 45 0 100 54 50 0 ]
+15601 - [ postStepRemove ] Removing a shape and body from postStep callback.
+15634 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid 6
+15634 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+15668 - [ 3 ] Found a new AI mode to change to [ ATTACK ]
+15668 - [ 3 ] - Running function : changeAIModeTo
+15668 - [ 3 ] - Changing to new AI mode - [ ATTACK ]
+15668 - [ 3 ] - In ATTACK mode case statement.
+15668 - [ 3 ] - Droid can not shoot. Increase FLEE amount.
+15668 - [ 3 ] AI Scores [ 0 0 100 75 50 0 ]
+15676 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+15676 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+15676 - Console [ 1   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+15676 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+15676 - Console [ 3   --  100 --    0 --   100 --  75  --  50  --  0 -- ATTACK -  ].
+15676 - Console [ 4   --   0 --    0 --   45 --   0  --  50  --  0 -- PATROL -  ].
+15676 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+15685 - Console [ 6   --  100 --    0 --    0 --   0  --  50  -- 45 -- ATTACK -  ].
+15685 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+15702 - [ 3 ] Found a new AI mode to change to [ FLEE ]
+15702 - [ 3 ] - Running function : changeAIModeTo
+15702 - [ 3 ] - Changing to new AI mode - [ FLEE ]
+15702 - [ 3 ] - Changing to FLEE mode. Looking for nearest waypoint to move to.
+15702 - [ 3 ] - Found the destination flee tile [ 45.000 16.000 ]
+15702 - [ requestNewPath ] Index 3
+15702 - [ 3 ] AI Scores [ 0 0 100 75 50 0 ]
+17200 - [ postStepRemove ] Removing a shape and body from postStep callback.
+17234 - [ gam_damageToDroid ] - target 3 damageSource 1 sourceDroid 6
+17234 - [ gam_damageToDroid ] - Damage to droid [ 3 ] from BULLET
+17234 - [ 3 ] - Running function : changeAIModeTo
+17234 - [ 3 ] - Changing to new AI mode - [ HEAL ]
+17234 - [ 3 ] - Changing to HEAL mode. Looking for nearest waypoint to move to.
+17234 - [ 3 ] - Found the destination healing tile [ 18.000 18.000 ]
+17234 - [ requestNewPath ] Index 3
+18835 - [ postStepRemove ] Removing a shape and body from postStep callback.
+18868 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+18868 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+18868 - [ 6 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+19200 - [ postStepRemove ] Removing a shape and body from postStep callback.
+19234 - [ gam_damageToDroid ] - target -1 damageSource 1 sourceDroid 6
+19234 - [ gam_damageToDroid ] - Damage to droid [ -1 ] from BULLET
+19534 - [ postStepRemove ] Removing a shape and body from postStep callback.
+19567 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+19567 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+19567 - [ 6 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+20768 - [ postStepRemove ] Removing a shape and body from postStep callback.
+20801 - [ gam_damageToDroid ] - target 6 damageSource 1 sourceDroid -1
+20801 - [ gam_damageToDroid ] - Damage to droid [ 6 ] from BULLET
+20801 - [ 6 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+21034 - [ postStepRemove ] Removing a shape and body from postStep callback.
+21067 - [ gam_damageToDroid ] - target -1 damageSource 1 sourceDroid 6
+21067 - [ gam_damageToDroid ] - Damage to droid [ -1 ] from BULLET
+33567 - [ postStepRemove ] Removing a shape and body from postStep callback.
+38042 - [ postStepRemove ] Removing a shape and body from postStep callback.
+38067 - [ gam_damageToDroid ] - target 1 damageSource 1 sourceDroid -1
+38067 - [ gam_damageToDroid ] - Damage to droid [ 1 ] from BULLET
+38067 - [ 1 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+39042 - [ postStepRemove ] Removing a shape and body from postStep callback.
+39968 - [ postStepRemove ] Removing a shape and body from postStep callback.
+40000 - [ gam_damageToDroid ] - target 1 damageSource 1 sourceDroid -1
+40000 - [ gam_damageToDroid ] - Damage to droid [ 1 ] from BULLET
+40000 - [ 1 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.
+40000 - [ 1 ] Found a new AI mode to change to [ ATTACK ]
+40000 - [ 1 ] - Running function : changeAIModeTo
+40000 - [ 1 ] - Changing to new AI mode - [ ATTACK ]
+40000 - [ 1 ] - In ATTACK mode case statement.
+40000 - [ 1 ] AI Scores [ 90 0 0 11 50 90 ]
+40008 - Console [         ATK    HNT    FLE    HEL    PAT    WIT ].
+40008 - Console [ 0   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+40008 - Console [ 1   --  90 --    0 --    0 --  11  --  50  -- 90 -- ATTACK -  ].
+40008 - Console [ 2   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+40008 - Console [ 3   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+40008 - Console [ 4   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+40008 - Console [ 5   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+40017 - Console [ 6   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+40017 - Console [ 7   --   0 --    0 --    0 --   0  --  50  --  0 -- PATROL -  ].
+40242 - [ gam_damageToDroid ] - target -1 damageSource 0 sourceDroid 1
+40242 - [ gam_damageToDroid ] - Damage to droid [ -1 ] from BUMP
+41367 - [ postStepRemove ] Removing a shape and body from postStep callback.
+41400 - [ gam_damageToDroid ] - target 1 damageSource 1 sourceDroid -1
+41400 - [ gam_damageToDroid ] - Damage to droid [ 1 ] from BULLET
+41400 - [ 1 ] - [ gam_checkActionWitness ] Droid witness an action - increase WITNESS.

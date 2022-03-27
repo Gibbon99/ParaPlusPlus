@@ -20,6 +20,8 @@ Check bottom edge of animated tiles in graphics
 Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
 Make GUI strings dynamic - change setLabel to set the guiString lookup key, and then get the actual string at draw time.
 
+Don't add particles to Disrupter bullet type
+
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
