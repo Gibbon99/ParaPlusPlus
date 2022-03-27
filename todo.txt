@@ -20,8 +20,6 @@ Check bottom edge of animated tiles in graphics
 Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
 Make GUI strings dynamic - change setLabel to set the guiString lookup key, and then get the actual string at draw time.
 
-Don't add particles to Disrupter bullet type
-
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
@@ -215,6 +213,8 @@ FIXED - BUG - Pressing key on splash screen also means splash screen exit event 
 FIXED - BUG - Pause mode on start results in jumping screen
 >Commit
 DONE - Slow down the rate of fire for higher droids
+>Commit
+DONE - Don't add particles to Disrupter bullet type
 
 GUI
 ------
