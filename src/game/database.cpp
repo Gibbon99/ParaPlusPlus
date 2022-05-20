@@ -4,6 +4,7 @@
 #include "game/audio.h"
 #include "game/texture.h"
 #include "game/database.h"
+#include "io/libfmemopen.h"
 
 tinyxml2::XMLDocument *xmlFileSave {};
 tinyxml2::XMLDocument *xmlFileLoad {};

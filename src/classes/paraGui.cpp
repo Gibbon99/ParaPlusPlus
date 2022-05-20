@@ -1,5 +1,4 @@
 #include <cstdarg>
-#include <physfs.h>
 #include <iostream>
 #include <utility>
 #include "game/audio.h"
@@ -8,6 +7,7 @@
 #include "classes/paraGui.h"
 #include "tinyxml2.h"
 #include "gui/guiLanguage.h"
+#include "io/libfmemopen.h"
 
 void paraGui::AddRef()
 {

@@ -17,6 +17,7 @@
 #include "game/terminal.h"
 #include "game/alertLevel.h"
 #include "tinyxml2.h"
+#include "io/libfmemopen.h"
 
 int                                                    tileSize;
 int                                                    numTileAcrossInTexture = 8;

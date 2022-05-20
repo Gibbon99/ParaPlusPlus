@@ -54,9 +54,9 @@ set (SOURCES
 
 if (WIN32)
 	# Library path
-	link_directories(./SDL2_WIN/lib/x86)
+	link_directories(./SDL2_WIN/lib/x64)
 
-	link_libraries(SDL2main SDL2 SDL2_image SDL2_mixer SDL2_ttf)
+	link_libraries(SDL2main SDL2 SDL2_image SDL2_mixer SDL2_ttf fmemopen_windows)
 
 	include_directories(
 			./hdr
@@ -69,7 +69,7 @@ if (WIN32)
 			./hdr/tinyxml2
 	)
 
-	set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 5)
+	set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 15)
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("Doing DEBUG build")
@@ -108,7 +108,7 @@ if (UNIX)
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("Doing DEBUG build")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g -O0 -Wimplicit-fallthrough -Wtype-limits -Wint-in-bool-context -Wcast-function-type -fno-omit-frame-pointer -Wsign-compare -fpermissive -Wall -Wextra -g -fsanitize=leak")
-		add_executable(Linux_Para_debug ${SOURCES})
+		add_executable(Linux_Para_debug ${SOURCES} hdr/io/libfmemopen.h)
 #		target_compile_definitions(Linux_Para_debug PUBLIC MY_DEBUG)
 	endif (CMAKE_BUILD_TYPE MATCHES Debug)
 

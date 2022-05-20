@@ -1,4 +1,5 @@
 #include "classes/paraHighScore.h"
+#include "io/libfmemopen.h"
 
 #include <utility>
 #include <fstream>
