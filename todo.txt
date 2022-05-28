@@ -1,8 +1,8 @@
 BUGS
 --------
 BUG - Two consoles not accessible on level - collision lines wrong spot
-BUG - Healing sound kept playing when not on healing tile
 BUG - Bullet from 7 droids causes bullet release with -1 out of range
+BUG - When transferring from 999 - image is not displayed in first transfer screen
 
 GAMEPLAY
 ---------
@@ -19,7 +19,6 @@ Droid AI - Help
 Check bottom edge of animated tiles in graphics
 Fix screen fades when drawing SDL_GFX - happens for scrollBoxes
 Make GUI strings dynamic - change setLabel to set the guiString lookup key, and then get the actual string at draw time.
-
 
 DONE - Universe background on menu screens
 DONE - Move score to right some more
@@ -215,6 +214,11 @@ FIXED - BUG - Pause mode on start results in jumping screen
 DONE - Slow down the rate of fire for higher droids
 >Commit
 DONE - Don't add particles to Disrupter bullet type
+>Commit
+DONE - Fix width of briefing background rectangle - right hand side
+DONE - Don't add particles to Disrupter bullet type
+DONE - BUG - Fix width of win scrollbox background width
+DONE - BUG - After win screen - does not take you to the high score table screen
 
 GUI
 ------

@@ -256,6 +256,13 @@ int paraAudio::play(std::string keyName, bool loop, int distance, int pan)
 
 	if ((pan < 0) || (pan > 255))
 		pan = 127;
+	//
+	// Attempt to stop sound playing sound twice on startup
+	if (keyName == "greenAlert")
+	{
+		if (isPlaying("greenAlert"))
+			return -1;
+	}
 
 	auto audioItr = audio.find(keyName);
 
@@ -266,9 +273,12 @@ int paraAudio::play(std::string keyName, bool loop, int distance, int pan)
 			funcOutput(-1, int_getString("File [ %s ] is not loaded", keyName.c_str()));
 			return -1;
 		}
-
+		//
+		// Look for a free non playing channel
 		for (auto& activeItr : activeSounds)
 		{
+			//
+			// Found one - use this one to play the sound
 			if (Mix_Playing(activeItr.whichChannel) == 0)   // Channel is not playing
 			{
 				if (activeItr.doorSound)        // If it was a door sound - decrement counter TODO - Check this. Other sounds are triggering this
@@ -281,7 +291,8 @@ int paraAudio::play(std::string keyName, bool loop, int distance, int pan)
 
 				if (!Mix_SetDistance(activeItr.whichChannel, distance))
 					funcOutput(-1, int_getString("Failed to set attenuation for [ %s ] - [ %s ]", keyName.c_str(), Mix_GetError()));
-
+				//
+				// Stop all the doors playing at once - creates too much noise
 				if ((keyName == "doorOpen") || (keyName == "doorClose"))
 				{
 					if (numDoorsPlaying > numDoorSounds)

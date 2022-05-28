@@ -70,9 +70,6 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char *argv[])
 
 	sys_startSystems ();
 
-	// TODO - use this for blinking player on deckview
-	// SDL_TimerID myTimer = SDL_AddTimer (1000, fpsCallback, nullptr);
-
 	while (!quitLoop)
 	{
 		previousTime         = currentTime;
