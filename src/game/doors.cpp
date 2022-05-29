@@ -53,50 +53,38 @@ void gam_doorCheckTriggerAreas()
 // ----------------------------------------------------------------------------
 //
 // Play a door sound - taking into account distance and orientation to player
-void gam_playDoorSound(int whichTrigger, std::string keyName)
+//
+// Distance: 0 (close / loud ) to 255 (far / quiet)7
+//
+// Panning: 254 for all left, 127 for center, 0 for all right
+void gam_playDoorSound(int whichTrigger, const std::string& keyName)
 // ----------------------------------------------------------------------------
 {
 	cpFloat distanceToDoor;
-	float   distanceSoundLevel;
-	float   distanceOrientation;
+	int   distanceOrientation;
+	float distanceSoundLevel;
 
 	//
 	// How far is player from this door - attenuate for distance
 	distanceToDoor = cpvdist (doorTriggers[whichTrigger].worldPosition, playerDroid.getWorldPosInPixels ());
 
 	if (distanceToDoor > distanceForDoorSoundMax)
-		distanceSoundLevel = 254;
+		distanceSoundLevel = 254;       // Make it quiet
 	else
 	{
-		distanceSoundLevel = 254 * (distanceForDoorSoundMax / 10.0f);
-		distanceSoundLevel = 255 - distanceSoundLevel;
+		distanceSoundLevel = (distanceToDoor / static_cast<float>(distanceForDoorSoundMax));  // Get distance percentage
+		distanceSoundLevel = 254.0f * distanceSoundLevel;
 	}
+	if (distanceSoundLevel < 0)
+		distanceSoundLevel = 0;
 	//
 	// Which side should the sound come from - attenuate for distance
 	if (doorTriggers[whichTrigger].worldPosition.x < playerDroid.getWorldPosInPixels ().x)   // Door is to the left
-	{
-		if (distanceToDoor > distanceForDoorSoundMax)
-			distanceOrientation = 254;  // All the way to the left
-		else
-		{
-			distanceOrientation = 127 * 1.0f - (distanceForDoorSoundMax / 10.0f);
-			distanceOrientation = 254 - distanceOrientation;
-		}
-	}
+		distanceOrientation = 254;
 	else
-	{
-		if (distanceToDoor > distanceForDoorSoundMax)
-			distanceOrientation = 0;        // All the way to the right
-		else
-		{
-			distanceOrientation = 127 * 1.0f - (distanceForDoorSoundMax / 10.0f);
-		}
-	}
+		distanceOrientation = 0;
 
-	if (distanceSoundLevel < 0)
-		distanceSoundLevel = 0;
-
-	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, static_cast<int>(distanceSoundLevel), static_cast<int>(distanceOrientation), keyName);
+	gam_addAudioEvent (EVENT_ACTION_AUDIO_PLAY, false, static_cast<int>(distanceSoundLevel), distanceOrientation, keyName);
 }
 
 // ----------------------------------------------------------------------------
@@ -122,7 +110,7 @@ void gam_doorProcessActions()
 				{
 					case DOOR_ACROSS_CLOSED:
 						doorTriggers[i].currentFrame = DOOR_ACROSS_OPEN_1;
-						gam_playDoorSound (1, "doorOpen");
+						gam_playDoorSound (i, "doorOpen");
 						break;
 					case DOOR_ACROSS_OPEN_1:
 						doorTriggers[i].currentFrame = DOOR_ACROSS_OPEN_2;
@@ -142,7 +130,7 @@ void gam_doorProcessActions()
 
 					case DOOR_UP_CLOSED:
 						doorTriggers[i].currentFrame = DOOR_UP_OPEN_1;
-						gam_playDoorSound (1, "doorOpen");
+						gam_playDoorSound (i, "doorOpen");
 						break;
 					case DOOR_UP_OPEN_1:
 						doorTriggers[i].currentFrame = DOOR_UP_OPEN_2;
@@ -175,7 +163,7 @@ void gam_doorProcessActions()
 				{
 					case DOOR_ACROSS_OPENED:
 						doorTriggers[i].currentFrame = DOOR_ACROSS_CLOSING_1;
-						gam_playDoorSound (1, "doorClose");
+						gam_playDoorSound (i, "doorClose");
 						break;
 					case DOOR_ACROSS_CLOSING_1:
 						doorTriggers[i].currentFrame = DOOR_ACROSS_CLOSING_2;
@@ -193,7 +181,7 @@ void gam_doorProcessActions()
 
 					case DOOR_UP_OPENED:
 						doorTriggers[i].currentFrame = DOOR_UP_CLOSING_1;
-						gam_playDoorSound (1, "doorClose");
+						gam_playDoorSound (i, "doorClose");
 						break;
 					case DOOR_UP_CLOSING_1:
 						doorTriggers[i].currentFrame = DOOR_UP_CLOSING_2;

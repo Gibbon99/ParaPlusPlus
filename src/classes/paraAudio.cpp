@@ -136,6 +136,7 @@ int paraAudio::init(int numMaxActiveChannels, audioFunctionPtrStr outputFunction
 	{
 		tempActiveSounds.whichChannel = i;
 		tempActiveSounds.keyName = "";
+		tempActiveSounds.doorSound = false;
 
 		activeSounds.push_back(tempActiveSounds);
 	}
@@ -186,14 +187,14 @@ void paraAudio::stopAllChannels()
 bool paraAudio::isPlaying(const std::string& keyName)
 //-----------------------------------------------------------------------------------------------------------------------
 {
-	for (const auto& audioItr : activeSounds)
+	for (const auto &audioItr: activeSounds)
 	{
 		if (keyName == audioItr.keyName)
 		{
-			if (Mix_Playing(audioItr.whichChannel) == 1)
+			if (Mix_Playing (audioItr.whichChannel) == 1)
 				return true;
 		}
-	}
+	};
 	return false;
 }
 
@@ -246,7 +247,7 @@ void paraAudio::stop(std::string keyName)
 // Distance: 0 (close / loud ) to 255 (far / quiet)
 //
 // Panning: 254 for all left, 127 for center, 0 for all right
-int paraAudio::play(std::string keyName, bool loop, int distance, int pan)
+int paraAudio::play(const std::string& keyName, bool loop, int distance, int pan)
 //-----------------------------------------------------------------------------------------------------------------------
 {
 	static int numDoorsPlaying = 0;
@@ -295,6 +296,9 @@ int paraAudio::play(std::string keyName, bool loop, int distance, int pan)
 				// Stop all the doors playing at once - creates too much noise
 				if ((keyName == "doorOpen") || (keyName == "doorClose"))
 				{
+
+					printf("Playing door sound [ %s ] Playing [ %i ]\n", keyName.c_str(), numDoorsPlaying);
+
 					if (numDoorsPlaying > numDoorSounds)
 					{
 						activeItr.doorSound = false;
@@ -303,7 +307,6 @@ int paraAudio::play(std::string keyName, bool loop, int distance, int pan)
 
 					numDoorsPlaying++;
 					activeItr.doorSound = true;
-
 					activeItr.whichChannel = Mix_PlayChannel(activeItr.whichChannel, audio[keyName].audio, loop ? -1 : 0);
 					activeItr.keyName = keyName;
 #ifdef AUDIO_DEBUG

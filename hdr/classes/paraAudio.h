@@ -64,7 +64,7 @@ public:
 
 	std::string int_getString(std::string format, ...);
 
-	int play(std::string keyName, bool loop, int distance, int pan);
+	int play(const std::string& keyName, bool loop, int distance, int pan);
 
 	void stop(std::string keyName);
 

@@ -932,7 +932,7 @@ void as_createGUI()
     redAlertLevel = 500;
     yellowAlertLevel = 300;
     updateScoreDelay = 0.5;
-    distanceForDoorSoundMax = 50.0;   // In meters
+    distanceForDoorSoundMax = 150.0;   // In meters
     powerdownLevelScore = 1000;
     healingDelayCounter = 0.8;
     healingAmountPerTick = 1;

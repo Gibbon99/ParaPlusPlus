@@ -2,11 +2,11 @@ BUGS
 --------
 BUG - Two consoles not accessible on level - collision lines wrong spot
 BUG - Bullet from 7 droids causes bullet release with -1 out of range
-BUG - When transferring from 999 - image is not displayed in first transfer screen
+BUG - When transferring from 999 - image is not displayed in first transfer screen - image is alpha background for end screen
 
 GAMEPLAY
 ---------
-
+Fix up door playing sounds
 
 TO DO
 -------
