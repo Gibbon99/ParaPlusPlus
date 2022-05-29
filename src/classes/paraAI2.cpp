@@ -102,6 +102,30 @@ std::string paraAI2::getAIActionString(int whichMode)
 
 //-----------------------------------------------------------------------------------------------------------------------
 //
+// Check if the traget droid is disrupter immune - if so, return false to show no point in attacking
+bool paraAI2::checkDisrupterUsage ()
+//-----------------------------------------------------------------------------------------------------------------------
+{
+	if (targetDroid == -1)  // Target player
+	{
+		if ((dataBaseEntry[playerDroid.getDroidType()].disrupterImmune) &&
+			(dataBaseEntry[g_shipDeckItr->second.droid[arrayIndex].getDroidType()].bulletType == BULLET_TYPE_DISRUPTER))
+			return false;
+		else
+			return true;
+	}
+	else    // targetting another droid
+	{
+		if ((dataBaseEntry[targetDroid].disrupterImmune) &&
+			(dataBaseEntry[g_shipDeckItr->second.droid[arrayIndex].getDroidType()].bulletType == BULLET_TYPE_DISRUPTER))
+			return false;
+		else
+			return true;
+	}
+}
+
+//-----------------------------------------------------------------------------------------------------------------------
+//
 // Start attacking the target
 void paraAI2::attack()
 //-----------------------------------------------------------------------------------------------------------------------
@@ -118,6 +142,14 @@ void paraAI2::attack()
 	//
 	// Check if target is still visible or not - either player or other droid
 	checkAttackVisibility ();
+	//
+	// Check if droid is using disrupter weapon on an immune droid ( player or enemy )
+	if (!checkDisrupterUsage ())
+	{
+		modifyAIScore (AI2_MODE_ATTACK, -30);
+		modifyAIScore (AI2_MODE_FLEE, +30);
+		return;
+	}
 	//
 	// Stop having a target if the droid is not in a normal state
 	if (targetDroid != TARGET_PLAYER)

@@ -6,7 +6,6 @@ BUG - When transferring from 999 - image is not displayed in first transfer scre
 
 GAMEPLAY
 ---------
-Fix up door playing sounds
 
 TO DO
 -------
@@ -219,6 +218,9 @@ DONE - Fix width of briefing background rectangle - right hand side
 DONE - Don't add particles to Disrupter bullet type
 DONE - BUG - Fix width of win scrollbox background width
 DONE - BUG - After win screen - does not take you to the high score table screen
+DONE - Fix up door playing sounds
+>Commit
+DONE - Enemy disrupter firing on player in disrupter immune droid - don't target?
 
 GUI
 ------

@@ -132,6 +132,8 @@ public:
 
 	void setWitnessDroid(int newWitnessDroid);
 
+	bool checkDisrupterUsage ();
+
 	float     desiredAttackDistance2 {90};    // pixels
 	float     paddingSize2 {12};
 	paraAStar aStar;

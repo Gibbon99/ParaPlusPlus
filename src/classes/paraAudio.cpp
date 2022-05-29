@@ -282,7 +282,7 @@ int paraAudio::play(const std::string& keyName, bool loop, int distance, int pan
 			// Found one - use this one to play the sound
 			if (Mix_Playing(activeItr.whichChannel) == 0)   // Channel is not playing
 			{
-				if (activeItr.doorSound)        // If it was a door sound - decrement counter TODO - Check this. Other sounds are triggering this
+				if (activeItr.doorSound)
 					numDoorsPlaying--;
 
 				Mix_UnregisterAllEffects(activeItr.whichChannel);       // Reset any effects from previous sounds
@@ -296,9 +296,6 @@ int paraAudio::play(const std::string& keyName, bool loop, int distance, int pan
 				// Stop all the doors playing at once - creates too much noise
 				if ((keyName == "doorOpen") || (keyName == "doorClose"))
 				{
-
-					printf("Playing door sound [ %s ] Playing [ %i ]\n", keyName.c_str(), numDoorsPlaying);
-
 					if (numDoorsPlaying > numDoorSounds)
 					{
 						activeItr.doorSound = false;
