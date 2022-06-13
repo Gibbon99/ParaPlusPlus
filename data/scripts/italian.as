@@ -41,6 +41,14 @@ void as_setItalianText ()
 	gui_addKeyAndText ("scrTutHealing.tutHealingLabel", "Tutorial - Guarigione");
 	gui_addKeyAndText ("scrTutTips.tutTipsLabel", "Tutorial - Suggerimenti di gioco");
 
+    gui_addKeyAndText ("scrTutorial.tutMoveText", "Utilizzare i tasti freccia per spostarsi. ! ! Premendo il tasto azione sparerai nella direzione di movimento corrente. ! ! Tenere premuto il tasto azione quando non vengono premuti altri tasti per avviare la modalità di trasferimento.");
+	gui_addKeyAndText ("scrTutTransfer.tutTransText", "Per prendere il controllo di un altro droide si entra in modalità di trasferimento. ! ! Tieni premuto il tasto Azione senza altri tasti per accedere a questa modalità. La collisione con un altro droide avvierà la subroutine di trasferimento.");
+	gui_addKeyAndText ("scrTutTransGame.tutTransGameText", "Per ottenere il controllo di un altro droide, devi vincere il gioco di trasferimento del circuito. Seleziona il lato che utilizzerai. Premi i tasti SU / GIÙ per spostare il token su un circuito adatto. Premere il tasto Azione per selezionare il circuito. Devi avere più del tuo colore prima che scada il tempo per vincere.");
+	gui_addKeyAndText ("scrTutLifts.tutLiftText", "Per cambiare tra i ponti, si utilizza un ascensore. Un ascensore viene attivato fermandosi su una tessera di sollevamento e premendo il tasto azione. Utilizzare i tasti di direzione per selezionare un nuovo livello e premere il tasto Azione per selezionarlo.");
+	gui_addKeyAndText ("scrTutTerminals.tutTerminalText", "Fermati a un terminale e premi il tasto azione. Questo ti garantirà l'accesso ai sistemi informatici delle navi. L'accesso al database dei droidi è controllato dal livello di accesso del tuo droide corrente.");
+	gui_addKeyAndText ("scrTutHealing.tutHealingText", "Tutti i droidi hanno un indicatore di salute che gira su di loro. Più lentamente gira, minore è il livello di salute del droide. Per riparare un danno, fermarsi su una piastrella di riparazione. Il tuo punteggio viene automaticamente sottratto durante la riparazione.");
+	gui_addKeyAndText ("scrTutTips.tutTipsText", "- La collisione con un altro droide danneggerà entrambi. ! - Alcuni droidi sono immuni alle armi disgregatori. ! - Il tuo controllo su un droide si indebolisce con il tempo. ! - Il primo numero su un droide indica la sua classifica.");
+
 	gui_addKeyAndText ("gameLeft", "Muovere a sinistra");
 	gui_addKeyAndText ("gameRight", "Vai a destra");
 	gui_addKeyAndText ("gameDown", "Abbassati");

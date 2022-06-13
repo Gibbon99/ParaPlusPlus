@@ -68,6 +68,8 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char *argv[])
 	double timeLag      = 0.0f;
 	Uint32 previousTime = PARA_GetTicks ();
 
+	auto fpsTimerID = SDL_AddTimer (1000, fpsCallback, nullptr);
+
 	sys_startSystems ();
 
 	while (!quitLoop)

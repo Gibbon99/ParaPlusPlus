@@ -221,6 +221,9 @@ DONE - BUG - After win screen - does not take you to the high score table screen
 DONE - Fix up door playing sounds
 >Commit
 DONE - Enemy disrupter firing on player in disrupter immune droid - don't target?
+>Commit
+FIXED - Tutorial text not showing
+FIXED - Performance stats not updating
 
 GUI
 ------

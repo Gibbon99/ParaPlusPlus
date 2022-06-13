@@ -41,6 +41,13 @@ void as_setEnglishText ()
 	gui_addKeyAndText ("scrTutHealing.tutHealingLabel", "Tutorial - Healing");
 	gui_addKeyAndText ("scrTutTips.tutTipsLabel", "Tutorial - Gameplay tips");
 
+    gui_addKeyAndText ("scrTutorial.tutMoveText", " Use the arrow keys to move. ! ! Pressing the Action Key will shoot in your current movement direction. ! ! Hold down the Action Key when no other keys are pressed to initiate transfer mode.");
+	gui_addKeyAndText ("scrTutTransfer.tutTransText", " To take over another droid you enter into Transfer mode. ! ! Press and hold the Action key with no other keys down to enter this mode. Colliding with another droid will initiate the transfer subroutine.");
+	gui_addKeyAndText ("scrTutTransGame.tutTransGameText", "To gain control of another droid, you must win the circuit transfer game. Select the side you will use. Press the UP / DOWN keys to move your token to a suitable circuit. Press the Action key to select that circuit. You must have more of your color before the time runs out in order to win.");
+	gui_addKeyAndText ("scrTutLifts.tutLiftText", "To change between decks, you use a lift. A lift is activated by stopping over a lift tile and pressing the Action Key. Use the direction keys to select a new level and press the Action Key to select it.");
+	gui_addKeyAndText ("scrTutTerminals.tutTerminalText", "Stop at a terminal and press the Action Key. This will grant you access to the ships computer systems. Access to the droid database is controlled by the access level of your current droid.");
+	gui_addKeyAndText ("scrTutHealing.tutHealingText", "All droids have a health indicator which spins on them. The slower this spins, the lower the health level of the droid. To repair damage stop over a repair tile. Your score is automatically subtracted as you repair.");
+	gui_addKeyAndText ("scrTutTips.tutTipsText", " - Colliding with another droid will damage both. ! - Some droids are immune to the disrupter weapons. ! - Your control over a droid weakens with time. ! - The first number on a droid indicates its ranking.");
 
 	gui_addKeyAndText ("gameLeft", "Move left");
 	gui_addKeyAndText ("gameRight", "Move Right");
