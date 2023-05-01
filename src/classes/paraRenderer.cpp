@@ -1,7 +1,4 @@
 #include <vector>
-#include <SDL_video.h>
-#include <SDL_render.h>
-#include <SDL_hints.h>
 #include <iostream>
 #include "../../hdr/classes/paraRenderer.h"
 

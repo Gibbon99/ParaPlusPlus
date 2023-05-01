@@ -40,7 +40,7 @@
 #include "system/shutdown.h"
 #include "physfs/physfs.h"
 #include "classes/paraRenderer.h"
-#include "chipmunk.h"
+#include "chipmunk/chipmunk.h"
 
 #define ERROR_COUNT_LIMIT   10
 

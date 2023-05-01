@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #define PARA_Color          SDL_Color
 #define PARA_Surface        SDL_Surface

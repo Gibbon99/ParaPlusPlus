@@ -101,6 +101,7 @@ void gam_createHealingSensor(int whichHealingTile)
 	cpBodySetPosition (healingTiles[whichHealingTile].body, healingTiles[whichHealingTile].worldPosition);
 
 	healingTiles[whichHealingTile].shape = cpBoxShapeNew (healingTiles[whichHealingTile].body, healingTiles[whichHealingTile].width, healingTiles[whichHealingTile].height, 1.0f);
+	cpSpaceAddBody (sys_returnPhysicsWorld (), healingTiles[whichHealingTile].body);
 	cpSpaceAddShape (sys_returnPhysicsWorld (), healingTiles[whichHealingTile].shape);
 	cpShapeSetCollisionType (healingTiles[whichHealingTile].shape, PHYSIC_TYPE_HEALING);
 	cpShapeSetSensor (healingTiles[whichHealingTile].shape, cpTrue);

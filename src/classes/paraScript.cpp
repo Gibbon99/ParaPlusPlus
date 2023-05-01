@@ -395,7 +395,7 @@ void paraScript::debugState()
 	asUINT      numVars = ctx->GetVarCount ();
 	for (asUINT n       = 0; n < numVars; n++)
 	{
-		int  typeId      = ctx->GetVarTypeId (n);
+		int  typeId      = ctx->GetThisTypeId (n);
 		void *varPointer = ctx->GetAddressOfVar (n);
 		if (typeId == engine->GetTypeIdByDecl ("int"))
 		{

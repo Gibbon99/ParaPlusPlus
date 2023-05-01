@@ -3,7 +3,7 @@
 #include <string>
 #include <map>
 #include "../wrapper.h"
-#include "SDL_ttf.h"
+#include <SDL2/SDL_ttf.h>
 
 typedef void (*funcPtrIntStr)(int, std::string);
 

@@ -3,54 +3,15 @@
 #
 cmake_minimum_required(VERSION 3.8)
 include(FetchContent)
+include(ExternalProject)
 
 project("ParaPlusPlus")
 #
-# Get SDL2 directly from Github
-FETCHCONTENT_DECLARE(
-		SDL2
-		GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-		GIT_TAG SDL2
-)
-FetchContent_MakeAvailable(SDL2)
-#
-# Get libOpus directly from Github
-FETCHCONTENT_DECLARE(
-		Opus
-		GIT_REPOSITORY https://github.com/xiph/opus.git
-		GIT_TAG Master
-)
-FetchContent_MakeAvailable(Opus)
-#
-# Get SDL2_Mixer directly from Github
-FETCHCONTENT_DECLARE(
-		SDL2_Mixer
-		GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
-		GIT_TAG SDL2
-)
-FetchContent_MakeAvailable(SDL2_Mixer)
-#
-# Get SDL2_TTF directly from Github
-FETCHCONTENT_DECLARE(
-		SDL2_TTF
-		GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
-		GIT_TAG SDL2
-)
-FetchContent_MakeAvailable(SDL2_TTF)
-#
-# Get SDL2_Image directly from Github
-FETCHCONTENT_DECLARE(
-		SDL2_Image
-		GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
-		GIT_TAG SDL2_Image
-)
-FetchContent_MakeAvailable(SDL2_Image)
-#
 # Get Chipmunk2D directly from Github
-FETCHCONTENT_DECLARE(
-		SDL2_Image
+FetchContent_Declare(
+		Chipmunk2D
 		GIT_REPOSITORY https://github.com/slembcke/Chipmunk2D.git
-		GIT_TAG Chipmunk2D
+		GIT_TAG master
 )
 FetchContent_MakeAvailable(Chipmunk2D)
 
@@ -79,26 +40,31 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 
-file (GLOB_RECURSE source_files "./src/classes/*.cpp")
+file (GLOB_RECURSE source_files "./src/*.cpp")
+file (GLOB_RECURSE angelscript_addons_files "./external/angelscript/*.cpp")
 
 set (SOURCES
 		src/main.cpp
 		${source_files}
+		${angelscript_addons_files}
 		)
 
-include_directories(SYSTEM ${CMAKE_CURRENT_BINARY_DIR}/_deps/sdl3-src/include)
-include_directories(SYSTEM ${CMAKE_CURRENT_BINARY_DIR}/_deps/enet-src/include)
-include_directories(SYSTEM ${CMAKE_CURRENT_BINARY_DIR}/_deps/chipmunk-src/include)
+include_directories(SYSTEM ${CMAKE_CURRENT_BINARY_DIR}/_deps/chipmunk2d-src/include)
 include_directories(SYSTEM ${CMAKE_CURRENT_BINARY_DIR}/external/angelscript/include)
 
 include_directories(
 		./hdr
+		./hdr/classes
+		./hdr/game
+		./hdr/gui
+		./hdr/io
+		./hdr/system
 		./hdr/physfs
 		./hdr/sdl2_gfx
 		./hdr/tinyxml2
 )
 
-link_libraries(SDL2main SDL2 SDL2_image SDL2_mixer SDL2_ttf)
+link_libraries(SDL2main SDL2 SDL2_image SDL2_mixer SDL2_ttf chipmunk)
 
 set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 15)
 

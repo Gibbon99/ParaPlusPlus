@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="angelscript"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake-build-debug\;CMake Files\cmake-build-debug\_deps\;CMake Files\cmake-build-debug\_deps\chipmunk2d-src\;CMake Files\cmake-build-debug\_deps\chipmunk2d-src\src\;CMake Files\cmake-build-debug\_deps\chipmunk2d-src\demo\;CMake Files\external\;CMake Files\external\angelscript\;CMake Files\external\angelscript\projects\;CMake Files\external\angelscript\projects\cmake\;CMake Files\external\angelscript\projects\cmake\cmake\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="angelscript">
+				<Option output="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/libangelscript.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DANGELSCRIPT_EXPORT"/>
+					<Add option="-D_LIB"/>
+					<Add directory="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/projects/cmake/../../include"/>
+					<Add directory="/usr/include/c++/12"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/12"/>
+					<Add directory="/usr/include/c++/12/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/12/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 angelscript"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="angelscript/fast">
+				<Option output="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/libangelscript.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DANGELSCRIPT_EXPORT"/>
+					<Add option="-D_LIB"/>
+					<Add directory="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/projects/cmake/../../include"/>
+					<Add directory="/usr/include/c++/12"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/12"/>
+					<Add directory="/usr/include/c++/12/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/12/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 angelscript/fast"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/gnuc/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/include/angelscript.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_array.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_atomic.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_atomic.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_builder.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_builder.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_bytecode.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_bytecode.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_callfunc.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_callfunc.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_callfunc_mips.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_callfunc_x64_gcc.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_callfunc_x64_mingw.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_callfunc_x64_msvc.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_callfunc_x86.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_compiler.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_compiler.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_config.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_configgroup.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_configgroup.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_context.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_context.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_criticalsection.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_datatype.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_datatype.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_debug.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_gc.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_gc.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_generic.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_generic.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_globalproperty.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_map.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_memory.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_memory.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_module.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_module.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_objecttype.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_objecttype.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_outputbuffer.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_outputbuffer.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_parser.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_parser.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_property.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_restore.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_restore.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_scriptcode.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_scriptcode.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_scriptengine.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_scriptengine.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_scriptfunction.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_scriptfunction.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_scriptnode.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_scriptnode.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_scriptobject.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_scriptobject.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_string.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_string.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_string_util.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_string_util.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_texts.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_thread.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_thread.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_tokendef.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_tokenizer.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_tokenizer.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_typeinfo.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_typeinfo.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_variablescope.cpp">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/source/as_variablescope.h">
+			<Option target="angelscript"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/cmake-build-debug/_deps/chipmunk2d-src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-debug\_deps\chipmunk2d-src\"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/cmake-build-debug/_deps/chipmunk2d-src/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-debug\_deps\chipmunk2d-src\src\"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/cmake-build-debug/_deps/chipmunk2d-src/demo/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-debug\_deps\chipmunk2d-src\demo\"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/projects/cmake/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\external\angelscript\projects\cmake\"/>
+		</Unit>
+		<Unit filename="/home/dberry/Devel-GIT/ParaPlusPlus/external/angelscript/projects/cmake/cmake/AngelscriptConfig.cmake">
+			<Option virtualFolder="CMake Files\external\angelscript\projects\cmake\cmake\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

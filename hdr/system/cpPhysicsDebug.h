@@ -1,6 +1,6 @@
 #pragma once
 
-#include <chipmunk_structs.h>
+#include <chipmunk/chipmunk_structs.h>
 
 // Return a color to draw a debug shape in
 cpSpaceDebugColor d_colorForShape(cpShape *shape, cpDataPointer data);

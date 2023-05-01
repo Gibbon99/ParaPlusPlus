@@ -1,9 +1,8 @@
 #pragma once
 
 #include <vector>
-#include <SDL_quit.h>
 #include "wrapper.h"
-#include "chipmunk_types.h"
+#include "chipmunk/chipmunk_types.h"
 
 #define NUM_BULLET_COLORS 8
 

@@ -385,6 +385,7 @@ void sys_setupSolidWalls(const std::string &levelName)
 		cpShapeSetFriction (wallItr->shape, wallFricton);
 		cpShapeSetCollisionType (wallItr->shape, PHYSIC_TYPE_WALL);
 		cpShapeSetFilter (wallItr->shape, FILTER_CAT_WALL);
+		cpSpaceAddBody (worldSpace, wallItr->body);
 		cpSpaceAddShape (worldSpace, wallItr->shape);
 	}
 	shipdecks.at (levelName).wallPhysicsCreated = true;

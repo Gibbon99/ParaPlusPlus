@@ -198,6 +198,7 @@ void gam_createLiftSensor(int whichLift)
 	cpBodySetPosition (lifts[whichLift].body, lifts[whichLift].worldPosition);
 
 	lifts[whichLift].shape = cpBoxShapeNew (lifts[whichLift].body, lifts[whichLift].width, lifts[whichLift].height, 1.0f);  // Check radis
+	cpSpaceAddBody (sys_returnPhysicsWorld (), lifts[whichLift].body);
 	cpSpaceAddShape (sys_returnPhysicsWorld (), lifts[whichLift].shape);
 	cpShapeSetCollisionType (lifts[whichLift].shape, PHYSIC_TYPE_LIFT);
 	cpShapeSetSensor (lifts[whichLift].shape, cpTrue);

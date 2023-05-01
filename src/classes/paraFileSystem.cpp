@@ -1,6 +1,6 @@
 #include <vector>
 #include <cstdarg>
-#include <SDL_rwops.h>
+#include <SDL2/SDL_rwops.h>
 #include "classes/paraFileSystem.h"
 
 //----------------------------------------------------------------------------------------------------------------------

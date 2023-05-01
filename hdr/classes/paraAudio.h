@@ -1,7 +1,7 @@
 #pragma once
 
 #include <map>
-#include <SDL_mixer.h>
+#include <SDL2/SDL_mixer.h>
 
 #define PARA_MAX_VOLUME 10
 #define SPEAKER_MONO    1

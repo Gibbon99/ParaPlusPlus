@@ -14,6 +14,7 @@ void gam_createTerminalSensor(int whichTerminal)
 	cpBodySetPosition (terminals[whichTerminal].body, terminals[whichTerminal].worldPosition);
 
 	terminals[whichTerminal].shape = cpBoxShapeNew (terminals[whichTerminal].body, terminals[whichTerminal].width, terminals[whichTerminal].height, 1.0);   // Check Radius
+	cpSpaceAddBody (sys_returnPhysicsWorld(), terminals[whichTerminal].body);
 	cpSpaceAddShape (sys_returnPhysicsWorld (), terminals[whichTerminal].shape);
 	cpShapeSetCollisionType (terminals[whichTerminal].shape, PHYSIC_TYPE_TERMINAL);
 	cpShapeSetSensor (terminals[whichTerminal].shape, cpTrue);

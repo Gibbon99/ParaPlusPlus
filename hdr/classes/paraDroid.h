@@ -1,7 +1,6 @@
 #pragma once
 
-#include <cpVect.h>
-#include <chipmunk.h>
+#include "chipmunk/chipmunk.h"
 #include "system/cpPhysics.h"
 #include "classes/paraAI2.h"
 
