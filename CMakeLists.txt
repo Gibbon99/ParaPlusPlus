@@ -1,11 +1,14 @@
 ﻿# CMakeList.txt : CMake project for Para++, include source and define
 # project specific logic here.
 #
-cmake_minimum_required(VERSION 3.8)
-include(FetchContent)
-include(ExternalProject)
-
 project("ParaPlusPlus")
+cmake_minimum_required(VERSION 3.8)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+include(FetchContent)
 #
 # Get Chipmunk2D directly from Github
 FetchContent_Declare(
@@ -15,24 +18,15 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Chipmunk2D)
 
-if (WIN32)
-	set(ANGEL_SCRIPT_OUTPUT_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/external/angelscript/msvc/)
-else()
-	set(ANGEL_SCRIPT_OUTPUT_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/external/angelscript/gnuc/)
-endif()
+INCLUDE_DIRECTORIES(
+		C:/Devel/tools/vcpkg/installed/x64-windows/include
+)
+LINK_DIRECTORIES(
+		C:/Devel/tools/vcpkg/installed/x64-windows/lib
+		C:/Devel/tools/vcpkg/installed/x64-windows/lib/manual-link
+)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/angelscript/projects/cmake ${ANGEL_SCRIPT_OUTPUT_LOCATION})
-
-IF (CMAKE_VERSION VERSION_LESS "3.8")
-    SET(CMAKE_CXX_STANDARD 14)
-ELSEIF (CMAKE_VERSION VERSION_LESS "3.11")
-    SET(CMAKE_CXX_STANDARD 17)
-ELSE()
-    SET(CMAKE_CXX_STANDARD 17)
-ENDIF()
-
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/angelscript/projects/cmake)
 
 # Set default locations
 set(CL_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
@@ -42,10 +36,12 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 
 file (GLOB_RECURSE source_files "./src/*.cpp")
 file (GLOB_RECURSE angelscript_addons_files "./external/angelscript/*.cpp")
+file (GLOB_RECURSE angelscript_asm "./external/angelscript/source/as_callfunc_x64_msvc_asm.asm")
 
 set (SOURCES
 		src/main.cpp
 		${source_files}
+		${angelscript_asm}
 		${angelscript_addons_files}
 		)
 
@@ -69,20 +65,19 @@ link_libraries(SDL2main SDL2 SDL2_image SDL2_mixer SDL2_ttf chipmunk)
 set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 15)
 
 if (WIN32)
-	set(BIN_NAME ${PROJECT_NAME}-Window-${CMAKE_BUILD_TYPE})
+	set(BIN_NAME ${PROJECT_NAME}-Win-${CMAKE_BUILD_TYPE})
+	add_executable(${BIN_NAME} ${SOURCES})
+
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("Doing DEBUG build")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-		add_executable(${BIN_NAME} ${SOURCES})
-		target_link_libraries(Win32_Para_debug)
-#		target_link_libraries(Win32_Para_debug)
+		target_link_options(${BIN_NAME} PUBLIC /NODEFAULTLIB:MSVCRT)
 	endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
 	if (CMAKE_BUILD_TYPE MATCHES Release)
 		message("Doing RELEASE build")
-		add_executable(Win32_Para_release ${SOURCES})
-		target_link_libraries(Win32_Para_release)
+		target_link_options(${BIN_NAME} PUBLIC /NODEFAULTLIB:MSVCRTD)
 	endif (CMAKE_BUILD_TYPE MATCHES Release)
 endif (WIN32)
 
@@ -95,10 +90,7 @@ if (UNIX)
 
 	include_directories(
 			/usr/include
-			./hdr
-			./hdr/physfs
-			./hdr/sdl2_gfx
-			./hdr/tinyxml2)
+	)
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("Doing DEBUG build")

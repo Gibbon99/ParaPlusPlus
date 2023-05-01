@@ -14,7 +14,7 @@
 #include <classes/paraHighScore.h>
 
 #ifdef __WIN32__
-#include "SDL.h"
+#include <SDL2/SDL.h>
 #else
 
 #include "SDL2/SDL.h"
