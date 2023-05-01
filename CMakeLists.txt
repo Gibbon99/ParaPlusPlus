@@ -2,11 +2,65 @@
 # project specific logic here.
 #
 cmake_minimum_required(VERSION 3.8)
+include(FetchContent)
 
 project("ParaPlusPlus")
+#
+# Get SDL2 directly from Github
+FETCHCONTENT_DECLARE(
+		SDL2
+		GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+		GIT_TAG SDL2
+)
+FetchContent_MakeAvailable(SDL2)
+#
+# Get libOpus directly from Github
+FETCHCONTENT_DECLARE(
+		Opus
+		GIT_REPOSITORY https://github.com/xiph/opus.git
+		GIT_TAG Master
+)
+FetchContent_MakeAvailable(Opus)
+#
+# Get SDL2_Mixer directly from Github
+FETCHCONTENT_DECLARE(
+		SDL2_Mixer
+		GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+		GIT_TAG SDL2
+)
+FetchContent_MakeAvailable(SDL2_Mixer)
+#
+# Get SDL2_TTF directly from Github
+FETCHCONTENT_DECLARE(
+		SDL2_TTF
+		GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
+		GIT_TAG SDL2
+)
+FetchContent_MakeAvailable(SDL2_TTF)
+#
+# Get SDL2_Image directly from Github
+FETCHCONTENT_DECLARE(
+		SDL2_Image
+		GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+		GIT_TAG SDL2_Image
+)
+FetchContent_MakeAvailable(SDL2_Image)
+#
+# Get Chipmunk2D directly from Github
+FETCHCONTENT_DECLARE(
+		SDL2_Image
+		GIT_REPOSITORY https://github.com/slembcke/Chipmunk2D.git
+		GIT_TAG Chipmunk2D
+)
+FetchContent_MakeAvailable(Chipmunk2D)
 
-# set(CMAKE_CXX_STANDARD "17")
+if (WIN32)
+	set(ANGEL_SCRIPT_OUTPUT_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/external/angelscript/msvc/)
+else()
+	set(ANGEL_SCRIPT_OUTPUT_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/external/angelscript/gnuc/)
+endif()
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/angelscript/projects/cmake ${ANGEL_SCRIPT_OUTPUT_LOCATION})
 
 IF (CMAKE_VERSION VERSION_LESS "3.8")
     SET(CMAKE_CXX_STANDARD 14)
@@ -25,56 +79,36 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 
-file (GLOB classes_source_files "./src/classes/*.cpp")
-file (GLOB script_source_files "./src/script/*.cpp")
-file (GLOB chipmunk_source_files "./src/chipmunk/*.c")
-file (GLOB fileWatch_source_files "./src/fileWatcher/*.cpp")
-file (GLOB game_source_files "./src/game/*.cpp")
-file (GLOB gui_source_files "./src/gui/*.cpp")
-file (GLOB io_source_files "./src/io/*.cpp")
-file (GLOB physfs_source_files "./src/physfs/*.cpp")
-file (GLOB sdl2_gfx_source_files "./src/sdl2_gfx/*.cpp")
-file (GLOB system_source_files "./src/system/*.cpp")
-file (GLOB tinyxml2_source_files "./src/tinyxml2/*.cpp")
+file (GLOB_RECURSE source_files "./src/classes/*.cpp")
 
 set (SOURCES
 		src/main.cpp
-		${classes_source_files}
-		${script_source_files}
-		${chipmunk_source_files}
-		${fileWatch_source_files}
-		${game_source_files}
-		${gui_source_files}
-		${io_source_files}
-		${physfs_source_files}
-		${sdl2_gfx_source_files}
-		${system_source_files}
-		${tinyxml2_source_files}
+		${source_files}
 		)
 
+include_directories(SYSTEM ${CMAKE_CURRENT_BINARY_DIR}/_deps/sdl3-src/include)
+include_directories(SYSTEM ${CMAKE_CURRENT_BINARY_DIR}/_deps/enet-src/include)
+include_directories(SYSTEM ${CMAKE_CURRENT_BINARY_DIR}/_deps/chipmunk-src/include)
+include_directories(SYSTEM ${CMAKE_CURRENT_BINARY_DIR}/external/angelscript/include)
+
+include_directories(
+		./hdr
+		./hdr/physfs
+		./hdr/sdl2_gfx
+		./hdr/tinyxml2
+)
+
+link_libraries(SDL2main SDL2 SDL2_image SDL2_mixer SDL2_ttf)
+
+set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 15)
+
 if (WIN32)
-	# Library path
-	link_directories(./SDL2_WIN/lib/x64)
-
-	link_libraries(SDL2main SDL2 SDL2_image SDL2_mixer SDL2_ttf fmemopen_windows)
-
-	include_directories(
-			./hdr
-			./hdr/script
-			./hdr/physfs
-			./hdr/sdl2_gfx
-			./hdr/fileWatcher
-			./SDL2_WIN/include
-			./hdr/chipmunk
-			./hdr/tinyxml2
-	)
-
-	set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 15)
+	set(BIN_NAME ${PROJECT_NAME}-Window-${CMAKE_BUILD_TYPE})
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("Doing DEBUG build")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")		
-		add_executable(Win32_Para_debug ${SOURCES})
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+		add_executable(${BIN_NAME} ${SOURCES})
 		target_link_libraries(Win32_Para_debug)
 #		target_link_libraries(Win32_Para_debug)
 	endif (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -87,23 +121,18 @@ if (WIN32)
 endif (WIN32)
 
 if (UNIX)
+	set(BIN_NAME ${PROJECT_NAME}-Linux-${CMAKE_BUILD_TYPE})
+
 	# Library path
 	link_directories(/usr/lib)
-
-	link_libraries(SDL2main SDL2 SDL2_image SDL2_mixer SDL2_ttf pthread)
+	link_libraries(pthread)
 
 	include_directories(
 			/usr/include
-			/usr/include/SDL2
 			./hdr
-			./hdr/script
 			./hdr/physfs
 			./hdr/sdl2_gfx
-			./hdr/fileWatcher
-			./hdr/chipmunk
 			./hdr/tinyxml2)
-
-	set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 5)
 
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		message("Doing DEBUG build")

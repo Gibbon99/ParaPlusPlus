@@ -2,9 +2,9 @@
 
 #define MODULE_NAME                 "clientModule"
 
-#include "../script/angelscript.h"
-#include "../script/scriptbuilder.h"
-#include "../script/scriptstdstring.h"
+#include "../../external/angelscript/include/angelscript.h"
+#include "../../external/angelscript/include/scriptbuilder.h"
+#include "../../external/angelscript/include/scriptstdstring.h"
 
 typedef int (*functionPtr)(...);
 
